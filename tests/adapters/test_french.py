@@ -32,6 +32,6 @@ def test_raises_on_text_without_monthly_block():
 @pytest.mark.network
 def test_download_real_ff5(tmp_path):
     df = load_ff5_monthly(cache_dir=tmp_path)
-    assert df.index[0] == pd.Period("1926-07", freq="M")
+    assert df.index[0] == pd.Period("1963-07", freq="M")
     assert "Mkt-RF" in df.columns
-    assert len(df) > 1000
+    assert len(df) > 700
