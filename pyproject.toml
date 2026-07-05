@@ -1,0 +1,25 @@
+[project]
+name = "quant-allocator"
+version = "0.1.0"
+description = "Public-data adapters and synthetic-manager simulator for allocator analytics research"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.4.6",
+    "pandas>=3.0.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.15.20",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-m 'not network'"
+markers = ["network: requires internet access; excluded by default"]
+
+[tool.ruff]
+line-length = 100
