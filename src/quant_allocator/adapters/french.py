@@ -54,5 +54,13 @@ def load_ff5_monthly(cache_dir: Path | None = None) -> pd.DataFrame:
         with urllib.request.urlopen(FF5_URL, timeout=30) as response:
             payload = response.read()
         with zipfile.ZipFile(io.BytesIO(payload)) as archive:
-            cache_path.write_bytes(archive.read(archive.namelist()[0]))
-    return parse_french_monthly_csv(cache_path.read_text(encoding="latin-1"))
+            csv_bytes = archive.read(archive.namelist()[0])
+        parsed = parse_french_monthly_csv(csv_bytes.decode("latin-1"))
+        cache_path.write_bytes(csv_bytes)
+        return parsed
+    try:
+        return parse_french_monthly_csv(cache_path.read_text(encoding="latin-1"))
+    except ValueError as error:
+        raise ValueError(
+            f"cached French data at {cache_path} failed to parse; delete it to force a re-download"
+        ) from error

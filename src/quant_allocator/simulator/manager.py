@@ -7,6 +7,9 @@ about that month's standardized idiosyncratic return. Signal quality is
 side is replaced by the freshest-signal candidates. Sizes interpolate between
 signal-proportional (sizing_discipline=1) and equal-weight (0), scaled to hit
 target_gross / target_net exactly.
+
+Sizing uses signal magnitude within each side, so an aged long whose refreshed
+signal turned negative is sized by conviction magnitude, not direction.
 """
 
 from __future__ import annotations
@@ -17,6 +20,8 @@ import numpy as np
 import pandas as pd
 
 from quant_allocator.simulator.market import FactorMarket
+
+_MANAGER_STREAM = 1
 
 
 @dataclass(frozen=True)
@@ -56,9 +61,26 @@ def _side_weights(
 
 
 def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHistory:
-    rng = np.random.default_rng(config.seed)
+    if not 0.0 <= config.information_coefficient <= 1.0:
+        raise ValueError(
+            f"information_coefficient must be in [0, 1], got {config.information_coefficient}"
+        )
+    if not 0.0 <= config.sizing_discipline <= 1.0:
+        raise ValueError(f"sizing_discipline must be in [0, 1], got {config.sizing_discipline}")
+    if not 0.0 < config.rebalance_fraction <= 1.0:
+        raise ValueError(
+            f"rebalance_fraction must be in (0, 1], got {config.rebalance_fraction}"
+        )
+    if config.n_long + config.n_short > len(market.betas.index):
+        raise ValueError(
+            f"book size {config.n_long + config.n_short} exceeds asset universe "
+            f"of {len(market.betas.index)}"
+        )
+
+    rng = np.random.default_rng([config.seed, _MANAGER_STREAM])
     months = market.idio_returns.index
     assets = market.betas.index
+    # Full-history std is deliberate in-sample scaling for synthetic ground truth; z is never emitted to allocator views.
     z = market.idio_returns / market.idio_returns.std()
     noise = rng.standard_normal(z.shape)
 

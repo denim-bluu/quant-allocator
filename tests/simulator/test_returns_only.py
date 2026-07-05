@@ -18,9 +18,9 @@ def test_shape_index_and_reproducibility():
 
 
 def test_skill_shifts_mean_return_on_long_sample():
-    base = ReturnsOnlyConfig(strategy="credit", n_months=120_000, seed=2)
+    base = ReturnsOnlyConfig(strategy="credit", n_months=1_200, seed=2)
     skilled = ReturnsOnlyConfig(
-        strategy="credit", n_months=120_000, skill_annual_alpha=0.06, seed=2
+        strategy="credit", n_months=1_200, skill_annual_alpha=0.06, seed=2
     )
     gap_annualized = 12 * (
         simulate_returns_only_manager(skilled).mean()

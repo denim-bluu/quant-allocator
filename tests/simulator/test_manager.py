@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from quant_allocator.simulator.manager import (
     ManagerConfig,
@@ -46,3 +47,33 @@ def test_turnover_matches_rebalance_fraction():
         entries = (held.iloc[t] & ~held.iloc[t - 1]).sum()
         entry_fracs.append(entries / (cfg.n_long + cfg.n_short))
     assert abs(np.mean(entry_fracs) - 0.25) < 0.05
+
+
+def test_rng_stream_tags_are_distinct():
+    from quant_allocator.simulator import manager, market, returns_only
+
+    tags = {market._MARKET_STREAM, manager._MANAGER_STREAM, returns_only._RETURNS_ONLY_STREAM}
+    assert len(tags) == 3
+
+
+def test_invalid_configs_raise():
+    market_ = simulate_market(MarketConfig(n_assets=30, n_months=6, seed=1))
+    for bad in (
+        ManagerConfig(information_coefficient=1.5),
+        ManagerConfig(sizing_discipline=-0.1),
+        ManagerConfig(rebalance_fraction=0.0),
+        ManagerConfig(n_long=20, n_short=20),
+    ):
+        with pytest.raises(ValueError):
+            simulate_manager(market_, bad)
+
+
+def test_sizing_discipline_adds_alpha():
+    market_ = simulate_market(MarketConfig(n_assets=500, n_months=240, seed=6))
+    sized = simulate_manager(
+        market_, ManagerConfig(information_coefficient=0.10, sizing_discipline=1.0, seed=13)
+    )
+    equal = simulate_manager(
+        market_, ManagerConfig(information_coefficient=0.10, sizing_discipline=0.0, seed=13)
+    )
+    assert sized.true_alpha_returns.mean() > equal.true_alpha_returns.mean()

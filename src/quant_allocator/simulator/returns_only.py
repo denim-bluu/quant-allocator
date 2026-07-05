@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 
 MONTHS_PER_YEAR = 12
+_RETURNS_ONLY_STREAM = 2
 
 STRATEGY_FACTORS: dict[str, dict[str, tuple[float, float]]] = {
     "macro": {"trend": (0.05, 0.12), "rates_carry": (0.03, 0.06), "fx_carry": (0.03, 0.08)},
@@ -35,7 +36,7 @@ def simulate_returns_only_manager(config: ReturnsOnlyConfig) -> pd.Series:
         raise ValueError(
             f"unknown strategy {config.strategy!r}; expected one of {sorted(STRATEGY_FACTORS)}"
         )
-    rng = np.random.default_rng(config.seed)
+    rng = np.random.default_rng([config.seed, _RETURNS_ONLY_STREAM])
     months = pd.period_range(config.start_month, periods=config.n_months, freq="M")
 
     total = np.zeros(config.n_months)

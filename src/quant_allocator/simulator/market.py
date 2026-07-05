@@ -8,6 +8,8 @@ import numpy as np
 import pandas as pd
 
 MONTHS_PER_YEAR = 12
+# Distinct per-module stream tags keep same-seed modules statistically independent.
+_MARKET_STREAM = 0
 
 
 @dataclass(frozen=True)
@@ -41,8 +43,8 @@ class FactorMarket:
 
 
 def simulate_market(config: MarketConfig) -> FactorMarket:
-    rng = np.random.default_rng(config.seed)
-    months = pd.period_range(config.start_month, periods=config.n_months, freq="M")
+    rng = np.random.default_rng([config.seed, _MARKET_STREAM])
+    months = pd.period_range(config.start_month, periods=config.n_months, freq="M", name="month")
     assets = pd.Index([f"A{i:04d}" for i in range(config.n_assets)], name="asset")
     factors = list(config.factor_names)
 
@@ -54,6 +56,7 @@ def simulate_market(config: MarketConfig) -> FactorMarket:
         columns=factors,
     )
 
+    # factor_names[0] is treated as the market factor (beta ~ N(1, 0.25)); style betas attach to the rest.
     market_beta = rng.normal(1.0, 0.25, size=config.n_assets)
     style_betas = rng.normal(0.0, 0.5, size=(config.n_assets, len(factors) - 1))
     betas = pd.DataFrame(
