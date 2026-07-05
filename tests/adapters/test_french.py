@@ -35,3 +35,16 @@ def test_download_real_ff5(tmp_path):
     assert df.index[0] == pd.Period("1963-07", freq="M")
     assert "Mkt-RF" in df.columns
     assert len(df) > 700
+
+
+def test_cache_hit_skips_network(tmp_path, monkeypatch):
+    cache_file = tmp_path / "ff5_monthly.csv"
+    cache_file.write_text(SAMPLE, encoding="latin-1")
+
+    def _no_network(*args, **kwargs):
+        raise AssertionError("network touched despite cache hit")
+
+    monkeypatch.setattr("urllib.request.urlopen", _no_network)
+    df = load_ff5_monthly(cache_dir=tmp_path)
+    assert df.shape == (2, 6)
+    assert df.index[0] == pd.Period("1926-07", freq="M")
