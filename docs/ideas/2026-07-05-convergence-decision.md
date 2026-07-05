@@ -1,7 +1,11 @@
 # Convergence Decision — Flagships, Quick Wins, 90-Day Plan
 
 **Date:** 2026-07-05
-**Status:** Recommended by convergence session; pending Joon's ratification
+**Status:** Ratified 2026-07-05 with the **demo-first amendment** (§6–§7):
+every card ships a gallery demo + implementation-ready spec; hardened
+flagship builds move behind stakeholder buy-in. The program's near-term
+purpose is a litmus test of stakeholder demand plus structured personal
+learning; deep engineering follows demand, not the other way around.
 **Companion:** [`2026-07-05-idea-cards.md`](2026-07-05-idea-cards.md) — the
 20-card portfolio this memo prioritizes.
 
@@ -53,6 +57,13 @@ doctrine added as a fifth input by the demo-layer decision.
 **Rule applied:** flagships = stack of 4 (all four axes ≥4) **and**
 feasibility ≥4. Exactly two cards qualify. Quick wins = time-to-first-demo
 ≤2 weeks with distinct decision coverage.
+
+**Selection semantics under the demo-first amendment (§6):** the ranking
+below no longer schedules hardened builds inside the 90 days. It sets three
+things instead: spec depth (full for the selected five and the method-dense
+cards), wave-1 order (the selected five demo first), and post-buy-in build
+priority (flagships are first in line for real implementation once demand
+is observed).
 
 ### Flagships
 
@@ -118,65 +129,119 @@ no VaR-plumbing rebuilds, no chatbots without a decision hook.
 
 ## 5. Coverage check
 
-| Decision | 90-day slate | Later |
+Under the demo-first program every decision is covered at demo + spec depth
+by the end of wave 2 (all 20 cards). The check that still matters is the
+wave-1 litmus pack — the five pages stakeholders see first:
+
+| Decision | Wave-1 coverage | Closed in wave 2 by |
 | --- | --- | --- |
 | Select | S1 posterior ranking; S2 screening | S3 underwriting, P3 journal |
 | Size | S1 advisory weight bands | P1 allocation, M4 crowding caps |
-| Monitor | S2 always-on sheets; X1 decides what's trustworthy | M1–M5 |
+| Monitor | S2 tear sheets; X1 decides what's trustworthy | M1–M5 |
 | Engage | E1 ladder; S2/X1 packs as conversation material | S4, E2, E3, M5 |
-| Redeem | S2 alt-beta chip + DD panel (thin — acknowledged) | M3 first backlog, S4, P3 |
+| Redeem | S2 alt-beta chip + DD panel (thin — acknowledged) | M3, S4, P3 |
 
-Two acknowledged gaps, both deliberate: **redeem** depth arrives with M3
-(first backlog item, ~2 sessions); **lane-4 AI/ML** (M5/E3) is absent from
-the core 90 days — the synthetic-letter corpus generator is the month-3
-stretch item that unlocks both, and LLM narration appears earlier inside the
-S2/E2 packs. Forcing a lane-4 flagship now would dilute the two bets that
-compound.
+One acknowledged thinness: **redeem** in wave 1 rides on S2's panels alone;
+M3's alarm page (early wave 2) closes it. Lane-4 AI/ML (M5/E3) demo pages
+land in wave 2 batch 3; their *hardened* builds still wait on the
+letter-corpus generator (wave 3 stretch).
 
-## 6. 90-day plan (Jul 6 → Oct 3, 2026)
+## 6. The demo-first program
+
+Adopted at ratification. Every one of the 20 cards ships **two artifacts**:
+
+**(a) A gallery demo page.** One static site (the *idea gallery*): Interval
+design system, GitHub Pages, one page per card rendering that card's
+wow-demo. The shell, tokens, and signature components are built once and
+amortized across all twenty pages. The simulator is the fake-data
+generator — demo numbers are baked JSON computed from simulator output
+wherever cheap (closed-form shrinkage stands in for PyMC; simple event
+studies stand in for the hardened lab), hand-authored synthetic content
+only for the document-flavored cards (M5, E3). Layout: gallery source in
+`site/`, data-generator scripts in `src/quant_allocator/demo_data/`
+(Python owns the numbers, the static layer owns the pixels — demo-layer
+spec, locked).
+
+**Honest-mockup contract (every page):**
+
+1. **SYNTHETIC badge** — data provenance declared, always.
+2. **Working PowerGates** — where the honest answer at realistic N is
+   "refuses to render," the demo shows the refusal. That is the pitch, not
+   a bug.
+3. **"What this needs to go live" box** — the data ask (tier), the sample
+   size required, and the build effort. This box is the litmus instrument:
+   buy-in conversations confront the transparency cost on the spot, so a
+   yes is a real yes. It is also the standing defense against the
+   demo-overpromise failure mode.
+
+**(b) An implementation-ready method spec** at
+`docs/ideas/specs/<id>-<slug>.md`, uniform template:
+
+1. Problem & decision hook (from the card)
+2. Data contract per tier — exact fields, frequency, and source the live
+   version needs
+3. Methodology — estimators, assumptions, references; worked math where
+   load-bearing
+4. Power & validation plan — simulator cells, gates, calibration tests
+5. Implementation architecture — modules, adapters, dependencies, effort
+6. Adoption & packaging — Sweep E doctrine applied; who sees what, when
+7. Go-live requirements — the demo page's box, expanded
+8. **Learning notes** — derivations to own, the 3–5 canonical papers, and
+   what to be able to defend unaided (the spec program doubles as a
+   structured curriculum)
+
+Depth tiers: full depth for the selected five plus the method-dense cards
+(S1, X1, P2, S6); standard depth for the rest.
+
+## 7. 90-day plan (Jul 6 → Oct 3, 2026) — demo-first
 
 **Assumptions:** ~2 focused build sessions/week (evenings/weekends),
 subagent-driven execution per house policy — specs and numerics review at
 the lead reviewer level, implementation on cheaper models from complete briefs
-(spec §9). Each build follows the superpowers flow
-(brainstorm → plan → SDD) where it touches code.
+(spec §9). Gallery shell and each wave follow the superpowers flow
+(brainstorm → plan → SDD) where they touch code.
 
-**Month 1 — Quick wins (Jul 6 – Aug 2)**
+**Wave 1 — litmus pack (weeks 1–2, Jul 6–19)**
 
-| Weeks | Deliverable |
+| Deliverable |
+| --- |
+| Gallery shell: Interval tokens, IntervalStat / PowerGate / TierBadge / VerdictChip, SYNTHETIC badge, go-live box |
+| Demos + full specs for the selected five: X2 playground (starter grid), S2 tear-sheet mock, E1 ladder (the memo is the page), X1 atlas sampler, S1 posterior strip (closed-form shrinkage) |
+| **Showable litmus pack exists at the end of week 2** |
+
+**Wave 2 — lane sweeps (weeks 3–8, Jul 20 – Aug 30)**
+
+| Weeks | Batch (demo + spec per card) |
 | --- | --- |
-| 1 | Ratify this memo; **E1 ladder memo** written and committed (+ publishable essay draft) |
-| 2–3 | **S2 tear-sheet MVP**: GLM → factor sets → Lo/Ledoit–Wolf CIs → MPPM pipeline; first Interval pack on a synthetic 8-manager roster + real FF5 factors. `design-tokens.css` and IntervalStat/TierBadge/VerdictChip born here |
-| 4 | **X2 playground v1**: starter grid from the simulator; Interval dark theme; PowerGate component born; published to GitHub Pages |
+| 3–4 | Substrate-cheap monitoring & governance: M1 hygiene, M3 alarms, M2 convexity screen, P3 decision audit, E2 pack page (rendered alongside S2) |
+| 5–6 | Trade-level lane: S3 sizing/decay lab, S4 sell-discipline, S5 short-book, S6 signatures protocol, P1 many-worlds chart |
+| 7–8 | Cross-manager & documents: M4 crowding radar, M6 13F intel, M5 say–do split screen, E3 meeting-prep brief, P2 X-ray concept page |
 
-**Month 2 — Flagship X1 (Aug 3 – Sep 6)**
+**Wave 3 — feedback + earn-a-build (weeks 9–13, Aug 31 – Oct 3)**
 
-| Weeks | Deliverable |
-| --- | --- |
-| 5–9 | **Atlas vol. 1**: Monte Carlo grid for returns-tier metrics + hit-rate/sizing basics; power curves, bias tables, tier-degradation deltas; **PowerGate thresholds JSON** (the registry); atlas pack; playground v2 regenerated from the real grid |
+| Deliverable |
+| --- |
+| Iterate gallery from early litmus feedback; re-cut the backlog by observed buy-in |
+| Harden the one thing that has earned it — default candidate: atlas starter grid → vol. 1 proper, since honest PowerGates across the gallery want real power numbers |
+| Stretch: synthetic-letter corpus generator (upgrades M5/E3 demos and unlocks their real builds) |
 
-**Month 3 — Flagship S1 (Sep 7 – Oct 3)**
+**Gates:** end-of-wave review; a card whose demo or spec fails its kill
+criteria is descoped or killed in writing, not extended silently
+(converge-or-cut, spec §10). Wave 3's build slot is earned by feedback,
+not pre-assigned.
 
-| Weeks | Deliverable |
-| --- | --- |
-| 10–13 | **Bayes engine**: PyMC hierarchical model; calibration/coverage tests against simulator ground truth; prior-sensitivity report; skill-ledger pack with posterior strips + advisory weight bands; posterior strip integrated into S2 tear sheets |
-| Stretch | M3 drawdown alarms (~2 sessions, slots into S2 pack); synthetic-letter corpus generator (unlocks M5/E3 next) |
+**Day-90 artifact set:** the idea gallery live on Pages — 20 honest demo
+pages · 20 implementation-ready specs · the playground · the ladder essay ·
+a demand-ranked backlog. Against spec §12: the ~20-card portfolio (✓),
+briefs-as-domain-map (✓), working prototypes (post-buy-in, by design), the
+90-day plan (✓), and a senior-role story told with artifacts — now twenty
+of them.
 
-**Gates:** end-of-month review against each card's kill criteria; a card that
-fails its gate is descoped or killed in writing, not extended silently
-(converge-or-cut, spec §10).
+**Post-buy-in build order (absent contrary feedback):** X1 → S1 → M3 →
+P1 → S3 → M5 (+ corpus) → S4 → E3 → M1 → M2 → P2 (phase-2 flagship) →
+M4 → S6 → remaining.
 
-**Day-90 artifact set:** the transparency playground live on Pages · three
-Interval packs (tear sheet, atlas, skill ledger) · atlas vol. 1 + PowerGate
-registry · the ladder essay · this backlog. Against spec §12: the ~20-card
-portfolio (✓ today), briefs-as-domain-map (✓), 1–2 working flagship
-prototypes (X1+S1), the 90-day plan (✓), and a senior-role story told with
-artifacts, not aspirations.
-
-**Backlog order after day 90:** M3 → P1 → S3 → M5 (+ corpus) → S4 → E3 →
-M1 → M2 → P2 (phase-2 flagship) → M4 → S6 → remaining.
-
-## 7. Compliance
+## 8. Compliance
 
 All twenty cards run on public or synthetic data; the repo remains treated
 as public at all times — no employer-internal facts, processes, or manager names
