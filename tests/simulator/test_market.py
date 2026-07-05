@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from quant_allocator.simulator.market import FactorMarket, MarketConfig, simulate_market
+from quant_allocator.simulator.market import MarketConfig, simulate_market
 
 
 def test_shapes_and_return_identity():
