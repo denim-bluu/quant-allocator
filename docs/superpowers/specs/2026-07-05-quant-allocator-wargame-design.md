@@ -173,11 +173,26 @@ mandate.
 
 ## 9. Execution policy — models, effort, agents
 
+Model assignment follows one rule: **top model where judgment is embedded in
+the output and hard to verify downstream; cheaper model where the output is
+verifiable retrieval or spec-following.**
+
 - **Main loop:** the lead reviewer as orchestrator. Reserved for heavy reasoning:
   cross-sweep synthesis, idea-card generation, rubric scoring, power-analysis
   design, spec/doc quality.
-- **Sub-agents:** landscape sweeps and mechanical tasks run on senior
-  (Agent tool, `model: senior`), dispatched in parallel.
+- **Sweeps A, B, D, E:** senior (`model: senior`), dispatched in parallel.
+  Breadth-bound retrieval/cataloging; briefs are verifiable at QC and thin
+  spots are cheaply re-dispatched.
+- **Sweep C (methods literature):** the lead reviewer (`model: lead-reviewer`). Its value is
+  embedded statistical judgment — what is robust at 36–60 monthly
+  observations — which silently poisons idea cards if subtly wrong and cannot
+  be cheaply re-derived at QC.
+- **Prototyping:** implementation on senior (implementer acceptable for
+  boilerplate adapters), bracketed at the lead reviewer level on three sides: design
+  specs authored at the lead reviewer level; simulator generative design and power-test
+  methodology are the lead reviewer work (statistics, not plumbing); and a the lead reviewer-level
+  numerics review pass gates merges — point-in-time joins, annualization
+  conventions, and factor alignment fail silently.
 - **Reasoning effort:** `/effort high` as the session default for running
   phases (dispatch, monitoring, substrate scaffolding, brief QC);
   `/effort max` reserved for the convergence session (idea-card synthesis and
