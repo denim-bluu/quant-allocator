@@ -49,6 +49,25 @@ SIZE_TOL_SYSTEMATIC = 0.015
 _FACTOR_COLS = ("beta_market", "beta_size", "beta_value", "beta_momentum")
 _CACHE_DIR = Path(__file__).resolve().parents[3] / "site" / "_grid_cache"
 
+GATE_POWER_TARGET = 0.80  # X1 spec §3.4: threshold = smallest gate quantity with power >= 0.80.
+ROBUST_POWER = 0.80  # NUMERICS-GATE (docket D-3): provisional VerdictChip band, "per Sweep C".
+NOISE_POWER = 0.50  # NUMERICS-GATE (docket D-3): provisional VerdictChip band, "per Sweep C".
+# NUMERICS-GATE (docket D-13): pinned-effect reference cell (IC=0.04, half-life=12,
+# sizing=0.8) is a provisional stand-in for "true IR 0.5" (X1 §3.4) — confirm the
+# IC->IR mapping before certifying.
+PINNED_EFFECT_IC = 0.04
+REF_HALF_LIFE = 12.0
+REF_SIZING = 0.8
+GATE_UNITS = {
+    "alpha_ols": "months",
+    "alpha_posterior": "months",
+    "sharpe": "months",
+    "hit_rate": "independent_trades",
+    "sizing_slope": "independent_trades",
+}
+_RETURNS_METRICS = ("alpha_ols", "alpha_posterior", "sharpe")
+_TRADE_METRICS = ("hit_rate", "sizing_slope")
+
 
 @dataclass(frozen=True)
 class SimConfig:
@@ -318,3 +337,93 @@ def assert_grid_invariants(cells: dict[tuple, CellStats]) -> None:
         for name, a in cell.analytics.items():
             if not (a.lo - 1e-9 <= a.point <= a.hi + 1e-9):
                 raise AssertionError(f"band excludes point at {key}/{name}")
+
+
+@dataclass(frozen=True)
+class CellPayload:
+    key: tuple
+    analytics: dict[str, dict]
+
+
+def verdict_for(power: float) -> str:
+    # Docket D-3: provisional VerdictChip bands from measured power (X1/S2 "per Sweep C").
+    if power >= ROBUST_POWER:
+        return "robust"
+    if power >= NOISE_POWER:
+        return "shrink"
+    return "noise"
+
+
+def _threshold_from_curve(gate_quantities, powers) -> float:
+    # X1 spec §3.4: smallest gate quantity whose power >= 0.80 (monotone step search).
+    pairs = sorted(zip(gate_quantities, powers))
+    for quantity, power in pairs:
+        if power >= GATE_POWER_TARGET:
+            return float(quantity)
+    return float("inf")  # never reaches target in the measured range
+
+
+def extract_thresholds(cells: dict[tuple, CellStats]) -> dict[tuple[str, str], float]:
+    thresholds: dict[tuple[str, str], float] = {}
+    # Returns metrics: gate quantity = T, at the pinned-effect reference cell (IC->IR 0.5).
+    for metric in _RETURNS_METRICS:
+        for tier in TIER_GRID:
+            quantities, powers = [], []
+            for T in T_GRID:
+                cell = cells[(PINNED_EFFECT_IC, REF_HALF_LIFE, REF_SIZING, T, tier)]
+                if metric in cell.analytics:
+                    quantities.append(T)
+                    powers.append(cell.analytics[metric].power)
+            if quantities:
+                thresholds[(metric, tier)] = _threshold_from_curve(quantities, powers)
+    # Trade metrics: gate quantity = independent trades, over the reference cell's T sweep.
+    for metric in _TRADE_METRICS:
+        quantities, powers = [], []
+        for T in T_GRID:
+            cell = cells[(PINNED_EFFECT_IC, REF_HALF_LIFE, REF_SIZING, T, "P")]
+            a = cell.analytics[metric]
+            quantities.append(a.gate_quantity)
+            powers.append(a.power)
+        thresholds[(metric, "P")] = _threshold_from_curve(quantities, powers)
+    return thresholds
+
+
+def _actual_n_reps(cells: dict[tuple, CellStats]) -> int:
+    # Report the reps actually baked into the supplied cells, not the (possibly
+    # stale) n_reps argument — matters when a caller passes a pre-built `cells`
+    # dict, since every AnalyticStats already carries its true sample size.
+    first_cell = next(iter(cells.values()))
+    return next(iter(first_cell.analytics.values())).n_reps
+
+
+def build_grid(cells=None, n_reps=N_REPS):
+    if cells is None:
+        cells = run_all_configs(n_reps=n_reps)
+    assert_grid_invariants(cells)
+    thresholds = extract_thresholds(cells)
+    payloads: dict[tuple, CellPayload] = {}
+    for key, cell in cells.items():
+        rendered: dict[str, dict] = {}
+        for name, a in cell.analytics.items():
+            threshold = thresholds.get((name, cell.tier), float("inf"))
+            gate_state = "closed" if a.gate_quantity < threshold else "open"
+            rendered[name] = {
+                "point": a.point,
+                "lo": a.lo,
+                "hi": a.hi,
+                "verdict": verdict_for(a.power),
+                "gate_state": gate_state,
+                "threshold": threshold,
+                "gate_quantity": a.gate_quantity,
+                "units": GATE_UNITS[name],
+                "wilson_hw": a.wilson_hw,
+                "power": a.power,
+                "rmse": a.rmse,
+            }
+        payloads[key] = CellPayload(key=key, analytics=rendered)
+    run_meta = {
+        "seed": GRID_BASE_SEED,
+        "n_reps": _actual_n_reps(cells),
+        "code_version": CODE_VERSION,
+    }
+    return payloads, thresholds, run_meta
