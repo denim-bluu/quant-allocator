@@ -30,5 +30,8 @@ def round_floats(obj: Any, ndigits: int = 6) -> Any:
 def write_json(path: Path, data: dict, *, ndigits: int = 6) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(round_floats(data, ndigits), sort_keys=True, indent=2)
+    # "</" -> "<\/" (identical JSON: \/ is the escaped solidus) so committed
+    # data can never terminate the <script> block the demo pages inline it into.
+    text = text.replace("</", "<\\/")
     path.write_text(text + "\n", encoding="utf-8")
     return path

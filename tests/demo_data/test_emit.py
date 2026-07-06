@@ -19,6 +19,22 @@ def test_write_json_is_sorted_indented_and_newline_terminated(tmp_path):
     assert json.loads(text) == {"a": 2.0, "z": 1.0}
 
 
+def test_write_json_escapes_script_terminator(tmp_path):
+    # Demo pages inline this JSON raw inside a <script> block; "</" must never
+    # appear literally or a hostile-looking quote could terminate the block.
+    path = write_json(tmp_path / "out.json", {"quote": "bad </script> actor"})
+    text = path.read_text(encoding="utf-8")
+    assert "</" not in text
+    assert json.loads(text) == {"quote": "bad </script> actor"}
+
+
+def test_write_json_normalizes_negative_zero(tmp_path):
+    # A tiny negative rounds to IEEE -0.0; the writer must emit 0.0.
+    text = write_json(tmp_path / "out.json", {"move": -2.8e-17}).read_text(encoding="utf-8")
+    assert "-0.0" not in text
+    assert json.loads(text) == {"move": 0.0}
+
+
 def test_write_json_is_byte_for_byte_deterministic(tmp_path):
     payload = {"m": [{"code": "A01", "x": 0.3333333333}, {"code": "A02", "x": 0.6}]}
     first = write_json(tmp_path / "a.json", payload).read_bytes()

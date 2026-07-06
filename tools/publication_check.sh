@@ -35,7 +35,10 @@ for term in "${TERMS[@]}"; do
     --exclude-dir=__pycache__ --exclude-dir=_build -- "$term" . \
     || echo "  (no working-tree hits)"
   echo "[git history]"
-  git log --all -p -S "$term" 2>/dev/null | grep -i -- "$term" \
+  # git grep -i over every commit: case-INsensitive like the working-tree scan
+  # (git log -S pickaxe is case-sensitive and would miss case variants) and
+  # scans whole blobs, not just diffs where the term count changed.
+  git grep -iI -- "$term" $(git rev-list --all) 2>/dev/null \
     || echo "  (no history hits)"
   echo
 done
