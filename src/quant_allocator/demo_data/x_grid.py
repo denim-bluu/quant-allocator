@@ -169,13 +169,16 @@ def _aggregate(points, trues, detects, gate_quantity) -> AnalyticStats:
 
 
 def _posterior_stats(estimates, T) -> AnalyticStats:
-    # S1 shrinkage posterior over the cell cohort, detect P(a>0)>0.95. The point/
-    # band report the tier's own alpha points; detection uses the shrunk posterior.
+    # S1 shrinkage posterior over the cell cohort, detect P(a>0)>0.95. gate
+    # ruling: an IntervalStat labeled "posterior alpha" carries the SHRUNK posterior
+    # means — reporting raw tier points under a posterior label would mislabel.
     points = np.array([e.point for e in estimates])
     ses = np.array([e.se for e in estimates])
     shrunk = shrink_alphas(points, ses, np.zeros(len(estimates), dtype=int))
     detect = shrunk.prob_positive > 0.95
-    return _aggregate(points, [e.true for e in estimates], detect, float(T))
+    return _aggregate(
+        shrunk.posterior_alpha, [e.true for e in estimates], detect, float(T)
+    )
 
 
 def run_config(cfg, n_reps=N_REPS, base_seed=GRID_BASE_SEED, use_cache=True) -> list[CellStats]:
