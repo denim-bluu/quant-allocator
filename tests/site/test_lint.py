@@ -104,6 +104,45 @@ def test_build_fails_on_missing_data_file(tmp_path):
         build(site, tmp_path / "out")
 
 
+def test_build_enforces_lint_end_to_end(tmp_path):
+    site = tmp_path / "site"
+    shutil.copytree(REPO_ROOT / "site" / "templates", site / "templates")
+    shutil.copytree(REPO_ROOT / "site" / "assets", site / "assets")
+    (site / "templates" / "pages" / "t1.html.j2").write_text(
+        "<html><body>no provenance furniture here</body></html>", encoding="utf-8"
+    )
+    (site / "data").mkdir()
+    (site / "data" / "t1.json").write_text('{"ok": true}', encoding="utf-8")
+    specs = tmp_path / "docs" / "ideas" / "specs"
+    specs.mkdir(parents=True)
+    (specs / "t1.md").write_text("# t1", encoding="utf-8")
+    (site / "cards.yaml").write_text(
+        yaml.safe_dump(
+            [
+                {
+                    "id": "t1",
+                    "title": "Test card",
+                    "lane": "S",
+                    "one_liner": "x",
+                    "decisions": ["select"],
+                    "tiers": ["R"],
+                    "status": "live",
+                    "demo": "pages/t1.html.j2",
+                    "data": "t1.json",
+                    "spec": "t1.md",
+                    "golive": {"data_ask": "R", "sample": "36m", "effort": "S"},
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    # This demo template deliberately skips demo.html.j2's furniture, so
+    # build() must fail via its call to _lint_outputs — not because we call
+    # _lint_outputs directly. A deleted call in build() would let this pass.
+    with pytest.raises(BuildError, match="synthetic-badge"):
+        build(site, tmp_path / "out")
+
+
 def test_real_demo_page_has_furniture(tmp_path):
     site = tmp_path / "site"
     shutil.copytree(REPO_ROOT / "site" / "templates", site / "templates")

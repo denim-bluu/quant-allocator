@@ -27,4 +27,6 @@ Publication is deliberate and human-gated. Do not automate these steps.
 
 6. **Set the gallery URL in the README.** Replace the
    `<!-- set after Pages enablement -->` placeholder and the `USERNAME`
-   gallery URL with the real Pages URL, then commit.
+   gallery URL with the real Pages URL, then commit. Also update `REPO_URL`
+   in `src/quant_allocator/site/build.py` to the real repository URL, so the
+   "Source repository" link in every published page footer resolves.

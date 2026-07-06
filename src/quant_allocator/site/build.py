@@ -1,6 +1,6 @@
 """Render-only static-site builder for the idea gallery.
 
-This module validates the card manifest and (in later tasks) renders the site.
+This module validates the card manifest and renders the site.
 It must never import numpy, pandas, or simulator modules: the builder renders
 committed inputs, it does not compute statistics.
 """
@@ -55,8 +55,13 @@ def load_manifest(path: Path) -> list[dict]:
         raise BuildError(f"{path}: manifest must be a YAML list of card entries")
 
     cards: list[dict] = []
+    seen_ids: set[str] = set()
     for index, entry in enumerate(raw):
         _validate_entry(entry, index, path, site_dir)
+        entry_id = entry["id"]
+        if entry_id in seen_ids:
+            raise BuildError(f"{path}: duplicate card id '{entry_id}'")
+        seen_ids.add(entry_id)
         cards.append(entry)
     return cards
 

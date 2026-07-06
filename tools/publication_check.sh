@@ -19,7 +19,7 @@ TERMS=(
 
 LOCAL_TERMS_FILE="$(dirname "$0")/.publication_terms"
 if [[ -f "$LOCAL_TERMS_FILE" ]]; then
-  while IFS= read -r line; do
+  while IFS= read -r line || [[ -n "$line" ]]; do
     [[ -n "$line" && "$line" != \#* ]] && TERMS+=("$line")
   done < "$LOCAL_TERMS_FILE"
 fi

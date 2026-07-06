@@ -120,3 +120,10 @@ def test_live_dangling_spec_raises(tmp_path):
     manifest = _write_manifest(tmp_path, [_live_entry()])
     with pytest.raises(BuildError, match="missing spec file"):
         load_manifest(manifest)
+
+
+def test_duplicate_id_raises(tmp_path):
+    entry = _planned_entry()
+    manifest = _write_manifest(tmp_path, [entry, dict(entry)])
+    with pytest.raises(BuildError, match="duplicate card id 's1'"):
+        load_manifest(manifest)
