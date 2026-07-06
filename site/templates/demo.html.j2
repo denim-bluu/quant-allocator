@@ -1,0 +1,40 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+<article class="demo-page">
+  <div class="badge-row">
+    {% if not card.doctrine %}<span class="synthetic-badge">SYNTHETIC DATA</span>{% endif %}
+    {% for tier in card.tiers %}<span class="tier-badge" data-tier="{{ tier }}">{{ tier }}</span>{% endfor %}
+  </div>
+  <h1 class="demo-page__title">{{ card.title }}</h1>
+  <p class="demo-page__oneliner">{{ card.one_liner }}</p>
+
+  {% if not card.doctrine %}
+  <script type="application/json" id="card-data">{{ card_data_json | safe }}</script>
+  {% endif %}
+
+  {% block demo_content %}{% endblock %}
+
+  <section class="demo-methodology">
+    <h2>Methodology</h2>
+    {% block methodology %}{% endblock %}
+  </section>
+
+  {% if card.doctrine %}
+  <aside class="usage-note">
+    <h2>How to use this</h2>
+    <p>{{ card.usage_note }}</p>
+  </aside>
+  {% else %}
+  <dl class="golive-box">
+    <dt>Data ask</dt><dd>{{ card.golive.data_ask }}</dd>
+    <dt>Sample required</dt><dd>{{ card.golive.sample }}</dd>
+    <dt>Build effort</dt><dd>{{ card.golive.effort }}</dd>
+  </dl>
+  {% endif %}
+
+  <p class="spec-link">
+    <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">Full method spec →</a>
+  </p>
+</article>
+{% endblock %}

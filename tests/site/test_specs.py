@@ -14,7 +14,9 @@ def _fixture_site(tmp_path):
     shutil.copytree(REPO_ROOT / "site" / "templates", site / "templates")
     shutil.copytree(REPO_ROOT / "site" / "assets", site / "assets")
     (site / "templates" / "pages").mkdir(exist_ok=True)
-    (site / "templates" / "pages" / "t1.html.j2").write_text("", encoding="utf-8")
+    (site / "templates" / "pages" / "t1.html.j2").write_text(
+        "{% extends 'demo.html.j2' %}", encoding="utf-8"
+    )
     (site / "data").mkdir()
     (site / "data" / "t1.json").write_text("{}", encoding="utf-8")
     specs = tmp_path / "docs" / "ideas" / "specs"

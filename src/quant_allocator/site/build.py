@@ -126,7 +126,7 @@ def _validate_live_entry(entry: dict, card_id: str, path: Path, site_dir: Path) 
 
 
 def build(site_dir: Path, out_dir: Path) -> None:
-    """Validate the manifest, render the index and specs, then copy assets."""
+    """Validate the manifest, render index/specs/demo pages, copy assets, lint."""
     cards = load_manifest(site_dir / "cards.yaml")
 
     env = Environment(
@@ -139,7 +139,9 @@ def build(site_dir: Path, out_dir: Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     _render_index(env, cards, out_dir)
     _render_specs(env, cards, site_dir, out_dir)
+    _render_demo_pages(env, cards, site_dir, out_dir)
     _copy_assets(site_dir, out_dir)
+    _lint_outputs(cards, out_dir)
 
 
 def _render_index(env: Environment, cards: list[dict], out_dir: Path) -> None:
@@ -184,3 +186,52 @@ def _render_specs(env: Environment, cards: list[dict], site_dir: Path, out_dir: 
             default_theme="light",
         )
         (out_specs / f"{card['id']}.html").write_text(html, encoding="utf-8")
+
+
+def _render_demo_pages(
+    env: Environment, cards: list[dict], site_dir: Path, out_dir: Path
+) -> None:
+    for card in cards:
+        if card["status"] != "live":
+            continue
+        card_data_json = ""
+        if not card.get("doctrine", False):
+            card_data_json = (site_dir / "data" / card["data"]).read_text(encoding="utf-8")
+        html = env.get_template(card["demo"]).render(
+            page_title=card["title"],
+            card=card,
+            card_data_json=card_data_json,
+            asset_base="",
+            default_theme="light",
+        )
+        (out_dir / f"{card['id']}.html").write_text(html, encoding="utf-8")
+
+
+def _lint_outputs(cards: list[dict], out_dir: Path) -> None:
+    """Fail loudly if any live page is missing its provenance furniture or spec link."""
+    for card in cards:
+        if card["status"] != "live":
+            continue
+        page_path = out_dir / f"{card['id']}.html"
+        html = page_path.read_text(encoding="utf-8")
+
+        if card.get("doctrine", False):
+            if "usage-note" not in html:
+                raise BuildError(
+                    f"{page_path}: doctrine card '{card['id']}' output missing usage-note block"
+                )
+        else:
+            if "synthetic-badge" not in html:
+                raise BuildError(
+                    f"{page_path}: card '{card['id']}' output missing synthetic-badge"
+                )
+            if "golive-box" not in html:
+                raise BuildError(
+                    f"{page_path}: card '{card['id']}' output missing golive-box"
+                )
+
+        spec_target = out_dir / "specs" / f"{card['id']}.html"
+        if not spec_target.exists():
+            raise BuildError(
+                f"{page_path}: card '{card['id']}' spec link target missing: {spec_target}"
+            )
