@@ -142,8 +142,9 @@ wave-1 litmus pack — the five pages stakeholders see first:
 | Redeem | S2 alt-beta chip + DD panel (thin — acknowledged) | M3, S4, P3 |
 
 One acknowledged thinness: **redeem** in wave 1 rides on S2's panels alone;
-M3's alarm page (early wave 2) closes it. Lane-4 AI/ML (M5/E3) demo pages
-land in wave 2 batch 3; their *hardened* builds still wait on the
+M3's alarm page (early wave 2) closes it. Lane-4 AI/ML is now visible in
+wave 1 via M5's say–do page (pulled forward 2026-07-06); E3's demo lands in
+wave 2 batch 3, and both cards' *hardened* builds still wait on the
 letter-corpus generator (wave 3 stretch).
 
 ## 6. The demo-first program
@@ -206,8 +207,8 @@ the lead reviewer level, implementation on cheaper models from complete briefs
 | Deliverable |
 | --- |
 | Gallery shell: Interval tokens, IntervalStat / PowerGate / TierBadge / VerdictChip, SYNTHETIC badge, go-live box |
-| Demos + full specs for the selected five: X2 playground (starter grid), S2 tear-sheet mock, E1 ladder (the memo is the page), X1 atlas sampler, S1 posterior strip (closed-form shrinkage) |
-| **Showable litmus pack exists at the end of week 2** |
+| Demos + full specs for the selected five: X2 playground (starter grid), S2 tear-sheet mock, E1 ladder (the memo is the page), X1 atlas sampler, S1 posterior strip (closed-form shrinkage) — plus **M5 say–do split screen, pulled forward from wave 2 batch 3 for AI/ML visibility in the litmus pack** (Joon, 2026-07-06) |
+| **Showable litmus pack (six pages) exists at the end of wave 1** |
 
 **Wave 2 — lane sweeps (weeks 3–8, Jul 20 – Aug 30)**
 
@@ -215,7 +216,7 @@ the lead reviewer level, implementation on cheaper models from complete briefs
 | --- | --- |
 | 3–4 | Substrate-cheap monitoring & governance: M1 hygiene, M3 alarms, M2 convexity screen, P3 decision audit, E2 pack page (rendered alongside S2) |
 | 5–6 | Trade-level lane: S3 sizing/decay lab, S4 sell-discipline, S5 short-book, S6 signatures protocol, P1 many-worlds chart |
-| 7–8 | Cross-manager & documents: M4 crowding radar, M6 13F intel, M5 say–do split screen, E3 meeting-prep brief, P2 X-ray concept page |
+| 7–8 | Cross-manager & documents: M4 crowding radar, M6 13F intel, E3 meeting-prep brief, P2 X-ray concept page (M5 moved to wave 1) |
 
 **Wave 3 — feedback + earn-a-build (weeks 9–13, Aug 31 – Oct 3)**
 

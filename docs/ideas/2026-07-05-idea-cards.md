@@ -447,9 +447,10 @@ X = meta / infrastructure.
   public letters only in the repo, always.
 - **JD mapping:** Current: the AI/ML bullet made concrete + monitoring.
   Vision: narrative-vs-positioning is a genuine platform engagement topic.
-- **Sequencing:** Demo page in wave 2 (hand-authored synthetic letter);
-  hardened build after the letter-corpus generator; gateway card for E3
-  (shares corpus + extraction). First lane-4 card in the post-buy-in order.
+- **Sequencing:** Demo page pulled forward into wave 1 (hand-authored
+  synthetic letter); hardened build after the letter-corpus generator;
+  gateway card for E3 (shares corpus + extraction). First lane-4 card in
+  the post-buy-in order.
 
 ### M6 · 13F long-book intelligence
 
