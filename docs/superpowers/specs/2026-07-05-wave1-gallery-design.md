@@ -163,7 +163,7 @@ simulator's existing stream-tag mechanism).
   factor-data redistribution questions); a real-FF5 variant is a wave-3
   upgrade note in the spec.
 - Go-live box: data ask = monthly returns (R); sample = ≥36 months;
-  effort = S.
+  effort = S–M.
 
 ### X1 · Atlas sampler
 
