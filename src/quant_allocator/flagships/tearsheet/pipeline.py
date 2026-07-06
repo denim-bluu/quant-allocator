@@ -21,9 +21,13 @@ _MA_ORDER = 2
 MONTHS_PER_YEAR = 12
 BOOT_REPS = 2000
 MPPM_RHO = 3.0
+# NUMERICS-GATE D-16/D-17: CI levels provisional (90% normal-z pre-approved; 95% Sharpe held).
 ALPHA_CI_LEVEL = 0.90
 SHARPE_CI_LEVEL = 0.95
 PIPELINE_SEED = 20260706
+# NUMERICS-GATE D-20: MC path count + lag-1 OLS AR(1) fit provisional; the pointwise
+# (not familywise) p99 envelope semantics are a gate question for how the page
+# renders breaches.
 DRAWDOWN_PATHS = 2000
 
 
