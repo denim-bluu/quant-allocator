@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-default-theme="{{ default_theme | default('light') }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page_title | default('Idea Gallery') }} · {{ site_title }}</title>
+  <script>
+    (function () {
+      var stored = null;
+      try { stored = localStorage.getItem("qa-theme"); } catch (e) {}
+      var root = document.documentElement;
+      root.setAttribute("data-theme", stored || root.getAttribute("data-default-theme") || "light");
+    })();
+  </script>
+  <link rel="stylesheet" href="{{ asset_base | default('') }}assets/design-tokens.css">
+  <link rel="stylesheet" href="{{ asset_base | default('') }}assets/interval.css">
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__title">{{ site_title }}</div>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="{{ asset_base | default('') }}index.html">Gallery</a>
+    </nav>
+    <button type="button" class="theme-toggle" data-theme-toggle
+            aria-label="Toggle light or dark theme">Theme</button>
+  </header>
+  <div class="site-banner" role="note">All data on this site is synthetic or public.</div>
+  <main id="main" class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <span>MIT License</span>
+    <a href="{{ repo_url }}">Source repository</a>
+  </footer>
+  <script src="{{ asset_base | default('') }}assets/interval.js"></script>
+  {% block body_scripts %}{% endblock %}
+</body>
+</html>

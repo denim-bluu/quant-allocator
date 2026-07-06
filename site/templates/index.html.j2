@@ -1,0 +1,38 @@
+{% extends "base.html.j2" %}
+
+{% macro tile_body(card) %}
+<h3 class="card-tile__title">{{ card.title }}</h3>
+<p class="card-tile__oneliner">{{ card.one_liner }}</p>
+<div class="card-tile__meta">
+  {% for decision in card.decisions %}<span class="decision-chip">{{ decision }}</span>{% endfor %}
+</div>
+<div class="card-tile__tiers">
+  {% for tier in card.tiers %}<span class="tier-badge" data-tier="{{ tier }}">{{ tier }}</span>{% endfor %}
+</div>
+{% endmacro %}
+
+{% block content %}
+<section class="gallery-intro">
+  <h1>Idea Gallery</h1>
+  <p class="gallery-thesis">Every analytic here is an exercise in inference under partial transparency.</p>
+</section>
+{% for lane in lanes %}
+<section class="lane" aria-labelledby="lane-{{ lane.key }}">
+  <h2 class="lane__heading" id="lane-{{ lane.key }}">{{ lane.heading }}</h2>
+  <div class="card-grid">
+    {% for card in lane.cards %}
+    {% if card.status == "live" %}
+    <a class="card-tile" href="{{ asset_base | default('') }}{{ card.id }}.html">
+      {{ tile_body(card) }}
+    </a>
+    {% else %}
+    <div class="card-tile card-tile--planned">
+      <span class="card-tile__wave">wave 2</span>
+      {{ tile_body(card) }}
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endfor %}
+{% endblock %}

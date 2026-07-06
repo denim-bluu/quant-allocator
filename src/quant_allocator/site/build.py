@@ -7,9 +7,11 @@ committed inputs, it does not compute statistics.
 
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
 import yaml
+from jinja2 import Environment, FileSystemLoader
 
 REQUIRED_KEYS = {"id", "title", "lane", "one_liner", "decisions", "tiers", "status"}
 OPTIONAL_KEYS = {"doctrine", "demo", "data", "spec", "golive", "usage_note"}
@@ -17,6 +19,18 @@ ALLOWED_KEYS = REQUIRED_KEYS | OPTIONAL_KEYS
 VALID_LANES = {"S", "M", "P", "E", "X"}
 VALID_STATUSES = {"live", "planned"}
 GOLIVE_KEYS = {"data_ask", "sample", "effort"}
+
+# Placeholder repo URL; set the real one at Pages enablement (see docs/PUBLISHING.md).
+REPO_URL = "https://github.com/USERNAME/quant-allocator"
+SITE_TITLE = "Quant Allocator — Idea Gallery"
+LANE_ORDER = ["S", "M", "P", "E", "X"]
+LANE_HEADINGS = {
+    "S": "S — Skill & inference",
+    "M": "M — Monitoring & early warning",
+    "P": "P — Portfolio construction & governance",
+    "E": "E — Engagement & knowledge",
+    "X": "X — Meta / infrastructure",
+}
 
 
 class BuildError(Exception):
@@ -107,3 +121,41 @@ def _validate_live_entry(entry: dict, card_id: str, path: Path, site_dir: Path) 
             raise BuildError(
                 f"{path}: live card '{card_id}' references missing {kind} file: {file_path}"
             )
+
+
+def build(site_dir: Path, out_dir: Path) -> None:
+    """Validate the manifest and render the index, then copy assets."""
+    cards = load_manifest(site_dir / "cards.yaml")
+
+    env = Environment(
+        loader=FileSystemLoader(str(site_dir / "templates")),
+        autoescape=True,
+    )
+    env.globals["repo_url"] = REPO_URL
+    env.globals["site_title"] = SITE_TITLE
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    _render_index(env, cards, out_dir)
+    _copy_assets(site_dir, out_dir)
+
+
+def _render_index(env: Environment, cards: list[dict], out_dir: Path) -> None:
+    lanes = [
+        {
+            "key": lane,
+            "heading": LANE_HEADINGS[lane],
+            "cards": [card for card in cards if card["lane"] == lane],
+        }
+        for lane in LANE_ORDER
+    ]
+    html = env.get_template("index.html.j2").render(
+        lanes=lanes, page_title="Idea Gallery", asset_base="", default_theme="light"
+    )
+    (out_dir / "index.html").write_text(html, encoding="utf-8")
+
+
+def _copy_assets(site_dir: Path, out_dir: Path) -> None:
+    dest = out_dir / "assets"
+    if dest.exists():
+        shutil.rmtree(dest)
+    shutil.copytree(site_dir / "assets", dest)
