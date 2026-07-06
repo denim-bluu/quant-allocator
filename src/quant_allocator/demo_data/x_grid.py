@@ -37,8 +37,12 @@ N_ASSETS = 120
 N_LONG = 40
 N_SHORT = 25
 REBALANCE_FRACTION = 0.25
-CODE_VERSION = "c1"
+CODE_VERSION = "c2"
 WILSON_Z = 1.96  # X1 spec §3.3 / §8.4: Wilson 95% interval on a MC proportion.
+# X1 spec §4.2: size within 5% +/- 1.5pp systematic; the cell's Wilson HW covers MC
+# noise on top (at N_REPS=500 the HW alone is ~1.9pp, so a bare 1.5pp gate would
+# false-fail ~12% of IC=0 cells).
+SIZE_TOL_SYSTEMATIC = 0.015
 _FACTOR_COLS = ("beta_market", "beta_size", "beta_value", "beta_momentum")
 _CACHE_DIR = Path(__file__).resolve().parents[3] / "site" / "_grid_cache"
 
@@ -164,8 +168,21 @@ def _aggregate(points, trues, detects, gate_quantity) -> AnalyticStats:
     )
 
 
+def _posterior_stats(estimates, T) -> AnalyticStats:
+    # S1 shrinkage posterior over the cell cohort, detect P(a>0)>0.95. The point/
+    # band report the tier's own alpha points; detection uses the shrunk posterior.
+    points = np.array([e.point for e in estimates])
+    ses = np.array([e.se for e in estimates])
+    shrunk = shrink_alphas(points, ses, np.zeros(len(estimates), dtype=int))
+    detect = shrunk.prob_positive > 0.95
+    return _aggregate(points, [e.true for e in estimates], detect, float(T))
+
+
 def run_config(cfg, n_reps=N_REPS, base_seed=GRID_BASE_SEED, use_cache=True) -> list[CellStats]:
-    cache_path = _CACHE_DIR / f"cfg{cfg.index}_seed{base_seed}_n{n_reps}_{CODE_VERSION}.pkl"
+    cache_path = _CACHE_DIR / (
+        f"cfg{cfg.index}_ic{cfg.ic}_hl{cfg.half_life}_sd{cfg.sizing}"
+        f"_seed{base_seed}_n{n_reps}_{CODE_VERSION}.pkl"
+    )
     if use_cache and cache_path.exists():
         # Trusted local-only cache: this module reads only its own writes under
         # site/_grid_cache/ (gitignored), keyed by (config, seed, code-version).
@@ -182,11 +199,9 @@ def run_config(cfg, n_reps=N_REPS, base_seed=GRID_BASE_SEED, use_cache=True) -> 
             for rep in reps
         ]
         sharpe = [x_metrics.sharpe_lo(rep[0][:T]) for rep in reps]
-        # S1 posterior alpha (shrunk within the cell cohort), detect P(a>0)>0.95.
-        ols_pts = np.array([e.point for e in ols])
-        ols_ses = np.array([e.se for e in ols])
-        shrunk = shrink_alphas(ols_pts, ols_ses, np.zeros(len(ols), dtype=int))
-        post_detect = shrunk.prob_positive > 0.95
+        # X1 spec §3.2: posterior scored at R/E with the tier's own alpha estimates;
+        # omitting it at P is deliberate.
+        posterior_by_tier = {"R": _posterior_stats(ols, T), "E": _posterior_stats(pinned, T)}
         trades = _independent_trades(T)
         hit = [
             x_metrics.hit_rate(rep[4][:T].ravel(), trades) for rep in reps
@@ -201,10 +216,8 @@ def run_config(cfg, n_reps=N_REPS, base_seed=GRID_BASE_SEED, use_cache=True) -> 
                 [e.point for e in alpha_src], [e.true for e in alpha_src],
                 [e.detected for e in alpha_src], float(T),
             )
-            analytics["alpha_posterior"] = _aggregate(
-                [e.point for e in ols], [e.true for e in ols],
-                post_detect, float(T),
-            )
+            if tier in posterior_by_tier:
+                analytics["alpha_posterior"] = posterior_by_tier[tier]
             analytics["sharpe"] = _aggregate(
                 [e.point for e in sharpe], [e.true for e in sharpe],
                 [e.detected for e in sharpe], float(T),
@@ -242,33 +255,36 @@ def _run_config_worker(args) -> list[CellStats]:
     return run_config(cfg, n_reps=n_reps, base_seed=GRID_BASE_SEED, use_cache=True)
 
 
-def assert_grid_invariants(cells: dict[tuple, CellStats], tol: float = 0.08) -> None:
+def assert_grid_invariants(cells: dict[tuple, CellStats]) -> None:
     # X1 spec §4: monotone power/width in T and IC up to MC noise; size ~5% at IC=0.
     for half_life in HALF_LIFE_GRID:
         for sizing in SIZING_GRID:
             for tier in TIER_GRID:
                 # Monotone in T at the top IC (power should not fall as T grows).
                 top_ic = IC_GRID[-1]
-                powers_t = [cells[(top_ic, half_life, sizing, T, tier)].analytics["alpha_ols"].power
-                            for T in T_GRID]
-                for earlier, later in zip(powers_t, powers_t[1:]):
-                    if later < earlier - tol:
+                stats_t = [cells[(top_ic, half_life, sizing, T, tier)].analytics["alpha_ols"]
+                           for T in T_GRID]
+                for earlier, later in zip(stats_t, stats_t[1:]):
+                    # X1 spec §4.3: "up to MC noise" — quantified by the cells' own Wilson half-widths
+                    if later.power < earlier.power - (earlier.wilson_hw + later.wilson_hw):
                         raise AssertionError(
                             f"power fell in T at ic={top_ic}, hl={half_life}, sz={sizing}, tier={tier}"
                         )
                 # Monotone in IC at the top T.
-                powers_ic = [cells[(ic, half_life, sizing, T_MAX, tier)].analytics["alpha_ols"].power
-                             for ic in IC_GRID]
-                for earlier, later in zip(powers_ic, powers_ic[1:]):
-                    if later < earlier - tol:
+                stats_ic = [cells[(ic, half_life, sizing, T_MAX, tier)].analytics["alpha_ols"]
+                            for ic in IC_GRID]
+                for earlier, later in zip(stats_ic, stats_ic[1:]):
+                    # X1 spec §4.3: "up to MC noise" — quantified by the cells' own Wilson half-widths
+                    if later.power < earlier.power - (earlier.wilson_hw + later.wilson_hw):
                         raise AssertionError(
                             f"power fell in IC at hl={half_life}, sz={sizing}, tier={tier}"
                         )
                 # Size ~5% at IC=0 (false-alarm rate, not power).
-                size = cells[(0.0, half_life, sizing, T_MAX, tier)].analytics["alpha_ols"].power
-                if size > 0.20:
+                size_cell = cells[(0.0, half_life, sizing, T_MAX, tier)].analytics["alpha_ols"]
+                size = size_cell.power
+                if abs(size - 0.05) > SIZE_TOL_SYSTEMATIC + size_cell.wilson_hw:
                     raise AssertionError(
-                        f"size too high at IC=0: {size:.3f} (hl={half_life}, sz={sizing}, tier={tier})"
+                        f"size off 5% at IC=0: {size:.3f} (hl={half_life}, sz={sizing}, tier={tier})"
                     )
     # Band contains point everywhere.
     for key, cell in cells.items():

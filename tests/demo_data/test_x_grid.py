@@ -30,8 +30,15 @@ def test_run_config_yields_all_t_and_tier_cells():
     # P-tier unlocks trade-level analytics; R/E do not carry them.
     p_cell = next(c for c in cells if c.T == 120 and c.tier == "P")
     r_cell = next(c for c in cells if c.T == 120 and c.tier == "R")
+    e_cell = next(c for c in cells if c.T == 120 and c.tier == "E")
     assert "hit_rate" in p_cell.analytics and "sizing_slope" in p_cell.analytics
     assert "hit_rate" not in r_cell.analytics
+    # X1 §3.2: posterior scored at R/E only, and E uses pinned (not OLS) inputs, so
+    # the R->E degradation signal shows up as a distinct posterior band.
+    assert "alpha_posterior" not in p_cell.analytics
+    r_post = r_cell.analytics["alpha_posterior"]
+    e_post = e_cell.analytics["alpha_posterior"]
+    assert (r_post.point, r_post.lo, r_post.hi) != (e_post.point, e_post.lo, e_post.hi)
 
 
 def test_power_monotone_in_ic_for_alpha_on_a_small_grid():
