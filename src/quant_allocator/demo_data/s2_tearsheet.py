@@ -23,6 +23,8 @@ MANAGER_CODE = "M07"
 STRATEGY = "equity_long_short"
 MANAGER_MONTHS = 48
 N_ASSETS = 300
+# NUMERICS-GATE D-19: demo-construction config chosen so the alt-beta chip fires and
+# de-smoothed Sharpe drops (like B1's M5 seed); _scan_manager_seeds is the recovery helper.
 MANAGER_IC = 0.05
 MANAGER_HALF_LIFE = 6.0
 MANAGER_SEED = 5

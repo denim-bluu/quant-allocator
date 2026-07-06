@@ -44,6 +44,15 @@ def test_desmoothed_sharpe_not_above_reported(tmp_path):
     )
 
 
+def test_drawdown_envelope_ordering(tmp_path):
+    # Deeper drawdown at higher band level: p50 >= p95 >= p99 pointwise (all <= 0).
+    data = _load(s2_tearsheet.build(out_dir=tmp_path))
+    dd = data["drawdown_band"]
+    for p50, p95, p99 in zip(dd["p50"], dd["p95"], dd["p99"]):
+        assert p50 >= p95 >= p99
+        assert p50 <= 0.0
+
+
 def test_byte_for_byte_determinism_and_matches_committed(tmp_path):
     first = s2_tearsheet.build(out_dir=tmp_path).read_bytes()
     second = s2_tearsheet.build(out_dir=tmp_path).read_bytes()
