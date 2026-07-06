@@ -24,6 +24,7 @@ MPPM_RHO = 3.0
 ALPHA_CI_LEVEL = 0.90
 SHARPE_CI_LEVEL = 0.95
 PIPELINE_SEED = 20260706
+DRAWDOWN_PATHS = 2000
 
 
 @dataclass(frozen=True)
@@ -292,3 +293,63 @@ def mppm(returns, rf, rho=MPPM_RHO) -> float:
     ratio = (1.0 + returns) / (1.0 + rf)
     inner = np.mean(ratio ** (1.0 - rho))
     return float(np.log(inner) / ((1.0 - rho) * dt))
+
+
+@dataclass(frozen=True)
+class DrawdownHypothesis:
+    sharpe_annual: float
+    vol_annual: float
+
+
+@dataclass(frozen=True)
+class DrawdownBand:
+    realized: np.ndarray
+    p50: np.ndarray
+    p95: np.ndarray
+    p99: np.ndarray
+    breaches_p99: bool
+    ar1: float
+
+
+def _drawdown_path(returns: np.ndarray) -> np.ndarray:
+    # Running drawdown of the compounded wealth path (<= 0 everywhere).
+    wealth = np.cumprod(1.0 + returns)
+    peak = np.maximum.accumulate(wealth)
+    return wealth / peak - 1.0
+
+
+def drawdown_band(returns, hypothesis, *, n_paths=DRAWDOWN_PATHS, seed=PIPELINE_SEED) -> DrawdownBand:
+    # S2 spec §3.6, M3-lite: Monte Carlo the maintained hypothesis (Sharpe, de-smoothed
+    # vol, fitted AR(1)) to get the null drawdown envelope at the 50/95/99th percentiles.
+    returns = np.asarray(returns, dtype=float)
+    t = len(returns)
+    realized = _drawdown_path(returns)
+
+    centered = returns - returns.mean()
+    denom = float(centered[:-1] @ centered[:-1])
+    ar1 = float(centered[1:] @ centered[:-1] / denom) if denom > 0 else 0.0
+    ar1 = float(np.clip(ar1, -0.99, 0.99))
+
+    vol_monthly = hypothesis.vol_annual / np.sqrt(MONTHS_PER_YEAR)
+    mean_monthly = hypothesis.sharpe_annual / np.sqrt(MONTHS_PER_YEAR) * vol_monthly
+    innovation_sd = vol_monthly * np.sqrt(1.0 - ar1**2)
+
+    rng = np.random.default_rng([seed, 7])
+    troughs = np.empty((n_paths, t))
+    for i in range(n_paths):
+        path = np.empty(t)
+        prev = 0.0  # AR(1) deviation from the mean
+        for k in range(t):
+            eps = rng.normal(0.0, innovation_sd)
+            dev = ar1 * prev + eps
+            path[k] = mean_monthly + dev
+            prev = dev
+        troughs[i] = _drawdown_path(path)
+
+    p50 = np.percentile(troughs, 50, axis=0)
+    p95 = np.percentile(troughs, 5, axis=0)   # 95th-pct DEEP drawdown = 5th pct of a <=0 series
+    p99 = np.percentile(troughs, 1, axis=0)   # 99th-pct deep drawdown = 1st pct
+    breaches = bool(np.any(realized < p99))
+    return DrawdownBand(
+        realized=realized, p50=p50, p95=p95, p99=p99, breaches_p99=breaches, ar1=ar1
+    )
