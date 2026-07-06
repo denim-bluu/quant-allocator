@@ -1,0 +1,444 @@
+{
+  "groups": [
+    {
+      "group": "A",
+      "mu_hat_annual": 0.09162,
+      "n": 10,
+      "tau_hat_annual": 0.106863
+    },
+    {
+      "group": "B",
+      "mu_hat_annual": 0.078049,
+      "n": 10,
+      "tau_hat_annual": 0.057195
+    }
+  ],
+  "managers": [
+    {
+      "advisory_band": "review",
+      "code": "A01",
+      "group": "A",
+      "months": 36,
+      "ols_alpha": {
+        "ci_hi": 0.0145,
+        "ci_lo": -0.16291,
+        "point": -0.074205
+      },
+      "ols_rank": 20,
+      "posterior_alpha": {
+        "ci_hi": 0.038647,
+        "ci_lo": -0.119738,
+        "point": -0.040546
+      },
+      "posterior_rank": 20,
+      "prob_positive": 0.199852,
+      "shrinkage_weight": 0.79702,
+      "true_alpha_annual": -0.031439
+    },
+    {
+      "advisory_band": "minimum",
+      "code": "A02",
+      "group": "A",
+      "months": 48,
+      "ols_alpha": {
+        "ci_hi": 0.071634,
+        "ci_lo": -0.065752,
+        "point": 0.002941
+      },
+      "ols_rank": 16,
+      "posterior_alpha": {
+        "ci_hi": 0.078671,
+        "ci_lo": -0.049291,
+        "point": 0.01469
+      },
+      "posterior_rank": 18,
+      "prob_positive": 0.64716,
+      "shrinkage_weight": 0.867509,
+      "true_alpha_annual": -0.027593
+    },
+    {
+      "advisory_band": "standard",
+      "code": "A03",
+      "group": "A",
+      "months": 60,
+      "ols_alpha": {
+        "ci_hi": 0.098682,
+        "ci_lo": -0.046201,
+        "point": 0.02624
+      },
+      "ols_rank": 13,
+      "posterior_alpha": {
+        "ci_hi": 0.102709,
+        "ci_lo": -0.031244,
+        "point": 0.035733
+      },
+      "posterior_rank": 14,
+      "prob_positive": 0.809905,
+      "shrinkage_weight": 0.854811,
+      "true_alpha_annual": 0.037219
+    },
+    {
+      "advisory_band": "minimum",
+      "code": "A04",
+      "group": "A",
+      "months": 36,
+      "ols_alpha": {
+        "ci_hi": 0.09473,
+        "ci_lo": -0.092065,
+        "point": 0.001332
+      },
+      "ols_rank": 17,
+      "posterior_alpha": {
+        "ci_hi": 0.103688,
+        "ci_lo": -0.061266,
+        "point": 0.021211
+      },
+      "posterior_rank": 17,
+      "prob_positive": 0.663858,
+      "shrinkage_weight": 0.77983,
+      "true_alpha_annual": 0.032779
+    },
+    {
+      "advisory_band": "standard",
+      "code": "A05",
+      "group": "A",
+      "months": 48,
+      "ols_alpha": {
+        "ci_hi": 0.103302,
+        "ci_lo": -0.064056,
+        "point": 0.019623
+      },
+      "ols_rank": 14,
+      "posterior_alpha": {
+        "ci_hi": 0.108479,
+        "ci_lo": -0.042629,
+        "point": 0.032925
+      },
+      "posterior_rank": 15,
+      "prob_positive": 0.763249,
+      "shrinkage_weight": 0.815241,
+      "true_alpha_annual": 0.028762
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "A06",
+      "group": "A",
+      "months": 60,
+      "ols_alpha": {
+        "ci_hi": 0.181494,
+        "ci_lo": 0.057333,
+        "point": 0.119413
+      },
+      "ols_rank": 7,
+      "posterior_alpha": {
+        "ci_hi": 0.174868,
+        "ci_lo": 0.057794,
+        "point": 0.116331
+      },
+      "posterior_rank": 7,
+      "prob_positive": 0.99946,
+      "shrinkage_weight": 0.889096,
+      "true_alpha_annual": 0.120165
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "A07",
+      "group": "A",
+      "months": 36,
+      "ols_alpha": {
+        "ci_hi": 0.255428,
+        "ci_lo": 0.099254,
+        "point": 0.177341
+      },
+      "ols_rank": 4,
+      "posterior_alpha": {
+        "ci_hi": 0.234574,
+        "ci_lo": 0.09185,
+        "point": 0.163212
+      },
+      "posterior_rank": 3,
+      "prob_positive": 0.999916,
+      "shrinkage_weight": 0.835175,
+      "true_alpha_annual": 0.168936
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "A08",
+      "group": "A",
+      "months": 48,
+      "ols_alpha": {
+        "ci_hi": 0.306428,
+        "ci_lo": 0.16301,
+        "point": 0.234719
+      },
+      "ols_rank": 2,
+      "posterior_alpha": {
+        "ci_hi": 0.280698,
+        "ci_lo": 0.147905,
+        "point": 0.214301
+      },
+      "posterior_rank": 2,
+      "prob_positive": 1.0,
+      "shrinkage_weight": 0.857315,
+      "true_alpha_annual": 0.234693
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "A09",
+      "group": "A",
+      "months": 60,
+      "ols_alpha": {
+        "ci_hi": 0.177699,
+        "ci_lo": 0.05409,
+        "point": 0.115894
+      },
+      "ols_rank": 8,
+      "posterior_alpha": {
+        "ci_hi": 0.171529,
+        "ci_lo": 0.054918,
+        "point": 0.113224
+      },
+      "posterior_rank": 8,
+      "prob_positive": 0.999299,
+      "shrinkage_weight": 0.889972,
+      "true_alpha_annual": 0.136825
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "A10",
+      "group": "A",
+      "months": 36,
+      "ols_alpha": {
+        "ci_hi": 0.378566,
+        "ci_lo": 0.207243,
+        "point": 0.292904
+      },
+      "ols_rank": 1,
+      "posterior_alpha": {
+        "ci_hi": 0.331279,
+        "ci_lo": 0.17727,
+        "point": 0.254274
+      },
+      "posterior_rank": 1,
+      "prob_positive": 1.0,
+      "shrinkage_weight": 0.808082,
+      "true_alpha_annual": 0.239297
+    },
+    {
+      "advisory_band": "minimum",
+      "code": "B01",
+      "group": "B",
+      "months": 36,
+      "ols_alpha": {
+        "ci_hi": 0.042898,
+        "ci_lo": -0.11351,
+        "point": -0.035306
+      },
+      "ols_rank": 19,
+      "posterior_alpha": {
+        "ci_hi": 0.071154,
+        "ci_lo": -0.049123,
+        "point": 0.011015
+      },
+      "posterior_rank": 19,
+      "prob_positive": 0.618401,
+      "shrinkage_weight": 0.591361,
+      "true_alpha_annual": -0.022134
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "B02",
+      "group": "B",
+      "months": 48,
+      "ols_alpha": {
+        "ci_hi": 0.129749,
+        "ci_lo": -0.012089,
+        "point": 0.05883
+      },
+      "ols_rank": 12,
+      "posterior_alpha": {
+        "ci_hi": 0.122425,
+        "ci_lo": 0.009164,
+        "point": 0.065795
+      },
+      "posterior_rank": 12,
+      "prob_positive": 0.971999,
+      "shrinkage_weight": 0.637644,
+      "true_alpha_annual": 0.037986
+    },
+    {
+      "advisory_band": "standard",
+      "code": "B03",
+      "group": "B",
+      "months": 60,
+      "ols_alpha": {
+        "ci_hi": 0.066589,
+        "ci_lo": -0.068617,
+        "point": -0.001014
+      },
+      "ols_rank": 18,
+      "posterior_alpha": {
+        "ci_hi": 0.080809,
+        "ci_lo": -0.028989,
+        "point": 0.02591
+      },
+      "posterior_rank": 16,
+      "prob_positive": 0.781212,
+      "shrinkage_weight": 0.659468,
+      "true_alpha_annual": -0.015799
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "B04",
+      "group": "B",
+      "months": 36,
+      "ols_alpha": {
+        "ci_hi": 0.138001,
+        "ci_lo": -0.019059,
+        "point": 0.059471
+      },
+      "ols_rank": 11,
+      "posterior_alpha": {
+        "ci_hi": 0.127387,
+        "ci_lo": 0.006813,
+        "point": 0.0671
+      },
+      "posterior_rank": 11,
+      "prob_positive": 0.966431,
+      "shrinkage_weight": 0.589346,
+      "true_alpha_annual": 0.042317
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "B05",
+      "group": "B",
+      "months": 48,
+      "ols_alpha": {
+        "ci_hi": 0.094481,
+        "ci_lo": -0.071199,
+        "point": 0.011641
+      },
+      "ols_rank": 15,
+      "posterior_alpha": {
+        "ci_hi": 0.102816,
+        "ci_lo": -0.021528,
+        "point": 0.040644
+      },
+      "posterior_rank": 13,
+      "prob_positive": 0.858881,
+      "shrinkage_weight": 0.563261,
+      "true_alpha_annual": 0.027439
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "B06",
+      "group": "B",
+      "months": 60,
+      "ols_alpha": {
+        "ci_hi": 0.142951,
+        "ci_lo": 0.019221,
+        "point": 0.081086
+      },
+      "ols_rank": 10,
+      "posterior_alpha": {
+        "ci_hi": 0.13186,
+        "ci_lo": 0.028479,
+        "point": 0.08017
+      },
+      "posterior_rank": 10,
+      "prob_positive": 0.994631,
+      "shrinkage_weight": 0.698112,
+      "true_alpha_annual": 0.101007
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "B07",
+      "group": "B",
+      "months": 36,
+      "ols_alpha": {
+        "ci_hi": 0.247593,
+        "ci_lo": 0.066986,
+        "point": 0.15729
+      },
+      "ols_rank": 5,
+      "posterior_alpha": {
+        "ci_hi": 0.184438,
+        "ci_lo": 0.054143,
+        "point": 0.119291
+      },
+      "posterior_rank": 5,
+      "prob_positive": 0.998702,
+      "shrinkage_weight": 0.520458,
+      "true_alpha_annual": 0.169254
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "B08",
+      "group": "B",
+      "months": 48,
+      "ols_alpha": {
+        "ci_hi": 0.183319,
+        "ci_lo": 0.046796,
+        "point": 0.115058
+      },
+      "ols_rank": 9,
+      "posterior_alpha": {
+        "ci_hi": 0.157543,
+        "ci_lo": 0.047044,
+        "point": 0.102294
+      },
+      "posterior_rank": 9,
+      "prob_positive": 0.998838,
+      "shrinkage_weight": 0.655101,
+      "true_alpha_annual": 0.112579
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "B09",
+      "group": "B",
+      "months": 60,
+      "ols_alpha": {
+        "ci_hi": 0.200062,
+        "ci_lo": 0.07476,
+        "point": 0.137411
+      },
+      "ols_rank": 6,
+      "posterior_alpha": {
+        "ci_hi": 0.171319,
+        "ci_lo": 0.067027,
+        "point": 0.119173
+      },
+      "posterior_rank": 6,
+      "prob_positive": 0.999915,
+      "shrinkage_weight": 0.692761,
+      "true_alpha_annual": 0.132909
+    },
+    {
+      "advisory_band": "conviction",
+      "code": "B10",
+      "group": "B",
+      "months": 36,
+      "ols_alpha": {
+        "ci_hi": 0.29832,
+        "ci_lo": 0.093736,
+        "point": 0.196028
+      },
+      "ols_rank": 3,
+      "posterior_alpha": {
+        "ci_hi": 0.201357,
+        "ci_lo": 0.062867,
+        "point": 0.132112
+      },
+      "posterior_rank": 4,
+      "prob_positive": 0.99915,
+      "shrinkage_weight": 0.45824,
+      "true_alpha_annual": 0.18089
+    }
+  ],
+  "meta": {
+    "credible_level": 0.9,
+    "generator": "s1_ledger",
+    "n_groups": 2,
+    "n_managers": 20
+  }
+}

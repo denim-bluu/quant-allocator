@@ -1,0 +1,365 @@
+{
+  "delta_table": {
+    "beta_market": 0.1,
+    "beta_momentum": 0.1,
+    "beta_value": 0.1,
+    "net": 0.05
+  },
+  "exposure_paths": {
+    "beta_market": [
+      {
+        "month": "2020-01",
+        "value": 0.180621
+      },
+      {
+        "month": "2020-02",
+        "value": 0.180715
+      },
+      {
+        "month": "2020-03",
+        "value": 0.16676
+      },
+      {
+        "month": "2020-04",
+        "value": 0.131919
+      },
+      {
+        "month": "2020-05",
+        "value": 0.122278
+      },
+      {
+        "month": "2020-06",
+        "value": 0.119859
+      },
+      {
+        "month": "2020-07",
+        "value": 0.181997
+      },
+      {
+        "month": "2020-08",
+        "value": 0.176185
+      },
+      {
+        "month": "2020-09",
+        "value": 0.046417
+      },
+      {
+        "month": "2020-10",
+        "value": 0.129795
+      },
+      {
+        "month": "2020-11",
+        "value": 0.146123
+      },
+      {
+        "month": "2020-12",
+        "value": 0.161289
+      },
+      {
+        "month": "2021-01",
+        "value": 0.199776
+      },
+      {
+        "month": "2021-02",
+        "value": 0.224211
+      },
+      {
+        "month": "2021-03",
+        "value": 0.233381
+      },
+      {
+        "month": "2021-04",
+        "value": 0.261935
+      },
+      {
+        "month": "2021-05",
+        "value": 0.199835
+      },
+      {
+        "month": "2021-06",
+        "value": 0.177447
+      }
+    ],
+    "beta_momentum": [
+      {
+        "month": "2020-01",
+        "value": -0.045167
+      },
+      {
+        "month": "2020-02",
+        "value": -0.045583
+      },
+      {
+        "month": "2020-03",
+        "value": -0.008251
+      },
+      {
+        "month": "2020-04",
+        "value": -0.213513
+      },
+      {
+        "month": "2020-05",
+        "value": -0.040742
+      },
+      {
+        "month": "2020-06",
+        "value": 0.03121
+      },
+      {
+        "month": "2020-07",
+        "value": -0.025409
+      },
+      {
+        "month": "2020-08",
+        "value": 0.019562
+      },
+      {
+        "month": "2020-09",
+        "value": -0.006605
+      },
+      {
+        "month": "2020-10",
+        "value": -0.010528
+      },
+      {
+        "month": "2020-11",
+        "value": -0.101744
+      },
+      {
+        "month": "2020-12",
+        "value": -0.061123
+      },
+      {
+        "month": "2021-01",
+        "value": -0.076694
+      },
+      {
+        "month": "2021-02",
+        "value": -0.060764
+      },
+      {
+        "month": "2021-03",
+        "value": -0.123874
+      },
+      {
+        "month": "2021-04",
+        "value": 0.005203
+      },
+      {
+        "month": "2021-05",
+        "value": 0.035575
+      },
+      {
+        "month": "2021-06",
+        "value": 0.118271
+      }
+    ],
+    "beta_value": [
+      {
+        "month": "2020-01",
+        "value": -0.016257
+      },
+      {
+        "month": "2020-02",
+        "value": -0.045594
+      },
+      {
+        "month": "2020-03",
+        "value": 0.056233
+      },
+      {
+        "month": "2020-04",
+        "value": 0.017344
+      },
+      {
+        "month": "2020-05",
+        "value": 0.24712
+      },
+      {
+        "month": "2020-06",
+        "value": 0.300924
+      },
+      {
+        "month": "2020-07",
+        "value": -0.00783
+      },
+      {
+        "month": "2020-08",
+        "value": 0.11055
+      },
+      {
+        "month": "2020-09",
+        "value": 0.090412
+      },
+      {
+        "month": "2020-10",
+        "value": 0.190307
+      },
+      {
+        "month": "2020-11",
+        "value": 0.129285
+      },
+      {
+        "month": "2020-12",
+        "value": 0.089319
+      },
+      {
+        "month": "2021-01",
+        "value": 0.35377
+      },
+      {
+        "month": "2021-02",
+        "value": 0.058525
+      },
+      {
+        "month": "2021-03",
+        "value": -0.07809
+      },
+      {
+        "month": "2021-04",
+        "value": -0.094461
+      },
+      {
+        "month": "2021-05",
+        "value": -0.053582
+      },
+      {
+        "month": "2021-06",
+        "value": -0.192063
+      }
+    ],
+    "net": [
+      {
+        "month": "2020-01",
+        "value": 0.2
+      },
+      {
+        "month": "2020-02",
+        "value": 0.2
+      },
+      {
+        "month": "2020-03",
+        "value": 0.2
+      },
+      {
+        "month": "2020-04",
+        "value": 0.2
+      },
+      {
+        "month": "2020-05",
+        "value": 0.2
+      },
+      {
+        "month": "2020-06",
+        "value": 0.2
+      },
+      {
+        "month": "2020-07",
+        "value": 0.2
+      },
+      {
+        "month": "2020-08",
+        "value": 0.2
+      },
+      {
+        "month": "2020-09",
+        "value": 0.2
+      },
+      {
+        "month": "2020-10",
+        "value": 0.2
+      },
+      {
+        "month": "2020-11",
+        "value": 0.2
+      },
+      {
+        "month": "2020-12",
+        "value": 0.2
+      },
+      {
+        "month": "2021-01",
+        "value": 0.2
+      },
+      {
+        "month": "2021-02",
+        "value": 0.2
+      },
+      {
+        "month": "2021-03",
+        "value": 0.2
+      },
+      {
+        "month": "2021-04",
+        "value": 0.2
+      },
+      {
+        "month": "2021-05",
+        "value": 0.2
+      },
+      {
+        "month": "2021-06",
+        "value": 0.2
+      }
+    ]
+  },
+  "meta": {
+    "generator": "m5_saydo",
+    "horizon_months": 6,
+    "manager_code": "M07",
+    "strategy": "equity_long_short"
+  },
+  "views": [
+    {
+      "conviction": 3,
+      "direction": "neutral-explicit",
+      "horizon_months": 6,
+      "instrument": "net",
+      "label": "aligned",
+      "letter_date": "2020-04",
+      "measured": {
+        "delta": 0.05,
+        "end": 0.2,
+        "move": 0.0,
+        "start": 0.2
+      },
+      "quote": "We continue to run the book at our disciplined net exposure and have not chased the rally.",
+      "theme": "disciplined net exposure",
+      "view_id": 1
+    },
+    {
+      "conviction": 2,
+      "direction": "long/constructive",
+      "horizon_months": 6,
+      "instrument": "beta_value",
+      "label": "aligned",
+      "letter_date": "2020-04",
+      "measured": {
+        "delta": 0.1,
+        "end": 0.190307,
+        "move": 0.172963,
+        "start": 0.017344
+      },
+      "quote": "We have leaned further into cheaper, higher-quality names, adding to our value tilt over the coming two quarters.",
+      "theme": "value factor tilt",
+      "view_id": 2
+    },
+    {
+      "conviction": 2,
+      "direction": "short/cautious",
+      "horizon_months": 6,
+      "instrument": "beta_momentum",
+      "label": "contradicted",
+      "letter_date": "2020-04",
+      "measured": {
+        "delta": 0.1,
+        "end": -0.010528,
+        "move": 0.202985,
+        "start": -0.213513
+      },
+      "quote": "Given how crowded momentum has become, we have been trimming our exposure to the factor and expect to stay cautious.",
+      "theme": "trimmed momentum risk",
+      "view_id": 3
+    }
+  ]
+}
