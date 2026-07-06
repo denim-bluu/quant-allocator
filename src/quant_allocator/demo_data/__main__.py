@@ -14,9 +14,13 @@ from pathlib import Path
 
 
 def _builders() -> dict[str, Callable[[], Path]]:
-    from quant_allocator.demo_data import m5_saydo, s1_ledger
+    from quant_allocator.demo_data import m5_saydo, s1_ledger, s2_tearsheet
 
-    return {"m5_saydo": m5_saydo.build, "s1_ledger": s1_ledger.build}
+    return {
+        "m5_saydo": m5_saydo.build,
+        "s1_ledger": s1_ledger.build,
+        "s2_tearsheet": s2_tearsheet.build,
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
