@@ -1,0 +1,57 @@
+{% extends "demo.html.j2" %}
+
+{% block demo_content %}
+<article class="pack-page ladder">
+  <p class="ladder__intro">Transparency is granted, not owed. Every rung below pairs an ask with what the manager receives back, and with the statistical reason the ask exists — the ask is justified by the math, not by suspicion.</p>
+
+  <section class="ladder-rung">
+    <h2 class="ladder-rung__heading">Rung 1 — Monthly returns <span class="ladder-rung__scope">(every manager, default)</span></h2>
+    <dl class="ladder-rung__body">
+      <dt>The ask</dt>
+      <dd>Monthly net returns, delivered timely.</dd>
+      <dt>In return</dt>
+      <dd>Our uncertainty-honest tear sheet of the manager — what we can and cannot conclude at their track length, stated plainly.</dd>
+      <dt>Why the math asks</dt>
+      <dd>At 36–60 months, returns support interval statements about Sharpe and factor mix, and little else; we will not pretend otherwise.</dd>
+    </dl>
+  </section>
+
+  <section class="ladder-rung">
+    <h2 class="ladder-rung__heading">Rung 2 — Exposure summaries <span class="ladder-rung__scope">(Open Protocol-aligned)</span></h2>
+    <dl class="ladder-rung__body">
+      <dt>The ask</dt>
+      <dd>Monthly factor, sector, gross and net buckets in the industry-standard Open Protocol format.</dd>
+      <dt>In return</dt>
+      <dd>A peer-relative factor-hygiene pack and drift review, framed as help — the manager sees everything we compute.</dd>
+      <dt>Why the math asks</dt>
+      <dd>Returns alone cannot separate skill from style at this sample size; measured exposures pin the betas, which tightens the alpha interval — a question both sides want answered.</dd>
+    </dl>
+  </section>
+
+  <section class="ladder-rung">
+    <h2 class="ladder-rung__heading">Rung 3 — Positions <span class="ladder-rung__scope">(quarterly lag acceptable)</span></h2>
+    <dl class="ladder-rung__body">
+      <dt>The ask</dt>
+      <dd>Position files, ideally with trade dates.</dd>
+      <dt>In return</dt>
+      <dd>The sizing and exit-timing diagnostics platforms give their own PMs — adjustable outputs, the manager keeps interpretive control.</dd>
+      <dt>Why the math asks</dt>
+      <dd>Sizing and exit skill are only measurable at position level; below this rung those analytics refuse to render rather than fake a number.</dd>
+    </dl>
+  </section>
+
+  <section class="ladder-standing">
+    <h2 class="ladder-standing__heading">Standing rules</h2>
+    <ul>
+      <li>An escalation is only made with a stated question attached, never as standing surveillance.</li>
+      <li>The manager sees every analytic computed on rung-2-or-higher data.</li>
+      <li>Asks are contractual and reciprocal.</li>
+      <li>A declined ask is recorded and respected, not punished.</li>
+    </ul>
+  </section>
+</article>
+{% endblock %}
+
+{% block methodology %}
+<p>This ladder operationalizes the trust-preserving escalation doctrine: each rung's ask is justified by what the statistics can and cannot resolve at the available sample, and each ask is paired with reciprocal value returned to the manager.</p>
+{% endblock %}

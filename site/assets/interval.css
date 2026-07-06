@@ -1,0 +1,380 @@
+/* Labels: 10px uppercase, +0.10em tracking (demo-layer spec typography). */
+.interval-stat__label,
+.power-gate__title,
+.tier-badge,
+.synthetic-badge,
+.card-tile__wave,
+.golive-box dt {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+}
+
+/* Cards: 8px radius, 1px hairline, no shadows. */
+.card-tile,
+.golive-box,
+.power-gate,
+.interval-stat {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+/* IntervalStat: point + rail + range text. */
+.interval-stat {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  background: var(--paper);
+}
+
+.interval-stat__value {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.interval-stat__rail {
+  position: relative;
+  height: 4px;
+  background: var(--track);
+  border-radius: 2px;
+}
+
+.interval-stat__band {
+  position: absolute;
+  top: 0;
+  height: 4px;
+  background: var(--band);
+  border-radius: 2px;
+}
+
+.interval-stat__point {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 10px;
+  background: var(--accent);
+}
+
+.interval-stat__range {
+  font-size: 12px;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.interval-stat[data-verdict="shrink"] .interval-stat__point {
+  background: var(--warn);
+}
+
+.interval-stat[data-verdict="noise"] .interval-stat__point {
+  background: var(--dim);
+}
+
+/* PowerGate: dashed empty-state, dim only, no accent inside. */
+.power-gate {
+  border-style: dashed;
+  border-color: var(--dim);
+  padding: 14px;
+  color: var(--dim);
+  background: transparent;
+}
+
+.power-gate__reason {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--dim);
+}
+
+/* TierBadge: 1px solid line, letter + optional label. */
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--dim);
+}
+
+/* VerdictChip: outline chips, transparent bg. */
+.verdict-chip {
+  display: inline-flex;
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 11px;
+  text-transform: lowercase;
+}
+
+.verdict-chip[data-verdict="robust"] {
+  color: var(--accent);
+}
+
+.verdict-chip[data-verdict="shrink"] {
+  color: var(--warn);
+}
+
+.verdict-chip[data-verdict="noise"] {
+  color: var(--dim);
+}
+
+/* SyntheticBadge: fixed top-right, warn outline chip. */
+.synthetic-badge {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 50;
+  padding: 3px 8px;
+  border: 1px solid var(--warn);
+  border-radius: 4px;
+  color: var(--warn);
+  background: var(--paper);
+}
+
+/* GoLiveBox: three labeled fields. */
+.golive-box {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+  padding: 14px 16px;
+  margin: 20px 0;
+}
+
+.golive-box dt {
+  align-self: center;
+}
+
+.golive-box dd {
+  margin: 0;
+  color: var(--ink);
+}
+
+/* UsageNote: doctrine-card replacement for the go-live box. */
+.usage-note {
+  border-left: 3px solid var(--accent);
+  padding: 8px 16px;
+  margin: 20px 0;
+}
+
+/* Header / banner / footer. */
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header__title {
+  font-weight: 600;
+}
+
+.site-nav {
+  margin-left: auto;
+}
+
+.theme-toggle {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.site-banner {
+  padding: 6px 20px;
+  font-size: 12px;
+  color: var(--dim);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.site-footer {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+
+.skip-link:focus {
+  left: 8px;
+  top: 8px;
+}
+
+/* Index tiles. */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.card-tile {
+  display: block;
+  padding: 16px;
+  background: var(--paper);
+  color: inherit;
+  text-decoration: none;
+}
+
+.card-tile--planned {
+  opacity: 0.55;
+}
+
+.card-tile__title {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.card-tile__oneliner {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.card-tile__meta,
+.card-tile__tiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.card-tile__tiers {
+  margin-top: 8px;
+}
+
+.decision-chip {
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--dim);
+}
+
+.card-tile__wave {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 2px 6px;
+  border: 1px solid var(--warn);
+  border-radius: 4px;
+  color: var(--warn);
+}
+
+/* Demo page + badge row. */
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.spec-link {
+  margin-top: 24px;
+}
+
+/* Pack / ladder (print showcase). */
+.pack-page {
+  max-width: 720px;
+}
+
+.ladder-rung {
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+
+.ladder-rung__heading {
+  font-size: 17px;
+}
+
+.ladder-rung__scope {
+  color: var(--dim);
+  font-weight: 400;
+}
+
+.ladder-rung__body dt {
+  margin-top: 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+}
+
+.ladder-rung__body dd {
+  margin: 2px 0 0;
+}
+
+.ladder-standing {
+  margin-top: 24px;
+}
+
+/* Tables scroll inside their own overflow container. */
+.spec-page__body table,
+.demo-page table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.spec-page__body th,
+.spec-page__body td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+}
+
+/* Accessibility. */
+a:focus-visible,
+button:focus-visible,
+.card-tile:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Print: hide nav + toggle; provenance survives paper. */
+@media print {
+  .site-nav,
+  .theme-toggle,
+  .skip-link {
+    display: none !important;
+  }
+
+  .site-banner {
+    display: block !important;
+  }
+
+  .synthetic-badge {
+    position: static;
+    display: inline-block !important;
+  }
+
+  .pack-page section {
+    break-inside: avoid;
+  }
+
+  @page {
+    margin: 18mm;
+  }
+}

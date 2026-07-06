@@ -1,0 +1,29 @@
+{% extends "base.html.j2" %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/katex/katex.min.css">
+{% endblock %}
+
+{% block content %}
+<article class="spec-page">
+  <a class="spec-page__back" href="{{ asset_base | default('') }}index.html">← Gallery</a>
+  <div class="spec-page__body">
+    {{ spec_html | safe }}
+  </div>
+</article>
+{% endblock %}
+
+{% block body_scripts %}
+<script defer src="{{ asset_base | default('') }}assets/katex/katex.min.js"></script>
+<script defer src="{{ asset_base | default('') }}assets/katex/contrib/auto-render.min.js"></script>
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false }
+      ]
+    });
+  });
+</script>
+{% endblock %}

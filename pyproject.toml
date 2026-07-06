@@ -5,8 +5,11 @@ description = "Public-data adapters and synthetic-manager simulator for allocato
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "jinja2>=3.1.6",
+    "markdown>=3.10.2",
     "numpy>=2.4.6",
     "pandas>=3.0.3",
+    "pyyaml>=6.0.3",
 ]
 
 [dependency-groups]

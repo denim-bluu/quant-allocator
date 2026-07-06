@@ -1,0 +1,144 @@
+- id: s1
+  title: Hierarchical Bayesian alpha engine
+  lane: S
+  one_liner: Posterior alpha across the roster — rank on skill, not luck.
+  decisions: [select, size]
+  tiers: [R, E, P]
+  status: planned
+- id: s2
+  title: Uncertainty-honest tear-sheet engine
+  lane: S
+  one_liner: Every statistic as an interval with a verdict — honest by construction.
+  decisions: [monitor, select]
+  tiers: [R, E, P]
+  status: planned
+- id: s3
+  title: Sizing & alpha-decay lab
+  lane: S
+  one_liner: Picking, sizing, or holding? Trade-level event studies, power-gated.
+  decisions: [size, select]
+  tiers: [P, E]
+  status: planned
+- id: s4
+  title: Sell-discipline diagnostic
+  lane: S
+  one_liner: Where the edge leaks — exit timing vs a random-sell counterfactual.
+  decisions: [engage, monitor]
+  tiers: [P, E]
+  status: planned
+- id: s5
+  title: Short-book quality score
+  lane: S
+  one_liner: Is short alpha real, or just an expensive beta hedge?
+  decisions: [size, redeem]
+  tiers: [P, E, R]
+  status: planned
+- id: s6
+  title: Returns-only sizing & decay signatures
+  lane: S
+  one_liner: Can monthly returns alone reveal sizing or decay? A pre-registered test.
+  decisions: [monitor, select]
+  tiers: [R]
+  status: planned
+- id: m1
+  title: Exposure hygiene & drift monitor
+  lane: M
+  one_liner: Does the book respect its stated bands, or is drift creeping in?
+  decisions: [monitor, engage]
+  tiers: [E, P, R]
+  status: planned
+- id: m2
+  title: Hidden-convexity / short-vol screen
+  lane: M
+  one_liner: A smooth Sharpe can hide sold optionality — surface the short-vol posture.
+  decisions: [monitor, redeem]
+  tiers: [R, E, P]
+  status: planned
+- id: m3
+  title: Simulation-calibrated drawdown alarms
+  lane: M
+  one_liner: Drawdown alarms tuned to each manager's own null, not a flat rule.
+  decisions: [redeem, monitor]
+  tiers: [R, E]
+  status: planned
+- id: m4
+  title: Crowding & overlap radar
+  lane: M
+  one_liner: Is our diversification illusory — are the managers the same trade?
+  decisions: [size, monitor, redeem]
+  tiers: [P, E, R]
+  status: planned
+- id: m5
+  title: Say–do gap monitor
+  lane: M
+  one_liner: Does the portfolio match the letter? Say vs do, side by side.
+  decisions: [monitor, engage]
+  tiers: [R, E, P]
+  status: planned
+- id: m6
+  title: 13F long-book intelligence
+  lane: M
+  one_liner: Mining free quarterly 13F filings for per-manager conviction signals.
+  decisions: [monitor, engage]
+  tiers: [P]
+  status: planned
+- id: p1
+  title: Allocation under alpha uncertainty
+  lane: P
+  one_liner: Given posterior skill, how much capital? Sizing that consumes uncertainty.
+  decisions: [size, redeem]
+  tiers: [R, E, P]
+  status: planned
+- id: p2
+  title: Tiered book X-ray
+  lane: P
+  one_liner: One book-level factor view fusing managers across transparency tiers.
+  decisions: [monitor, size]
+  tiers: [R, E, P]
+  status: planned
+- id: p3
+  title: Hire/fire decision audit & journal
+  lane: P
+  one_liner: Backtest your own hire/fire timing — governance turned into data.
+  decisions: [redeem, select]
+  tiers: [R]
+  status: planned
+- id: e1
+  title: Trust-preserving transparency ladder
+  lane: E
+  one_liner: The escalating-data-ask playbook — each rung's ask, reciprocity, and math.
+  decisions: [engage]
+  tiers: [R, E, P]
+  status: live
+  doctrine: true
+  demo: pages/e1-ladder.html.j2
+  spec: e1-transparency-ladder.md
+  usage_note: One rung per relationship conversation. The 'why the math asks' line is the script.
+- id: e2
+  title: Narrated engagement-pack generator
+  lane: E
+  one_liner: One command renders a per-manager, print-clean engagement pack.
+  decisions: [engage]
+  tiers: [R, E, P]
+  status: planned
+- id: e3
+  title: Manager knowledge graph & retrieval
+  lane: E
+  one_liner: Structured memory over letters and notes, anchored to decision hooks.
+  decisions: [engage, select]
+  tiers: [R, E, P]
+  status: planned
+- id: x1
+  title: Tier & Power Atlas
+  lane: X
+  one_liner: How much data until a metric means anything — the tier & power atlas.
+  decisions: [select, monitor, engage]
+  tiers: [R, E, P]
+  status: planned
+- id: x2
+  title: Transparency playground
+  lane: X
+  one_liner: Drag the dials and watch honest claims dissolve into grey.
+  decisions: [engage]
+  tiers: [R, E, P]
+  status: planned
