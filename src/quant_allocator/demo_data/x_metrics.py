@@ -24,13 +24,13 @@ class Estimate:
     true: float
 
 
-def _ols_intercept_se(y: np.ndarray, design: np.ndarray) -> tuple[float, float, float]:
+def _ols_intercept_se(y: np.ndarray, design: np.ndarray) -> tuple[float, float]:
     coef, *_ = np.linalg.lstsq(design, y, rcond=None)
     resid = y - design @ coef
     dof = len(y) - design.shape[1]
     sigma2 = float(resid @ resid) / dof
     cov = sigma2 * np.linalg.inv(design.T @ design)
-    return float(coef[0]), float(np.sqrt(cov[0, 0])), coef
+    return float(coef[0]), float(np.sqrt(cov[0, 0]))
 
 
 def ols_alpha(returns, factors, true_alpha) -> Estimate:
@@ -38,7 +38,7 @@ def ols_alpha(returns, factors, true_alpha) -> Estimate:
     returns = np.asarray(returns, dtype=float)
     factors = np.asarray(factors, dtype=float)
     design = np.column_stack([np.ones(len(returns)), factors])
-    alpha_m, se_m, _ = _ols_intercept_se(returns, design)
+    alpha_m, se_m = _ols_intercept_se(returns, design)
     alpha_ann = alpha_m * MONTHS_PER_YEAR
     se_ann = se_m * MONTHS_PER_YEAR
     tstat = alpha_ann / se_ann if se_ann > 0 else 0.0
