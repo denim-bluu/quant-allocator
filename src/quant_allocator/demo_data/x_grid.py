@@ -11,7 +11,9 @@ NUMERICS GATE.
 from __future__ import annotations
 
 import multiprocessing as mp
+import os
 import pickle
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -38,6 +40,7 @@ N_LONG = 40
 N_SHORT = 25
 REBALANCE_FRACTION = 0.25
 CODE_VERSION = "c2"
+RUNTIME_BUDGET_SECONDS = 3000  # 50 min: margin under the one-hour ceiling (X2 spec §7).
 WILSON_Z = 1.96  # X1 spec §3.3 / §8.4: Wilson 95% interval on a MC proportion.
 # X1 spec §4.2: size within 5% +/- 1.5pp systematic; the cell's Wilson HW covers MC
 # noise on top (at N_REPS=500 the HW alone is ~1.9pp, so a bare 1.5pp gate would
@@ -256,6 +259,26 @@ def run_all_configs(n_reps=N_REPS, processes=None) -> dict[tuple, CellStats]:
 def _run_config_worker(args) -> list[CellStats]:
     cfg, n_reps = args
     return run_config(cfg, n_reps=n_reps, base_seed=GRID_BASE_SEED, use_cache=True)
+
+
+def estimate_runtime(sample_configs=2, n_reps=N_REPS, processes=None) -> dict:
+    # Measure a few configs at full reps, extrapolate to 30 configs across cores.
+    configs = base_configs()[:sample_configs]
+    start = time.perf_counter()
+    for cfg in configs:
+        run_config(cfg, n_reps=n_reps, base_seed=GRID_BASE_SEED, use_cache=False)
+    elapsed = time.perf_counter() - start
+    per_config = elapsed / max(1, len(configs))
+    total = per_config * len(base_configs())
+    procs = processes or os.cpu_count() or 1
+    wall = total / procs
+    return {
+        "per_config_seconds": per_config,
+        "projected_total_seconds": total,
+        "projected_wall_seconds": wall,
+        "processes": procs,
+        "budget_seconds": RUNTIME_BUDGET_SECONDS,
+    }
 
 
 def assert_grid_invariants(cells: dict[tuple, CellStats]) -> None:
