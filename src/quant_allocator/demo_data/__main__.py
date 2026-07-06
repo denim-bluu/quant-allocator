@@ -14,8 +14,9 @@ from pathlib import Path
 
 
 def _builders() -> dict[str, Callable[[], Path]]:
-    # Generators register here as later tasks add them (Task 4: s1_ledger, Task 6: m5_saydo).
-    return {}
+    from quant_allocator.demo_data import s1_ledger
+
+    return {"s1_ledger": s1_ledger.build}
 
 
 def main(argv: list[str] | None = None) -> int:
