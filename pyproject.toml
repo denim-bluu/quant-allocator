@@ -23,7 +23,10 @@ dev = [
 pythonpath = ["src"]
 testpaths = ["tests"]
 addopts = "-m 'not network'"
-markers = ["network: requires internet access; excluded by default"]
+markers = [
+    "network: requires internet access; excluded by default",
+    "slow: long-running grid smoke; opt in with -m slow",
+]
 
 [tool.ruff]
 line-length = 100

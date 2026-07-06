@@ -5,3 +5,4 @@ __pycache__/
 .venv/
 site/_build/
 tools/.publication_terms
+site/_grid_cache/
