@@ -1,7 +1,9 @@
 import numpy as np
 
 from quant_allocator.flagships.tearsheet.pipeline import (
+    ALPHA_CI_LEVEL,
     MONTHS_PER_YEAR,
+    _z,
     alpha_interval,
     mppm,
     regress,
@@ -52,6 +54,34 @@ def test_alpha_interval_crosses_zero_flag():
     lo, hi = stats.ci
     assert lo <= 0.0 <= hi
     assert stats.crosses_zero is True
+
+
+def test_alpha_hac_se_exceeds_residual_mean_hac_with_nonzero_mean_factor():
+    # S2 spec §3.3: the NW sandwich intercept SE must exceed the (old) residual-mean
+    # HAC SE when a factor has a large nonzero mean — the case that used to understate.
+    rng = np.random.default_rng(7)
+    T = 120
+    factor = rng.normal(0.05, 0.04, size=T)  # large positive mean
+    excess = 0.004 + 1.0 * factor + rng.normal(0.0, 0.01, size=T)
+    fit = regress(excess, factor.reshape(-1, 1), ("market",))
+
+    lag = round(T ** (1.0 / 4.0))
+    resid = fit.resid
+    centered = resid - resid.mean()
+    gamma0 = float(centered @ centered) / T
+    var = gamma0
+    for k in range(1, lag + 1):
+        weight = 1.0 - k / (lag + 1)
+        cov = float(centered[k:] @ centered[:-k]) / T
+        var += 2.0 * weight * cov
+    old_residual_mean_se = float(np.sqrt(var / T))
+
+    stats = alpha_interval(fit)
+    new_sandwich_se_annual = (stats.hac_ci[1] - stats.alpha_annual) / _z(ALPHA_CI_LEVEL)
+    new_sandwich_se_monthly = new_sandwich_se_annual / MONTHS_PER_YEAR
+
+    assert new_sandwich_se_monthly >= old_residual_mean_se
+    assert new_sandwich_se_monthly / old_residual_mean_se > 1.02
 
 
 def test_mppm_penalizes_a_manipulated_tail():

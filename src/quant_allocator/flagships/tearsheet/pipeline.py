@@ -137,6 +137,7 @@ class FactorFit:
     betas: np.ndarray
     resid: np.ndarray
     factor_names: tuple[str, ...]
+    design: np.ndarray  # [1, factors] design matrix (T×k), for the HAC intercept SE
 
 
 @dataclass(frozen=True)
@@ -176,6 +177,7 @@ def regress(excess_returns, factors, factor_names) -> FactorFit:
         betas=coef[1:].copy(),
         resid=resid,
         factor_names=tuple(factor_names),
+        design=design,
     )
 
 
@@ -190,7 +192,7 @@ def sharpe_intervals(returns, *, n_boot=BOOT_REPS, seed=PIPELINE_SEED) -> Sharpe
     se_ann = se_m * root12
     z = _z(SHARPE_CI_LEVEL)
     lo_ci = (sr_ann - z * se_ann, sr_ann + z * se_ann)
-    boot_ci = _studentized_block_bootstrap_sharpe(returns, sr_m, se_m, n_boot, seed, z)
+    boot_ci = _studentized_block_bootstrap_sharpe(returns, sr_m, se_m, n_boot, seed)
     boot_ann = (boot_ci[0] * root12, boot_ci[1] * root12)
     return SharpeStats(
         sharpe_annual=sr_ann,
@@ -201,7 +203,7 @@ def sharpe_intervals(returns, *, n_boot=BOOT_REPS, seed=PIPELINE_SEED) -> Sharpe
     )
 
 
-def _studentized_block_bootstrap_sharpe(returns, sr_hat, se_hat, n_boot, seed, z):
+def _studentized_block_bootstrap_sharpe(returns, sr_hat, se_hat, n_boot, seed):
     # S2 spec §3.3, Ledoit-Wolf (2008): studentized circular block bootstrap,
     # block length ~ T^(1/3) rounded (≈4 at T=48).
     t = len(returns)
@@ -227,7 +229,8 @@ def alpha_interval(fit, *, level=ALPHA_CI_LEVEL, n_boot=BOOT_REPS, seed=PIPELINE
     resid = fit.resid
     t = len(resid)
     lag = max(0, round(t ** (1.0 / 4.0)))
-    se_hac_monthly = _newey_west_mean_se(resid, lag)
+    # S2 spec §3.3 — NW sandwich [0,0]: residual-mean HAC understates intercept SE when factors have nonzero mean
+    se_hac_monthly = _newey_west_intercept_se(fit.design, resid, lag)
     z = _z(level)
     hac_half = z * se_hac_monthly * MONTHS_PER_YEAR
     hac_ci = (fit.alpha_annual - hac_half, fit.alpha_annual + hac_half)
@@ -245,18 +248,23 @@ def alpha_interval(fit, *, level=ALPHA_CI_LEVEL, n_boot=BOOT_REPS, seed=PIPELINE
     )
 
 
-def _newey_west_mean_se(x, lag):
-    # HAC standard error of the sample mean of x (S2 spec §3.3, Newey-West).
-    x = np.asarray(x, dtype=float)
-    t = len(x)
-    centered = x - x.mean()
-    gamma0 = float(centered @ centered) / t
-    var = gamma0
-    for k in range(1, lag + 1):
-        weight = 1.0 - k / (lag + 1)  # Bartlett kernel
-        cov = float(centered[k:] @ centered[:-k]) / t
-        var += 2.0 * weight * cov
-    return float(np.sqrt(var / t))
+def _newey_west_intercept_se(design, resid, lag):
+    # HAC (Newey-West) sandwich SE of the OLS intercept (S2 spec §3.3).
+    # X = design [1, factors] (T×k), e = OLS residuals, Q = (X'X)^-1.
+    # Gamma_j = sum_t (x_t e_t)(x_{t-j} e_{t-j})' (k×k outer products).
+    # S = Gamma_0 + sum_{j=1..lag} w_j (Gamma_j + Gamma_j'), Bartlett w_j = 1 - j/(lag+1).
+    # V = Q S Q; the monthly intercept SE is sqrt(V[0,0]).
+    x = np.asarray(design, dtype=float)
+    e = np.asarray(resid, dtype=float)
+    q = np.linalg.inv(x.T @ x)
+    scores = x * e[:, None]  # rows x_t e_t
+    s = scores.T @ scores  # Gamma_0
+    for j in range(1, lag + 1):
+        weight = 1.0 - j / (lag + 1)  # Bartlett kernel
+        gamma_j = scores[j:].T @ scores[:-j]
+        s += weight * (gamma_j + gamma_j.T)
+    v = q @ s @ q
+    return float(np.sqrt(v[0, 0]))
 
 
 def _block_bootstrap_mean_ci(resid, alpha_annual, level, n_boot, seed):
