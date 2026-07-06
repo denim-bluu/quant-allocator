@@ -478,7 +478,8 @@ X = meta / infrastructure.
 - **Scores:** seat 3 · senior 3 · public 4 · methods 3
 - **Risks & kill criteria:** Data — regulatory flux (Sweep D flags N-PORT
   cadence and 13f-2 as unstable; 13F itself is stable). Political — using
-  public filings of *unaffiliated* managers only in the repo. Vendor —
+  public filings of unaffiliated managers only in the repo — never any
+  filer with an implied relationship to the employer's roster. Vendor —
   Novus sells this (thin-build verdict): build only the interpretation layer.
 - **JD mapping:** Current: monitoring tooling. Vision: holdings literacy.
 - **Sequencing:** After 13F adapter; feeds M4's real-data rung.

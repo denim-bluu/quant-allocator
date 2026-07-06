@@ -198,7 +198,8 @@ verifiable retrieval or spec-following.**
   `/effort max` reserved for the convergence session (idea-card synthesis and
   prioritization). Effort is user-controlled via `/effort`.
 - **Compliance guardrail in every sub-agent prompt:** public sources only; no
-  employer-internal facts, manager names, or portfolio details in this repo, ever.
+  employer-internal facts, manager names, or portfolio details in this repo,
+  ever.
   The repo is treated as public at all times; Joon translates methods
   internally.
 
