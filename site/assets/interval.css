@@ -378,3 +378,309 @@ button:focus-visible,
     margin: 18mm;
   }
 }
+
+/* === S1 ledger (posterior strip) ================================= */
+.ledger-intro {
+  margin: 8px 0 20px;
+}
+
+.ledger-headline {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.ledger-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.sort-toggle {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  padding: 4px 10px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.ledger-legend {
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.ledger {
+  display: grid;
+  gap: 12px;
+}
+
+.ledger-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: var(--paper);
+}
+
+.ledger-row--mover {
+  border-left: 3px solid var(--accent);
+}
+
+.ledger-row__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.ledger-row__code {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger-row__meta {
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.advisory-band {
+  margin-left: auto;
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 11px;
+  text-transform: lowercase;
+  color: var(--dim);
+}
+
+.advisory-band[data-band="review"] { color: var(--neg); }
+.advisory-band[data-band="minimum"] { color: var(--dim); }
+.advisory-band[data-band="standard"] { color: var(--accent); }
+.advisory-band[data-band="conviction"] { color: var(--pos); }
+
+.ledger-row__ranks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.rank-move {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.rank-move--up { color: var(--pos); }
+.rank-move--down { color: var(--neg); }
+.rank-move--same { color: var(--dim); }
+
+.ledger-row__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .ledger-row__stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ledger-row__prob {
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+}
+
+.ledger-row__prob-value {
+  font-size: 18px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger-footnote {
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--dim);
+}
+
+/* === VerdictChip alignment states (M5) =========================== */
+.verdict-chip[data-verdict="aligned"] { color: var(--pos); }
+.verdict-chip[data-verdict="partial"] { color: var(--warn); }
+.verdict-chip[data-verdict="contradicted"] { color: var(--neg); }
+
+/* === M5 say-do split screen ====================================== */
+.saydo-intro {
+  margin: 8px 0 20px;
+}
+
+.saydo-headline {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.saydo-honesty {
+  margin: 12px 0;
+  padding: 8px 14px;
+  border-left: 3px solid var(--warn);
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.saydo-focus {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  padding: 4px 10px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.saydo {
+  display: grid;
+  gap: 16px;
+}
+
+.saydo-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--paper);
+  transition: opacity 0.15s ease;
+}
+
+@media (max-width: 640px) {
+  .saydo-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.saydo-row--contradicted {
+  border-color: var(--neg);
+}
+
+.saydo--focus .saydo-row:not(.saydo-row--contradicted) {
+  opacity: 0.4;
+}
+
+.saydo-side {
+  padding: 14px 16px;
+}
+
+.saydo-side--did {
+  border-left: 1px solid var(--line);
+}
+
+@media (max-width: 640px) {
+  .saydo-side--did {
+    border-left: none;
+    border-top: 1px solid var(--line);
+  }
+}
+
+/* .saydo-side--said carries no rules of its own: layout comes from
+   .saydo-side and the column divider lives on .saydo-side--did. The
+   modifier class exists so templates can target the "said" column. */
+.saydo-side--said {
+}
+
+.saydo-side__label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+  margin-bottom: 8px;
+}
+
+.saydo-quote {
+  margin: 0 0 10px;
+  padding-left: 10px;
+  border-left: 2px solid var(--line);
+  font-style: italic;
+}
+
+.saydo-view,
+.saydo-measure {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 2px 12px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.saydo-view dt,
+.saydo-measure dt {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+  align-self: center;
+}
+
+.saydo-view dd,
+.saydo-measure dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.saydo-conviction {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.conviction-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 1px solid var(--dim);
+}
+
+.conviction-dot--on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.saydo-exposure {
+  margin: 10px 0;
+}
+
+.saydo-spark {
+  display: block;
+  width: 100%;
+  height: 40px;
+}
+
+.saydo-spark__band {
+  fill: var(--band);
+}
+
+.saydo-spark__line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.saydo-illustrative {
+  font-size: 11px;
+  color: var(--warn);
+}
+
+.saydo-footnote {
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--dim);
+}
