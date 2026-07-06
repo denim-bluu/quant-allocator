@@ -29,7 +29,7 @@ def test_m5_page_verdict_contract_and_quotes(tmp_path):
     assert 'data-verdict="contradicted"' in html
     assert 'class="verdict-chip"' in html
     # The contradiction row is the centerpiece.
-    assert 'saydo-row--contradicted' in html
+    assert "saydo-row--contradicted" in html
     # Verbatim quote from the JSON (receipts always ship with claims).
     assert "crowded momentum has become" in html
 
