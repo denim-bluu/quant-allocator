@@ -109,7 +109,11 @@
   one_liner: The escalating-data-ask playbook — each rung's ask, reciprocity, and math.
   decisions: [engage]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  doctrine: true
+  demo: pages/e1-ladder.html.j2
+  spec: e1-transparency-ladder.md
+  usage_note: One rung per relationship conversation. The 'why the math asks' line is the script.
 - id: e2
   title: Narrated engagement-pack generator
   lane: E
