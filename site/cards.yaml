@@ -4,7 +4,14 @@
   one_liner: Posterior alpha across the roster — rank on skill, not luck.
   decisions: [select, size]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/s1-ledger.html.j2
+  data: s1_ledger.json
+  spec: s1-bayesian-alpha-engine.md
+  golive:
+    data_ask: Monthly net returns for the roster (R), with strategy labels
+    sample: ≥36 months × ≥10 managers
+    effort: M
 - id: s2
   title: Uncertainty-honest tear-sheet engine
   lane: S
@@ -74,7 +81,14 @@
   one_liner: Does the portfolio match the letter? Say vs do, side by side.
   decisions: [monitor, engage]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/m5-saydo.html.j2
+  data: m5_saydo.json
+  spec: m5-say-do-gap.md
+  golive:
+    data_ask: Letters (R) + exposure summaries (E)
+    sample: n/a — per-letter analytic, eval-harness-gated
+    effort: M–L (includes the eval harness)
 - id: m6
   title: 13F long-book intelligence
   lane: M

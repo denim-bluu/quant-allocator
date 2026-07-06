@@ -7,6 +7,7 @@ committed inputs, it does not compute statistics.
 
 from __future__ import annotations
 
+import json
 import shutil
 from pathlib import Path
 
@@ -200,12 +201,15 @@ def _render_demo_pages(
         if card["status"] != "live":
             continue
         card_data_json = ""
+        card_data = None
         if not card.get("doctrine", False):
             card_data_json = (site_dir / "data" / card["data"]).read_text(encoding="utf-8")
+            card_data = json.loads(card_data_json)
         html = env.get_template(card["demo"]).render(
             page_title=card["title"],
             card=card,
             card_data_json=card_data_json,
+            card_data=card_data,
             asset_base="",
             default_theme="light",
         )

@@ -38,3 +38,32 @@ def test_interval_css_defines_all_contract_classes():
     css = CSS_PATH.read_text(encoding="utf-8")
     missing = [token for token in REQUIRED_TOKENS if token not in css]
     assert not missing, f"interval.css missing: {missing}"
+
+
+PAGE_TOKENS = [
+    ".ledger",
+    ".ledger-row",
+    ".ledger-row--mover",
+    ".rank-move--up",
+    ".rank-move--down",
+    ".advisory-band",
+    '.verdict-chip[data-verdict="aligned"]',
+    '.verdict-chip[data-verdict="partial"]',
+    '.verdict-chip[data-verdict="contradicted"]',
+    ".saydo-row",
+    ".saydo-side--said",
+    ".saydo-side--did",
+    ".saydo-quote",
+    ".conviction-dot",
+    ".conviction-dot--on",
+    ".saydo-spark__band",
+    ".saydo-spark__line",
+    ".saydo-illustrative",
+    ".saydo--focus",
+]
+
+
+def test_interval_css_defines_page_classes():
+    css = CSS_PATH.read_text(encoding="utf-8")
+    missing = [token for token in PAGE_TOKENS if token not in css]
+    assert not missing, f"interval.css missing page classes: {missing}"
