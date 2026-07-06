@@ -36,9 +36,10 @@ def test_index_lists_all_cards(tmp_path):
     index = (out / "index.html").read_text(encoding="utf-8")
     assert "All data on this site is synthetic or public." in index
     assert index.count("card-tile__title") == 20
-    assert index.count("card-tile--planned") == 18
+    assert index.count("card-tile--planned") == 17
     assert 'href="e1.html"' in index
     assert 'href="s1.html"' in index
+    assert 'href="m5.html"' in index
     for title in EXPECTED_TITLES:
         # Titles are rendered through Jinja2 with autoescape=True, so "&" in a
         # title (e.g. "Sizing & alpha-decay lab") becomes "&amp;" in the output.

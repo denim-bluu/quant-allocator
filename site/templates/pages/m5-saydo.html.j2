@@ -1,0 +1,86 @@
+{% extends "demo.html.j2" %}
+
+{% block demo_content %}
+<section class="saydo-intro">
+  <p class="saydo-headline">
+    One synthetic manager letter, three stated views, read against the measured
+    book. Two views match the positioning; one contradicts it &mdash; shown side
+    by side, quote and measurement together, so the reader draws the conclusion.
+  </p>
+  <aside class="saydo-honesty" role="note">
+    The extraction shown here is <strong>illustrative</strong>. The live build
+    renders a real-letter claim only after the synthetic-letter eval harness
+    passes its gate (extraction precision &ge; 0.8 and recall &ge; 0.8, alignment
+    accuracy &ge; 0.8). See method spec &sect;4.
+  </aside>
+  <button type="button" class="saydo-focus" data-saydo-focus>Focus the contradiction</button>
+</section>
+
+<section class="saydo" data-saydo>
+  {% for v in card_data.views %}
+  <article class="saydo-row saydo-row--{{ v.label }}"
+           data-instrument="{{ v.instrument }}"
+           data-label="{{ v.label }}">
+    <div class="saydo-side saydo-side--said">
+      <span class="saydo-side__label">Said &middot; {{ v.letter_date }}</span>
+      <blockquote class="saydo-quote">{{ v.quote }}</blockquote>
+      <dl class="saydo-view">
+        <dt>Direction</dt><dd>{{ v.direction }}</dd>
+        <dt>Theme</dt><dd>{{ v.theme }}</dd>
+        <dt>Conviction</dt>
+        <dd class="saydo-conviction" aria-label="conviction {{ v.conviction }} of 3">
+          {% for i in range(3) %}<span class="conviction-dot{% if i < v.conviction %} conviction-dot--on{% endif %}"></span>{% endfor %}
+        </dd>
+      </dl>
+    </div>
+
+    <div class="saydo-side saydo-side--did">
+      <span class="saydo-side__label">Did &middot; {{ card_data.meta.horizon_months }}-month horizon</span>
+      <div class="saydo-exposure"
+           data-instrument="{{ v.instrument }}"
+           data-start="{{ v.measured.start }}"
+           data-end="{{ v.measured.end }}"
+           data-delta="{{ v.measured.delta }}">
+        <svg class="saydo-spark" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"></svg>
+      </div>
+      <dl class="saydo-measure">
+        <dt>{{ v.instrument }}</dt>
+        <dd>{{ "%+.3f"|format(v.measured.start) }} &rarr; {{ "%+.3f"|format(v.measured.end) }}
+            (move {{ "%+.3f"|format(v.measured.move) }})</dd>
+        <dt>Dead-band &delta;</dt>
+        <dd>&plusmn;{{ "%.2f"|format(v.measured.delta) }}
+            <span class="saydo-illustrative">illustrative, uncalibrated</span></dd>
+      </dl>
+      <span class="verdict-chip" data-verdict="{{ v.label }}">{{ v.label }}</span>
+    </div>
+  </article>
+  {% endfor %}
+</section>
+
+<p class="saydo-footnote">
+  &ldquo;Communication drift worth a conversation,&rdquo; never &ldquo;caught
+  you.&rdquo; Every row shows the verbatim quote and the measured series side by
+  side and stops there. The dead-band &delta; is illustrative, uncalibrated in
+  this demo; the live build sets each &delta; from the simulator so a stated
+  false-contradiction budget holds. See method spec &sect;3.2 and &sect;4.
+</p>
+{% endblock %}
+
+{% block methodology %}
+<p>Two stages with a hard division of labor: an LLM reads the letter text and
+emits a structured view (direction, theme, instrument, conviction, quote span);
+deterministic code scores that view against the measured exposure path. Nothing
+probabilistic touches the label.</p>
+<p>A view is <em>aligned</em> when the exposure moves in the stated direction by
+at least the dead-band &delta; over the horizon, <em>contradicted</em> when it
+moves against the stated direction by at least &delta;, and <em>partial</em> when
+the move stays inside the dead-band &mdash; in either direction &mdash; making no
+material statement. A stated-flat view is <em>aligned</em> only while the
+exposure stays inside &plusmn;&delta;, <em>contradicted</em> beyond it. In this
+demo &delta; is illustrative, uncalibrated; the live build calibrates it from
+the simulator's honest-wander distribution.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/m5-saydo.js"></script>
+{% endblock %}
