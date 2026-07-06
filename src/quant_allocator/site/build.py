@@ -10,6 +10,7 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
+import markdown
 import yaml
 from jinja2 import Environment, FileSystemLoader
 
@@ -31,6 +32,7 @@ LANE_HEADINGS = {
     "E": "E — Engagement & knowledge",
     "X": "X — Meta / infrastructure",
 }
+MARKDOWN_EXTENSIONS = ["tables", "fenced_code", "toc"]
 
 
 class BuildError(Exception):
@@ -124,7 +126,7 @@ def _validate_live_entry(entry: dict, card_id: str, path: Path, site_dir: Path) 
 
 
 def build(site_dir: Path, out_dir: Path) -> None:
-    """Validate the manifest and render the index, then copy assets."""
+    """Validate the manifest, render the index and specs, then copy assets."""
     cards = load_manifest(site_dir / "cards.yaml")
 
     env = Environment(
@@ -136,6 +138,7 @@ def build(site_dir: Path, out_dir: Path) -> None:
 
     out_dir.mkdir(parents=True, exist_ok=True)
     _render_index(env, cards, out_dir)
+    _render_specs(env, cards, site_dir, out_dir)
     _copy_assets(site_dir, out_dir)
 
 
@@ -159,3 +162,25 @@ def _copy_assets(site_dir: Path, out_dir: Path) -> None:
     if dest.exists():
         shutil.rmtree(dest)
     shutil.copytree(site_dir / "assets", dest)
+
+
+def _render_specs(env: Environment, cards: list[dict], site_dir: Path, out_dir: Path) -> None:
+    template = env.get_template("spec.html.j2")
+    specs_dir = site_dir.parent / "docs" / "ideas" / "specs"
+    out_specs = out_dir / "specs"
+    out_specs.mkdir(parents=True, exist_ok=True)
+    for card in cards:
+        if card["status"] != "live":
+            continue
+        source = specs_dir / card["spec"]
+        body_html = markdown.markdown(
+            source.read_text(encoding="utf-8"), extensions=MARKDOWN_EXTENSIONS
+        )
+        html = template.render(
+            page_title=card["title"],
+            card=card,
+            spec_html=body_html,
+            asset_base="../",
+            default_theme="light",
+        )
+        (out_specs / f"{card['id']}.html").write_text(html, encoding="utf-8")
