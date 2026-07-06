@@ -40,9 +40,12 @@ VIEWS = [
         "theme": "disciplined net exposure",
         "instrument": "net",
         "conviction": 3,
+        # gate: quote must be a stance-persistence claim only (that is
+        # what the engine measures, M5 spec §3.2) — no level claim like
+        # "near-flat", which the plotted net path (0.20) would contradict.
         "quote": (
-            "We continue to run the book at a disciplined, near-flat net "
-            "exposure and have not chased the rally."
+            "We continue to run the book at our disciplined net exposure "
+            "and have not chased the rally."
         ),
     },
     {

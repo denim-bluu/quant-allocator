@@ -17,7 +17,9 @@ SITE_DATA_DIR = Path(__file__).resolve().parents[3] / "site" / "data"
 
 def round_floats(obj: Any, ndigits: int = 6) -> Any:
     if isinstance(obj, float):
-        return round(obj, ndigits)
+        # + 0.0 normalizes IEEE -0.0 (a tiny negative rounding to zero) to 0.0,
+        # so no generator can emit "-0.0" into committed JSON (gate).
+        return round(obj, ndigits) + 0.0
     if isinstance(obj, dict):
         return {key: round_floats(value, ndigits) for key, value in obj.items()}
     if isinstance(obj, (list, tuple)):

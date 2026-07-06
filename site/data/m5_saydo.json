@@ -320,10 +320,10 @@
       "measured": {
         "delta": 0.05,
         "end": 0.2,
-        "move": -0.0,
+        "move": 0.0,
         "start": 0.2
       },
-      "quote": "We continue to run the book at a disciplined, near-flat net exposure and have not chased the rally.",
+      "quote": "We continue to run the book at our disciplined net exposure and have not chased the rally.",
       "theme": "disciplined net exposure",
       "view_id": 1
     },
