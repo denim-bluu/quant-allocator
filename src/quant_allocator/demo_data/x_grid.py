@@ -270,7 +270,8 @@ def estimate_runtime(sample_configs=2, n_reps=N_REPS, processes=None) -> dict:
     elapsed = time.perf_counter() - start
     per_config = elapsed / max(1, len(configs))
     total = per_config * len(base_configs())
-    procs = processes or os.cpu_count() or 1
+    # Cap at the config count: >30 cores cannot parallelize beyond 30 configs.
+    procs = min(processes or os.cpu_count() or 1, len(base_configs()))
     wall = total / procs
     return {
         "per_config_seconds": per_config,
