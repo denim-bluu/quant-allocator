@@ -1,0 +1,107 @@
+{% extends "demo.html.j2" %}
+
+{% block demo_content %}
+{% set ns = namespace(movers=0) %}
+{% for m in card_data.managers %}
+  {% if m.ols_rank != m.posterior_rank %}{% set ns.movers = ns.movers + 1 %}{% endif %}
+{% endfor %}
+
+<section class="ledger-intro">
+  <p class="ledger-headline">
+    Shrinking each manager toward their strategy peers reshuffles the ranking:
+    <strong>{{ ns.movers }} of {{ card_data.meta.n_managers }} managers change rank</strong>
+    once luck is separated from skill. Rankings built on raw OLS alpha hire the lucky.
+  </p>
+  <div class="ledger-controls">
+    <button type="button" class="sort-toggle" data-sort-toggle data-order="ols">
+      Order by: OLS rank
+    </button>
+    <span class="ledger-legend">
+      <span class="rank-move rank-move--up">&#9650;</span> rose &middot;
+      <span class="rank-move rank-move--down">&#9660;</span> fell after shrinkage
+    </span>
+  </div>
+</section>
+
+<section class="ledger" data-ledger>
+  {% for m in card_data.managers | sort(attribute='ols_rank') %}
+  {% set delta = m.ols_rank - m.posterior_rank %}
+  <article class="ledger-row{% if delta != 0 %} ledger-row--mover{% endif %}"
+           data-ols-rank="{{ m.ols_rank }}"
+           data-posterior-rank="{{ m.posterior_rank }}">
+    <header class="ledger-row__head">
+      <span class="ledger-row__code">{{ m.code }}</span>
+      <span class="ledger-row__meta">group {{ m.group }} &middot; {{ m.months }} months</span>
+      <span class="advisory-band" data-band="{{ m.advisory_band }}">{{ m.advisory_band }}</span>
+    </header>
+
+    <div class="ledger-row__ranks">
+      <span class="rank-pair">OLS #{{ m.ols_rank }} &rarr; posterior #{{ m.posterior_rank }}</span>
+      {% if delta > 0 %}
+        <span class="rank-move rank-move--up">&#9650; {{ delta }}</span>
+      {% elif delta < 0 %}
+        <span class="rank-move rank-move--down">&#9660; {{ -delta }}</span>
+      {% else %}
+        <span class="rank-move rank-move--same">&mdash; held</span>
+      {% endif %}
+    </div>
+
+    <div class="ledger-row__stats">
+      <div class="interval-stat"
+           data-lo="{{ m.ols_alpha.ci_lo }}"
+           data-point="{{ m.ols_alpha.point }}"
+           data-hi="{{ m.ols_alpha.ci_hi }}">
+        <span class="interval-stat__label">OLS alpha (annual)</span>
+        <span class="interval-stat__value">{{ "%+.1f"|format(m.ols_alpha.point * 100) }}%</span>
+        <div class="interval-stat__rail">
+          <div class="interval-stat__band"></div>
+          <div class="interval-stat__point"></div>
+        </div>
+        <span class="interval-stat__range">90% interval {{ "%+.1f"|format(m.ols_alpha.ci_lo * 100) }}% &hellip; {{ "%+.1f"|format(m.ols_alpha.ci_hi * 100) }}%</span>
+      </div>
+
+      <div class="interval-stat"
+           data-lo="{{ m.posterior_alpha.ci_lo }}"
+           data-point="{{ m.posterior_alpha.point }}"
+           data-hi="{{ m.posterior_alpha.ci_hi }}">
+        <span class="interval-stat__label">Posterior alpha (annual)</span>
+        <span class="interval-stat__value">{{ "%+.1f"|format(m.posterior_alpha.point * 100) }}%</span>
+        <div class="interval-stat__rail">
+          <div class="interval-stat__band"></div>
+          <div class="interval-stat__point"></div>
+        </div>
+        <span class="interval-stat__range">90% interval {{ "%+.1f"|format(m.posterior_alpha.ci_lo * 100) }}% &hellip; {{ "%+.1f"|format(m.posterior_alpha.ci_hi * 100) }}%</span>
+      </div>
+
+      <div class="ledger-row__prob">
+        <span class="interval-stat__label">P(&alpha; &gt; 0)</span>
+        {# Doctrine: never display certainty — 1.0 in the JSON is 6-digit rounding. #}
+        <span class="ledger-row__prob-value">{% if m.prob_positive > 0.99 %}&gt;0.99{% elif m.prob_positive < 0.01 %}&lt;0.01{% else %}{{ "%.2f"|format(m.prob_positive) }}{% endif %}</span>
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</section>
+
+<p class="ledger-footnote">
+  This gallery page uses the closed-form normal&ndash;normal shrinkage variant
+  (empirical-Bayes moment estimates per strategy group). The live build is the
+  full hierarchical MCMC model &mdash; the demo formula is the intuition, not the
+  product. See method spec &sect;3.6.
+</p>
+{% endblock %}
+
+{% block methodology %}
+<p>Each manager's raw OLS alpha is shrunk toward their strategy-group mean by the
+weight their track length earns: a short, noisy record is pulled hard toward the
+peer mean; a long, clean record barely moves. The band shown is the 90% interval;
+a bare point alpha is never shown without it.</p>
+<p>Shrinkage never claims &ldquo;your alpha was cut&rdquo; &mdash; it reports
+&ldquo;shrunk toward strategy peers by the weight your track length earns.&rdquo;
+Ranking on the posterior mean and P(&alpha; &gt; 0) is what separates skill from
+luck at 36&ndash;60 months.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/s1-ledger.js"></script>
+{% endblock %}

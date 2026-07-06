@@ -4,7 +4,14 @@
   one_liner: Posterior alpha across the roster — rank on skill, not luck.
   decisions: [select, size]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/s1-ledger.html.j2
+  data: s1_ledger.json
+  spec: s1-bayesian-alpha-engine.md
+  golive:
+    data_ask: Monthly net returns for the roster (R), with strategy labels
+    sample: ≥36 months × ≥10 managers
+    effort: M
 - id: s2
   title: Uncertainty-honest tear-sheet engine
   lane: S
