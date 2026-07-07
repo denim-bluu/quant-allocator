@@ -1,0 +1,325 @@
+{
+  "managers": {
+    "honest": {
+      "code": "B05",
+      "monthly_returns": [
+        0.037449,
+        -0.007322,
+        0.031742,
+        -0.002474,
+        -0.019854,
+        -0.034754,
+        -0.031005,
+        0.009855,
+        -0.014683,
+        0.01251,
+        0.035379,
+        0.022821,
+        -0.030766,
+        0.034096,
+        -0.049074,
+        0.001352,
+        -0.050389,
+        -0.007322,
+        0.007329,
+        -0.034856,
+        0.019572,
+        0.035966,
+        0.02248,
+        -0.011788,
+        -0.021532,
+        -0.037034,
+        0.010032,
+        0.004998,
+        -0.018303,
+        -0.025785,
+        -0.021683,
+        0.042915,
+        -0.009168,
+        -0.036354,
+        0.056102,
+        0.012403,
+        0.029014,
+        0.024613,
+        -0.019328,
+        -0.018601,
+        -0.036867,
+        0.018259,
+        0.030373,
+        0.013177,
+        0.032454,
+        -0.013318,
+        0.001399,
+        0.009969
+      ],
+      "name": "Wrenmoor Partners",
+      "screen": {
+        "composite": {
+          "chip": "noise",
+          "k": 3,
+          "label": "NOT RESOLVABLE AT THIS TRACK LENGTH",
+          "playable_count": 4,
+          "short_vol_count": 1,
+          "verdict": "inconclusive"
+        },
+        "diagnostics": {
+          "drawdown_vol": {
+            "ci_hi": 2.879851,
+            "ci_lo": 0.785481,
+            "name": "drawdown_vol",
+            "played": true,
+            "point": 1.630115,
+            "verdict": "inconclusive"
+          },
+          "market_coskew": {
+            "ci_hi": -0.031249,
+            "ci_lo": -0.415474,
+            "name": "market_coskew",
+            "played": true,
+            "point": -0.200203,
+            "verdict": "inconclusive"
+          },
+          "straddle_loading": {
+            "ci_hi": null,
+            "ci_lo": null,
+            "name": "straddle_loading",
+            "played": false,
+            "point": null,
+            "verdict": "not-played"
+          },
+          "treynor_mazuy": {
+            "ci_hi": 0.376701,
+            "ci_lo": -4.800411,
+            "name": "treynor_mazuy",
+            "played": true,
+            "point": -1.060058,
+            "verdict": "inconclusive"
+          },
+          "updown_beta": {
+            "ci_hi": -0.05316,
+            "ci_lo": -0.809945,
+            "name": "updown_beta",
+            "played": true,
+            "point": -0.327423,
+            "verdict": "short-vol-consistent"
+          }
+        },
+        "power_gate": {
+          "min_t_flag": 48,
+          "open": true,
+          "reason": "Composite renders at T \u2265 48 months; this track is 48.",
+          "t": 48
+        }
+      },
+      "sharpe": {
+        "ci_hi": 0.977628,
+        "ci_lo": -1.004631,
+        "point": 0.010693
+      },
+      "theta": [
+        0.93002,
+        0.013088,
+        0.056892
+      ]
+    },
+    "overlaid": {
+      "code": "B06",
+      "monthly_returns": [
+        0.048666,
+        -0.149288,
+        0.042959,
+        0.008743,
+        -0.008637,
+        -0.039012,
+        -0.019788,
+        0.019593,
+        -0.003466,
+        0.023727,
+        0.046597,
+        0.034038,
+        -0.108892,
+        0.045314,
+        -0.0853,
+        0.012569,
+        -0.039171,
+        0.003895,
+        0.018546,
+        -0.023639,
+        0.030789,
+        0.047183,
+        0.033697,
+        -0.000571,
+        -0.010315,
+        -0.077861,
+        0.017374,
+        0.016215,
+        -0.007086,
+        -0.014568,
+        -0.076076,
+        0.054132,
+        0.00205,
+        -0.025137,
+        0.06732,
+        0.023621,
+        0.040231,
+        0.03583,
+        -0.008111,
+        -0.007384,
+        -0.13562,
+        0.029476,
+        0.04159,
+        0.024394,
+        0.043672,
+        -0.0021,
+        0.012616,
+        0.021186
+      ],
+      "name": "Gullwing Point Capital",
+      "screen": {
+        "composite": {
+          "chip": "shrink",
+          "k": 3,
+          "label": "SHORT-VOL POSTURE \u2014 INVESTIGATE",
+          "playable_count": 4,
+          "short_vol_count": 3,
+          "verdict": "investigate"
+        },
+        "diagnostics": {
+          "drawdown_vol": {
+            "ci_hi": 2.531579,
+            "ci_lo": 0.823262,
+            "name": "drawdown_vol",
+            "played": true,
+            "point": 1.38503,
+            "verdict": "inconclusive"
+          },
+          "market_coskew": {
+            "ci_hi": -0.355235,
+            "ci_lo": -1.034222,
+            "name": "market_coskew",
+            "played": true,
+            "point": -0.697666,
+            "verdict": "short-vol-consistent"
+          },
+          "straddle_loading": {
+            "ci_hi": null,
+            "ci_lo": null,
+            "name": "straddle_loading",
+            "played": false,
+            "point": null,
+            "verdict": "not-played"
+          },
+          "treynor_mazuy": {
+            "ci_hi": -6.972535,
+            "ci_lo": -17.452373,
+            "name": "treynor_mazuy",
+            "played": true,
+            "point": -10.345896,
+            "verdict": "short-vol-consistent"
+          },
+          "updown_beta": {
+            "ci_hi": -1.368811,
+            "ci_lo": -2.635274,
+            "name": "updown_beta",
+            "played": true,
+            "point": -1.945758,
+            "verdict": "short-vol-consistent"
+          }
+        },
+        "power_gate": {
+          "min_t_flag": 48,
+          "open": true,
+          "reason": "Composite renders at T \u2265 48 months; this track is 48.",
+          "t": 48
+        }
+      },
+      "sharpe": {
+        "ci_hi": 0.717596,
+        "ci_lo": -0.969331,
+        "point": 0.005979
+      },
+      "theta": [
+        0.906094,
+        0.0,
+        0.093906
+      ]
+    }
+  },
+  "meta": {
+    "generator": "m2_convexity",
+    "months": 48,
+    "rf_annual": 0.02,
+    "strategy": "equity_long_short",
+    "tier": "R"
+  },
+  "overlay": {
+    "fair_premium": true,
+    "kappa": 2.6,
+    "strike_moneyness": 0.9
+  },
+  "stress_months": [
+    {
+      "honest_return": -0.007322,
+      "market_factor": -0.09735,
+      "month": "2020-02",
+      "overlaid_return": -0.149288,
+      "payout": 0.153183
+    },
+    {
+      "honest_return": -0.034754,
+      "market_factor": -0.044385,
+      "month": "2020-06",
+      "overlaid_return": -0.039012,
+      "payout": 0.015476
+    },
+    {
+      "honest_return": 0.009855,
+      "market_factor": -0.039002,
+      "month": "2020-08",
+      "overlaid_return": 0.019593,
+      "payout": 0.001479
+    },
+    {
+      "honest_return": -0.030766,
+      "market_factor": -0.072796,
+      "month": "2021-01",
+      "overlaid_return": -0.108892,
+      "payout": 0.089343
+    },
+    {
+      "honest_return": -0.049074,
+      "market_factor": -0.056681,
+      "month": "2021-03",
+      "overlaid_return": -0.0853,
+      "payout": 0.047443
+    },
+    {
+      "honest_return": -0.037034,
+      "market_factor": -0.05845,
+      "month": "2022-02",
+      "overlaid_return": -0.077861,
+      "payout": 0.052044
+    },
+    {
+      "honest_return": 0.010032,
+      "market_factor": -0.039924,
+      "month": "2022-03",
+      "overlaid_return": 0.017374,
+      "payout": 0.003875
+    },
+    {
+      "honest_return": -0.021683,
+      "market_factor": -0.063668,
+      "month": "2022-07",
+      "overlaid_return": -0.076076,
+      "payout": 0.06561
+    },
+    {
+      "honest_return": -0.036867,
+      "market_factor": -0.08073,
+      "month": "2023-05",
+      "overlaid_return": -0.13562,
+      "payout": 0.109971
+    }
+  ]
+}
