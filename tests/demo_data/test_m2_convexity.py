@@ -24,7 +24,9 @@ def test_schema_is_valid(tmp_path):
             if d["played"]:
                 assert d["ci_lo"] <= d["point"] <= d["ci_hi"]
         assert diags["straddle_loading"]["played"] is False
-    assert data["overlay"]["fair_premium"] is True
+    # DK-7 ruling: the demo premium is a flat carry set RICH of the payouts' fair value.
+    assert data["overlay"]["fair_premium"] is False
+    assert data["overlay"]["premium_annual"] > data["overlay"]["fair_value_annual"] > 0.0
     assert len(data["stress_months"]) >= 1
 
 
@@ -33,6 +35,8 @@ def test_paired_sharpe_is_matched_to_two_decimals(tmp_path):
     honest = data["managers"]["honest"]["sharpe"]["point"]
     overlaid = data["managers"]["overlaid"]["sharpe"]["point"]
     assert round(honest, 2) == round(overlaid, 2)
+    # DK-7 ruling: the pair matches at a HEALTHY Sharpe, not a degenerate near-zero one.
+    assert honest > 0.5
 
 
 def test_overlaid_flags_but_honest_does_not(tmp_path):

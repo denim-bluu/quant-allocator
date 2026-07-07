@@ -3,54 +3,54 @@
     "honest": {
       "code": "B05",
       "monthly_returns": [
-        0.037449,
-        -0.007322,
-        0.031742,
-        -0.002474,
-        -0.019854,
-        -0.034754,
-        -0.031005,
-        0.009855,
-        -0.014683,
-        0.01251,
-        0.035379,
-        0.022821,
-        -0.030766,
-        0.034096,
-        -0.049074,
-        0.001352,
-        -0.050389,
-        -0.007322,
-        0.007329,
-        -0.034856,
-        0.019572,
-        0.035966,
-        0.02248,
-        -0.011788,
-        -0.021532,
-        -0.037034,
-        0.010032,
-        0.004998,
-        -0.018303,
-        -0.025785,
-        -0.021683,
-        0.042915,
-        -0.009168,
-        -0.036354,
-        0.056102,
-        0.012403,
-        0.029014,
-        0.024613,
-        -0.019328,
-        -0.018601,
-        -0.036867,
-        0.018259,
-        0.030373,
-        0.013177,
-        0.032454,
-        -0.013318,
-        0.001399,
-        0.009969
+        0.005879,
+        -0.067897,
+        0.009115,
+        -0.006992,
+        0.009221,
+        0.030504,
+        0.031292,
+        -0.048272,
+        0.026826,
+        -0.042558,
+        -0.002753,
+        0.036389,
+        -0.017597,
+        0.056243,
+        0.016851,
+        -0.01372,
+        0.042411,
+        -0.040789,
+        0.036145,
+        0.04452,
+        -0.008723,
+        -0.005765,
+        0.052212,
+        -0.001634,
+        -0.026626,
+        -0.001062,
+        -0.003892,
+        0.03398,
+        0.037002,
+        0.058735,
+        0.06542,
+        0.027791,
+        0.04244,
+        0.004833,
+        -0.038039,
+        0.065322,
+        -0.010709,
+        -0.013517,
+        0.04022,
+        -0.002125,
+        0.008909,
+        0.016358,
+        0.041812,
+        -0.00115,
+        0.005511,
+        0.0124,
+        0.019809,
+        -0.042615
       ],
       "name": "Wrenmoor Partners",
       "screen": {
@@ -59,24 +59,24 @@
           "k": 3,
           "label": "NOT RESOLVABLE AT THIS TRACK LENGTH",
           "playable_count": 4,
-          "short_vol_count": 1,
+          "short_vol_count": 0,
           "verdict": "inconclusive"
         },
         "diagnostics": {
           "drawdown_vol": {
-            "ci_hi": 2.879851,
-            "ci_lo": 0.785481,
+            "ci_hi": 10.618684,
+            "ci_lo": 2.822096,
             "name": "drawdown_vol",
             "played": true,
-            "point": 1.630115,
+            "point": 3.816526,
             "verdict": "inconclusive"
           },
           "market_coskew": {
-            "ci_hi": -0.031249,
-            "ci_lo": -0.415474,
+            "ci_hi": 0.395888,
+            "ci_lo": -0.394398,
             "name": "market_coskew",
             "played": true,
-            "point": -0.200203,
+            "point": 0.008715,
             "verdict": "inconclusive"
           },
           "straddle_loading": {
@@ -88,20 +88,20 @@
             "verdict": "not-played"
           },
           "treynor_mazuy": {
-            "ci_hi": 0.376701,
-            "ci_lo": -4.800411,
+            "ci_hi": 6.616402,
+            "ci_lo": -2.42808,
             "name": "treynor_mazuy",
             "played": true,
-            "point": -1.060058,
+            "point": 1.029246,
             "verdict": "inconclusive"
           },
           "updown_beta": {
-            "ci_hi": -0.05316,
-            "ci_lo": -0.809945,
+            "ci_hi": 1.157669,
+            "ci_lo": -0.322397,
             "name": "updown_beta",
             "played": true,
-            "point": -0.327423,
-            "verdict": "short-vol-consistent"
+            "point": 0.350429,
+            "verdict": "inconclusive"
           }
         },
         "power_gate": {
@@ -112,67 +112,67 @@
         }
       },
       "sharpe": {
-        "ci_hi": 0.977628,
-        "ci_lo": -1.004631,
-        "point": 0.010693
+        "ci_hi": 2.127758,
+        "ci_lo": 0.080817,
+        "point": 1.095154
       },
       "theta": [
-        0.93002,
-        0.013088,
-        0.056892
+        0.901669,
+        0.0,
+        0.098331
       ]
     },
     "overlaid": {
       "code": "B06",
       "monthly_returns": [
-        0.048666,
-        -0.149288,
-        0.042959,
-        0.008743,
-        -0.008637,
-        -0.039012,
-        -0.019788,
-        0.019593,
-        -0.003466,
-        0.023727,
-        0.046597,
-        0.034038,
-        -0.108892,
-        0.045314,
-        -0.0853,
-        0.012569,
-        -0.039171,
-        0.003895,
-        0.018546,
-        -0.023639,
-        0.030789,
-        0.047183,
-        0.033697,
-        -0.000571,
-        -0.010315,
-        -0.077861,
-        0.017374,
-        0.016215,
-        -0.007086,
-        -0.014568,
-        -0.076076,
-        0.054132,
-        0.00205,
-        -0.025137,
-        0.06732,
-        0.023621,
-        0.040231,
-        0.03583,
-        -0.008111,
-        -0.007384,
-        -0.13562,
-        0.029476,
-        0.04159,
-        0.024394,
-        0.043672,
-        -0.0021,
-        0.012616,
-        0.021186
+        0.021104,
+        -0.186986,
+        0.02434,
+        0.008233,
+        0.024446,
+        0.027937,
+        0.046517,
+        -0.038996,
+        0.042051,
+        -0.027333,
+        0.012472,
+        0.051614,
+        -0.082667,
+        0.071468,
+        -0.012766,
+        0.001505,
+        0.057636,
+        -0.025564,
+        0.05137,
+        0.059745,
+        0.006502,
+        0.00946,
+        0.067437,
+        0.013591,
+        -0.011401,
+        -0.034571,
+        0.003357,
+        0.049205,
+        0.052227,
+        0.07396,
+        0.020431,
+        0.043016,
+        0.057665,
+        0.020058,
+        -0.022814,
+        0.080547,
+        0.004516,
+        0.001708,
+        0.055445,
+        0.0131,
+        -0.073616,
+        0.031583,
+        0.057037,
+        0.014075,
+        0.020736,
+        0.027625,
+        0.035034,
+        -0.02739
       ],
       "name": "Gullwing Point Capital",
       "screen": {
@@ -186,20 +186,20 @@
         },
         "diagnostics": {
           "drawdown_vol": {
-            "ci_hi": 2.531579,
-            "ci_lo": 0.823262,
+            "ci_hi": 14.609873,
+            "ci_lo": 3.256666,
             "name": "drawdown_vol",
             "played": true,
-            "point": 1.38503,
-            "verdict": "inconclusive"
+            "point": 8.27203,
+            "verdict": "short-vol-consistent"
           },
           "market_coskew": {
-            "ci_hi": -0.355235,
-            "ci_lo": -1.034222,
+            "ci_hi": -0.034828,
+            "ci_lo": -0.931915,
             "name": "market_coskew",
             "played": true,
-            "point": -0.697666,
-            "verdict": "short-vol-consistent"
+            "point": -0.548647,
+            "verdict": "inconclusive"
           },
           "straddle_loading": {
             "ci_hi": null,
@@ -210,19 +210,19 @@
             "verdict": "not-played"
           },
           "treynor_mazuy": {
-            "ci_hi": -6.972535,
-            "ci_lo": -17.452373,
+            "ci_hi": -0.637637,
+            "ci_lo": -12.826298,
             "name": "treynor_mazuy",
             "played": true,
-            "point": -10.345896,
+            "point": -6.895465,
             "verdict": "short-vol-consistent"
           },
           "updown_beta": {
-            "ci_hi": -1.368811,
-            "ci_lo": -2.635274,
+            "ci_hi": -0.01386,
+            "ci_lo": -1.832382,
             "name": "updown_beta",
             "played": true,
-            "point": -1.945758,
+            "point": -1.046865,
             "verdict": "short-vol-consistent"
           }
         },
@@ -234,14 +234,14 @@
         }
       },
       "sharpe": {
-        "ci_hi": 0.717596,
-        "ci_lo": -0.969331,
-        "point": 0.005979
+        "ci_hi": 2.154372,
+        "ci_lo": -0.327001,
+        "point": 1.095107
       },
       "theta": [
-        0.906094,
+        1.0,
         0.0,
-        0.093906
+        0.0
       ]
     }
   },
@@ -253,73 +253,75 @@
     "tier": "R"
   },
   "overlay": {
-    "fair_premium": true,
-    "kappa": 2.6,
-    "strike_moneyness": 0.9
+    "fair_premium": false,
+    "fair_value_annual": 0.124467,
+    "kappa": 2.2,
+    "premium_annual": 0.1827,
+    "strike_moneyness": 0.85
   },
   "stress_months": [
     {
-      "honest_return": -0.007322,
+      "honest_return": -0.067897,
       "market_factor": -0.09735,
       "month": "2020-02",
-      "overlaid_return": -0.149288,
-      "payout": 0.153183
+      "overlaid_return": -0.186986,
+      "payout": 0.134314
     },
     {
-      "honest_return": -0.034754,
+      "honest_return": 0.030504,
       "market_factor": -0.044385,
       "month": "2020-06",
-      "overlaid_return": -0.039012,
-      "payout": 0.015476
+      "overlaid_return": 0.027937,
+      "payout": 0.017792
     },
     {
-      "honest_return": 0.009855,
+      "honest_return": -0.048272,
       "market_factor": -0.039002,
       "month": "2020-08",
-      "overlaid_return": 0.019593,
-      "payout": 0.001479
+      "overlaid_return": -0.038996,
+      "payout": 0.005949
     },
     {
-      "honest_return": -0.030766,
+      "honest_return": -0.017597,
       "market_factor": -0.072796,
       "month": "2021-01",
-      "overlaid_return": -0.108892,
-      "payout": 0.089343
+      "overlaid_return": -0.082667,
+      "payout": 0.080295
     },
     {
-      "honest_return": -0.049074,
+      "honest_return": 0.016851,
       "market_factor": -0.056681,
       "month": "2021-03",
-      "overlaid_return": -0.0853,
-      "payout": 0.047443
+      "overlaid_return": -0.012766,
+      "payout": 0.044842
     },
     {
-      "honest_return": -0.037034,
+      "honest_return": -0.001062,
       "market_factor": -0.05845,
       "month": "2022-02",
-      "overlaid_return": -0.077861,
-      "payout": 0.052044
+      "overlaid_return": -0.034571,
+      "payout": 0.048734
     },
     {
-      "honest_return": 0.010032,
+      "honest_return": -0.003892,
       "market_factor": -0.039924,
       "month": "2022-03",
-      "overlaid_return": 0.017374,
-      "payout": 0.003875
+      "overlaid_return": 0.003357,
+      "payout": 0.007976
     },
     {
-      "honest_return": -0.021683,
+      "honest_return": 0.06542,
       "market_factor": -0.063668,
       "month": "2022-07",
-      "overlaid_return": -0.076076,
-      "payout": 0.06561
+      "overlaid_return": 0.020431,
+      "payout": 0.060214
     },
     {
-      "honest_return": -0.036867,
+      "honest_return": 0.008909,
       "market_factor": -0.08073,
       "month": "2023-05",
-      "overlaid_return": -0.13562,
-      "payout": 0.109971
+      "overlaid_return": -0.073616,
+      "payout": 0.09775
     }
   ]
 }

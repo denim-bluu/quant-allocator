@@ -72,9 +72,16 @@ def test_m2_composite_and_copy_obligations(tmp_path):
     assert "converging evidence, not a p-value" in html.lower()
     # Investigation framing, not an accusation.
     assert "SHORT-VOL POSTURE — INVESTIGATE" in html
-    # Overlay disclosure obligation (dials plan, binding).
+    # Overlay disclosure obligation — two-sided form per the DK-7 gate ruling:
+    # (a) demo premium is rich of fair (the carry seduction), an in-sample
+    # look-ahead, not live methodology; (b) atlas detection rows measure at
+    # fair premium, the conservative case.
     assert "in-sample" in html.lower()
     assert "not a claim about live methodology" in html.lower()
+    assert "rich of fair" in html.lower()
+    assert "carry seduction" in html.lower()
+    assert "fair premium" in html.lower()
+    assert "conservative" in html.lower()
     # HM down-leg honesty stays on the sheet.
     assert "~19" in html
     assert "static payoff-shape descriptor" in html.lower()
