@@ -14,10 +14,26 @@ from pathlib import Path
 
 
 def _builders() -> dict[str, Callable[[], Path]]:
-    from quant_allocator.demo_data import m5_saydo, s1_ledger, s2_tearsheet, x1_atlas, x2_playground
+    from quant_allocator.demo_data import (
+        e2_pack,
+        m1_drift,
+        m2_convexity,
+        m3_alarms,
+        m5_saydo,
+        p3_hirefire,
+        s1_ledger,
+        s2_tearsheet,
+        x1_atlas,
+        x2_playground,
+    )
 
     return {
+        "e2_pack": e2_pack.build,
+        "m1_drift": m1_drift.build,
+        "m2_convexity": m2_convexity.build,
+        "m3_alarms": m3_alarms.build,
         "m5_saydo": m5_saydo.build,
+        "p3_hirefire": p3_hirefire.build,
         "s1_ledger": s1_ledger.build,
         "s2_tearsheet": s2_tearsheet.build,
         "x1_atlas": x1_atlas.build,
