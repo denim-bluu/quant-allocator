@@ -39,7 +39,9 @@ def test_alpha_dies_after_death_month():
     pre = dying.true_alpha_returns.iloc[:k].mean()
     post = dying.true_alpha_returns.iloc[k:].mean()
     assert pre > 0
-    assert post < pre  # skill is gone after death; post-k alpha collapses toward zero
+    # Skill is GONE, not merely reduced: post-death selection is pure noise, so
+    # the post-k alpha must collapse toward zero, not just shrink (review note).
+    assert abs(post) < pre / 4
 
 
 def test_negative_death_month_raises():
