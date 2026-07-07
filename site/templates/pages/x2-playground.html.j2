@@ -27,7 +27,9 @@
   </div>
   <div class="x2-analytic__meta">
     <span class="verdict-chip" data-verdict="noise">noise</span>
-    <span class="x2-wilson">Wilson 95% half-width &plusmn;<span class="x2-wilson__value">&mdash;</span> &mdash; the band is itself an estimate</span>
+    {# copy gate: the Wilson HW is on the cell's MEASURED POWER (the
+       verdict's own MC uncertainty), not on the alpha/Sharpe band. #}
+    <span class="x2-wilson">measured power carries a Wilson 95% half-width of &plusmn;<span class="x2-wilson__value">&mdash;</span> &mdash; the verdict is itself an estimate</span>
   </div>
   <div class="power-gate">
     <span class="power-gate__title">power gate</span>
@@ -75,8 +77,8 @@ Dials snap to computed cells &mdash; interpolating between them would invent pre
 Monte-Carlo grid does not have.</p>
 <p>The tier selector is the star control: the same ground truth at three honesty levels. R
 estimates betas from returns; E pins them to the true exposures, narrowing the alpha band;
-P adds trade-level analytics behind PowerGates. Every band carries its own Wilson 95%
-half-width because the band is itself an estimate.</p>
+P adds trade-level analytics behind PowerGates. Every verdict rests on a measured power
+that carries its own Wilson 95% half-width &mdash; the verdict is itself an estimate.</p>
 {% endblock %}
 
 {% block body_scripts %}
