@@ -1,0 +1,51 @@
+/* X2 playground — "What this exhibit shows" explainer.
+   Card-owned styles only; shared tokens come from design-tokens.css and the
+   x2-* structural classes live in interval.css (not touched here). */
+
+.x2-exhibit {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 0 0 20px;
+}
+
+.x2-exhibit__title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+  margin: 0 0 10px;
+}
+
+.x2-exhibit__lede {
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0 0 12px;
+}
+
+.x2-exhibit__subhead {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+  margin: 0 0 6px;
+}
+
+.x2-exhibit__map {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 5px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.x2-exhibit__map b {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.x2-exhibit__bridge {
+  font-size: 13px;
+  margin: 12px 0 0;
+}
