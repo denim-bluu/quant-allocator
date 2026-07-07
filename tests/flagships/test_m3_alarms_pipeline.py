@@ -1,5 +1,6 @@
 import numpy as np
 
+from quant_allocator.flagships.alarms import pipeline as ap
 from quant_allocator.flagships.tearsheet import pipeline as tp
 
 
@@ -28,3 +29,50 @@ def test_simulate_null_drawdowns_matches_inline_loop():
     expected = _inline_troughs(hyp, ar1, 48, 500, 20260706)
     got = tp.simulate_null_drawdowns(hyp, ar1, 48, n_paths=500, seed=20260706)
     assert np.array_equal(got, expected)
+
+
+def test_max_drawdown_null_is_per_path_positive_depth():
+    troughs = np.array([[0.0, -0.1, -0.05], [0.0, -0.2, -0.3]])
+    mdd = ap.max_drawdown_null(troughs)
+    assert np.allclose(mdd, [0.1, 0.3])  # deepest point per row, sign-flipped to positive
+
+
+def test_familywise_band_is_monotone_and_meets_scalar_at_window_end():
+    hyp = ap.DrawdownHypothesis(sharpe_annual=0.5, vol_annual=0.12)
+    troughs = ap.simulate_null_drawdowns(hyp, 0.0, 48, n_paths=3000, seed=ap.ALARM_SEED)
+    band_amber, band_red = ap.familywise_band(troughs)
+    assert np.all(np.diff(band_amber) >= -1e-12)   # running-MDD quantile never decreases
+    assert np.all(np.diff(band_red) >= -1e-12)
+    assert np.all(band_red >= band_amber - 1e-12)  # 99th deeper than 95th
+    # Identity (spec §3.2): the band's window-end value == the alpha-quantile of null MDD.
+    null_mdd = ap.max_drawdown_null(troughs)
+    assert band_red[-1] == np.percentile(null_mdd, 99)
+    assert band_amber[-1] == np.percentile(null_mdd, 95)
+
+
+def _returns_from_null(sharpe, vol, ar1, t, seed):
+    # A "healthy" realized path is one draw from the maintained hypothesis process itself.
+    rng = np.random.default_rng([seed, 99])
+    vm = vol / np.sqrt(12.0)
+    mm = sharpe / np.sqrt(12.0) * vm
+    sd = vm * np.sqrt(1.0 - ar1**2)
+    out = np.empty(t)
+    prev = 0.0
+    for k in range(t):
+        prev = ar1 * prev + rng.normal(0.0, sd)
+        out[k] = mm + prev
+    return out
+
+
+def test_alarm_state_flags_a_tail_drawdown_red_and_reports_percentile():
+    hyp = ap.DrawdownHypothesis(sharpe_annual=1.0, vol_annual=0.06)
+    # A -12% path is a deep tail for a smooth 6%-vol book: force it by scaling a null draw.
+    base = _returns_from_null(1.0, 0.06, 0.0, 48, seed=3)
+    returns = base - 0.02  # shift down so the path digs a deep drawdown
+    v = ap.alarm_state(returns, hyp, roster_size=12, n_paths=4000, seed=ap.ALARM_SEED)
+    assert v.level in {"green", "amber", "red"}
+    assert 0.0 <= v.mdd_percentile <= 100.0
+    assert v.realized_mdd > 0.0
+    assert v.red_threshold >= v.amber_threshold
+    assert v.expected_false_red == 12 * ap.RED_BUDGET  # heat-list count = N x per-manager RED budget
+    assert (v.level == "red") == (v.realized_mdd > v.red_threshold)
