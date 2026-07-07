@@ -6,3 +6,4 @@ __pycache__/
 site/_build/
 tools/.publication_terms
 site/_grid_cache/
+.claude/
