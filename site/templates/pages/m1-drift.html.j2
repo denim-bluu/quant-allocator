@@ -21,6 +21,43 @@
   <span class="tier-badge" data-tier="E">E &middot; measured</span>
 </section>
 
+<aside class="m1-guide" aria-label="What this exhibit shows">
+  <h2 class="m1-panel__title">What this exhibit shows</h2>
+  <div class="m1-guide__block">
+    <h3 class="m1-guide__subtitle">What you are looking at</h3>
+    <p class="m1-note">
+      A synthetic {{ card_data.meta.manager_name }} book whose stated net-beta band is
+      {{ "%+.2f"|format(band.lower) }} &hellip; {{ "%+.2f"|format(band.upper) }} but whose
+      <strong>measured</strong> net beta walks out of that band over {{ card_data.meta.months }} months.
+      The cumulative-sum alarm holds until the excursion has <em>persisted</em>, then fires at
+      month {{ v.alarm_month }} (the drift began at month {{ v.drift_onset }}). Reading the same walk
+      from returns instead of exposures, the picture inverts: the measured (E) tier detects it
+      {{ "%.0f"|format(op.detection_e.rate * 100) }}% of the time by T={{ op.detection_window }} while
+      the returns-inferred (R) tier detects it {{ "%.0f"|format(op.detection_r.rate * 100) }}%.
+    </p>
+  </div>
+  <div class="m1-guide__block">
+    <h3 class="m1-guide__subtitle">How to read it</h3>
+    <ul class="m1-guide__list">
+      <li><strong>The accent path</strong> is the measured net beta &mdash; disclosed, exact, not inferred.</li>
+      <li><strong>The dashed band</strong> is the stated mandate limit; <strong>the shaded envelope</strong>
+        is where a non-drifting book of this type wanders (5&ndash;95th percentile of the calibrated null).</li>
+      <li><strong>The alarm marker</strong> is where the CUSUM crosses its calibrated threshold; the gap back
+        to the drift onset is the honest <em>detection delay</em>.</li>
+      <li><strong>The tier badge</strong> marks the panel as measurement (E); <strong>the greyed R chart and
+        its noise chip</strong> mark returns-inferred drift that does not clear at this track length.</li>
+      <li><strong>The interval bars</strong> are the E and R detection rates and the factor-share slope, each
+        with its 95% interval &mdash; never a bare number.</li>
+      <li><strong>The power gate</strong> states the calibration: the false-alarm budget the threshold was set
+        to, and whether detection cleared the floor that lets the alarm render.</li>
+    </ul>
+    <p class="m1-note">
+      The full methodology &mdash; with the math and a reference implementation &mdash; is in the
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
+    </p>
+  </div>
+</aside>
+
 <section class="m1-panel">
   <h2 class="m1-panel__title">The measured net-beta walk &amp; the CUSUM alarm</h2>
   <p class="m1-note">

@@ -16,6 +16,36 @@
   margin: 0;
 }
 
+.m1-guide {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.m1-guide__subtitle {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dim);
+  margin: 0 0 6px;
+}
+
+.m1-guide__list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.55;
+  max-width: 68ch;
+}
+
+.m1-guide__list li {
+  margin: 0 0 5px;
+}
+
 .m1-panel {
   border-top: 1px solid var(--line);
   padding: 18px 0;
