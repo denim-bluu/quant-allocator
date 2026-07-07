@@ -105,18 +105,18 @@ and the screen must not conflate them.
 Take six months of a symmetric market factor and two managers who will turn out to
 report the *same* average return:
 
-| Month | Market $f$ | Honest $r=0.5f$ | Short-vol $r=0.5f-3f^2+0.0194$ |
+| Month | Market $f$ | Honest $r=0.5f$ | Short-vol $r=0.5f-3f^2+0.0189$ |
 | --- | --- | --- | --- |
 | 1 | $+0.10$ | $+0.050$ | $+0.039$ |
 | 2 | $-0.10$ | $-0.050$ | $-0.061$ |
-| 3 | $+0.05$ | $+0.025$ | $+0.037$ |
-| 4 | $-0.05$ | $-0.025$ | $-0.013$ |
+| 3 | $+0.05$ | $+0.025$ | $+0.036$ |
+| 4 | $-0.05$ | $-0.025$ | $-0.014$ |
 | 5 | $+0.08$ | $+0.040$ | $+0.040$ |
 | 6 | $-0.08$ | $-0.040$ | $-0.040$ |
 
-Both managers average **exactly zero** over the six months — the $+0.0194$ added to
+Both managers average **exactly zero** over the six months — the $+0.0189$ added to
 the short-vol book is a flat *premium* that offsets, on average, the $-3f^2$ it gives
-back (the mean of $f^2$ here is $0.00648$, and $3\times0.00648=0.0194$). So a mean- or
+back (the mean of $f^2$ here is $0.0063$, and $3\times0.0063=0.0189$). So a mean- or
 Sharpe-based comparison sees two identical books. But look at the down-months (2, 4,
 6): the short-vol book's worst month is $-0.061$, deeper than the honest book's
 $-0.050$, and every large move is shaded worse. The premium is the calm; the bend is
