@@ -469,26 +469,35 @@ def alarm_level(realized_mdd, null_mdd_samples,
 
 
 # ---------------------------------------------------------------------------
-# 5. Hysteresis (§3.8): a two-threshold state machine. Arm on the RED line,
-#    clear only after the drawdown recovers inside the AMBER line and holds
-#    there for `clear_months` consecutive months.
+# 5. Hysteresis (§3.8): a two-threshold state machine over the CURRENT
+#    drawdown D_t (from running_drawdown, NOT running_mdd). Arm when D_t
+#    crosses a band line; clear only after D_t recovers inside the AMBER line
+#    and holds there for `clear_months` consecutive months.
+#    Arm on the path max; clear on the current drawdown — the max cannot
+#    recover, the drawdown can. (Because the band is monotone, the running max
+#    M_t first exceeds it exactly at the month where D_t does, so arming on
+#    D_t IS the rising edge of the M_t-vs-band test of §3.4 — and it re-arms
+#    correctly if the drawdown deepens again after a clear.)
 # ---------------------------------------------------------------------------
-def hysteresis_states(running_mdd_path, amber_curve, red_curve, clear_months=2):
-    """Step a single realized running-MDD path through the alarm state machine."""
+def hysteresis_states(drawdown_path, amber_curve, red_curve, clear_months=2):
+    """Step the realized CURRENT-drawdown series D_t through the alarm state
+    machine. Feeding the running max here would make clearing impossible:
+    M_t is monotone non-decreasing and can never come back inside the band."""
     state = "green"
     calm = 0                                      # consecutive months inside AMBER
     out = []
-    for t, m_t in enumerate(running_mdd_path):
-        armed_red = m_t > red_curve[t]
-        armed_amber = m_t > amber_curve[t]
-        inside_amber = m_t <= amber_curve[t]
+    for t, d_t in enumerate(drawdown_path):
+        arm_red = d_t > red_curve[t]              # crossing the arm line (re-)arms
+        arm_amber = d_t > amber_curve[t]
+        inside_amber = d_t <= amber_curve[t]      # recovery test uses D_t, never M_t
         calm = calm + 1 if inside_amber else 0
-        if armed_red:
+        if arm_red:
             state = "red"
         elif state == "red":
             if inside_amber and calm >= clear_months:
                 state = "amber"                   # step down only after recovery
-        elif armed_amber:
+                calm = 0                          # each step-down earns its own run
+        elif arm_amber:
             state = "amber"
         elif state == "amber" and inside_amber and calm >= clear_months:
             state = "green"
@@ -519,10 +528,22 @@ if __name__ == "__main__":
         level, pct, amber, red = alarm_level(0.12, nulls)
         print(f"{name}: -12% MDD -> {level.upper():5s} "
               f"({pct:5.1f}th pct;  null 95th={amber:.0%}, 99th={red:.0%})")
+
+    # Hysteresis on a toy CURRENT-drawdown path: breach the RED line, hover
+    # above the AMBER (clear) line, then recover and hold for 2 calm months.
+    amber_line = np.full(8, 0.10)                 # flat toy bands for legibility
+    red_line = np.full(8, 0.15)
+    toy_dd = np.array([0.05, 0.16, 0.12, 0.12, 0.08, 0.08, 0.05, 0.04])
+    print(hysteresis_states(toy_dd, amber_line, red_line, clear_months=2))
+    # -> ['green', 'red', 'red', 'red', 'red', 'amber', 'amber', 'green']
+    #    arm at 0.16; hold while 0.12 hovers above the clear line; step down to
+    #    AMBER only after two months back inside; then AMBER -> GREEN the same way.
 ```
 
 Run it and the trend book prints GREEN (−12% far inside its wide null), the credit book
-RED (−12% past its narrow 99th) — the demo's punchline reproduced from first principles.
+RED (−12% past its narrow 99th) — the demo's punchline reproduced from first principles —
+followed by the toy hysteresis trace arming, holding, and clearing exactly as §3.8
+specifies.
 
 ## 5. Reading the demo
 
