@@ -124,7 +124,16 @@ def _validate_live_entry(entry: dict, card_id: str, path: Path, site_dir: Path) 
         required_live |= {"usage_note"}
     else:
         required_live |= {"data"}
-        if "standing_note" not in entry:
+        standing_note = entry.get("standing_note")
+        if standing_note is not None and not (
+            isinstance(standing_note, str) and standing_note.strip()
+        ):
+            # An empty note would fall through to the golive-box branch and crash
+            # on Undefined golive fields — fail with a named error instead.
+            raise BuildError(
+                f"{path}: live card '{card_id}' standing_note must be a non-empty string"
+            )
+        if standing_note is None:
             required_live |= {"golive"}
     missing = required_live - entry.keys()
     if missing:
