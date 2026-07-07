@@ -18,7 +18,14 @@
   one_liner: Every statistic as an interval with a verdict — honest by construction.
   decisions: [monitor, select]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/s2-tearsheet.html.j2
+  data: s2_tearsheet.json
+  spec: s2-tear-sheet-engine.md
+  golive:
+    data_ask: Monthly net returns (R) + risk-free series + strategy factor set
+    sample: ≥36 months
+    effort: S–M
 - id: s3
   title: Sizing & alpha-decay lab
   lane: S

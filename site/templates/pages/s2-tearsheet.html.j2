@@ -1,0 +1,128 @@
+{% extends "demo.html.j2" %}
+
+{% set st = card_data.statistics %}
+{% set ab = card_data.alt_beta %}
+{% set dd = card_data.drawdown_band %}
+
+{% block demo_content %}
+<section class="tearsheet-intro">
+  <p class="tearsheet-headline">
+    One synthetic manager (<strong>{{ card_data.meta.manager_code }}</strong>, equity
+    long/short, {{ card_data.meta.months }} months, tier {{ card_data.meta.tier }}). Every
+    statistic ships as an interval with a verdict &mdash; no bare point, no overstated
+    confidence. Risk-free {{ "%.1f"|format(card_data.meta.rf_annual * 100) }}%/yr
+    <span class="tearsheet-synthetic">(synthetic)</span>.
+  </p>
+</section>
+
+<section class="tearsheet-panel">
+  <h2 class="tearsheet-panel__title">De-smoothing &mdash; reported vs economic Sharpe</h2>
+  <p class="tearsheet-note">
+    Getmansky&ndash;Lo&ndash;Makarov unsmoothing restores the volatility that smoothed
+    marks hide, so the economic Sharpe is lower. Smoothing kernel
+    &theta; = ({{ "%.2f"|format(card_data.theta[0]) }},
+    {{ "%.2f"|format(card_data.theta[1]) }},
+    {{ "%.2f"|format(card_data.theta[2]) }}); vol ratio
+    {{ "%.2f"|format(card_data.unsmoothing.vol_ratio) }}. De-smoothing lowers the Sharpe
+    from {{ "%.2f"|format(st.sharpe_reported.point) }} to
+    {{ "%.2f"|format(st.sharpe_desmoothed.point) }}.
+  </p>
+  <div class="tearsheet-stat-pair">
+    <div class="interval-stat" data-domain="sharpe"
+         data-lo="{{ st.sharpe_reported.ci_lo }}"
+         data-point="{{ st.sharpe_reported.point }}"
+         data-hi="{{ st.sharpe_reported.ci_hi }}">
+      <span class="interval-stat__label">Reported Sharpe</span>
+      <span class="interval-stat__value">{{ "%.2f"|format(st.sharpe_reported.point) }}</span>
+      <div class="interval-stat__rail">
+        <div class="interval-stat__band"></div>
+        <div class="interval-stat__point"></div>
+      </div>
+      <span class="interval-stat__range">95% interval {{ "%.2f"|format(st.sharpe_reported.ci_lo) }} &hellip; {{ "%.2f"|format(st.sharpe_reported.ci_hi) }}</span>
+    </div>
+
+    <div class="interval-stat" data-domain="sharpe"
+         data-lo="{{ st.sharpe_desmoothed.ci_lo }}"
+         data-point="{{ st.sharpe_desmoothed.point }}"
+         data-hi="{{ st.sharpe_desmoothed.ci_hi }}">
+      <span class="interval-stat__label">De-smoothed Sharpe</span>
+      <span class="interval-stat__value">{{ "%.2f"|format(st.sharpe_desmoothed.point) }}</span>
+      <div class="interval-stat__rail">
+        <div class="interval-stat__band"></div>
+        <div class="interval-stat__point"></div>
+      </div>
+      <span class="interval-stat__range">95% interval {{ "%.2f"|format(st.sharpe_desmoothed.ci_lo) }} &hellip; {{ "%.2f"|format(st.sharpe_desmoothed.ci_hi) }}</span>
+    </div>
+  </div>
+  <p class="tearsheet-mppm">
+    MPPM (&rho;=3) {{ "%+.1f"|format(st.mppm.point * 100) }}%/yr, shown beside the Sharpe
+    as a manipulation check &mdash; the Sharpe&ndash;MPPM <em>gap</em>, not the level, is
+    the signal.
+  </p>
+</section>
+
+<section class="tearsheet-panel">
+  <h2 class="tearsheet-panel__title">Factor regression &mdash; interval alpha</h2>
+  <div class="tearsheet-factor">
+    <div class="interval-stat" data-domain="alpha"
+         data-lo="{{ st.alpha.ci_lo }}"
+         data-point="{{ st.alpha.point }}"
+         data-hi="{{ st.alpha.ci_hi }}">
+      <span class="interval-stat__label">Annualized alpha</span>
+      <span class="interval-stat__value">{{ "%+.1f"|format(st.alpha.point * 100) }}%</span>
+      <div class="interval-stat__rail">
+        <div class="interval-stat__band"></div>
+        <div class="interval-stat__point"></div>
+      </div>
+      <span class="interval-stat__range">90% interval {{ "%+.1f"|format(st.alpha.ci_lo * 100) }}% &hellip; {{ "%+.1f"|format(st.alpha.ci_hi * 100) }}%</span>
+    </div>
+    <dl class="tearsheet-betas">
+      <dt>Market</dt><dd>{{ "%.2f"|format(card_data.factor_betas.market) }}</dd>
+      <dt>Size</dt><dd>{{ "%.2f"|format(card_data.factor_betas.size) }}</dd>
+      <dt>Value</dt><dd>{{ "%.2f"|format(card_data.factor_betas.value) }}</dd>
+      <dt>Momentum</dt><dd>{{ "%.2f"|format(card_data.factor_betas.momentum) }}</dd>
+    </dl>
+  </div>
+  <div class="tearsheet-altbeta">
+    <span class="verdict-chip" data-verdict="shrink">{{ ab.chip }}</span>
+    <span class="tearsheet-altbeta__ci">
+      alpha {{ "%.0f"|format(ab.level * 100) }}% CI
+      {{ "%+.1f"|format(ab.ci_lo * 100) }}% &hellip; {{ "%+.1f"|format(ab.ci_hi * 100) }}%
+      &mdash; not distinguishable from factor beta at this track length.
+    </span>
+  </div>
+</section>
+
+<section class="tearsheet-panel">
+  <h2 class="tearsheet-panel__title">Drawdown vs simulation-calibrated null</h2>
+  <p class="tearsheet-note">
+    The realized drawdown path against the <strong>pointwise</strong> 50 / 95 / 99th
+    percentile null envelope (AR(1) {{ "%.2f"|format(dd.ar1) }}). The realized path
+    <strong>stays within the 99th-percentile envelope</strong> &mdash; an ordinary
+    drawdown under the paid-for-skill hypothesis.
+  </p>
+  <svg class="s2-drawdown" viewBox="0 0 100 40" preserveAspectRatio="none"
+       role="img" aria-label="Realized drawdown against the pointwise null envelope"></svg>
+</section>
+
+<section class="tearsheet-panel">
+  <h2 class="tearsheet-panel__title">Monthly returns</h2>
+  <svg class="s2-strip" viewBox="0 0 100 30" preserveAspectRatio="none"
+       role="img" aria-label="Monthly return strip"></svg>
+</section>
+{% endblock %}
+
+{% block methodology %}
+<p>Six pure stages over the return series and a fully synthetic factor set:
+unsmoothing (Getmansky&ndash;Lo&ndash;Makarov MA(2)), factor regression, interval
+machinery (Lo SE + Ledoit&ndash;Wolf bootstrap for the Sharpe, Newey&ndash;West for the
+alpha), MPPM, and the simulation-calibrated drawdown band. Every statistic is an
+interval; a bare point is a design-system error.</p>
+<p>The alt-beta chip is a <em>calibration statement about track length</em>, not an
+accusation: the alpha's 90% interval includes zero at 48 months, which opens a
+fees-for-beta conversation &mdash; it does not claim the manager has no skill.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/s2-tearsheet.js"></script>
+{% endblock %}
