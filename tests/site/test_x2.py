@@ -61,6 +61,11 @@ def test_x2_component_scaffolding_and_copy(tmp_path):
         assert 'data-analytic="%s"' % a in html
 
 
+def test_x2_exhibit_explainer(tmp_path):
+    html, _ = _build(tmp_path)
+    assert "What this exhibit shows" in html
+
+
 def test_x2_script_loaded(tmp_path):
     html, out = _build(tmp_path)
     assert "assets/x2-playground.js" in html
