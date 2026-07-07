@@ -83,3 +83,8 @@ def test_e2_print_furniture_and_script(tmp_path):
 def test_e2_honesty_note_states_hand_authored(tmp_path):
     html, _ = _build_with_e2_live(tmp_path)
     assert "hand-authored" in html or "human-edited" in html
+
+
+def test_e2_gallery_explainer_present(tmp_path):
+    html, _ = _build_with_e2_live(tmp_path)
+    assert "What this exhibit shows" in html
