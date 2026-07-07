@@ -1,0 +1,170 @@
+{# site/templates/pages/p3-hirefire.html.j2 #}
+{% extends "demo.html.j2" %}
+
+{% set ag = card_data.aggregate %}
+{% set sc = card_data.scorecard %}
+{% set names = card_data.meta.names %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/p3.css">
+{% endblock %}
+
+{% block demo_content %}
+<section class="p3-intro">
+  <p class="p3-headline">
+    Goyal&ndash;Wahal (2008): plan sponsors hire after strong trailing performance and
+    fire after weak &mdash; yet the <strong>fired managers go on to match or beat the
+    newly hired ones</strong>. The round-trip adds nothing; the timing is the mistake.
+    P3 audits <strong>the allocator's own decision</strong>, not the manager's skill.
+    This is a fully <span class="p3-synthetic">synthetic</span> decision history of
+    {{ ag.n_events }} events over {{ card_data.meta.n_managers }} managers.
+  </p>
+</section>
+
+<section class="p3-panel">
+  <h2 class="p3-panel__title">Process value-add &mdash; shrunk toward the base rate</h2>
+  {% if ag.raw_mean_gated %}
+  <div class="power-gate" role="note">
+    <span class="power-gate__title">Raw average refused</span>
+    <p class="power-gate__reason">
+      {{ ag.gate_banner }} Effective N is
+      {{ "%.1f"|format(ag.n_effective) }} ({{ ag.n_events }} events across
+      {{ ag.n_cohorts }} quarterly cohorts, design effect
+      {{ "%.2f"|format(ag.design_effect) }}) &mdash; below the
+      {{ card_data.meta.min_events }}-event gate.
+    </p>
+  </div>
+  {% endif %}
+
+  <div class="interval-stat" data-domain="valueadd" data-zero="0"
+       data-lo="{{ ag.posterior.ci_lo }}"
+       data-point="{{ ag.posterior.point }}"
+       data-hi="{{ ag.posterior.ci_hi }}">
+    <span class="interval-stat__label">Posterior process value-add (annualized round-trip)</span>
+    <span class="interval-stat__value">{{ "%+.1f"|format(ag.posterior.point * 100) }}%</span>
+    <div class="interval-stat__rail">
+      <div class="interval-stat__band"></div>
+      <div class="interval-stat__zero"></div>
+      <div class="interval-stat__point"></div>
+    </div>
+    <span class="interval-stat__range">90% interval
+      {{ "%+.1f"|format(ag.posterior.ci_lo * 100) }}% &hellip;
+      {{ "%+.1f"|format(ag.posterior.ci_hi * 100) }}%</span>
+  </div>
+
+  <p class="p3-verdict">
+    <span class="verdict-chip" data-verdict="noise">{{ ag.verdict_chip }}</span>
+    <span class="p3-verdict__note">
+      The prior is pinned at the Goyal&ndash;Wahal null (0), prior scale
+      {{ "%.0f"|format(card_data.meta.prior_scale * 100) }}%/yr. The interval
+      straddles zero &mdash; not a failure to conclude, it is the conclusion.
+    </span>
+  </p>
+
+  <p class="p3-detect">
+    {% if ag.events_to_detect.n %}
+    At a true {{ "%.0f"|format(ag.events_to_detect.true_gap * 100) }}%/yr edge and
+    &rho; = {{ "%.2f"|format(ag.events_to_detect.rho) }}, the posterior interval would
+    first exclude zero at &asymp; <strong>{{ ag.events_to_detect.n | int }} decisions</strong>
+    &mdash; more than a career of governance holds.
+    {% else %}
+    At this cohort correlation, <strong>no attainable decision count</strong> reaches
+    significance &mdash; the value is prospective calibration, not a p-value.
+    {% endif %}
+  </p>
+</section>
+
+<section class="p3-panel">
+  <h2 class="p3-panel__title">Counterfactual cohort &mdash; fired vs replacement, forward</h2>
+  <p class="p3-note">
+    Event-time forward path of the <strong>fired</strong> managers against the
+    <strong>replacements</strong> that funded their mandates. The fired recover; the
+    replacements fade &mdash; mean reversion, exactly the round-trip Goyal&ndash;Wahal
+    found. This is calibration of the termination bar, not an accusation.
+  </p>
+  <svg class="p3-cohort" viewBox="0 0 100 40" preserveAspectRatio="none"
+       role="img" aria-label="Fired vs replacement forward paths"></svg>
+  <div class="p3-cohort__legend">
+    <span class="p3-legend p3-legend--fired">fired</span>
+    <span class="p3-legend p3-legend--replacement">replacement</span>
+  </div>
+</section>
+
+<section class="p3-panel">
+  <h2 class="p3-panel__title">Journal scorecard &mdash; decision graded against its pre-commitments</h2>
+  <div class="p3-scorecard">
+    <div class="p3-scorecard__head">
+      <span class="p3-scorecard__name">{{ names[sc.manager_id] }}</span>
+      <span class="ledger-row__id">{{ sc.manager_id }}</span>
+      <span class="ledger-row__meta">{{ sc.decision_type }} &middot; {{ sc.decision_date }}
+        &middot; {{ sc.horizon_years }}y horizon</span>
+    </div>
+    <dl class="p3-scorecard__grid">
+      <dt>Thesis (pre-committed)</dt><dd>{{ sc.thesis }}</dd>
+      <dt>Kill criterion (pre-committed)</dt><dd>{{ sc.kill_criterion }}</dd>
+      <dt>Expected alpha</dt><dd>{{ "%+.1f"|format(sc.expected_alpha_annual * 100) }}%/yr</dd>
+      <dt>Realized forward ({{ sc.horizon_years }}y)</dt>
+        <dd>{{ "%+.1f"|format(sc.realized_forward * 100) }}%</dd>
+      <dt>Realized factor alpha</dt>
+        <dd>{{ "%+.1f"|format(sc.realized_factor_alpha_annual * 100) }}%/yr</dd>
+      <dt>Kill criterion met?</dt>
+        <dd>{{ "yes" if sc.kill_criterion_met else "no" }}</dd>
+    </dl>
+    <p class="p3-scorecard__grade">
+      Graded on the bar set <em>before</em> the draw, not on the hindsight outcome
+      &mdash; a good decision with a bad draw is not a bad decision.
+    </p>
+  </div>
+</section>
+
+<section class="p3-panel">
+  <h2 class="p3-panel__title">Per-event ledger &mdash; individual stories with receipts</h2>
+  <p class="p3-note">
+    At this decision count the stories <em>are</em> the honest output; nothing is
+    averaged away. Each row is one decision, its counterfactual, and the forward gap.
+  </p>
+  <div class="p3-ledger">
+    {% for ev in card_data.events %}
+    <article class="p3-event p3-event--{{ ev.value_verdict }}">
+      <div class="p3-event__head">
+        <span class="p3-event__type">{{ ev.decision_type }}</span>
+        <span class="p3-event__name">{{ names[ev.manager_id] }}</span>
+        <span class="ledger-row__id">{{ ev.manager_id }}</span>
+        <span class="ledger-row__meta">{{ ev.decision_date }} &middot;
+          {{ ev.counterfactual_rung }} &middot; {{ ev.horizon_years }}y</span>
+        <span class="verdict-chip" data-verdict="{{ 'aligned' if ev.value_verdict == 'helped'
+          else 'contradicted' if ev.value_verdict == 'hurt' else 'noise' }}">{{ ev.value_verdict }}</span>
+      </div>
+      <div class="p3-event__gaps">
+        <span>forward gap (raw) <strong>{{ "%+.1f"|format(ev.forward_gap_raw * 100) }}%</strong></span>
+        <span>factor-adjusted <strong>{{ "%+.1f"|format(ev.forward_gap_factor_adj * 100) }}%</strong></span>
+        <span>kill criterion {{ "met" if ev.kill_criterion_met else "not met" }}</span>
+      </div>
+      <p class="p3-event__thesis">{{ ev.thesis }}</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+
+{% block methodology %}
+<p>Two halves with a hard division of labor. The <strong>journal</strong> is a
+prospective discipline instrument &mdash; a schema (thesis, expected alpha, horizon,
+kill criterion) filled at the decision moment, before the outcome is known, the only
+clean defense against outcome bias. The <strong>ledger</strong> is deterministic
+event-time accounting: forward excess returns and factor-adjusted gaps (reusing the S2
+factor regression), a counterfactual resolved by a fixed hierarchy
+(replacement-paired &rarr; peer-median &rarr; benchmark), and a signed value-add per
+event where positive always means the decision helped.</p>
+<p>The one crossing-events number is the <strong>process value-add posterior</strong>:
+the same normal-normal shrinkage the skill engine uses, with the grand mean pinned at
+the Goyal&ndash;Wahal base rate (0). Effective N is honest &mdash; decisions in one
+market episode share a forward path, so the cohort block bootstrap and the design
+effect deflate the sample far below the event count. The raw average is refused below
+the effective-events gate; the posterior renders at any N, and its straddling-zero
+interval is the product, not a bug.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/p3-hirefire.js"></script>
+{% endblock %}
