@@ -54,6 +54,11 @@ def test_m2_provenance_furniture(tmp_path):
     assert (out / "specs" / "m2.html").exists()
 
 
+def test_m2_exhibit_explainer_present(tmp_path):
+    html, _ = _build_m2(tmp_path)
+    assert "What this exhibit shows" in html
+
+
 def test_m2_paired_managers_and_components(tmp_path):
     html, _ = _build_m2(tmp_path)
     # Both fictional manager names render.
