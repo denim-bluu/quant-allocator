@@ -15,7 +15,7 @@ def test_three_exhibits_present(tmp_path):
     curves = data["power_curves"]
     assert len(curves) == len(x1_atlas.SAMPLER_IC_LEVELS)
     for curve in curves:
-        assert set(curve) >= {"ic", "measured_ir", "T", "ols_ttest", "posterior"}
+        assert set(curve) >= {"ic", "realized_ir", "T", "ols_ttest", "posterior"}
         assert len(curve["T"]) == len(curve["ols_ttest"]) == len(curve["posterior"])
     # Exhibit 2: alpha degradation R vs E, plus P-only metrics.
     table = data["degradation_table"]

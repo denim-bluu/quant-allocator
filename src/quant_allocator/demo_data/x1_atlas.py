@@ -13,21 +13,15 @@ from pathlib import Path
 from quant_allocator.demo_data import x_grid
 from quant_allocator.demo_data._emit import SITE_DATA_DIR, write_json
 
-SAMPLER_IC_LEVELS = (0.02, 0.04, 0.10)  # labeled by measured IR (docket D-13).
+SAMPLER_IC_LEVELS = (0.02, 0.04, 0.10)  # labeled by the engine's realized IR (docket D-13).
 SAMPLER_HALF_LIFE = 12.0
 SAMPLER_SIZING = 0.8
 DEGRADATION_T = 48
 
 
-def _measured_ir(payloads, ic) -> float:
-    # Mean true-alpha IR proxy at the longest T: true annualized alpha / its dispersion.
-    cell = payloads[(ic, SAMPLER_HALF_LIFE, SAMPLER_SIZING, x_grid.T_MAX, "E")].analytics["alpha_ols"]
-    band = (cell["hi"] - cell["lo"]) / 2.0
-    return float(cell["point"] / band) if band > 0 else 0.0
-
-
 def build(out_dir: Path = SITE_DATA_DIR) -> Path:
     payloads, thresholds, meta = x_grid.build_grid()
+    realized_ir_by_ic = meta["realized_ir_by_ic"]
 
     power_curves = []
     for ic in SAMPLER_IC_LEVELS:
@@ -43,7 +37,9 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
         ]
         power_curves.append({
             "ic": ic,
-            "measured_ir": round(_measured_ir(payloads, ic), 3),
+            # Engine's realized IR for this IC at the sampler slice (D-13): the
+            # measured effect size the OLS/posterior curves are detecting.
+            "realized_ir": round(realized_ir_by_ic[ic], 3),
             "T": list(x_grid.T_GRID),
             "ols_ttest": [round(p, 4) for p in ols],
             "posterior": [round(p, 4) for p in posterior],

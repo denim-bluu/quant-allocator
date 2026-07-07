@@ -39,22 +39,44 @@ N_ASSETS = 120
 N_LONG = 40
 N_SHORT = 25
 REBALANCE_FRACTION = 0.25
-CODE_VERSION = "c2"
+# c7: Fama-MacBeth sizing_slope (RULING 7) on top of c6's equal-weight-
+# counterfactual trade-metric contributions (RULING 5) and plain clustered
+# hit-rate SE (RULING 6). The cache stores computed AnalyticStats, so
+# engine/kernel changes must invalidate it.
+CODE_VERSION = "c7"
 RUNTIME_BUDGET_SECONDS = 3000  # 50 min: margin under the one-hour ceiling (X2 spec §7).
 WILSON_Z = 1.96  # X1 spec §3.3 / §8.4: Wilson 95% interval on a MC proportion.
 # X1 spec §4.2: size within 5% +/- 1.5pp systematic; the cell's Wilson HW covers MC
 # noise on top (at N_REPS=500 the HW alone is ~1.9pp, so a bare 1.5pp gate would
 # false-fail ~12% of IC=0 cells).
 SIZE_TOL_SYSTEMATIC = 0.015
+# GATE RULED 2026-07-07 (two-tier size bands): EXACT tests (alpha_ols — both the R
+# estimated-beta and E/P pinned variants) keep the tight SIZE_TOL_SYSTEMATIC band.
+# APPROXIMATE tests (sharpe Lo-SE, month-clustered hit_rate, pooled sizing_slope)
+# get this wide implementation-sanity band: deviations inside it are FINDINGS the
+# IC=0 column displays (e.g. Lo-SE under-coverage at hl=3 is real content);
+# deviations outside it are bugs.
+SIZE_TOL_APPROX = 0.05
+# Analytics whose detection rule is an exact size-controlled test at IC=0.
+_EXACT_SIZE_ANALYTICS = ("alpha_ols",)
+# GATE RULED 2026-07-07 (posterior tripwire): alpha_posterior is EXEMPT from the 5%
+# size band — an informative-prior decision rule is not a size-controlled
+# frequentist test; its IC=0 rate is atlas CONTENT (the false-attribution price of
+# borrowing strength). The invariant keeps only a degeneracy tripwire:
+# 0 = collapsed prior (the old same-config-clone bug), >= this bound = runaway prior.
+POSTERIOR_SIZE_TRIPWIRE = 0.25
 _FACTOR_COLS = ("beta_market", "beta_size", "beta_value", "beta_momentum")
 _CACHE_DIR = Path(__file__).resolve().parents[3] / "site" / "_grid_cache"
 
 GATE_POWER_TARGET = 0.80  # X1 spec §3.4: threshold = smallest gate quantity with power >= 0.80.
 ROBUST_POWER = 0.80  # NUMERICS-GATE (docket D-3): provisional VerdictChip band, "per Sweep C".
 NOISE_POWER = 0.50  # NUMERICS-GATE (docket D-3): provisional VerdictChip band, "per Sweep C".
-# NUMERICS-GATE (docket D-13): pinned-effect reference cell (IC=0.04, half-life=12,
-# sizing=0.8) is a provisional stand-in for "true IR 0.5" (X1 §3.4) — confirm the
-# IC->IR mapping before certifying.
+# GATE RULED 2026-07-07 (docket D-13): PINNED_EFFECT_IC=0.04 kept — engine-measured
+# realized IR 0.65 (ref slice), nearest grid point to the spec's IR-0.5 target
+# (X1 §3.4). The reference cell is (IC=0.04, half-life=12, sizing=0.8).
+# gate 2026-07-07: all-inf frequentist thresholds at this reference effect are
+# CERTIFIED as content — only the shrinkage posterior at E-tier reaches 80% power
+# within T<=120 at the reference effect — the atlas headline.
 PINNED_EFFECT_IC = 0.04
 REF_HALF_LIFE = 12.0
 REF_SIZING = 0.8
@@ -98,6 +120,29 @@ class CellStats:
     T: int
     tier: str
     analytics: dict[str, AnalyticStats]
+
+
+@dataclass(frozen=True)
+class EstimatorArrays:
+    # Per-rep alpha estimates for one (config, T, estimator), kept out of run_config
+    # so build_grid can pool them across the IC axis for the posterior cohort.
+    point: np.ndarray
+    se: np.ndarray
+    true: np.ndarray
+
+
+@dataclass(frozen=True)
+class ConfigResult:
+    # One config's full contribution to the grid: its T x tier CellStats, the
+    # per-(T, estimator) estimate arrays the posterior pools over, and the config's
+    # realized IR (median over reps at T_MAX) used to label the atlas curves.
+    cells: list[CellStats]
+    estimates: dict[int, dict[str, EstimatorArrays]]
+    realized_ir: float
+
+
+# The posterior is scored at R (OLS inputs) and E (pinned inputs) only — X1 §3.2.
+_POSTERIOR_ESTIMATOR = {"R": "ols", "E": "pinned"}
 
 
 def base_configs() -> list[SimConfig]:
@@ -152,9 +197,19 @@ def _simulate_rep(cfg: SimConfig, seed: int):
     betas_path = tiers.exposures[list(_FACTOR_COLS)].to_numpy()
     weights = history.weights.to_numpy()
     asset_returns = market.asset_returns.to_numpy()
-    contributions = weights * asset_returns  # per position-month P&L contribution
+    # GATE RULED 2026-07-07 (RULING 5): BOTH trade metrics (hit_rate, sizing_slope)
+    # score EQUAL-WEIGHT-COUNTERFACTUAL contributions w*(r - r_bar_month), where
+    # r_bar_month is the universe cross-sectional mean. X1 spec §3.2's own sizing
+    # wording is "slope vs an equal-weight counterfactual" — w·(r − r̄) IS that
+    # counterfactual; for hit rate it is the standard active batting average ("did
+    # the pick beat the month's equal-weight market"), and it zeroes the net-long
+    # drift bias at IC=0 by construction (measured bias t ≈ +9 under the raw null).
+    # Raw w*r contributions stay available to any other consumer via
+    # weights/asset_returns; only the trade-metric input is hedged.
+    hedged_returns = asset_returns - asset_returns.mean(axis=1, keepdims=True)
+    active_contributions = weights * hedged_returns
     sizes = np.abs(weights)
-    return returns, true_alpha, factors, betas_path, contributions, sizes
+    return returns, true_alpha, factors, betas_path, active_contributions, sizes
 
 
 def _independent_trades(T: int) -> float:
@@ -190,20 +245,23 @@ def _aggregate(points, trues, detects, gate_quantity) -> AnalyticStats:
     )
 
 
-def _posterior_stats(estimates, T) -> AnalyticStats:
-    # S1 shrinkage posterior over the cell cohort, detect P(a>0)>0.95. gate
-    # ruling: an IntervalStat labeled "posterior alpha" carries the SHRUNK posterior
-    # means — reporting raw tier points under a posterior label would mislabel.
-    points = np.array([e.point for e in estimates])
-    ses = np.array([e.se for e in estimates])
-    shrunk = shrink_alphas(points, ses, np.zeros(len(estimates), dtype=int))
-    detect = shrunk.prob_positive > 0.95
-    return _aggregate(
-        shrunk.posterior_alpha, [e.true for e in estimates], detect, float(T)
+def _realized_ir(true_alpha_series) -> float:
+    # Annualized IR on the FULL T_MAX true-alpha series of one rep (docket D-13).
+    ta = np.asarray(true_alpha_series, dtype=float)
+    ann_mean = float(ta.mean()) * 12
+    ann_vol = float(ta.std(ddof=1)) * np.sqrt(12.0)
+    return ann_mean / ann_vol if ann_vol > 0 else 0.0
+
+
+def _estimator_arrays(estimates) -> EstimatorArrays:
+    return EstimatorArrays(
+        point=np.array([e.point for e in estimates], dtype=float),
+        se=np.array([e.se for e in estimates], dtype=float),
+        true=np.array([e.true for e in estimates], dtype=float),
     )
 
 
-def run_config(cfg, n_reps=N_REPS, base_seed=GRID_BASE_SEED, use_cache=True) -> list[CellStats]:
+def run_config(cfg, n_reps=N_REPS, base_seed=GRID_BASE_SEED, use_cache=True) -> ConfigResult:
     cache_path = _CACHE_DIR / (
         f"cfg{cfg.index}_ic{cfg.ic}_hl{cfg.half_life}_sd{cfg.sizing}"
         f"_seed{base_seed}_n{n_reps}_{CODE_VERSION}.pkl"
@@ -215,34 +273,41 @@ def run_config(cfg, n_reps=N_REPS, base_seed=GRID_BASE_SEED, use_cache=True) -> 
 
     reps = [_simulate_rep(cfg, _config_seed(base_seed, cfg.index, r)) for r in range(n_reps)]
     cells: list[CellStats] = []
+    estimates: dict[int, dict[str, EstimatorArrays]] = {}
     for T in T_GRID:
         # Per-rep point estimates for this T-prefix, by analytic.
-        ols = [x_metrics.ols_alpha(r[:T], f[:T], ta[:T].mean() * 12) for r, ta, f in
-               ((rep[0], rep[1], rep[2]) for rep in reps)]
+        ols = [x_metrics.ols_alpha(rep[0][:T], rep[2][:T], rep[1][:T].mean() * 12) for rep in reps]
         pinned = [
             x_metrics.pinned_alpha(rep[0][:T], rep[3][:T], rep[2][:T], rep[1][:T].mean() * 12)
             for rep in reps
         ]
         sharpe = [x_metrics.sharpe_lo(rep[0][:T]) for rep in reps]
-        # X1 spec §3.2: posterior scored at R/E with the tier's own alpha estimates;
-        # omitting it at P is deliberate.
-        posterior_by_tier = {"R": _posterior_stats(ols, T), "E": _posterior_stats(pinned, T)}
         trades = _independent_trades(T)
-        hit = [
-            x_metrics.hit_rate(rep[4][:T].ravel(), trades) for rep in reps
-        ]
-        sizing = [x_metrics.sizing_slope(rep[5][:T].ravel(), rep[4][:T].ravel()) for rep in reps]
+        # Both trade metrics take the 2D (month x position) matrices: hit_rate's
+        # t-test clusters by month (D-9 gate ruling 2026-07-07) and sizing_slope is
+        # Fama-MacBeth over monthly cross-sections (RULING 7); the trades proxy is
+        # the gate axis only.
+        hit = [x_metrics.hit_rate(rep[4][:T], trades) for rep in reps]
+        sizing = [x_metrics.sizing_slope(rep[5][:T], rep[4][:T]) for rep in reps]
+
+        # Per-rep alpha estimate arrays survive out of run_config: the posterior
+        # cohort (build_grid) pools these across the IC axis (X1 §3.2).
+        ols_arrays = _estimator_arrays(ols)
+        pinned_arrays = _estimator_arrays(pinned)
+        estimates[T] = {"ols": ols_arrays, "pinned": pinned_arrays}
+        # FIX 3 gate ruling — estimation error is measured against the population
+        # effect (the cross-rep mean of realized window alpha), not each rep's own
+        # realized window mean (which makes pinned-alpha RMSE identically 0).
+        alpha_population_target = np.full(len(reps), float(ols_arrays.true.mean()))
 
         for tier in TIER_GRID:
             analytics: dict[str, AnalyticStats] = {}
             # Alpha OLS (R) vs pinned (E/P) — X1 §3.2 tier semantics.
             alpha_src = ols if tier == "R" else pinned
             analytics["alpha_ols"] = _aggregate(
-                [e.point for e in alpha_src], [e.true for e in alpha_src],
+                [e.point for e in alpha_src], alpha_population_target,
                 [e.detected for e in alpha_src], float(T),
             )
-            if tier in posterior_by_tier:
-                analytics["alpha_posterior"] = posterior_by_tier[tier]
             analytics["sharpe"] = _aggregate(
                 [e.point for e in sharpe], [e.true for e in sharpe],
                 [e.detected for e in sharpe], float(T),
@@ -258,24 +323,31 @@ def run_config(cfg, n_reps=N_REPS, base_seed=GRID_BASE_SEED, use_cache=True) -> 
                 )
             cells.append(CellStats(cfg.ic, cfg.half_life, cfg.sizing, T, tier, analytics))
 
+    realized_ir = float(np.median([_realized_ir(rep[1]) for rep in reps]))
+    result = ConfigResult(cells=cells, estimates=estimates, realized_ir=realized_ir)
     if use_cache:
         _CACHE_DIR.mkdir(parents=True, exist_ok=True)
-        cache_path.write_bytes(pickle.dumps(cells))
-    return cells
+        cache_path.write_bytes(pickle.dumps(result))
+    return result
 
 
-def run_all_configs(n_reps=N_REPS, processes=None) -> dict[tuple, CellStats]:
+def run_all_configs(n_reps=N_REPS, processes=None):
     configs = base_configs()
     with mp.Pool(processes=processes) as pool:
         results = pool.map(_run_config_worker, [(c, n_reps) for c in configs])
     grid: dict[tuple, CellStats] = {}
-    for cell_list in results:
-        for cell in cell_list:
+    estimates: dict[tuple, dict] = {}
+    realized_ir_by_config: dict[tuple, float] = {}
+    for cfg, result in zip(configs, results):
+        for cell in result.cells:
             grid[(cell.ic, cell.half_life, cell.sizing, cell.T, cell.tier)] = cell
-    return grid
+        config_key = (cfg.ic, cfg.half_life, cfg.sizing)
+        estimates[config_key] = result.estimates
+        realized_ir_by_config[config_key] = result.realized_ir
+    return grid, estimates, realized_ir_by_config
 
 
-def _run_config_worker(args) -> list[CellStats]:
+def _run_config_worker(args) -> ConfigResult:
     cfg, n_reps = args
     return run_config(cfg, n_reps=n_reps, base_seed=GRID_BASE_SEED, use_cache=True)
 
@@ -325,13 +397,36 @@ def assert_grid_invariants(cells: dict[tuple, CellStats]) -> None:
                         raise AssertionError(
                             f"power fell in IC at hl={half_life}, sz={sizing}, tier={tier}"
                         )
-                # Size ~5% at IC=0 (false-alarm rate, not power).
-                size_cell = cells[(0.0, half_life, sizing, T_MAX, tier)].analytics["alpha_ols"]
-                size = size_cell.power
-                if abs(size - 0.05) > SIZE_TOL_SYSTEMATIC + size_cell.wilson_hw:
-                    raise AssertionError(
-                        f"size off 5% at IC=0: {size:.3f} (hl={half_life}, sz={sizing}, tier={tier})"
+                # Size at IC=0 (false-alarm rate, not power) for EVERY analytic
+                # present in the cell — a per-analytic check, since covering only
+                # alpha_ols let a miscalibrated trade-metric test (hit_rate, D-9)
+                # slip through the gate. Two-tier bands + posterior tripwire per
+                # the 2026-07-07 gate rulings (see SIZE_TOL_APPROX /
+                # POSTERIOR_SIZE_TRIPWIRE comments).
+                size_cell = cells[(0.0, half_life, sizing, T_MAX, tier)]
+                for name, a in size_cell.analytics.items():
+                    if name == "alpha_posterior":
+                        # The upper bound carries the cell's Wilson HW like every
+                        # other band here ("up to MC noise", X1 §4.3) so reduced-rep
+                        # test grids don't false-trip; at N_REPS=500 the allowance
+                        # is ~3pp and the tripwire stays binding.
+                        if not (0.0 < a.power < POSTERIOR_SIZE_TRIPWIRE + a.wilson_hw):
+                            raise AssertionError(
+                                f"posterior degeneracy tripwire at IC=0: "
+                                f"size={a.power:.3f} not in (0, {POSTERIOR_SIZE_TRIPWIRE} + hw) "
+                                f"(hl={half_life}, sz={sizing}, tier={tier})"
+                            )
+                        continue
+                    tol = (
+                        SIZE_TOL_SYSTEMATIC
+                        if name in _EXACT_SIZE_ANALYTICS
+                        else SIZE_TOL_APPROX
                     )
+                    if abs(a.power - 0.05) > tol + a.wilson_hw:
+                        raise AssertionError(
+                            f"size off 5% at IC=0: {name}={a.power:.3f} "
+                            f"(tol={tol}, hl={half_life}, sz={sizing}, tier={tier})"
+                        )
     # Band contains point everywhere.
     for key, cell in cells.items():
         for name, a in cell.analytics.items():
@@ -396,9 +491,68 @@ def _actual_n_reps(cells: dict[tuple, CellStats]) -> int:
     return next(iter(first_cell.analytics.values())).n_reps
 
 
-def build_grid(cells=None, n_reps=N_REPS):
+def _compute_posterior_cells(estimates) -> dict[tuple, AnalyticStats]:
+    # FIX 2: the shrinkage posterior pools the cohort ACROSS THE IC AXIS at fixed
+    # (half_life, sizing, T, tier) — 5 ICs x N_REPS heterogeneous managers shrunk
+    # together in ONE group — so shrinkage is non-degenerate (pooling same-config
+    # clones collapsed the posterior sd to 0, forcing power=1/size=0 everywhere).
+    # Each cell then keeps only its own IC's reps: points = that IC's shrunk
+    # posterior means, detect = its own prob_positive > 0.95. gate ruling: an
+    # IntervalStat labeled "posterior alpha" carries the SHRUNK posterior means.
+    posterior: dict[tuple, AnalyticStats] = {}
+    for half_life in HALF_LIFE_GRID:
+        for sizing in SIZING_GRID:
+            for T in T_GRID:
+                for tier, estimator in _POSTERIOR_ESTIMATOR.items():
+                    per_ic = [
+                        estimates[(ic, half_life, sizing)][T][estimator] for ic in IC_GRID
+                    ]
+                    all_points = np.concatenate([a.point for a in per_ic])
+                    all_ses = np.concatenate([a.se for a in per_ic])
+                    shrunk = shrink_alphas(
+                        all_points, all_ses, np.zeros(len(all_points), dtype=int)
+                    )
+                    detect_all = shrunk.prob_positive > 0.95
+                    start = 0
+                    for ic, arrays in zip(IC_GRID, per_ic):
+                        length = len(arrays.point)
+                        window = slice(start, start + length)
+                        start += length
+                        # Population effect target, matching the alpha_ols RMSE rule.
+                        population_target = np.full(length, float(arrays.true.mean()))
+                        posterior[(ic, half_life, sizing, T, tier)] = _aggregate(
+                            shrunk.posterior_alpha[window],
+                            population_target,
+                            detect_all[window],
+                            float(T),
+                        )
+    return posterior
+
+
+def _inject_posterior(cells, estimates) -> None:
+    for key, stats in _compute_posterior_cells(estimates).items():
+        cells[key].analytics["alpha_posterior"] = stats
+
+
+def _ref_realized_ir(realized_ir_by_config) -> dict[float, float]:
+    # Realized IR at the reference (half_life, sizing) slice, keyed by IC — labels
+    # the X1 atlas exhibit-1 power curves (docket D-13).
+    if not realized_ir_by_config:
+        return {}
+    return {
+        ic: realized_ir_by_config[(ic, REF_HALF_LIFE, REF_SIZING)]
+        for ic in IC_GRID
+        if (ic, REF_HALF_LIFE, REF_SIZING) in realized_ir_by_config
+    }
+
+
+def build_grid(cells=None, estimates=None, realized_ir_by_config=None, n_reps=N_REPS):
     if cells is None:
-        cells = run_all_configs(n_reps=n_reps)
+        cells, estimates, realized_ir_by_config = run_all_configs(n_reps=n_reps)
+    if estimates is not None:
+        # Posterior is computed here (not in run_config) so the cohort can pool
+        # across every config's per-rep estimates once all configs have loaded.
+        _inject_posterior(cells, estimates)
     assert_grid_invariants(cells)
     thresholds = extract_thresholds(cells)
     payloads: dict[tuple, CellPayload] = {}
@@ -425,5 +579,6 @@ def build_grid(cells=None, n_reps=N_REPS):
         "seed": GRID_BASE_SEED,
         "n_reps": _actual_n_reps(cells),
         "code_version": CODE_VERSION,
+        "realized_ir_by_ic": _ref_realized_ir(realized_ir_by_config),
     }
     return payloads, thresholds, run_meta

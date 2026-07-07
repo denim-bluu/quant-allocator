@@ -19,7 +19,8 @@ def test_config_seeds_are_independent_and_deterministic():
 
 def test_run_config_yields_all_t_and_tier_cells():
     cfg = x_grid.SimConfig(ic=0.10, half_life=12.0, sizing=0.8, index=0)
-    cells = x_grid.run_config(cfg, n_reps=24, base_seed=x_grid.GRID_BASE_SEED, use_cache=False)
+    result = x_grid.run_config(cfg, n_reps=24, base_seed=x_grid.GRID_BASE_SEED, use_cache=False)
+    cells = result.cells
     keys = {(c.T, c.tier) for c in cells}
     assert keys == {(t, tier) for t in x_grid.T_GRID for tier in x_grid.TIER_GRID}
     for cell in cells:
@@ -30,22 +31,24 @@ def test_run_config_yields_all_t_and_tier_cells():
     # P-tier unlocks trade-level analytics; R/E do not carry them.
     p_cell = next(c for c in cells if c.T == 120 and c.tier == "P")
     r_cell = next(c for c in cells if c.T == 120 and c.tier == "R")
-    e_cell = next(c for c in cells if c.T == 120 and c.tier == "E")
     assert "hit_rate" in p_cell.analytics and "sizing_slope" in p_cell.analytics
     assert "hit_rate" not in r_cell.analytics
-    # X1 §3.2: posterior scored at R/E only, and E uses pinned (not OLS) inputs, so
-    # the R->E degradation signal shows up as a distinct posterior band.
+    # FIX 2: the posterior is no longer produced per-config — build_grid pools it
+    # across the IC axis — so run_config cells carry no posterior band.
+    assert "alpha_posterior" not in r_cell.analytics
     assert "alpha_posterior" not in p_cell.analytics
-    r_post = r_cell.analytics["alpha_posterior"]
-    e_post = e_cell.analytics["alpha_posterior"]
-    assert (r_post.point, r_post.lo, r_post.hi) != (e_post.point, e_post.lo, e_post.hi)
+    # Per-rep alpha estimate arrays survive out of run_config for that pooling.
+    assert set(result.estimates[120]) == {"ols", "pinned"}
+    assert len(result.estimates[120]["ols"].point) == 24
+    assert result.realized_ir > 0.0  # IC=0.10 has a clearly positive realized IR
 
 
 def test_power_monotone_in_ic_for_alpha_on_a_small_grid():
     # A reduced-rep smoke of the X1 §4 monotonicity invariant on the alpha metric.
     cells = {}
     for cfg in [c for c in x_grid.base_configs() if c.half_life == 12.0 and c.sizing == 0.8]:
-        for cell in x_grid.run_config(cfg, n_reps=60, base_seed=x_grid.GRID_BASE_SEED, use_cache=False):
+        result = x_grid.run_config(cfg, n_reps=60, base_seed=x_grid.GRID_BASE_SEED, use_cache=False)
+        for cell in result.cells:
             cells[(cell.ic, cell.half_life, cell.sizing, cell.T, cell.tier)] = cell
     # At the longest T, R-tier alpha power should trend up with IC (within MC noise).
     powers = [
@@ -58,6 +61,6 @@ def test_power_monotone_in_ic_for_alpha_on_a_small_grid():
 @pytest.mark.slow
 def test_size_near_five_percent_at_ic_zero():
     cfg = next(c for c in x_grid.base_configs() if c.ic == 0.0 and c.half_life == 12.0 and c.sizing == 0.8)
-    cells = x_grid.run_config(cfg, n_reps=200, base_seed=x_grid.GRID_BASE_SEED, use_cache=False)
-    cell = next(c for c in cells if c.T == 120 and c.tier == "R")
+    result = x_grid.run_config(cfg, n_reps=200, base_seed=x_grid.GRID_BASE_SEED, use_cache=False)
+    cell = next(c for c in result.cells if c.T == 120 and c.tier == "R")
     assert cell.analytics["alpha_ols"].power < 0.15  # size, not power, at IC=0
