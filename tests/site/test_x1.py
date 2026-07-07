@@ -20,6 +20,8 @@ def test_x1_provenance_and_headline(tmp_path):
     assert (out / "specs" / "x1.html").exists()
     # Atlas headline copy obligation.
     assert "only the E-tier shrinkage posterior reaches 80% power within a 10-year record" in html
+    # Gallery explainer obligation.
+    assert "What this exhibit shows" in html
 
 
 def test_x1_power_curves_and_posterior_label(tmp_path):

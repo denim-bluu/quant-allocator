@@ -12,6 +12,40 @@
 </section>
 
 <section class="tearsheet-panel">
+  <h2 class="tearsheet-panel__title">What this exhibit shows</h2>
+  <p class="tearsheet-note"><strong>What you are looking at.</strong>
+  Three panels ask the same question &mdash; how many months of track record does a
+  skill test need before it is reliable &mdash; at three known skill levels (realized
+  IR 0.30, 0.65, and 1.57). These curves are the returns-only (R-tier) slice: the
+  cohort-informed shrinkage posterior climbs fastest but still tops out just below
+  the 80% bar at the middle effect (0.788 at T=120), and it fires about 10% of the
+  time when there is no skill at all (its IC=0 false-alarm rate). Pinning betas at
+  tier E is what pushes the posterior over the bar within a 10-year record &mdash;
+  which is the atlas headline. The degradation table below reads the same effect at a fixed cell (T=48,
+  IC=0.04): alpha estimation lifts from 25.2% power at returns-tier to 31.8% at
+  exposure-tier, and every number is 500-manager simulator output, illustrative
+  and uncalibrated.</p>
+  <p class="tearsheet-note"><strong>How to read it.</strong></p>
+  <ul class="tearsheet-note">
+    <li><strong>Two lines per panel</strong> &mdash; the OLS <em>t</em>-test and the
+    shrinkage posterior, plotted as detection rate (power) against sample length
+    <em>T</em> in months.</li>
+    <li><strong>Dashed horizontal line</strong> &mdash; the 80% power bar; where a
+    curve crosses it is the tenure at which that metric becomes reliable.</li>
+    <li><strong>Amber poster label</strong> &mdash; the posterior's false-alarm price
+    (~10% false-attribution at IC=0), the cost of borrowing strength across a cohort.</li>
+    <li><strong>Degradation table</strong> &mdash; power (and RMSE where it applies)
+    for each analytic by transparency tier; the tier gap is what visibility buys.</li>
+    <li><strong>Registry rows</strong> &mdash; each metric's gate; a null threshold
+    prints as "no tenure in the measured range suffices," meaning it never clears 80%
+    power here.</li>
+  </ul>
+  <p class="tearsheet-note">The full methodology &mdash; with the math and a reference
+  implementation &mdash; is in the
+  <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.</p>
+</section>
+
+<section class="tearsheet-panel">
   <h2 class="tearsheet-panel__title">Exhibit 1 &mdash; power curves: OLS t-test vs shrinkage posterior</h2>
   <p class="atlas-poster-label">
     cohort-informed; ~10% false-attribution at IC=0 &mdash; the price of borrowing strength
