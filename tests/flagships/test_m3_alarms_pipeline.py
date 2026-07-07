@@ -76,3 +76,33 @@ def test_alarm_state_flags_a_tail_drawdown_red_and_reports_percentile():
     assert v.red_threshold >= v.amber_threshold
     assert v.expected_false_red == 12 * ap.RED_BUDGET  # heat-list count = N x per-manager RED budget
     assert (v.level == "red") == (v.realized_mdd > v.red_threshold)
+
+
+def test_posterior_null_is_wider_than_point_null():
+    # Same central Sharpe, but a posterior fan folds in Sharpe uncertainty => a wider,
+    # deeper 99th-pct null MDD than any single plug-in (M3 spec §3.6).
+    vol, ar1, t = 0.10, 0.0, 60
+    point = ap.DrawdownHypothesis(sharpe_annual=0.8, vol_annual=vol)
+    rng = np.random.default_rng([ap.ALARM_SEED, 5])
+    posterior = ap.PosteriorHypothesis(
+        sharpe_draws=rng.normal(0.8, 0.6, size=400), vol_annual=vol
+    )
+    point_mdd = ap.max_drawdown_null(
+        ap.simulate_null_drawdowns(point, ar1, t, n_paths=5000, seed=ap.ALARM_SEED)
+    )
+    post_troughs = ap._simulate_posterior_troughs(posterior, ar1, t, n_paths=5000, seed=ap.ALARM_SEED)
+    post_mdd = ap.max_drawdown_null(post_troughs)
+    assert np.percentile(post_mdd, 99) > np.percentile(point_mdd, 99)
+
+
+def test_hysteresis_holds_red_until_sustained_recovery():
+    # Path digs past the RED arm line, then hovers at the boundary; a single month back inside
+    # the clear line must NOT step down — two consecutive months must (M3 spec §3.5).
+    exceeds_amber = np.array([0, 1, 1, 1, 1, 1, 1, 1], dtype=bool)
+    exceeds_red = np.array([0, 0, 1, 1, 0, 0, 0, 0], dtype=bool)
+    # month 4 clear alone, below_run reset at 5, then a sustained 2-month recovery at 6-7.
+    inside_clear = np.array([1, 0, 0, 0, 1, 0, 1, 1], dtype=bool)
+    levels = ap.hysteresis_sequence(exceeds_amber, exceeds_red, inside_clear)
+    assert levels[2] == "red" and levels[3] == "red"
+    assert levels[4] == "red"          # one month inside clear is not enough (below_run reset at 5)
+    assert levels[-1] in {"amber", "green"}  # sustained recovery finally steps down

@@ -33,6 +33,8 @@ RED_BUDGET = 0.01
 ALARM_SEED = 20260707
 # Posterior-predictive draws use a distinct RNG stream tag from the point null (7).
 POSTERIOR_STREAM = 11
+# NUMERICS-GATE (provisional — 2): consecutive months inside the clear line required to step down.
+HYSTERESIS_CLEAR_MONTHS = 2
 
 __all__ = [
     "DrawdownHypothesis",
@@ -162,9 +164,54 @@ def alarm_state(
     )
 
 
-def _simulate_posterior_troughs(posterior, ar1, t, *, n_paths, seed):
-    raise NotImplementedError("posterior null lands in Task 3")
+def _simulate_posterior_troughs(
+    posterior: PosteriorHypothesis, ar1: float, t: int, *, n_paths: int, seed: int
+) -> np.ndarray:
+    # Posterior-predictive null (M3 spec §3.6): draw a Sharpe per path from the posterior fan,
+    # simulate the AR(1) path at that Sharpe with de-smoothed vol and fitted AR(1). v1 samples
+    # Sharpe only (NUMERICS-GATE NULL_NESTED_MC — vol/AR(1) plugged as points).
+    rng = np.random.default_rng([seed, POSTERIOR_STREAM])
+    vol_monthly = posterior.vol_annual / np.sqrt(MONTHS_PER_YEAR)
+    innovation_sd = vol_monthly * np.sqrt(1.0 - ar1**2)
+    sharpe_draws = rng.choice(np.asarray(posterior.sharpe_draws, dtype=float), size=n_paths)
+    troughs = np.empty((n_paths, t))
+    for i in range(n_paths):
+        mean_monthly = sharpe_draws[i] / np.sqrt(MONTHS_PER_YEAR) * vol_monthly
+        path = np.empty(t)
+        prev = 0.0
+        for k in range(t):
+            eps = rng.normal(0.0, innovation_sd)
+            dev = ar1 * prev + eps
+            path[k] = mean_monthly + dev
+            prev = dev
+        troughs[i] = _drawdown_path(path)
+    return troughs
 
 
-def hysteresis_sequence(*args, **kwargs):
-    raise NotImplementedError("hysteresis lands in Task 3")
+_LEVEL_ORDER = {"green": 0, "amber": 1, "red": 2}
+
+
+def hysteresis_sequence(
+    exceeds_amber: np.ndarray,
+    exceeds_red: np.ndarray,
+    inside_clear: np.ndarray,
+    *,
+    clear_months: int = HYSTERESIS_CLEAR_MONTHS,
+) -> list[str]:
+    # Two-threshold Schmitt trigger (M3 spec §3.5): the arm line (running-MDD vs the 99th/95th
+    # band) is not the clear line (current drawdown recovered inside the 95th band). Stepping DOWN
+    # a level requires clear_months consecutive months of recovery, killing single-month flapping.
+    state = "green"
+    below_run = 0
+    out: list[str] = []
+    for t in range(len(exceeds_amber)):
+        if exceeds_red[t]:
+            state = "red"
+        elif exceeds_amber[t] and state != "red":
+            state = "amber"
+        below_run = below_run + 1 if inside_clear[t] else 0
+        if inside_clear[t] and below_run >= clear_months and _LEVEL_ORDER[state] > 0:
+            state = "amber" if state == "red" else "green"
+            below_run = 0
+        out.append(state)
+    return out
