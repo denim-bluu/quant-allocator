@@ -1,0 +1,54 @@
+/* P1 allocation-band page layout. Component classes (interval-stat, power-gate, advisory-band)
+   live in interval.css / s1.css; this file adds only page layout, the naive-marker, the
+   fund-or-not chip, and the τ-dial. Colors use the shared design tokens (design-tokens.css):
+   --ink, --dim, --line, --pos, --neg, --warn, --track. */
+.p1-rows { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; }
+.p1-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.p1-row--review { border-left: 3px solid var(--warn); }
+.p1-row__head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.p1-row__id { color: var(--dim); font-variant-numeric: tabular-nums; }
+.p1-row__meta { color: var(--dim); margin-right: auto; }
+
+/* The naive point-optimizer marker: a distinct diamond on the band rail (a contrast, not a point). */
+.p1-band__rail { position: relative; }
+.p1-naive {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: transparent;
+  border: 1.5px solid var(--ink);
+}
+.p1-naive-note { color: var(--dim); }
+
+.p1-chip {
+  font-size: 0.8em;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+.p1-chip--fund { color: var(--warn); }
+
+.p1-dial { margin-top: 10px; }
+.p1-dial__options { display: flex; gap: 6px; }
+.p1-dial__btn {
+  padding: 2px 10px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+.p1-dial__btn--active { background: var(--track); }
+.p1-dial__readout { color: var(--dim); margin-top: 4px; }
