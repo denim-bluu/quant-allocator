@@ -51,7 +51,7 @@ Concretely, if you estimate a manager's average monthly excess return from `T` m
 SE(alpha) ≈ 6% / √5 ≈ 6% / 2.236 ≈ 2.7% per year
 ```
 
-So the estimate arrives as roughly `3% ± 2.7%` at one standard error, or about `3% ± 5.3%` at two — an interval of roughly **[−2.3%, +8.3%]**. That interval **straddles zero.** After five years of clean monthly data, a truly skilled manager's return record is statistically indistinguishable from a lucky zero-alpha manager. You cannot honestly say "this manager has skill" from returns alone; you can only say "the data are consistent with skill, and also consistent with none."
+So the estimate arrives as roughly `3% ± 2.7%` at one standard error, or about `3% ± 5.4%` at two — an interval of roughly **[−2.4%, +8.4%]**. That interval **straddles zero.** After five years of clean monthly data, a truly skilled manager's return record is statistically indistinguishable from a lucky zero-alpha manager. You cannot honestly say "this manager has skill" from returns alone; you can only say "the data are consistent with skill, and also consistent with none."
 
 This is not pessimism, it is arithmetic — and it is exactly why the rung-1 reciprocity is an *uncertainty-honest* tear sheet that states what cannot be concluded rather than pretending to a verdict.
 
@@ -70,7 +70,7 @@ where:
 - `T` — the number of monthly return observations.
 - `√(T / 12)` — converts the monthly sample into annualized units; the `12` is months per year, and the square-root is the sampling-error scaling from §3.2.
 
-**What it means in words:** even a genuinely good manager produces only a faint statistical signal at this sample length. Plug in `IR = 0.5` and `T = 60`: `t ≈ 0.5 × √5 ≈ 1.0`. A t of about 1.0 corresponds to a **power below roughly 30%** — meaning that if you ran this test on a stream of truly-skilled managers, you would correctly flag skill fewer than one time in three. **Returns alone cannot separate skill from style at 36–60 months.**
+**What it means in words:** even a genuinely good manager produces only a faint statistical signal at this sample length. Plug in `IR = 0.5` and `T = 60`: `t ≈ 0.5 × √5 ≈ 1.1`. A t of about 1.1 corresponds to a **power of roughly 20% — below the ~30% bound the doctrine cites** — meaning that if you ran this test on a stream of truly-skilled managers, you would correctly flag skill only about one time in five. **Returns alone cannot separate skill from style at 36–60 months.**
 
 The escalation follows directly. A large part of what looks like alpha in a returns series is really *style* — persistent exposure to factors (value, momentum, size, credit) that a returns-only view cannot strip out. Pástor and Stambaugh's estimation insight is the relevant one here: pinning down a manager's factor *betas* with measured exposure data tightens the alpha interval, because variance you were previously attributing to an uncertain mean is reassigned to known loadings. So the rung-2 ask — "send us monthly exposure summaries" — is justified by a question *both sides want answered*: how much of your track record is skill versus style? The exposures shrink the interval that returns alone leaves hopelessly wide.
 
@@ -144,7 +144,7 @@ if __name__ == "__main__":
         t = expected_t_stat(true_ir, months)
         print(f"{months:>7} {t:>8.2f} {approx_power(t):>8.0%}")
 
-    # At 60 months: exp. t ~= 1.0, power ~= 30% -- returns alone are not enough.
+    # At 60 months: exp. t ~= 1.1, power ~= 20% -- returns alone are not enough.
     # Only past ~120-240 months does the same manager become reliably visible,
     # which no live allocation can wait for. Hence the rung-2 exposure ask.
 ```
