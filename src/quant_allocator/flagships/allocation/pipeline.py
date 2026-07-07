@@ -131,3 +131,24 @@ def band_from_posterior(
         ceil=np.percentile(weights, hi_pct, axis=0),
         prob_zero=(weights == 0.0).mean(axis=0),
     )
+
+
+@dataclass(frozen=True)
+class BandAction:
+    state: str          # "inside" (no action) | "review" (sizing-review trigger)
+    outside_band: bool  # is the current weight outside the advisory 10-90 band right now?
+
+
+def band_action(
+    current_weight: float, band: ManagerBand, prev_state: str | None = None
+) -> BandAction:
+    """§3.7 Schmitt-trigger hysteresis for the sizing memo. A current weight outside the 10-90
+    band [floor, ceil] is a sizing-review trigger; the review clears only when the weight re-enters
+    the inner 25-75 band [q25, q75], so a weight hovering at the band edge does not flap the memo.
+    `prev_state` is the last emitted state ("inside" | "review"); None is a fresh look."""
+    outside_band = current_weight < band.floor or current_weight > band.ceil
+    if prev_state == "review":
+        state = "inside" if band.q25 <= current_weight <= band.q75 else "review"
+    else:
+        state = "review" if outside_band else "inside"
+    return BandAction(state=state, outside_band=outside_band)

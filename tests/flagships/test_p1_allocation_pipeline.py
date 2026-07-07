@@ -83,3 +83,27 @@ def test_prob_zero_is_positive_for_a_marginal_name():
     assert bands.prob_zero[1] > 0.10       # marginal name funded-or-not is genuinely open
     assert bands.floor[1] == 0.0           # its band floor is exactly 0%
     assert bands.prob_zero[0] < 0.01       # the strong name is funded in nearly every world
+
+
+def _band(floor, q25, q75, ceil):
+    return ap.ManagerBand(floor=floor, q25=q25, anchor=0.5 * (q25 + q75),
+                          q75=q75, ceil=ceil, prob_zero=0.0)
+
+
+def test_band_action_fresh_look_inside_and_outside():
+    band = _band(0.045, 0.055, 0.070, 0.104)   # B10-shaped band
+    assert ap.band_action(0.065, band, prev_state=None).state == "inside"
+    # B10 headline: the naive weight (10.8%) sits ABOVE the whole band -> review.
+    trip = ap.band_action(0.108, band, prev_state=None)
+    assert trip.state == "review"
+    assert trip.outside_band is True
+
+
+def test_band_action_hysteresis_holds_review_until_reentry_of_inner_band():
+    band = _band(0.045, 0.055, 0.070, 0.104)
+    # Once in review, hovering back inside the OUTER band but not the inner clear band holds review.
+    hover = ap.band_action(0.100, band, prev_state="review")   # < ceil but > q75
+    assert hover.state == "review"
+    # Re-entering the inner 25-75 band clears the review.
+    cleared = ap.band_action(0.062, band, prev_state="review")
+    assert cleared.state == "inside"
