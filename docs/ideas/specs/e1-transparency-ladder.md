@@ -216,7 +216,7 @@ Open Protocol is the deliberate rung-2 standard because it is the published, all
 
 **Power statements that must survive (never weakened):**
 
-- At 36–60 monthly observations, returns support interval statements about Sharpe and factor mix and little else; a true `IR = 0.5` gives an expected `t ≈ 1.0` at `T = 60`, power under ~30%. Returns alone cannot separate skill from style at this sample.
+- At 36–60 monthly observations, returns support interval statements about Sharpe and factor mix and little else; a true `IR = 0.5` gives an expected `t ≈ 1.1` at `T = 60`, power around 20% — comfortably under the ~30% bound the doctrine cites. Returns alone cannot separate skill from style at this sample.
 - Hit-rate discrimination (55% vs 50%) needs **~780 independent trades at 80% power**; a concentrated 30-name book never clears in five years, a high-turnover book clears in one to two. Below the position rung, these analytics **refuse to render rather than fake a number.**
 
 **Go-live requirements (publication and use):**
@@ -246,6 +246,6 @@ Supporting the arithmetic: **Pástor & Stambaugh** on how pinning factor betas t
 **Questions you should be able to answer after reading this page:**
 
 - **In 60 seconds, why does monitoring framing cause transparency withdrawal?** Falk–Kosfeld: a monitoring signal reads as distrust; the agent reciprocates by withdrawing effort — here, the position and exposure detail the whole program runs on. The tier is the asset; audit framing spends it. Every ask must therefore be help-framed, reciprocal, and attached to a shared question.
-- **Recite the rung-2 power justification with the actual numbers.** At 36–60 monthly observations a factor alpha's t-stat is `IR × √(T/12)`; a true `IR = 0.5` gives an expected `t ≈ 1.0` at `T = 60` — power under ~30%. Returns cannot separate skill from style at this N. Measured exposures pin the betas and tighten the alpha interval, so we ask for exposures because the returns-only interval provably cannot answer a question both sides care about.
+- **Recite the rung-2 power justification with the actual numbers.** At 36–60 monthly observations a factor alpha's t-stat is `IR × √(T/12)`; a true `IR = 0.5` gives an expected `t ≈ 1.1` at `T = 60` — power around 20%, under the ~30% bound. Returns cannot separate skill from style at this N. Measured exposures pin the betas and tighten the alpha interval, so we ask for exposures because the returns-only interval provably cannot answer a question both sides care about.
 - **Recite the rung-3 power justification.** Sizing and exit skill live at the position level, where effective N is trades × breadth, not months; discriminating a 55% hit rate from a coin needs ~780 independent trades at 80% power — a bar a concentrated book never clears in five years. Below that rung the analytics refuse to render rather than fake a number.
 - **State the anti-Goodhart rule.** The ladder is never quota'd; grant depth is a relationship health check, not a target — the moment it becomes a KPI, the incentive flips back to extraction and the Falk–Kosfeld failure returns.
