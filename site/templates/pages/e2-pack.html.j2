@@ -1,0 +1,115 @@
+{% extends "demo.html.j2" %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/e2-pack.css">
+{% endblock %}
+
+{% block demo_content %}
+<div class="pack-page">
+  <section class="pack-head">
+    <p class="pack-head__meta">
+      {{ card_data.meta.manager_name }} &middot; tier {{ card_data.meta.tier }} &middot;
+      {{ card_data.meta.quarter }}
+    </p>
+    <p class="pack-summary">{{ card_data.summary }}</p>
+    <aside class="pack-honesty" role="note">
+      Narration in this demo is <strong>hand-authored and human-edited</strong>. The
+      live build drafts it through the numeric-faithfulness harness (spec &sect;4);
+      every number here already traces to the source card that certified it.
+    </aside>
+  </section>
+
+  {% for s in card_data.sections %}
+    {% if s.state == "rendered" %}
+    <section class="pack-section" data-section="{{ s.section_id }}">
+      <h2 class="pack-section__title">{{ s.title }}</h2>
+      <p class="pack-section__prov">Certified by {{ s.provenance.card | upper }}
+        &middot; {{ s.provenance.metric }} &middot; as of {{ s.provenance.as_of }}</p>
+      {% if s.narration %}<p class="pack-narration">{{ s.narration }}</p>{% endif %}
+      {% if s.stats %}
+      <div class="pack-stats">
+        {% for stat in s.stats %}
+          {% if stat.kind == "interval" %}
+          <div class="interval-stat" data-domain="{{ s.section_id }}"
+               data-lo="{{ stat.ci_lo }}" data-point="{{ stat.point }}" data-hi="{{ stat.ci_hi }}">
+            <span class="interval-stat__label">{{ stat.label }}</span>
+            <span class="interval-stat__value">{{ stat.value }}</span>
+            <div class="interval-stat__rail">
+              <div class="interval-stat__band"></div>
+              <div class="interval-stat__point"></div>
+            </div>
+            <span class="interval-stat__range">{{ stat.range }}</span>
+          </div>
+          {% else %}
+          <span class="verdict-chip" data-verdict="{{ stat.verdict }}">{{ stat.chip }}</span>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% if s.views %}
+      <ul class="pack-views">
+        {% for v in s.views %}
+        <li class="pack-view">
+          <blockquote class="pack-view__quote">{{ v.quote }}</blockquote>
+          <span class="pack-view__meta">{{ v.direction }} &middot; {{ v.theme }}
+            &middot; conviction {{ v.conviction }}/3</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </section>
+
+    {% elif s.state == "refused" %}
+    <section class="pack-section" data-section="{{ s.section_id }}">
+      <h2 class="pack-section__title">{{ s.title }}</h2>
+      <p class="pack-section__prov">Gated by X1 &middot; {{ s.gate.metric }}
+        &middot; source {{ s.provenance.card | upper }}</p>
+      <div class="power-gate">
+        <span class="power-gate__title">{{ s.title }} &middot; power gate</span>
+        <p class="power-gate__reason">{{ s.narration }}</p>
+        <p class="power-gate__reason">
+          {{ s.gate.effect }} needs more {{ s.gate.quantity }} than the sampler atlas
+          holds &mdash;
+          {% if s.gate.threshold is none %}no tenure in the measured range suffices{% else %}threshold {{ s.gate.threshold }} {{ s.gate.quantity }}{% endif %}
+          (measured {{ s.gate.measured }}).
+        </p>
+      </div>
+    </section>
+    {% endif %}
+  {% endfor %}
+
+  <footer class="pack-footer">
+    <h2 class="pack-footer__title">Provenance</h2>
+    <ul class="pack-footer__prov">
+      {% for p in card_data.footer.provenance %}
+      <li>{{ p.title }} &mdash; certified by {{ p.certified_by | upper }}</li>
+      {% endfor %}
+    </ul>
+    {% if card_data.footer.omitted %}
+    <h2 class="pack-footer__title">Not shown at this tier</h2>
+    <ul class="pack-footer__omitted">
+      {% for o in card_data.footer.omitted %}
+      <li>{{ o.title }} &mdash; shown at tier {{ o.needs_tier }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </footer>
+</div>
+{% endblock %}
+
+{% block methodology %}
+<p>E2 computes nothing. It reads the certified render payloads other cards emit,
+selects the sections this manager's tier and the X1 PowerGate registry permit,
+orders them, and binds narration whose every number traces to a payload. A
+section resolves to exactly one of three states &mdash; rendered, refused, or
+omitted-and-footnoted &mdash; never a silent drop.</p>
+<p>The refusal is content, not a gap: where the source card's PowerGate refuses a
+claim, the pack shows the gate and the sample it would need, and the narration
+may say what the metric would show and why it can't &mdash; it may not assert the
+refused claim. A killed analytic has no registry row and no payload, so the pack
+cannot narrate a claim no card is allowed to make.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/e2-pack.js"></script>
+{% endblock %}
