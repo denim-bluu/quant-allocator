@@ -3,6 +3,52 @@
    .verdict-chip, .power-gate, .pack-page) come from interval.css and are NOT
    redefined here. Do not touch interval.css. */
 
+.exhibit-intro {
+  margin: 4px 0 24px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface, transparent);
+}
+
+.exhibit-intro__title {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+  margin: 0 0 10px;
+}
+
+.exhibit-intro__block {
+  margin: 0 0 12px;
+}
+
+.exhibit-intro__block:last-child {
+  margin-bottom: 0;
+}
+
+.exhibit-intro__sub {
+  font-size: 13px;
+  margin: 0 0 4px;
+}
+
+.exhibit-intro p {
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.exhibit-intro__list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.exhibit-intro__list li {
+  margin: 4px 0;
+}
+
 .pack-head {
   margin: 8px 0 20px;
 }

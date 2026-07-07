@@ -5,6 +5,45 @@
 {% endblock %}
 
 {% block demo_content %}
+<section class="exhibit-intro" aria-label="What this exhibit shows">
+  <h2 class="exhibit-intro__title">What this exhibit shows</h2>
+  <div class="exhibit-intro__block">
+    <h3 class="exhibit-intro__sub">What you are looking at</h3>
+    <p>This is one composed engagement pack for {{ card_data.meta.manager_name }},
+      a returns-only (tier&nbsp;{{ card_data.meta.tier }}) manager, for
+      {{ card_data.meta.quarter }}. E2 computes nothing itself: it stitches
+      already-certified fragments from other cards into one print-clean document.
+      The tear sheet is honest &mdash; a reported Sharpe of 0.71 that de-smooths to
+      0.60, with a +3.2% alpha whose 90% interval still spans zero &mdash; while the
+      skill-standing section stays gated at 48 months and the exposure-drift panel is
+      withheld until tier&nbsp;E. Nothing here is asserted beyond what its source card
+      certified.</p>
+  </div>
+  <div class="exhibit-intro__block">
+    <h3 class="exhibit-intro__sub">How to read it</h3>
+    <ul class="exhibit-intro__list">
+      <li><strong>Interval band</strong> (the little rail under a number): the point
+        estimate is the tick, the shaded band is its confidence interval &mdash; a
+        band crossing zero means the track is too short to call.</li>
+      <li><strong>Verdict chip</strong> ("provisionally alternative beta"): a
+        plain-language read on the number, a track-length statement, not a claim of
+        skill.</li>
+      <li><strong>Power-gate panel</strong> (the dashed box on Posterior skill
+        standing): a <em>refused</em> section &mdash; it names what the metric would
+        show and the sample it needs, rather than guessing. The refusal is content,
+        not a gap.</li>
+      <li><strong>"Not shown at this tier" footer</strong>: an <em>omitted</em>
+        section (Exposure hygiene &amp; drift) that this manager's data does not reach
+        &mdash; disclosed, never silently dropped.</li>
+      <li><strong>Per-section provenance line</strong>: which source card certified
+        each number, so every figure traces to its origin even on paper.</li>
+      <li>The full methodology &mdash; with the math and a reference implementation
+        &mdash; is in the
+        <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.</li>
+    </ul>
+  </div>
+</section>
+
 <div class="pack-page">
   <section class="pack-head">
     <p class="pack-head__meta">
