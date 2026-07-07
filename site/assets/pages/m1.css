@@ -1,0 +1,59 @@
+/* M1 drift-monitor page layout. Reuses interval.css component classes
+   (.interval-stat, .verdict-chip, .power-gate, .tier-badge); defines only
+   page-specific layout here. Never edit interval.css from this card. */
+
+.m1-intro {
+  margin: 8px 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.m1-headline {
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.m1-panel {
+  border-top: 1px solid var(--line);
+  padding: 18px 0;
+}
+
+.m1-panel__title {
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+
+.m1-note {
+  font-size: 13px;
+  color: var(--dim);
+  line-height: 1.5;
+  margin: 0 0 12px;
+  max-width: 62ch;
+}
+
+.m1-drift-chart {
+  width: 100%;
+  height: 220px;
+}
+
+.m1-drift-chart__wander { fill: var(--line); opacity: 0.35; stroke: none; }
+.m1-drift-chart__band { stroke: var(--dim); stroke-width: 0.4; stroke-dasharray: 2 2; }
+.m1-drift-chart__path { fill: none; stroke: var(--accent); stroke-width: 1; }
+.m1-drift-chart__alarm { stroke: var(--warn); stroke-width: 0.8; }
+
+.m1-rbsa-chart {
+  width: 100%;
+  height: 120px;
+}
+
+.m1-rbsa-chart__path { fill: none; stroke: var(--dim); stroke-width: 0.8; opacity: 0.7; }
+
+.m1-detection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
