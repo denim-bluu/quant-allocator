@@ -136,7 +136,7 @@ def _build_records(world) -> list[DecisionRecord]:
             candidates, key=lambda c: -_trailing_return(world.returns_by_manager[c], d)
         )
         worst, second_worst, third_worst = ranked_active[0], ranked_active[1], ranked_active[2]
-        best_cand, next_cand = ranked_cand[0], ranked_cand[1]
+        best_cand = ranked_cand[0]
 
         # 1) Paired fire (round-trip): fire worst, replacement = best candidate.
         records.append(_record("fire", worst, date,
@@ -208,8 +208,6 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
 
     # Scorecard: the first paired hire (a replacement) with its 3y realized figures.
     sc_event = next(ev for ev in events if ev.decision_type == "hire")
-    sc_record = next(r for r in records if r.manager_id == sc_event.manager_id
-                     and r.decision_date == sc_event.decision_date)
     d = ledger.month_index(world, sc_event.decision_date)
     realized_fwd = ledger.forward_excess_return(
         world.returns_by_manager[sc_event.manager_id], world.rf_monthly, d, sc_event.horizon_years)
