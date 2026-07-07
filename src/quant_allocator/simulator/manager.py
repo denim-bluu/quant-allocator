@@ -26,7 +26,7 @@ _MANAGER_STREAM = 1
 
 @dataclass(frozen=True)
 class NetBetaDrift:
-    """Linear net-beta drift schedule on target_net (M1 spec §4, the lead reviewer-RULED linear form).
+    """Linear net-beta drift schedule on target_net (M1 spec §4, ruled linear form).
 
     target_net at month t = base target_net
         + total_walk * clip((t - onset_month) / ramp_months, 0, 1).

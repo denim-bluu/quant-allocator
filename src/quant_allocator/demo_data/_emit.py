@@ -19,7 +19,7 @@ SITE_DATA_DIR = Path(__file__).resolve().parents[3] / "site" / "data"
 def round_floats(obj: Any, ndigits: int = 6) -> Any:
     if isinstance(obj, float):
         # + 0.0 normalizes IEEE -0.0 (a tiny negative rounding to zero) to 0.0,
-        # so no generator can emit "-0.0" into committed JSON (gate).
+        # so no generator can emit "-0.0" into committed JSON (numerics gate).
         return round(obj, ndigits) + 0.0
     if isinstance(obj, dict):
         return {key: round_floats(value, ndigits) for key, value in obj.items()}
@@ -36,7 +36,7 @@ def round_sigfigs(obj: Any, sigfigs: int = 4) -> Any:
     # JSON null *before* calling this, since json.dumps cannot emit inf/nan.
     if isinstance(obj, float):
         if obj == 0.0:
-            # +0.0 normalizes IEEE -0.0 to 0.0, matching round_floats (gate).
+            # +0.0 normalizes IEEE -0.0 to 0.0, matching round_floats (numerics gate).
             return 0.0
         if not math.isfinite(obj):
             return obj

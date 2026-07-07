@@ -198,7 +198,7 @@ Depth tiers: full depth for the selected five plus the method-dense cards
 
 **Assumptions:** ~2 focused build sessions/week (evenings/weekends),
 subagent-driven execution per house policy — specs and numerics review at
-the lead reviewer level, implementation on cheaper models from complete briefs
+senior level, implementation on cheaper models from complete briefs
 (spec §9). Gallery shell and each wave follow the superpowers flow
 (brainstorm → plan → SDD) where they touch code.
 

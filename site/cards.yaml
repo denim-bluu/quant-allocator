@@ -60,21 +60,42 @@
   one_liner: Does the book respect its stated bands, or is drift creeping in?
   decisions: [monitor, engage]
   tiers: [E, P, R]
-  status: planned
+  status: live
+  demo: pages/m1-drift.html.j2
+  data: m1_drift.json
+  spec: m1-exposure-drift-monitor.md
+  golive:
+    data_ask: Exposure summaries (E — net/gross, factor betas, sector/duration buckets) + the stated bands from mandate/letters; + positions (P) for drift attribution; R rolling-beta needs returns + a factor set only
+    sample: n/a per-window — the measurement is exact at any T; the sustained-drift alarm renders only where the X1 registry says the detector clears at the manager's cadence and horizon
+    effort: S–M (incl. the null-calibration harness and the net-beta-drift simulator dial)
 - id: m2
   title: Hidden-convexity / short-vol screen
   lane: M
   one_liner: A smooth Sharpe can hide sold optionality — surface the short-vol posture.
   decisions: [monitor, redeem]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/m2-convexity.html.j2
+  data: m2_convexity.json
+  spec: m2-hidden-convexity-screen.md
+  golive:
+    data_ask: Monthly net returns (R) + a market-factor return series; the straddle rung adds the public Fung–Hsieh PTFS factor series (adapter not yet built)
+    sample: Calibrated false-alarm, not a raw count — composite renders at T ≥ 48 months where honest-manager false-alarm (including honest-but-smooth) sits ≤ 0.10; below that the individual interval stats render with a NOISE composite chip
+    effort: M
 - id: m3
   title: Simulation-calibrated drawdown alarms
   lane: M
   one_liner: Drawdown alarms tuned to each manager's own null, not a flat rule.
   decisions: [redeem, monitor]
   tiers: [R, E]
-  status: planned
+  status: live
+  demo: pages/m3-alarms.html.j2
+  data: m3_alarms.json
+  spec: m3-drawdown-alarms.md
+  golive:
+    data_ask: Monthly net returns (R) + a maintained Sharpe (S1 posterior or claimed) + a risk-free series
+    sample: Any T — the output is a calibrated band and a stated budget, not a point; detection improves with T
+    effort: S
 - id: m4
   title: Crowding & overlap radar
   lane: M
@@ -123,7 +144,19 @@
   one_liner: Backtest your own hire/fire timing — governance turned into data.
   decisions: [redeem, select]
   tiers: [R]
-  status: planned
+  status: live
+  demo: pages/p3-hirefire.html.j2
+  data: p3_hirefire.json
+  spec: p3-hirefire-audit.md
+  golive:
+    data_ask: >-
+      A prospectively-maintained decision journal (dates + type + pre-committed
+      thesis, expected alpha, horizon, kill criterion) + monthly net returns for
+      every manager touched by a decision (tier R, roster-wide)
+    sample: >-
+      None for the journal; the aggregate renders an average only above 12
+      effective events, and even then as an interval that straddles zero for years
+    effort: S
 - id: e1
   title: Trust-preserving transparency ladder
   lane: E
@@ -141,7 +174,14 @@
   one_liner: One command renders a per-manager, print-clean engagement pack.
   decisions: [engage]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/e2-pack.html.j2
+  data: e2_pack.json
+  spec: e2-engagement-pack.md
+  golive:
+    data_ask: None of its own — inherits each section's ask (S1/S2 returns; M1/M5 exposure)
+    sample: Inherited — the X1 PowerGate registry gates each section
+    effort: S
 - id: e3
   title: Manager knowledge graph & retrieval
   lane: E

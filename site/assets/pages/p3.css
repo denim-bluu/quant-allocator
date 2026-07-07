@@ -1,0 +1,52 @@
+/* site/assets/pages/p3.css — P3 page layout only. Component classes
+   (interval-stat, verdict-chip, power-gate, golive-box) come from interval.css. */
+
+.p3-intro { margin: 8px 0 20px; }
+.p3-headline { font-size: 15px; line-height: 1.5; }
+.p3-synthetic { color: var(--warn); }
+
+.p3-panel { margin: 20px 0; padding-top: 16px; border-top: 1px solid var(--line); }
+.p3-panel__title { font-size: 15px; margin: 0 0 10px; }
+.p3-note { font-size: 13px; color: var(--dim); margin: 0 0 12px; }
+
+.p3-verdict { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin: 12px 0 0; }
+.p3-verdict__note { font-size: 12px; color: var(--dim); }
+.p3-detect { margin: 12px 0 0; font-size: 13px; color: var(--dim); }
+
+/* Zero reference tick inside the posterior IntervalStat rail. */
+.interval-stat__zero {
+  position: absolute; top: -3px; width: 1px; height: 10px;
+  background: var(--dim);
+}
+
+.p3-cohort { display: block; width: 100%; height: 160px; }
+.p3-cohort__p-fired { fill: none; stroke: var(--pos); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.p3-cohort__p-replacement { fill: none; stroke: var(--neg); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.p3-cohort__zero { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 2 2; vector-effect: non-scaling-stroke; }
+.p3-cohort__legend { display: flex; gap: 12px; margin-top: 6px; font-size: 11px; }
+.p3-legend--fired { color: var(--pos); }
+.p3-legend--replacement { color: var(--neg); }
+
+.p3-scorecard { border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; background: var(--paper); }
+.p3-scorecard__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.p3-scorecard__name { font-weight: 600; }
+.p3-scorecard__grid { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; font-size: 13px; }
+.p3-scorecard__grid dt { font-size: 10px; text-transform: uppercase; letter-spacing: 0.10em; color: var(--dim); align-self: center; }
+.p3-scorecard__grid dd { margin: 0; font-variant-numeric: tabular-nums; }
+.p3-scorecard__grade { margin: 12px 0 0; font-size: 12px; color: var(--dim); }
+
+.p3-ledger { display: grid; gap: 12px; }
+.p3-event { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; background: var(--paper); }
+.p3-event--helped { border-left: 3px solid var(--pos); }
+.p3-event--hurt { border-left: 3px solid var(--neg); }
+.p3-event--flat { border-left: 3px solid var(--dim); }
+.p3-event__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.p3-event__type { font-size: 10px; text-transform: uppercase; letter-spacing: 0.10em; color: var(--dim); }
+.p3-event__name { font-weight: 600; }
+.p3-event__head .verdict-chip { margin-left: auto; }
+.p3-event__gaps { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--dim); font-variant-numeric: tabular-nums; }
+.p3-event__thesis { margin: 8px 0 0; font-size: 13px; }
+
+@media (max-width: 640px) {
+  .p3-scorecard__grid { grid-template-columns: 1fr; }
+}

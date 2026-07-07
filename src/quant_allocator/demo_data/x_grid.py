@@ -4,7 +4,7 @@ ONE grid computation serves both cards (X2 spec §2: the playground is a strict
 subset of the atlas grid, never a parallel computation). The 450 dial cells
 collapse to 30 simulation configs: T is a prefix truncation of one T_MAX=120
 manager path, and tier is three emissions of the same book. Configs run under
-multiprocessing with a per-config cache. Numeric output is HELD FOR THE NUMERICS
+multiprocessing with a per-config cache. Numeric output is HELD FOR THE
 NUMERICS GATE.
 """
 
@@ -497,7 +497,7 @@ def _compute_posterior_cells(estimates) -> dict[tuple, AnalyticStats]:
     # together in ONE group — so shrinkage is non-degenerate (pooling same-config
     # clones collapsed the posterior sd to 0, forcing power=1/size=0 everywhere).
     # Each cell then keeps only its own IC's reps: points = that IC's shrunk
-    # posterior means, detect = its own prob_positive > 0.95. gate ruling: an
+    # posterior means, detect = its own prob_positive > 0.95. numerics gate ruling: an
     # IntervalStat labeled "posterior alpha" carries the SHRUNK posterior means.
     posterior: dict[tuple, AnalyticStats] = {}
     for half_life in HALF_LIFE_GRID:

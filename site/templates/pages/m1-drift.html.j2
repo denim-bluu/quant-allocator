@@ -1,0 +1,129 @@
+{% extends "demo.html.j2" %}
+
+{% set v = card_data.visual %}
+{% set band = card_data.band %}
+{% set op = card_data.operating %}
+{% set fs = card_data.factor_share %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/m1.css">
+{% endblock %}
+
+{% block demo_content %}
+<section class="m1-intro">
+  <p class="m1-headline">
+    One synthetic <strong>{{ card_data.meta.manager_name }}</strong> (equity market-neutral,
+    stated net-beta band {{ "%+.2f"|format(band.lower) }} &hellip; {{ "%+.2f"|format(band.upper) }},
+    {{ card_data.meta.months }} months). The <strong>measured</strong> net market beta walks out of
+    the band; the alarm is a <em>calibrated rule</em>, not a bare breach &mdash; its threshold is set
+    on the simulator's autocorrelated honest-wander null.
+  </p>
+  <span class="tier-badge" data-tier="E">E &middot; measured</span>
+</section>
+
+<section class="m1-panel">
+  <h2 class="m1-panel__title">The measured net-beta walk &amp; the CUSUM alarm</h2>
+  <p class="m1-note">
+    The measured path (exact, Robust) against its stated band and the honest-wander null envelope
+    (5&ndash;95th percentile). The one-sided CUSUM accumulates sustained excursions beyond the band
+    edge and fires at the <strong>onset of the sustained breach</strong> &mdash; a single month over
+    the edge does not accumulate to the threshold.
+    {% if v.alarm_month is not none %}Alarm fires at month {{ v.alarm_month }} (drift onset {{ v.drift_onset }}).{% endif %}
+  </p>
+  <svg class="m1-drift-chart" viewBox="0 0 100 44" preserveAspectRatio="none"
+       role="img" aria-label="Measured net-beta path against its band, null envelope, and CUSUM alarm onset"></svg>
+</section>
+
+<section class="m1-panel">
+  <h2 class="m1-panel__title">Tier degradation &mdash; E measures, R only infers</h2>
+  <p class="m1-note">
+    Identical ground truth, two honesty levels. E reads the disclosed exposure path directly; R infers
+    net beta from returns via a {{ card_data.meta.months and "24" }}-month rolling regression (Sharpe 1992).
+    At this track length the rolling estimate is too noisy to call the walk &mdash; shown greyed behind a
+    noise chip, never a verdict.
+  </p>
+  <svg class="m1-rbsa-chart" viewBox="0 0 100 30" preserveAspectRatio="none"
+       role="img" aria-label="R-tier rolling-beta inference, rendered descriptive-only"></svg>
+  <span class="verdict-chip" data-verdict="noise">returns-inferred &mdash; no drift verdict at this track length</span>
+  <div class="m1-detection">
+    <div class="interval-stat" data-domain="detection"
+         data-lo="{{ op.detection_e.ci_lo }}" data-point="{{ op.detection_e.rate }}" data-hi="{{ op.detection_e.ci_hi }}">
+      <span class="interval-stat__label">E detection @ T={{ op.detection_window }}</span>
+      <span class="interval-stat__value">{{ "%.0f"|format(op.detection_e.rate * 100) }}%</span>
+      <div class="interval-stat__rail"><div class="interval-stat__band"></div><div class="interval-stat__point"></div></div>
+      <span class="interval-stat__range">Wilson 95% {{ "%.0f"|format(op.detection_e.ci_lo * 100) }}% &hellip; {{ "%.0f"|format(op.detection_e.ci_hi * 100) }}%{% if op.detection_e.median_delay is not none %}, median delay {{ "%.0f"|format(op.detection_e.median_delay) }} mo{% endif %}</span>
+    </div>
+    <div class="interval-stat" data-domain="detection"
+         data-lo="{{ op.detection_r.ci_lo }}" data-point="{{ op.detection_r.rate }}" data-hi="{{ op.detection_r.ci_hi }}">
+      <span class="interval-stat__label">R detection @ T={{ op.detection_window }}</span>
+      <span class="interval-stat__value">{{ "%.0f"|format(op.detection_r.rate * 100) }}%</span>
+      <div class="interval-stat__rail"><div class="interval-stat__band"></div><div class="interval-stat__point"></div></div>
+      <span class="interval-stat__range">Wilson 95% {{ "%.0f"|format(op.detection_r.ci_lo * 100) }}% &hellip; {{ "%.0f"|format(op.detection_r.ci_hi * 100) }}%</span>
+    </div>
+  </div>
+</section>
+
+<section class="m1-panel">
+  <h2 class="m1-panel__title">Accidental-factor drift &mdash; factor share of variance</h2>
+  <p class="m1-note">
+    The factor-explained share of predicted variance over the walk. Estimate-bearing (it uses an
+    estimated idiosyncratic variance), so the trend ships as a slope interval with a verdict &mdash;
+    never a bare &ldquo;factor share up.&rdquo;
+  </p>
+  <div class="interval-stat" data-domain="slope"
+       data-lo="{{ fs.slope.ci_lo }}" data-point="{{ fs.slope.point }}" data-hi="{{ fs.slope.ci_hi }}">
+    <span class="interval-stat__label">Factor-share slope (per month)</span>
+    <span class="interval-stat__value">{{ "%+.4f"|format(fs.slope.point) }}</span>
+    <div class="interval-stat__rail"><div class="interval-stat__band"></div><div class="interval-stat__point"></div></div>
+    <span class="interval-stat__range">95% interval {{ "%+.4f"|format(fs.slope.ci_lo) }} &hellip; {{ "%+.4f"|format(fs.slope.ci_hi) }}</span>
+  </div>
+  <span class="verdict-chip" data-verdict="{{ 'shrink' if fs.verdict == 'rising' else 'noise' }}">
+    {{ 'rising factor share' if fs.verdict == 'rising' else 'no material trend' }}
+  </span>
+</section>
+
+<section class="m1-panel">
+  <h2 class="m1-panel__title">Operating characteristics</h2>
+  {% if card_data.alarm_cleared %}
+  <div class="power-gate">
+    <span class="power-gate__title">power gate &middot; alarm cleared</span>
+    <p class="power-gate__reason">
+      Calibrated on {{ op.size_e.n_paths }} honest-wander paths to a
+      {{ "%.2f"|format(op.budget_per_year) }}/manager-year false-alarm budget (achieved
+      {{ "%.3f"|format(op.size_e.rate) }}); detection of the pinned
+      {{ "%.2f"|format(op.pinned_effect) }} net-beta walk is
+      {{ "%.0f"|format(op.detection_e.rate * 100) }}% by T={{ op.detection_window }} &mdash; above the
+      0.50 floor. The alarm is rendered; the R rung is not.
+    </p>
+  </div>
+  {% else %}
+  <div class="power-gate">
+    <span class="power-gate__title">power gate &middot; demoted to measured-breach flag</span>
+    <p class="power-gate__reason">
+      The E-tier CUSUM cannot separate the pinned {{ "%.2f"|format(op.pinned_effect) }} walk from
+      honest wander at the budgeted false-alarm rate by T={{ op.detection_window }} (detection
+      {{ "%.0f"|format(op.detection_e.rate * 100) }}% &lt; 0.50 floor). Only the instantaneous
+      measured-breach flag is shown &mdash; no sustained-drift verdict.
+    </p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block methodology %}
+<p>The measurement is exact: the breach flag reads the disclosed exposure path against its stated band
+with a materiality dead-band, and is Robust by construction. The <em>sustained-drift alarm</em> is a
+calibrated rule &mdash; Page's (1954) one-sided CUSUM, whose decision interval <em>h</em> is set on the
+simulator's <strong>autocorrelated</strong> honest-wander null (never an iid ARL, which would over-fire
+a rotating book). Detection and delay are measured on the drift alternative, each with a Wilson 95%
+interval.</p>
+<p>The R rung exists only to make the tier degradation visible: returns-based rolling-beta inference at
+this track length buries a real net-beta walk in estimation noise &mdash; the do-not-build verdict,
+measured, not asserted. The R rung is calibrated with the same allowance as the measured tier; on the
+far noisier rolling-beta series no threshold on the calibration grid meets the false-alarm budget
+&mdash; the refusal itself is the measured verdict.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/m1-drift.js"></script>
+{% endblock %}

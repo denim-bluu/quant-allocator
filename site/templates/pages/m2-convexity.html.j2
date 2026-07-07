@@ -1,0 +1,134 @@
+{% extends "demo.html.j2" %}
+
+{% set honest = card_data.managers.honest %}
+{% set overlaid = card_data.managers.overlaid %}
+{% set comp = overlaid.screen.composite %}
+{% set gate = overlaid.screen.power_gate %}
+
+{% macro diag_label(name) %}{{ {
+  "treynor_mazuy": "Treynor–Mazuy γ (curvature)",
+  "updown_beta": "Up/down β gap (β⁺ − β⁻)",
+  "market_coskew": "Market coskewness",
+  "drawdown_vol": "Drawdown vs vol signature",
+  "straddle_loading": "Fung–Hsieh straddle loading"
+}[name] }}{% endmacro %}
+
+{% macro verdict_token(v) %}{{ "shrink" if v == "short-vol-consistent" else ("noise" if v in ["inconclusive", "not-played"] else "robust") }}{% endmacro %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/m2.css">
+{% endblock %}
+
+{% block demo_content %}
+<section class="m2-intro">
+  <p class="m2-headline">
+    Two synthetic managers, one market, {{ card_data.meta.months }} months, tier
+    {{ card_data.meta.tier }}. <strong>{{ honest.name }}</strong> and
+    <strong>{{ overlaid.name }}</strong> report the <em>same</em> Sharpe to two
+    decimals ({{ "%.2f"|format(honest.sharpe.point) }}) &mdash; but one is quietly
+    short volatility. The convexity screen reads payoff <em>shape</em>, not the
+    average, so it separates them where every linear statistic cannot.
+  </p>
+  <aside class="m2-disclosure" role="note">
+    The overlaid book's written-put premium is calibrated in-sample and set
+    <strong>rich of fair</strong> &mdash; above the actuarial cost of its
+    payouts &mdash; so both books report the same healthy Sharpe: the classic
+    carry seduction, where selling insurance above cost flatters every
+    average-based statistic. That calibration is a deliberate look-ahead for a
+    controlled demonstration and <strong>not a claim about live methodology</strong>
+    &mdash; a real short-vol book's premium is set ex-ante. The atlas detection
+    rows are measured at <strong>fair premium</strong> (zero in-sample carry),
+    the conservative case. Fully synthetic; manager names are fictional.
+  </aside>
+</section>
+
+<section class="m2-pair">
+  {% for key, m in [("honest", honest), ("overlaid", overlaid)] %}
+  <article class="m2-manager m2-manager--{{ key }}">
+    <h2 class="m2-manager__name">{{ m.name }}</h2>
+    <div class="interval-stat" data-domain="sharpe"
+         data-lo="{{ m.sharpe.ci_lo }}" data-point="{{ m.sharpe.point }}" data-hi="{{ m.sharpe.ci_hi }}">
+      <span class="interval-stat__label">Reported Sharpe</span>
+      <span class="interval-stat__value">{{ "%.2f"|format(m.sharpe.point) }}</span>
+      <div class="interval-stat__rail"><div class="interval-stat__band"></div><div class="interval-stat__point"></div></div>
+      <span class="interval-stat__range">95% interval {{ "%.2f"|format(m.sharpe.ci_lo) }} &hellip; {{ "%.2f"|format(m.sharpe.ci_hi) }}</span>
+    </div>
+    <span class="verdict-chip m2-composite" data-verdict="{{ m.screen.composite.chip }}">{{ m.screen.composite.label }}</span>
+    <p class="m2-tally">{{ m.screen.composite.short_vol_count }} of {{ m.screen.composite.playable_count }} playable diagnostics short-vol-consistent (flag at {{ m.screen.composite.k }}).</p>
+  </article>
+  {% endfor %}
+</section>
+
+<section class="m2-diagnostics">
+  <h2 class="m2-section__title">Four windows onto one shape &mdash; {{ overlaid.name }}</h2>
+  <p class="m2-note">Converging evidence, not a p-value. Each diagnostic reads the same left-tail geometry; the tally is agreement across windows, never a manufactured joint significance.</p>
+  {% for name, d in overlaid.screen.diagnostics.items() %}
+  {% if d.played %}
+  <div class="interval-stat" data-domain="{{ name }}"
+       data-lo="{{ d.ci_lo }}" data-point="{{ d.point }}" data-hi="{{ d.ci_hi }}"
+       data-verdict="{{ verdict_token(d.verdict) }}">
+    <span class="interval-stat__label">{{ diag_label(name) }}</span>
+    <span class="interval-stat__value">{{ "%+.3f"|format(d.point) }}</span>
+    <div class="interval-stat__rail"><div class="interval-stat__band"></div><div class="interval-stat__point"></div></div>
+    <span class="interval-stat__range">90% interval {{ "%+.3f"|format(d.ci_lo) }} &hellip; {{ "%+.3f"|format(d.ci_hi) }} &mdash; {{ d.verdict }}</span>
+  </div>
+  {% else %}
+  <div class="power-gate m2-rung-unplayed">
+    <span class="power-gate__title">{{ diag_label(name) }}</span>
+    <p class="power-gate__reason">Rung unplayed: requires the external Fung&ndash;Hsieh PTFS straddle series (public; adapter not yet built). The demo never fabricates it.</p>
+  </div>
+  {% endif %}
+  {% endfor %}
+  <p class="m2-downleg-note">The up/down β gap is a <strong>static payoff-shape descriptor</strong>, never a conditional-alpha table. Its down-leg is identified off ~19 down-months at T = 48, so its interval is honestly wide.</p>
+</section>
+
+{% if not gate.open %}
+<section class="m2-powergate">
+  <div class="power-gate">
+    <span class="power-gate__title">power gate</span>
+    <p class="power-gate__reason">{{ gate.reason }}</p>
+  </div>
+</section>
+{% endif %}
+
+<section class="m2-stress">
+  <h2 class="m2-section__title">Stress-month receipts</h2>
+  <p class="m2-note">The months the written put paid out &mdash; identical books until the tail arrives.</p>
+  <svg class="m2-stress-strip" viewBox="0 0 100 30" preserveAspectRatio="none" role="img" aria-label="Honest vs overlaid monthly returns"></svg>
+  <table class="m2-stress-table">
+    <thead><tr><th>Month</th><th>Market</th><th>{{ honest.name }}</th><th>{{ overlaid.name }}</th><th>Put payout</th></tr></thead>
+    <tbody>
+    {% for s in card_data.stress_months %}
+      <tr>
+        <td>{{ s.month }}</td>
+        <td>{{ "%+.1f"|format(s.market_factor * 100) }}%</td>
+        <td>{{ "%+.1f"|format(s.honest_return * 100) }}%</td>
+        <td class="m2-stress-hit">{{ "%+.1f"|format(s.overlaid_return * 100) }}%</td>
+        <td>&minus;{{ "%.1f"|format(s.payout * 100) }}%</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
+
+{% block methodology %}
+<p>Five returns-based convexity diagnostics over a de-smoothed return series: a
+Treynor&ndash;Mazuy quadratic term, a Henriksson&ndash;Merton up/down β gap,
+Harvey&ndash;Siddique market coskewness, a drawdown-vs-vol signature (reusing the
+S2 drawdown band read for asymmetry), and &mdash; where the external Fung&ndash;Hsieh
+straddle series is loaded &mdash; a PTFS loading. Each is a single static shape
+coefficient over the whole window, interval-reported by a circular block
+bootstrap; none is a regime split or a time-varying beta.</p>
+<p>The composite is an <em>evidence tally</em>, not a score and not a p-value: it
+flags <em>investigate</em> only when at least {{ comp.k }} playable diagnostics
+agree in the short-vol direction and the power gate for this track length is
+open. De-smoothing first is the load-bearing false-alarm control &mdash; it keeps
+an honest-but-smooth illiquid book from being mistaken for a short-vol one. The
+T &ge; 48 render gate is provisional &mdash; the calibrated false-alarm and detection
+curves that pin it land with the atlas build.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/m2-convexity.js"></script>
+{% endblock %}

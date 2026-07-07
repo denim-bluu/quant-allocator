@@ -13,7 +13,7 @@ def test_s1_page_provenance_and_copy(tmp_path):
     assert "synthetic-badge" in html
     assert "SYNTHETIC DATA" in html
     assert "golive-box" in html
-    # the lead reviewer copy obligation: every band labeled exactly "90% interval".
+    # numerics gate copy obligation: every band labeled exactly "90% interval".
     assert "90% interval" in html
     # Inline JSON block + spec link.
     assert 'id="card-data"' in html

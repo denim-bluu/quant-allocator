@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-> **NUMERICS ARE HELD FOR THE NUMERICS GATE.** Nothing in this plan merges to `main` or publishes. Every JSON file this plan produces (`site/data/s2_tearsheet.json`, `site/data/x1_atlas.json`, `site/data/x2_playground.json`) is committed to the **branch** `wave1-plan-c-demodata-s2-x1-x2` and stays there until a later numerics-gate pass certifies the numbers (annualization, alignment, seeding are the named failure modes — gallery design §8). The self-consistency tests and build-time invariants in this plan catch transcription and monotonicity errors mechanically; **they do not replace the gate.** Every provisional numeric choice is a named constant with a docket entry — see the **the lead reviewer Numerics-Gate Docket** at the end.
+> **NUMERICS ARE HELD FOR THE NUMERICS GATE.** Nothing in this plan merges to `main` or publishes. Every JSON file this plan produces (`site/data/s2_tearsheet.json`, `site/data/x1_atlas.json`, `site/data/x2_playground.json`) is committed to the **branch** `wave1-plan-c-demodata-s2-x1-x2` and stays there until a later the lead reviewer numerics-gate pass certifies the numbers (annualization, alignment, seeding are the named failure modes — gallery design §8). The self-consistency tests and build-time invariants in this plan catch transcription and monotonicity errors mechanically; **they do not replace the numerics gate.** Every provisional numeric choice is a named constant with a docket entry — see the **Numerics-Gate Docket** at the end.
 
 **Goal:** Build three wave-1 demo-data generators — S2 (uncertainty-honest tear sheet for one synthetic manager), X1 (tier & power atlas *sampler*), and X2 (transparency playground, all 450 cells) — where X1 and X2 are served by **one shared Monte-Carlo grid engine** (X2 is a strict subset of the atlas grid, never a parallel computation), plus the S2 analytic pipeline library the tear-sheet generator imports.
 
@@ -31,9 +31,9 @@
 ## Model & Review Policy
 
 - **senior implementers** for: Task X-2 (shared-grid engine) and Tasks S2-1…S2-3 (the S2 statistics pipeline). These carry the load-bearing math.
-- **implementer implementers** for pure-transcription / assembly tasks: S2-4, X-1 setup portions, X-4, X-5, X-6 generators (they wire pinned pieces into JSON).
+- **implementers** for pure-transcription / assembly tasks: S2-4, X-1 setup portions, X-4, X-5, X-6 generators (they wire pinned pieces into JSON).
 - **senior task reviewers** after each task; **whole-branch senior code review** before hand-off.
-- **NUMERICS CERTIFICATION IS RESERVED FOR NUMERICS** (the session controller). No implementer or reviewer certifies numbers; they certify *mechanics* (tests pass, invariants hold, determinism holds). the lead reviewer clears the docket against the committed JSON diffs.
+- **NUMERICS CERTIFICATION IS RESERVED FOR THE NUMERICS GATE** (the session controller). No implementer or reviewer certifies numbers; they certify *mechanics* (tests pass, invariants hold, determinism holds). The lead reviewer clears the docket against the committed JSON diffs.
 
 ## Task map
 
@@ -724,7 +724,7 @@ Generates one synthetic manager ("Manager 07", equity L/S, T=48, tier R — gall
 - Create: `src/quant_allocator/demo_data/s2_tearsheet.py`
 - Modify: `src/quant_allocator/demo_data/__main__.py` (register `s2_tearsheet`)
 - Modify: `tests/demo_data/test_cli.py` (registry now has three cards)
-- Create: `site/data/s2_tearsheet.json` (generated output — held for gate)
+- Create: `site/data/s2_tearsheet.json` (generated output — held for numerics gate)
 - Test: `tests/demo_data/test_s2_tearsheet.py`
 
 **Interfaces:**
@@ -1309,7 +1309,7 @@ The one Monte-Carlo grid computation serving both X1 and X2 (X2 §2: the playgro
   subset of the atlas grid, never a parallel computation). The 450 dial cells
   collapse to 30 simulation configs: T is a prefix truncation of one T_MAX=120
   manager path, and tier is three emissions of the same book. Configs run under
-  multiprocessing with a per-config cache. Numeric output is HELD FOR THE NUMERICS
+  multiprocessing with a per-config cache. Numeric output is HELD FOR THE
   NUMERICS GATE.
   """
 
@@ -1864,7 +1864,7 @@ Serializes the full 450-cell grid to `site/data/x2_playground.json` as short-arr
 - Create: `src/quant_allocator/demo_data/x2_playground.py`
 - Modify: `src/quant_allocator/demo_data/__main__.py` (register `x2_playground`)
 - Modify: `tests/demo_data/test_cli.py`, `tests/demo_data/test_emit.py`
-- Create: `site/data/x2_playground.json` (held for gate)
+- Create: `site/data/x2_playground.json` (held for numerics gate)
 - Test: `tests/demo_data/test_x2_playground.py`
 
 **Interfaces:**
@@ -2082,7 +2082,7 @@ Emits the wave-1 SAMPLER (`site/data/x1_atlas.json`, gallery design §5 — not 
 - Create: `src/quant_allocator/demo_data/x1_atlas.py`
 - Modify: `src/quant_allocator/demo_data/__main__.py` (register `x1_atlas`)
 - Modify: `tests/demo_data/test_cli.py`
-- Create: `site/data/x1_atlas.json` (held for gate)
+- Create: `site/data/x1_atlas.json` (held for numerics gate)
 - Test: `tests/demo_data/test_x1_atlas.py`
 
 **Interfaces:**
@@ -2290,7 +2290,7 @@ Emits the wave-1 SAMPLER (`site/data/x1_atlas.json`, gallery design §5 — not 
 
 ---
 
-## the lead reviewer Numerics-Gate Docket
+## Numerics-Gate Docket
 
 The drafter surfaced the numeric ambiguities below rather than inventing answers. **Implementation proceeds on the provisional values — all are named constants at module top; the lead reviewer flips a constant and regenerates (one command: `python -m quant_allocator.demo_data build <card>`) if it disposes differently. The determinism tests prove any regeneration is clean. Nothing merges or publishes until the lead reviewer clears this docket against the committed `s2_tearsheet.json` / `x1_atlas.json` / `x2_playground.json` diffs.**
 
@@ -2304,7 +2304,7 @@ The drafter surfaced the numeric ambiguities below rather than inventing answers
 
 **Held for the lead reviewer (provisional default → the lead reviewer confirms or flips):**
 
-| # | Question | Constant | Provisional | Why the lead reviewer |
+| # | Question | Constant | Provisional | Why gated |
 | --- | --- | --- | --- | --- |
 | D-1 | Atlas universe size (breadth of the candidate pool the manager selects from) | `x_grid.N_ASSETS` | 120 | not spec-pinned; sets book-selection breadth and is the primary runtime lever if the smoke test misses budget |
 | D-3 | VerdictChip power bands (robust/shrink/noise) | `ROBUST_POWER`, `NOISE_POWER` | 0.80 / 0.50 | X1/S2 say "per Sweep C" but do not pin the exact power cutoffs that flip a chip |

@@ -1,6 +1,6 @@
 # War-Game Sessions 1–2 Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. **Exception:** Part A tasks (A1–A3) are executed inline by the orchestrator — they require Agent-tool dispatch with model pinning and the lead reviewer-level QC, per spec Section 9.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. **Exception:** Part A tasks (A1–A3) are executed inline by the orchestrator — they require Agent-tool dispatch with model pinning and senior-level QC, per spec Section 9.
 
 **Goal:** Execute the dual-track opening of the campaign in `docs/superpowers/specs/2026-07-05-quant-allocator-wargame-design.md` — five landscape-sweep briefs committed to `docs/briefs/`, and a working substrate slice (synthetic manager simulator + Ken French factor adapter) with tests.
 
@@ -324,7 +324,7 @@ One Agent call per sweep, all in a single message, `run_in_background: true`:
 | --- | --- | --- | --- |
 | A | `docs/briefs/prompts/sweep-a.md` | `senior` | retrieval-bound |
 | B | `docs/briefs/prompts/sweep-b.md` | `senior` | retrieval-bound |
-| C | `docs/briefs/prompts/sweep-c.md` | `lead-reviewer` | embedded statistical judgment |
+| C | `docs/briefs/prompts/sweep-c.md` | `reviewer` | embedded statistical judgment |
 | D | `docs/briefs/prompts/sweep-d.md` | `senior` | retrieval-bound |
 | E | `docs/briefs/prompts/sweep-e.md` | `senior` | retrieval-bound |
 
@@ -353,7 +353,7 @@ git commit -m "docs: add raw landscape sweep briefs A-E"
 - Consumes: the five raw briefs from Task A2.
 - Produces: QC-passed briefs — the certified inputs to the convergence session.
 
-- [ ] **Step 1: Score every brief against this checklist (orchestrator, the lead reviewer-level)**
+- [ ] **Step 1: Score every brief against this checklist (orchestrator, senior-level)**
 
 Per brief, all must hold:
 1. All four required sections present; 800–2000 words.

@@ -1,0 +1,182 @@
+{
+  "footer": {
+    "omitted": [
+      {
+        "needs_tier": "E",
+        "section": "exposure_drift",
+        "title": "Exposure hygiene & drift"
+      }
+    ],
+    "provenance": [
+      {
+        "certified_by": "s1",
+        "section": "posterior_standing",
+        "title": "Posterior skill standing"
+      },
+      {
+        "certified_by": "s2",
+        "section": "tear_sheet",
+        "title": "Honest tear sheet"
+      },
+      {
+        "certified_by": "m5",
+        "section": "say_do",
+        "title": "Say\u2013do inventory"
+      }
+    ]
+  },
+  "meta": {
+    "generator": "e2_pack",
+    "manager_code": "M07",
+    "manager_name": "Kestrelmoor Partners",
+    "quarter": "2021-Q2",
+    "registry_version": 1,
+    "s1_posterior_available": false,
+    "tier": "R"
+  },
+  "sections": [
+    {
+      "display_numbers": [
+        "48",
+        "0.5"
+      ],
+      "gate": {
+        "effect": "true IR 0.5",
+        "measured": 48,
+        "metric": "ols_alpha_ttest",
+        "quantity": "months",
+        "threshold": null
+      },
+      "min_tier": "R",
+      "narration": "What this section will hold \u2014 the posterior probability the manager's alpha is genuinely positive \u2014 cannot be stated yet: at 48 months no tenure in the sampler atlas separates a true IR of 0.5 from luck. The pack shows the gate, not a number it cannot defend.",
+      "provenance": {
+        "as_of": "",
+        "card": "s1",
+        "metric": "ols_alpha_ttest"
+      },
+      "section_id": "posterior_standing",
+      "source_card": "s1",
+      "state": "refused",
+      "title": "Posterior skill standing"
+    },
+    {
+      "display_numbers": [
+        "+10.8%",
+        "+3.2%",
+        "-0.26",
+        "-0.29",
+        "-4.4%",
+        "0.60",
+        "0.71",
+        "1.46",
+        "1.67",
+        "90%",
+        "95%"
+      ],
+      "min_tier": "R",
+      "narration": "Getmansky\u2013Lo\u2013Makarov de-smoothing pulls the reported Sharpe of 0.71 down to 0.60 once the volatility smoothed marks hide is restored. The annualized alpha's 90% interval runs -4.4% to +10.8% and still spans zero, so the chip reads provisionally alternative beta \u2014 a track-length statement, not a verdict on skill.",
+      "provenance": {
+        "as_of": "2021-Q2",
+        "card": "s2",
+        "metric": "tear_sheet"
+      },
+      "section_id": "tear_sheet",
+      "source_card": "s2",
+      "state": "rendered",
+      "stats": [
+        {
+          "ci_hi": 1.669494,
+          "ci_lo": -0.26107,
+          "kind": "interval",
+          "label": "Reported Sharpe",
+          "level": "95%",
+          "point": 0.708543,
+          "range": "95% interval -0.26 \u2026 1.67",
+          "value": "0.71"
+        },
+        {
+          "ci_hi": 1.460354,
+          "ci_lo": -0.291789,
+          "kind": "interval",
+          "label": "De-smoothed Sharpe",
+          "level": "95%",
+          "point": 0.597257,
+          "range": "95% interval -0.29 \u2026 1.46",
+          "value": "0.60"
+        },
+        {
+          "ci_hi": 0.108435,
+          "ci_lo": -0.043751,
+          "kind": "interval",
+          "label": "Annualized alpha",
+          "level": "90%",
+          "point": 0.032342,
+          "range": "90% interval -4.4% \u2026 +10.8%",
+          "value": "+3.2%"
+        },
+        {
+          "chip": "provisionally alternative beta",
+          "kind": "verdict",
+          "label": "Alt-beta",
+          "verdict": "shrink"
+        }
+      ],
+      "title": "Honest tear sheet",
+      "views": []
+    },
+    {
+      "display_numbers": [],
+      "min_tier": "R",
+      "narration": "Three stated views from the letter \u2014 disciplined net exposure, a value tilt, and trimmed momentum. At the returns-only tier the pack lists what the manager said; the say\u2013do alignment against the measured book unlocks at tier E.",
+      "provenance": {
+        "as_of": "2020-04",
+        "card": "m5",
+        "metric": "letter_views"
+      },
+      "section_id": "say_do",
+      "source_card": "m5",
+      "state": "rendered",
+      "stats": [],
+      "title": "Say\u2013do inventory",
+      "views": [
+        {
+          "conviction": 3,
+          "direction": "neutral-explicit",
+          "quote": "We continue to run the book at our disciplined net exposure and have not chased the rally.",
+          "theme": "disciplined net exposure"
+        },
+        {
+          "conviction": 2,
+          "direction": "long/constructive",
+          "quote": "We have leaned further into cheaper, higher-quality names, adding to our value tilt over the coming two quarters.",
+          "theme": "value factor tilt"
+        },
+        {
+          "conviction": 2,
+          "direction": "short/cautious",
+          "quote": "Given how crowded momentum has become, we have been trimming our exposure to the factor and expect to stay cautious.",
+          "theme": "trimmed momentum risk"
+        }
+      ]
+    },
+    {
+      "display_numbers": [],
+      "min_tier": "E",
+      "narration": null,
+      "omitted": {
+        "needs_tier": "E",
+        "reason": "requires exposure summaries (tier-E data ask)"
+      },
+      "provenance": {
+        "as_of": "",
+        "card": "m1",
+        "metric": ""
+      },
+      "section_id": "exposure_drift",
+      "source_card": "m1",
+      "state": "omitted",
+      "title": "Exposure hygiene & drift"
+    }
+  ],
+  "summary": "Kestrelmoor Partners, returns-only tier. The tear sheet is honest \u2014 a reported Sharpe of 0.71 that de-smooths to 0.60, an alpha interval that still spans zero. Skill standing stays gated at 48 months, and the exposure-drift panel waits for tier-E data. Nothing here is asserted beyond what its source card certified."
+}

@@ -1,0 +1,131 @@
+{% extends "demo.html.j2" %}
+
+{% set split = card_data.split %}
+{% set roster = card_data.roster %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/m3.css">
+{% endblock %}
+
+{% macro manager_panel(m) %}
+<article class="m3-manager m3-manager--{{ m.level }}" data-role="{{ m.role }}"
+         data-band-red="{{ m.band.band_red | tojson }}"
+         data-band-amber="{{ m.band.band_amber | tojson }}"
+         data-running="{{ m.band.running_mdd_realized | tojson }}">
+  <header class="m3-manager__head">
+    <h3 class="m3-manager__name">{{ m.name }}</h3>
+    <span class="verdict-chip" data-verdict="{{ m.level }}">{{ m.level }}</span>
+  </header>
+  <p class="m3-manager__claim">
+    {{ "%.0f"|format(m.vol_annual * 100) }}%/yr vol, claimed Sharpe
+    {{ "%.1f"|format(m.claimed_sharpe) }} <span class="m3-synthetic">(synthetic)</span>.
+  </p>
+  <div class="interval-stat" data-domain="mdd"
+       data-lo="{{ m.amber_threshold }}" data-point="{{ m.realized_mdd }}"
+       data-hi="{{ m.red_threshold }}">
+    <span class="interval-stat__label">Realized max drawdown</span>
+    <span class="interval-stat__value">&minus;{{ "%.0f"|format(m.realized_mdd * 100) }}%</span>
+    <div class="interval-stat__rail">
+      <div class="interval-stat__band"></div>
+      <div class="interval-stat__point"></div>
+    </div>
+    <span class="interval-stat__range">null 95th&ndash;99th
+      &minus;{{ "%.0f"|format(m.amber_threshold * 100) }}% &hellip;
+      &minus;{{ "%.0f"|format(m.red_threshold * 100) }}%</span>
+  </div>
+  <p class="m3-manager__receipt">
+    MDD &minus;{{ "%.0f"|format(m.realized_mdd * 100) }}% sits at the
+    <strong>{{ "%.1f"|format(m.mdd_percentile) }}th percentile</strong> of the null under the
+    maintained Sharpe &mdash; {{ "an ordinary drawdown" if m.level == "green" else "a calibrated reason to review" }}.
+  </p>
+  <svg class="m3-band" viewBox="0 0 100 40" preserveAspectRatio="none" role="img"
+       aria-label="Realized running max-drawdown against the familywise null band"></svg>
+  <div class="m3-dial" data-dial="{{ m.role }}">
+    <span class="m3-dial__label">Maintained Sharpe (skepticism dial)</span>
+    <div class="m3-dial__options">
+      {% for f in m.fan %}
+      <button type="button" class="m3-dial__btn" data-sharpe="{{ "%.2f"|format(f.sharpe) }}"
+              data-level="{{ f.level }}" data-pct="{{ "%.1f"|format(f.mdd_percentile) }}"
+              aria-pressed="false">{{ "%.1f"|format(f.sharpe) }}</button>
+      {% endfor %}
+    </div>
+    <p class="m3-dial__readout" data-dial-readout>drag the dial to reweight the maintained Sharpe</p>
+  </div>
+</article>
+{% endmacro %}
+
+{% block demo_content %}
+<section class="m3-intro">
+  <p class="m3-headline">
+    The same &minus;12% drawdown is a shrug for a 20%-vol trend book and a five-alarm fire for a
+    smooth 6%-vol credit book &mdash; not because 12% means different things, but because each
+    manager is read against <strong>their own simulated null</strong>, not a flat house rule.
+  </p>
+  <p class="m3-window">
+    Budgets are stated <strong>per review window</strong>; the window here is the
+    <strong>full evaluated track</strong> ({{ card_data.meta.months }} months). AMBER fires above
+    the 95th-percentile null max-drawdown ({{ "%.0f"|format(card_data.meta.amber_budget * 100) }}%
+    budget), RED above the 99th ({{ "%.0f"|format(card_data.meta.red_budget * 100) }}% budget).
+    Budgets are stated under the fitted null; parameter-estimation slack means realized
+    false-alarm rates can run above nominal at short track lengths &mdash; validation at
+    T = 48 measured roughly 2% for the 1% RED budget. The hardened build recalibrates with
+    parameter-uncertainty-aware nulls.
+  </p>
+</section>
+
+<section class="m3-split">
+  {{ manager_panel(split[0]) }}
+  {{ manager_panel(split[1]) }}
+</section>
+
+<section class="m3-roster">
+  <h2 class="m3-roster__title">Roster heat-list</h2>
+  <p class="m3-roster__count">
+    <strong>{{ roster.observed_red }} RED{{ "s" if roster.observed_red != 1 else "" }}</strong>
+    this review; <strong>~{{ "%.2f"|format(roster.expected_false_red) }}</strong> expected by chance
+    on a healthy roster of {{ roster.size }} (size &times;
+    {{ "%.0f"|format(card_data.meta.red_budget * 100) }}% per-manager RED budget). Read the flags
+    with that count in view.
+  </p>
+  <ul class="m3-roster__list">
+    {% for mgr in roster.managers %}
+    <li class="m3-roster__row m3-roster__row--{{ mgr.level }}">
+      <span class="m3-roster__name">{{ mgr.name }}</span>
+      <span class="verdict-chip" data-verdict="{{ mgr.level }}">{{ mgr.level }}</span>
+      <span class="m3-roster__pct">&minus;{{ "%.0f"|format(mgr.realized_mdd * 100) }}%
+        &middot; {{ "%.0f"|format(mgr.mdd_percentile) }}th pct</span>
+    </li>
+    {% endfor %}
+  </ul>
+  <div class="power-gate">
+    <span class="power-gate__title">power gate</span>
+    <p class="power-gate__reason">
+      Detection of slow alpha death is low-power at T &le; 60 (one drawdown episode is n&asymp;1).
+      This alarm is a <strong>calibrated flag</strong> &mdash; &ldquo;extreme relative to the
+      stated null&rdquo; &mdash; never proof the alpha is gone, and never an auto-redeem.
+    </p>
+  </div>
+  <p class="m3-roster__fdr">
+    This roster count controls <em>monitor</em> false-alarms (drawdowns). It is <strong>not</strong>
+    an FDR luck-screen on alphas at roster scale &mdash; M3 runs no cross-manager alpha-discovery
+    test; it reports one honest count so the heat-list is not read naively.
+  </p>
+</section>
+{% endblock %}
+
+{% block methodology %}
+<p>The alarm statistic is the <em>path</em> max-drawdown: one scalar per simulated null path, so
+an &alpha;-level test has exactly an &alpha; familywise false-alarm rate by construction &mdash;
+the multiplicity S2's pointwise 99th band cannot control. The null is Monte-Carlo'd from each
+manager's maintained hypothesis (Sharpe, de-smoothed vol, fitted AR(1)); the panel plots the
+realized running max-drawdown against the familywise band, where a breach at the window end
+<em>is</em> a calibrated event.</p>
+<p>The roster heat-list carries its own multiplicity: a 1%-per-manager RED still yields roughly a
+one-in-three chance of some false RED across 40 healthy managers, so M3 prints the expected-false
+count rather than Bonferroni-correcting it away (which would destroy detection at T &le; 60). The
+skepticism dial is the honest picture of how much each verdict leans on the maintained Sharpe.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/m3-alarms.js"></script>
+{% endblock %}
