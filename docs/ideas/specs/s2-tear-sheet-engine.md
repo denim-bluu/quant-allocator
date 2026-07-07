@@ -101,28 +101,34 @@ economic returns, not the smoothed ones.
 
 ### 3.2 A worked toy example
 
-Take a tiny illiquid book that truly earns a flat 1% a month but reports it
-smoothed, so each reported month is 70% this month's true return and 30% last
-month's:
+Take a tiny illiquid book whose *true* monthly returns average 1% with a true
+month-to-month standard deviation of $\sigma_r = 1.00\%$, and — matching the
+assumption the unsmoothing model rests on (§3.3.1) — no serial correlation:
+each true month is an independent draw. The manager reports it smoothed, so
+each reported month is 70% this month's true return and 30% last month's:
 
 $$r^{\text{obs}}_t = 0.7\,r_t + 0.3\,r_{t-1}.$$
 
-Suppose the *true* monthly returns are $r = [2\%, 0\%, 2\%, 0\%, \dots]$ —
-mean 1%, and a real month-to-month swing of $\pm1\%$ around it (standard
-deviation 1%). The *reported* series is
-$r^{\text{obs}} = [\dots, 1.4\%, 0.6\%, 1.4\%, 0.6\%, \dots]$: same mean (1%),
-but the swing has shrunk to $\pm0.4\%$ (standard deviation 0.4%). The smoothing
-kernel conserved the average but **compressed the volatility to 40% of the
-truth**. A tear sheet that computes Sharpe on the reported series divides the
-same excess mean by a denominator that is 2.5× too small — a Sharpe inflated by
-2.5×, out of thin air.
+Run the smoothing *forward* first. The mean is conserved
+($0.7 \times 1\% + 0.3 \times 1\% = 1\%$), but for uncorrelated true returns the
+variances of the two independent pieces add:
 
-Unsmoothing reverses this. The variance relationship (derived in §3.3) says the
-reported variance equals $(0.7^2 + 0.3^2) = 0.58$ times the true variance, so
-the true standard deviation is $0.4\% / \sqrt{0.58} \approx 0.53\%$ — recovering
-(up to the toy's rounding) the honest denominator, and cutting the inflated
-Sharpe back down. That single correction is station 1. Everything else on the
-sheet then runs on the recovered economic series.
+$$\sigma^2_{\text{obs}} = (0.7^2 + 0.3^2)\,\sigma^2_r = 0.58\,\sigma^2_r,
+\qquad\text{so}\qquad
+\sigma_{\text{obs}} = \sqrt{0.58} \times 1.00\% \approx 0.76\%.$$
+
+The reported volatility is only 76% of the truth. A tear sheet that computes
+Sharpe on the reported series divides the same excess mean by a denominator
+that is too small by the factor $1/\sqrt{0.58} \approx 1.31$ — a Sharpe
+inflated by roughly 31%, out of thin air.
+
+Unsmoothing simply inverts that step: the true standard deviation is
+$\sigma_{\text{obs}} / \sqrt{0.58} = 0.76\% / 0.7616 = 1.00\%$ — the honest
+denominator, recovered exactly, and the inflated Sharpe cut back down. (In a
+real sample the reconciliation is exact only in expectation: a finite draw of
+"uncorrelated" returns has some accidental sample autocorrelation, so recovered
+numbers wobble around the truth.) That single correction is station 1.
+Everything else on the sheet then runs on the recovered economic series.
 
 ### 3.3 The math
 
@@ -294,7 +300,8 @@ where:
   cash** in month $t$.
 
 In words, $\widehat{\Theta}_\rho$ is the **annualized certainty-equivalent
-excess return** of a CRRA investor holding the manager: the guaranteed return
+excess return** of a CRRA (constant relative risk aversion — power-utility)
+investor holding the manager: the guaranteed return
 that would make that investor exactly as happy as the manager's risky record.
 It is reported **beside** the Sharpe. A large **Sharpe-vs-MPPM gap** flags
 manipulation or hidden optionality: the two agree for well-behaved
@@ -328,13 +335,16 @@ anyone.
 
 The realized drawdown path (the running peak-to-trough decline) is plotted
 against a **simulation-calibrated band**. A Monte Carlo of the *maintained
-hypothesis* — the claimed or S1-posterior Sharpe, the de-smoothed volatility
+hypothesis* — the claimed or S1-posterior Sharpe (the Sharpe estimate from card
+S1's Bayesian skill ledger, when that companion analytic is available), the
+de-smoothed volatility
 from station 1, and a fitted **AR(1)** autocorrelation (one-lag persistence) —
 generates the null distribution of drawdown paths, and the band is the
 **50 / 95 / 99th percentile envelope** at each horizon. If the manager's
 skill is real, the realized path should sit inside the band; a path that punches
 through the 99th-percentile envelope is a drawdown that is *extreme* under the
-story you are paying for. This is **M3-lite**: it shows whether a loss is
+story you are paying for. This is **M3-lite** — a lightweight preview of card
+M3, the dedicated drawdown-alarm module: it shows whether a loss is
 ordinary or alarming, but the full alarm logic (hysteresis, time-to-detection,
 roster heat-list) is card M3, which slots into this same panel when built.
 
