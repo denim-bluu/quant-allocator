@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 
 from quant_allocator.flagships.convexity import diagnostics as dg
+from quant_allocator.flagships.convexity import render as rd
 from quant_allocator.flagships.convexity import screen as sc
 from quant_allocator.flagships.convexity.bootstrap import block_bootstrap_ci
 from quant_allocator.flagships.tearsheet.pipeline import DrawdownHypothesis
@@ -147,3 +148,23 @@ def test_composite_flags_only_when_k_agree_and_gate_open():
     # An honest manager should not reach K short-vol votes.
     assert res.short_vol_count < sc.M2_COMPOSITE_K
     assert res.composite_chip == "noise"
+
+
+def test_pack_screen_shapes_are_render_ready():
+    res = _run(kappa=0.0)
+    packed = rd.pack_screen(res)
+    assert set(packed) >= {"diagnostics", "composite", "power_gate"}
+    tm = packed["diagnostics"]["treynor_mazuy"]
+    assert set(tm) >= {"name", "point", "ci_lo", "ci_hi", "verdict", "played"}
+    assert tm["ci_lo"] <= tm["point"] <= tm["ci_hi"]
+    # Unplayed rung serializes with null numerics (no fake interval).
+    assert packed["diagnostics"]["straddle_loading"]["played"] is False
+    assert packed["diagnostics"]["straddle_loading"]["point"] is None
+    pg = packed["power_gate"]
+    assert set(pg) >= {"open", "min_t_flag", "t", "reason"}
+
+
+def test_pack_power_gate_reason_states_threshold():
+    closed = rd.pack_power_gate(_run(kappa=0.9, n_months=36))
+    assert closed["open"] is False
+    assert "48" in closed["reason"]  # threshold named in the refusal
