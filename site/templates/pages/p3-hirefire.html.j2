@@ -21,6 +21,62 @@
   </p>
 </section>
 
+<section class="p3-explainer" aria-label="What this exhibit shows">
+  <h2 class="p3-panel__title">What this exhibit shows</h2>
+  <div class="p3-explainer__block">
+    <h3 class="p3-explainer__sub">What you are looking at</h3>
+    <p class="p3-note">
+      A fully synthetic history of {{ ag.n_events }} hire, fire, and
+      hold-under-review decisions across {{ card_data.meta.n_managers }} managers.
+      The headline exhibit shrinks their average value-add toward the
+      Goyal&ndash;Wahal base rate of zero and reports it as a
+      {{ "%+.1f"|format(ag.posterior.ci_lo * 100) }}% to
+      {{ "%+.1f"|format(ag.posterior.ci_hi * 100) }}% per-year posterior interval
+      &mdash; straddling zero, tagged &ldquo;{{ ag.verdict_chip }}.&rdquo; Below it,
+      the fired-versus-replacement cohort paths mean-revert, one scorecard grades a
+      decision against its pre-committed thesis, and the full {{ ag.n_events }}-row
+      ledger keeps every decision as its own story rather than averaging them away.
+    </p>
+  </div>
+  <div class="p3-explainer__block">
+    <h3 class="p3-explainer__sub">How to read it</h3>
+    <ul class="p3-explainer__list">
+      <li><strong>The interval band</strong> is the 90% posterior for process
+        value-add; its width is the uncertainty, the tick is the pinned-zero base
+        rate, and the dot is the shrunk point
+        ({{ "%+.1f"|format(ag.posterior.point * 100) }}%/yr).</li>
+      <li><strong>The verdict chip</strong> reads
+        &ldquo;{{ ag.verdict_chip }}&rdquo; whenever the interval still covers zero
+        &mdash; the conclusion, not a failure.</li>
+      <li><strong>The &ldquo;raw average refused&rdquo; note</strong> withholds the
+        plain average because effective N is only
+        {{ "%.1f"|format(ag.n_effective) }} ({{ ag.n_events }} events,
+        {{ ag.n_cohorts }} quarterly cohorts, design effect
+        {{ "%.2f"|format(ag.design_effect) }}) &mdash; below the
+        {{ card_data.meta.min_events }}-event gate.</li>
+      <li><strong>The detectability line</strong> says that at a true
+        {{ "%.0f"|format(ag.events_to_detect.true_gap * 100) }}%/yr edge the
+        interval would not exclude zero until &asymp;
+        {{ ag.events_to_detect.n | int }} decisions.</li>
+      <li><strong>The cohort chart</strong> plots the fired managers' forward path
+        (green) against their replacements' (red); the fired recover and the
+        replacements fade.</li>
+      <li><strong>The scorecard</strong> sets the pre-committed thesis and kill
+        criterion beside the realized path, so process is graded, not the draw.</li>
+      <li><strong>Each ledger row</strong> is one decision: a green left border
+        means it helped, red means it hurt; the row shows the raw and
+        factor-adjusted forward gaps, the counterfactual rung used
+        (replacement-paired, peer-median, or benchmark), and whether the kill
+        criterion was met.</li>
+    </ul>
+    <p class="p3-note">
+      The full methodology &mdash; with the math and a reference implementation
+      &mdash; is in the
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
+    </p>
+  </div>
+</section>
+
 <section class="p3-panel">
   <h2 class="p3-panel__title">Process value-add &mdash; shrunk toward the base rate</h2>
   {% if ag.raw_mean_gated %}

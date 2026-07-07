@@ -9,6 +9,14 @@
 .p3-panel__title { font-size: 15px; margin: 0 0 10px; }
 .p3-note { font-size: 13px; color: var(--dim); margin: 0 0 12px; }
 
+/* "What this exhibit shows" primer — sits between headline and first exhibit. */
+.p3-explainer { margin: 16px 0 20px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+.p3-explainer__block { margin-top: 12px; }
+.p3-explainer__block:first-of-type { margin-top: 0; }
+.p3-explainer__sub { font-size: 10px; text-transform: uppercase; letter-spacing: 0.10em; color: var(--dim); margin: 0 0 6px; }
+.p3-explainer__list { margin: 0 0 12px; padding-left: 18px; font-size: 13px; line-height: 1.5; }
+.p3-explainer__list li { margin-bottom: 5px; }
+
 .p3-verdict { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin: 12px 0 0; }
 .p3-verdict__note { font-size: 12px; color: var(--dim); }
 .p3-detect { margin: 12px 0 0; font-size: 13px; color: var(--dim); }

@@ -53,6 +53,8 @@ def test_p3_provenance_and_furniture(tmp_path):
     html, out = _build_with_p3_live(tmp_path)
     assert "synthetic-badge" in html
     assert "SYNTHETIC DATA" in html
+    # Editorial explainer sits near the top of the gallery page.
+    assert "What this exhibit shows" in html
     assert "golive-box" in html
     assert 'id="card-data"' in html
     assert "specs/p3.html" in html
