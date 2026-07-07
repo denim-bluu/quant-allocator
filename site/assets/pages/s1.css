@@ -1,0 +1,45 @@
+/* S1 ledger — "What this exhibit shows" explainer block. */
+.exhibit-guide {
+  margin: 0 0 22px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  background: var(--paper);
+}
+
+.exhibit-guide__title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.exhibit-guide__lead {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.exhibit-guide__subhead {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.exhibit-guide__map {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.exhibit-guide__map li {
+  margin: 3px 0;
+}
+
+.exhibit-guide__map li:last-child {
+  margin-top: 8px;
+}

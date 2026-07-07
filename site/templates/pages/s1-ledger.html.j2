@@ -1,5 +1,9 @@
 {% extends "demo.html.j2" %}
 
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/s1.css">
+{% endblock %}
+
 {% block demo_content %}
 {% set ns = namespace(movers=0) %}
 {% for m in card_data.managers %}
@@ -22,6 +26,37 @@
     </span>
   </div>
 </section>
+
+<aside class="exhibit-guide" aria-label="What this exhibit shows">
+  <h2 class="exhibit-guide__title">What this exhibit shows</h2>
+  <p class="exhibit-guide__lead">
+    <strong>What you are looking at.</strong> Each row is one manager's alpha
+    shown twice &mdash; the raw OLS estimate and the posterior after it is shrunk
+    toward its strategy peers. Osprey Hollow Partners (A10) leads on both: a raw
+    +29.3% barely moves to +25.4% and holds rank #1, because a long, clean record
+    is trusted. Cinderbank Capital (B10) instead falls from +19.6% (#3) to +13.2%
+    (#4): its 36-month record earns a shrinkage weight of only 0.46, so the peer
+    mean pulls it down. Across the roster, {{ ns.movers }} of
+    {{ card_data.meta.n_managers }} managers change rank once luck is separated
+    from skill.
+  </p>
+  <p class="exhibit-guide__subhead">How to read it</p>
+  <ul class="exhibit-guide__map">
+    <li><strong>Two interval bands per row</strong> &mdash; left is the OLS alpha,
+      right is the posterior; each band is the 90% interval and the tick inside is
+      the point estimate.</li>
+    <li><strong>OLS #x &rarr; posterior #y and the &#9650;/&#9660; chip</strong>
+      &mdash; rank before and after shrinkage; the chip flags rose, fell, or held,
+      and movers carry an accent stripe down the left edge.</li>
+    <li><strong>The band pill</strong> (review / minimum / standard / conviction)
+      &mdash; the advisory capital band from the posterior t-ratio.</li>
+    <li><strong>P(&alpha; &gt; 0)</strong> &mdash; the posterior probability true
+      alpha is positive, capped at &gt;0.99 because certainty is never displayed.</li>
+    <li>The full methodology &mdash; with the math and a reference implementation
+      &mdash; is in the
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.</li>
+  </ul>
+</aside>
 
 <section class="ledger" data-ledger>
   {% for m in card_data.managers | sort(attribute='ols_rank') %}
