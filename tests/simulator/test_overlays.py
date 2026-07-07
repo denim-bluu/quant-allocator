@@ -73,6 +73,23 @@ def test_flat_premium_when_fair_disabled():
     np.testing.assert_allclose(result.to_numpy(), expected, atol=1e-12)
 
 
+def test_deeper_moneyness_weakens_the_tail_monotonically():
+    # Deeper-OTM strikes pay off less often and less deeply: the worst month
+    # and the total payout must both shrink monotonically in strike_moneyness.
+    mkt = _market_factor()
+    base = _returns(mkt)
+    kappa = 0.8
+    mins, payouts = [], []
+    for moneyness in (0.5, 1.0, 2.0):
+        overlay = WrittenPutOverlay(strike_moneyness=moneyness, overlay_notional=kappa)
+        result = apply_written_put_overlay(base, mkt, overlay)
+        mins.append(float(result.min()))
+        strike = -moneyness * float(mkt.std())
+        payouts.append(float(np.maximum(strike - mkt.to_numpy(), 0.0).sum()))
+    assert mins[0] <= mins[1] <= mins[2]  # shallower strike => worse worst-month
+    assert payouts[0] > payouts[1] > payouts[2]  # strictly less total payoff deeper OTM
+
+
 def test_invalid_overlays_raise():
     mkt = _market_factor(n_months=24)
     base = _returns(mkt)
