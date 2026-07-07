@@ -1,0 +1,102 @@
+/* site/assets/pages/e2-pack.css
+   E2 pack page-layout classes ONLY. Component classes (.interval-stat,
+   .verdict-chip, .power-gate, .pack-page) come from interval.css and are NOT
+   redefined here. Do not touch interval.css. */
+
+.pack-head {
+  margin: 8px 0 20px;
+}
+
+.pack-head__meta {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+}
+
+.pack-summary {
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 8px 0 0;
+}
+
+.pack-honesty {
+  margin: 12px 0 0;
+  padding: 8px 14px;
+  border-left: 3px solid var(--warn);
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.pack-section {
+  margin: 20px 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.pack-section__title {
+  font-size: 15px;
+  margin: 0 0 4px;
+}
+
+.pack-section__prov {
+  font-size: 11px;
+  color: var(--dim);
+  margin: 0 0 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pack-narration {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+
+.pack-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.pack-views {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.pack-view__quote {
+  margin: 0 0 4px;
+  padding-left: 10px;
+  border-left: 2px solid var(--line);
+  font-style: italic;
+}
+
+.pack-view__meta {
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.pack-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.pack-footer__title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+  margin: 12px 0 6px;
+}
+
+.pack-footer__prov,
+.pack-footer__omitted {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12px;
+  color: var(--dim);
+}
