@@ -10,8 +10,7 @@ ask exists.
 
 ## Gallery
 
-<!-- set after Pages enablement -->
-Live gallery: `https://USERNAME.github.io/quant-allocator/`
+Live gallery: **<https://denim-bluu.github.io/quant-allocator/>**
 
 ## Repository map
 

@@ -33,7 +33,7 @@ GOLIVE_KEYS = {"data_ask", "sample", "effort"}
 VALID_THEMES = {"light", "dark"}
 
 # Placeholder repo URL; set the real one at Pages enablement (see docs/PUBLISHING.md).
-REPO_URL = "https://github.com/USERNAME/quant-allocator"
+REPO_URL = "https://github.com/denim-bluu/quant-allocator"
 SITE_TITLE = "Quant Allocator — Idea Gallery"
 LANE_ORDER = ["S", "M", "P", "E", "X"]
 LANE_HEADINGS = {
