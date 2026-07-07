@@ -132,6 +132,9 @@ def drawdown_vol_signature(returns, hypothesis: DrawdownHypothesis, *, level=DIA
     point = ratio(r)
     lo, hi = block_bootstrap_ci(ratio, (r,), level=level, n_boot=n_boot, seed=seed, stream_tag=_DDVOL_STREAM)
     realized_maxdd = point * null_median_maxdd
+    # Gate ruling: this rung votes point-vs-null-envelope — the simulated envelope IS the
+    # calibrated band for a path statistic (same logic as the M3 alarm); the bootstrap
+    # interval shown is descriptive.
     if realized_maxdd < null_q_maxdd:
         verdict = "short-vol-consistent"          # deeper than the 95th-pct null
     elif realized_maxdd > null_median_maxdd:

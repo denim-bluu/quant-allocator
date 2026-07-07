@@ -189,6 +189,9 @@ def resolve_event(record, world: AuditWorld) -> EventResult:
         v_raw = sub_raw - cf_raw       # subject - counterfactual
         v_fa = sub_fa - cf_fa
 
+    # Ex-post read of the pre-committed criterion: the forward realized factor alpha over
+    # the horizon measured against the pre-set bar — did the outcome trip the bar the
+    # allocator committed to, not a re-derivation of a trailing signal.
     realized_alpha_annual = (1.0 + sub_fa) ** (1.0 / h) - 1.0
     kill_met = bool(realized_alpha_annual < record.kill_alpha_threshold_annual)
 

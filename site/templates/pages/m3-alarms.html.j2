@@ -66,6 +66,10 @@
     <strong>full evaluated track</strong> ({{ card_data.meta.months }} months). AMBER fires above
     the 95th-percentile null max-drawdown ({{ "%.0f"|format(card_data.meta.amber_budget * 100) }}%
     budget), RED above the 99th ({{ "%.0f"|format(card_data.meta.red_budget * 100) }}% budget).
+    Budgets are stated under the fitted null; parameter-estimation slack means realized
+    false-alarm rates can run above nominal at short track lengths &mdash; validation at
+    T = 48 measured roughly 2% for the 1% RED budget. The hardened build recalibrates with
+    parameter-uncertainty-aware nulls.
   </p>
 </section>
 

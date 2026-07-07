@@ -42,8 +42,8 @@ N_MANAGERS = 16
 # luck (the Goyal-Wahal precondition). Provisional 0.03; _scan_seeds recovers a
 # value/seed reproducing the stylized facts if the gate revises it.
 MANAGER_IC = 0.03
-# NUMERICS-GATE P3-D6: five review months (one per calendar quarter -> five cohorts),
-# each emitting three same-month events (m_bar=3). Chosen so trailing-36 and
+# NUMERICS-GATE P3-D6: five review months (one per year, spaced 12 months apart -> five
+# cohorts), each emitting three same-month events (m_bar=3). Chosen so trailing-36 and
 # forward-36 windows both fit inside DEMO_MONTHS.
 REVIEW_INDICES = (42, 54, 66, 78, 90)
 TRAILING_MONTHS = 36

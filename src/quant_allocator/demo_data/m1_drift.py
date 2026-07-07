@@ -65,7 +65,6 @@ FALSE_ALARM_BUDGET = 0.05
 K_CONSEC = 3
 M_WINDOW = 4
 RBSA_WINDOW = 24
-FACTOR_SHARE_WINDOW = 12
 
 # --- Calibration ensemble sizes (Docket D-M1-2) ---
 # NUMERICS-GATE: demo-fidelity path counts; the full atlas (X1 D-11) uses >= 1000 across
@@ -161,7 +160,7 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
         drift=None, window=RBSA_WINDOW, manager_kwargs=_MANAGER_KWARGS,
     )
     h_e = calibrate.calibrate_threshold(null_beta, band, CUSUM_ALLOWANCE_K, FALSE_ALARM_BUDGET, H_GRID)
-    # R-tier rolling-beta wanders around ~1.0; calibrate against a band centred there.
+    # R-tier rolling-beta centres near the ~0.10 target net beta; calibrate against a band centred there.
     r_band = _rolling_band(null_rbeta, band.delta)
     r_clean = [p[~np.isnan(p)] for p in null_rbeta]
     h_r = calibrate.calibrate_threshold(r_clean, r_band, CUSUM_ALLOWANCE_K, FALSE_ALARM_BUDGET, H_GRID)

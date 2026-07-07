@@ -119,7 +119,9 @@ a rotating book). Detection and delay are measured on the drift alternative, eac
 interval.</p>
 <p>The R rung exists only to make the tier degradation visible: returns-based rolling-beta inference at
 this track length buries a real net-beta walk in estimation noise &mdash; the do-not-build verdict,
-measured, not asserted.</p>
+measured, not asserted. The R rung is calibrated with the same allowance as the measured tier; on the
+far noisier rolling-beta series no threshold on the calibration grid meets the false-alarm budget
+&mdash; the refusal itself is the measured verdict.</p>
 {% endblock %}
 
 {% block body_scripts %}
