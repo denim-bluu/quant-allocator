@@ -322,23 +322,25 @@ def _drawdown_path(returns: np.ndarray) -> np.ndarray:
     return wealth / peak - 1.0
 
 
-def drawdown_band(returns, hypothesis, *, n_paths=DRAWDOWN_PATHS, seed=PIPELINE_SEED) -> DrawdownBand:
-    # S2 spec §3.6, M3-lite: Monte Carlo the maintained hypothesis (Sharpe, de-smoothed
-    # vol, fitted AR(1)) to get the null drawdown envelope at the 50/95/99th percentiles.
-    returns = np.asarray(returns, dtype=float)
-    t = len(returns)
-    realized = _drawdown_path(returns)
-
+def _fit_ar1(returns: np.ndarray) -> float:
+    # Lag-1 OLS AR(1) on mean-centered returns (S2 §3.6), clipped to a stationary range.
     centered = returns - returns.mean()
     denom = float(centered[:-1] @ centered[:-1])
     ar1 = float(centered[1:] @ centered[:-1] / denom) if denom > 0 else 0.0
-    ar1 = float(np.clip(ar1, -0.99, 0.99))
+    return float(np.clip(ar1, -0.99, 0.99))
 
+
+def simulate_null_drawdowns(
+    hypothesis: "DrawdownHypothesis", ar1: float, t: int, *, n_paths: int, seed: int, stream: int = 7
+) -> np.ndarray:
+    # Shared MC primitive (S2 §3.6, M3 spec §5): simulate n_paths AR(1) return paths at the
+    # maintained (Sharpe, vol) and return their running-drawdown matrix (n_paths × t, each row <= 0).
+    # S2's drawdown_band takes pointwise percentiles of this; M3 takes path scalars. No estimator
+    # is duplicated. stream=7 reproduces S2's exact RNG sequence (byte-identity constraint).
     vol_monthly = hypothesis.vol_annual / np.sqrt(MONTHS_PER_YEAR)
     mean_monthly = hypothesis.sharpe_annual / np.sqrt(MONTHS_PER_YEAR) * vol_monthly
     innovation_sd = vol_monthly * np.sqrt(1.0 - ar1**2)
-
-    rng = np.random.default_rng([seed, 7])
+    rng = np.random.default_rng([seed, stream])
     troughs = np.empty((n_paths, t))
     for i in range(n_paths):
         path = np.empty(t)
@@ -349,7 +351,18 @@ def drawdown_band(returns, hypothesis, *, n_paths=DRAWDOWN_PATHS, seed=PIPELINE_
             path[k] = mean_monthly + dev
             prev = dev
         troughs[i] = _drawdown_path(path)
+    return troughs
 
+
+def drawdown_band(returns, hypothesis, *, n_paths=DRAWDOWN_PATHS, seed=PIPELINE_SEED) -> DrawdownBand:
+    # S2 spec §3.6, M3-lite: Monte Carlo the maintained hypothesis to get the null drawdown
+    # envelope at the pointwise 50/95/99th percentiles. Simulation lifted to simulate_null_drawdowns
+    # (M3 spec §5); behavior and committed output are unchanged.
+    returns = np.asarray(returns, dtype=float)
+    t = len(returns)
+    realized = _drawdown_path(returns)
+    ar1 = _fit_ar1(returns)
+    troughs = simulate_null_drawdowns(hypothesis, ar1, t, n_paths=n_paths, seed=seed)
     p50 = np.percentile(troughs, 50, axis=0)
     p95 = np.percentile(troughs, 5, axis=0)   # 95th-pct DEEP drawdown = 5th pct of a <=0 series
     p99 = np.percentile(troughs, 1, axis=0)   # 99th-pct deep drawdown = 1st pct
