@@ -665,6 +665,11 @@ the capped set, and the 50-pass bound is a safety rail, not a tuning knob. The
 
 ## 5. Reading the demo
 
+> Generator-reconciled 2026-07-07: B10 band ceiling 10.4% -> 10.3% and top-3
+> band-anchor concentration 35.5% -> 35.4% (MC-seed convention differs from §4
+> teaching code — house seed `[P1_SEED, P1_DRAW_STREAM]` with `standard_normal`
+> vs §4's `70707`/`normal(means, sds)`; verify at the numerics gate).
+
 The gallery page `p1.html` is a **band chart** on the S1 roster — the same 20
 synthetic managers, in the same certified numbers, one step further down the
 decision pipeline (the page states: "posteriors from the S1 skill ledger;
@@ -685,13 +690,13 @@ manager, ordered by band anchor. Each row shows:
 
 **The headline row.** Cinderbank Capital (B10) — S1's exemplar of a lucky
 36-month record — gets **10.8%** of the book from the point optimizer, riding
-its raw +19.6% OLS alpha. Its honest band is **[4.5%, 10.4%]**: the naive
+its raw +19.6% OLS alpha. Its honest band is **[4.5%, 10.3%]**: the naive
 weight sits *above the entire range* the posterior evidence supports. The
 point optimizer did not just miss the anchor (7.4%); it left the defensible
 region altogether, and it did so on the roster's noisiest flattering estimate
 — §3.3's selection-on-noise mechanism, visible in one row. Across the top of
 the book the same tilt shows up in aggregate: the top-3 concentration is
-40.0% under the point optimizer versus 35.5% at the band anchors, with the
+40.0% under the point optimizer versus 35.4% at the band anchors, with the
 excess parked in exactly the short-record names.
 
 **The matched pair — what evidence width is worth in capital.** Petrelwood

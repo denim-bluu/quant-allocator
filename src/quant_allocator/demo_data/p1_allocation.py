@@ -20,7 +20,7 @@ from pathlib import Path
 import numpy as np
 
 from quant_allocator.demo_data._emit import SITE_DATA_DIR, write_json
-from quant_allocator.demo_data.roster import MANAGER_NAMES, build_skill_ledger_roster
+from quant_allocator.demo_data.roster import build_skill_ledger_roster
 from quant_allocator.flagships.allocation.pipeline import (
     AllocationConfig,
     allocate_one_draw,

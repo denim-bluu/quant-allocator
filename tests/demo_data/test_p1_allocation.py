@@ -1,6 +1,5 @@
 import json
 
-import numpy as np
 import pytest
 
 from quant_allocator.demo_data import p1_allocation
