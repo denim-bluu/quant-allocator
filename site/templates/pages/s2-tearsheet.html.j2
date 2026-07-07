@@ -15,6 +15,41 @@
   </p>
 </section>
 
+<section class="tearsheet-panel" aria-label="What this exhibit shows">
+  <h2 class="tearsheet-panel__title">What this exhibit shows</h2>
+  <p class="tearsheet-note">
+    <strong>What you are looking at.</strong> One synthetic manager's honest tear
+    sheet. The de-smoothing panel drops the Sharpe from
+    {{ "%.2f"|format(st.sharpe_reported.point) }} (reported) to
+    {{ "%.2f"|format(st.sharpe_desmoothed.point) }} (economic) once smoothed marks
+    are undone, and both come with a 95% interval that straddles zero. The factor
+    panel reports an annualized alpha of {{ "%+.1f"|format(st.alpha.point * 100) }}%
+    whose 90% interval includes zero, so 48 months cannot yet separate skill from
+    factor exposure. The realized drawdown stays inside its simulated 99th-percentile
+    band &mdash; an ordinary loss under the paid-for-skill hypothesis.
+  </p>
+  <p class="tearsheet-note"><strong>How to read it.</strong></p>
+  <ul class="tearsheet-note">
+    <li><strong>Interval stat</strong> (a value with a shaded rail) &mdash; the point
+      estimate plus its confidence interval; the wider the band, the less the track
+      length resolves.</li>
+    <li><strong>Reported vs de-smoothed Sharpe pair</strong> &mdash; the gap is the
+      volatility that smoothing hid; the economic Sharpe is the defensible one.</li>
+    <li><strong>MPPM chip</strong> &mdash; a manipulation-proof return beside the
+      Sharpe; read the <em>gap</em> between them, not the level.</li>
+    <li><strong>Verdict chip</strong> (&ldquo;provisionally alternative beta&rdquo;)
+      &mdash; a calibration statement that the alpha interval includes zero at this
+      track length, not an accusation of no skill.</li>
+    <li><strong>Drawdown band</strong> &mdash; the pointwise 50 / 95 / 99th percentile
+      null envelope; a realized path inside it is an ordinary drawdown.</li>
+  </ul>
+  <p class="tearsheet-note">
+    The full methodology &mdash; with the math and a reference implementation &mdash;
+    is in the <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method
+    spec</a>.
+  </p>
+</section>
+
 <section class="tearsheet-panel">
   <h2 class="tearsheet-panel__title">De-smoothing &mdash; reported vs economic Sharpe</h2>
   <p class="tearsheet-note">
