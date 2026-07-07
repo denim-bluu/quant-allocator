@@ -1,8 +1,27 @@
 {% extends "demo.html.j2" %}
 
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/e1.css">
+{% endblock %}
+
 {% block demo_content %}
 <article class="pack-page ladder">
   <p class="ladder__intro">Transparency is granted, not owed. Every rung below pairs an ask with what the manager receives back, and with the statistical reason the ask exists — the ask is justified by the math, not by suspicion.</p>
+
+  <section class="exhibit-explainer" aria-label="What this exhibit shows">
+    <h2 class="exhibit-explainer__heading">What this exhibit shows</h2>
+    <p class="exhibit-explainer__lede"><strong>What you are looking at.</strong> A three-rung escalation ladder for asking a manager for deeper data — monthly returns, then exposure summaries, then position files. Each rung states the ask, what the manager receives back in return, and the statistical reason the ask is warranted. The reasons are not suspicion: at 36–60 months of returns you can state intervals about Sharpe and factor mix and little else, so each higher rung is the answer to a question the current data provably cannot resolve.</p>
+    <p class="exhibit-explainer__subhead">How to read it</p>
+    <ul>
+      <li><strong>Each rung block</strong> — one escalation step; read it top to bottom before deciding to climb.</li>
+      <li><strong>"The ask"</strong> — the exact data grant to request at this rung.</li>
+      <li><strong>"In return"</strong> — the reciprocal artifact you hand back at the moment of the ask; bring it to the meeting.</li>
+      <li><strong>"Why the math asks"</strong> — the one line you say out loud: the question this rung's data answers that the current tier cannot.</li>
+      <li><strong>Rung scope</strong> (the grey note by each heading) — the cadence and format terms of the grant.</li>
+      <li><strong>Standing rules</strong> — the four non-negotiables that hold at every rung, including that a declined ask is respected, not punished.</li>
+    </ul>
+    <p class="exhibit-explainer__lede">Use it one rung per conversation: read the "why the math asks" line as your script, pair it with the reciprocity, and never ask without a stated question attached. The full methodology — with the math and a reference implementation — is in the <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.</p>
+  </section>
 
   <section class="ladder-rung">
     <h2 class="ladder-rung__heading">Rung 1 — Monthly returns <span class="ladder-rung__scope">(every manager, default)</span></h2>

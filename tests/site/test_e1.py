@@ -12,5 +12,6 @@ def test_e1_ladder_page(tmp_path):
         assert rung in html
     assert "synthetic-badge" not in html
     assert "usage-note" in html
+    assert "What this exhibit shows" in html
     assert "Standing rules" in html
     assert (tmp_path / "out" / "specs" / "e1.html").exists()

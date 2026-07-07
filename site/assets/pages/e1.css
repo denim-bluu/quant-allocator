@@ -1,0 +1,43 @@
+/* site/assets/pages/e1.css
+   E1 ladder page-layout classes ONLY. Component classes (.pack-page, .ladder-rung,
+   .ladder-standing, .usage-note) come from interval.css and are NOT redefined
+   here. Do not touch interval.css. */
+
+.exhibit-explainer {
+  margin: 8px 0 24px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+}
+
+.exhibit-explainer__heading {
+  margin: 0 0 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+}
+
+.exhibit-explainer__lede {
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.exhibit-explainer__subhead {
+  margin: 12px 0 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+}
+
+.exhibit-explainer ul {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.5;
+}
+
+.exhibit-explainer li {
+  margin: 3px 0;
+}
