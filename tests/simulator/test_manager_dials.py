@@ -216,3 +216,58 @@ def test_short_ic_out_of_band_raises():
         simulate_manager(market, ManagerConfig(short_information_coefficient=1.5))
     with pytest.raises(ValueError, match="short_information_coefficient"):
         simulate_manager(market, ManagerConfig(short_information_coefficient=-0.1))
+
+
+def test_exit_style_age_is_byte_identical():
+    market = _market(n_months=120)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    aged = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, exit_style="age")
+    )
+    pd.testing.assert_frame_equal(base.weights, aged.weights)
+    pd.testing.assert_series_equal(base.true_alpha_returns, aged.true_alpha_returns)
+
+
+def test_active_exit_styles_change_the_book():
+    market = _market(n_months=120)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    for style in ("signal", "disposition", "random"):
+        alt = simulate_manager(
+            market, ManagerConfig(information_coefficient=0.10, seed=7, exit_style=style)
+        )
+        assert not base.weights.equals(alt.weights)
+
+
+def test_exit_random_is_seed_reproducible_and_consumes_its_stream():
+    market = _market(n_months=120)
+    a = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, exit_style="random")
+    )
+    b = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, exit_style="random")
+    )
+    pd.testing.assert_frame_equal(a.weights, b.weights)  # deterministic given seed + tag
+    c = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=8, exit_style="random")
+    )
+    assert not a.weights.equals(c.weights)  # a different seed draws different exits
+
+
+def test_signal_exit_beats_disposition_under_persistence():
+    # S4 ground truth: under idio persistence, selling the lowest-signal incumbents
+    # (disciplined) retains names whose edge still pays, while selling trailing winners
+    # (disposition) forgoes forward alpha -> signal earns more realized true alpha.
+    market = simulate_market(MarketConfig(n_assets=300, n_months=240, seed=5, idio_ar1=0.4))
+    signal = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=11, exit_style="signal")
+    )
+    dispo = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=11, exit_style="disposition")
+    )
+    assert signal.true_alpha_returns.mean() > dispo.true_alpha_returns.mean()
+
+
+def test_bad_exit_style_raises():
+    market = _market(n_months=24)
+    with pytest.raises(ValueError, match="exit_style"):
+        simulate_manager(market, ManagerConfig(exit_style="bogus"))

@@ -26,6 +26,12 @@ _MANAGER_STREAM = 1
 # stream tag, AFTER the main manager noise, so short_information_coefficient=None is
 # byte-identical. S4's exit-random dial (Task 5) takes tag 3.
 _SHORT_SIGNAL_STREAM = 4
+# S4 spec §3.8 / §8.5: exit_style="random" draws uniform incumbent choices under its
+# own stream tag, AFTER the main manager noise, so exit_style="age" is byte-identical.
+_EXIT_RANDOM_STREAM = 3
+# S4 spec §3.8 / §8.7: disposition trailing-gain lookback (months).
+S4_DISPOSITION_TRAIL_MONTHS = 3
+_EXIT_STYLES = ("age", "signal", "disposition", "random")
 
 
 @dataclass(frozen=True)
@@ -66,6 +72,11 @@ class ManagerConfig:
     # signal panel (byte-identical, no new draws); a value draws a decorrelated short
     # panel under _SHORT_SIGNAL_STREAM and picks/sizes shorts on it. Demo 0.06.
     short_information_coefficient: float | None = None
+    # S4 spec §3.8: which incumbents each side retires. "age" (default) is the current
+    # oldest-first replacement (byte-identical). "signal"/"disposition" are the S4
+    # disciplined/flawed managers; "random" is the validation-only specificity control
+    # and consumes RNG under _EXIT_RANDOM_STREAM.
+    exit_style: str = "age"
 
 
 @dataclass(frozen=True)
@@ -89,6 +100,30 @@ def _side_weights(
     strength = signals.loc[names].abs()
     raw = discipline * strength + (1.0 - discipline) * 1.0
     return sign * total * raw / raw.sum()
+
+
+def _incumbent_directional_signal(
+    names: list[str], sign: float, ic_base: float, half_life: float,
+    ages: dict[str, int], z_row: np.ndarray, noise_row: np.ndarray, asset_pos: dict[str, int]
+) -> dict[str, float]:
+    """Refreshed conviction of held `names` in their held direction at month t:
+    sign * (ic_eff(age) * z + sqrt(1 - ic_eff^2) * noise). Higher = stronger edge."""
+    out: dict[str, float] = {}
+    for name in names:
+        col = asset_pos[name]
+        ic_eff = ic_base * 0.5 ** (ages[name] / half_life)
+        raw = ic_eff * z_row[col] + np.sqrt(1.0 - ic_eff**2) * noise_row[col]
+        out[name] = sign * raw
+    return out
+
+
+def _incumbent_trailing_gain(
+    names: list[str], sign: float, idio: np.ndarray, t: int, trail: int, asset_pos: dict[str, int]
+) -> dict[str, float]:
+    """Directional trailing gain over [max(0, t - trail), t): sign * sum(past idio)."""
+    lo = max(0, t - trail)
+    window = idio[lo:t]
+    return {name: sign * float(window[:, asset_pos[name]].sum()) for name in names}
 
 
 def _target_net_path(config: ManagerConfig, n_months: int) -> np.ndarray:
@@ -130,6 +165,8 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
             "short_information_coefficient must be in [0, 1] or None, got "
             f"{config.short_information_coefficient}"
         )
+    if config.exit_style not in _EXIT_STYLES:
+        raise ValueError(f"exit_style must be one of {_EXIT_STYLES}, got {config.exit_style!r}")
     if config.net_drift is not None:
         drift = config.net_drift
         if drift.ramp_months <= 0:
@@ -156,10 +193,16 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
         if short_ic is not None
         else None
     )
+    exit_rng = (
+        np.random.default_rng([config.seed, _EXIT_RANDOM_STREAM])
+        if config.exit_style == "random"
+        else None
+    )
+    asset_pos = {name: i for i, name in enumerate(assets)}
+    idio_matrix = market.idio_returns.to_numpy()
 
     persistence_on = config.alpha_persistence != 0.0
     if persistence_on:
-        asset_pos = {name: i for i, name in enumerate(assets)}
         idio_std_arr = idio_std.to_numpy()
         idio_edge = np.zeros((len(months), len(assets)))
 
@@ -177,8 +220,32 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
             ages[name] += 1
 
         if t > 0:
-            drop_long = sorted(longs, key=lambda n: (-ages[n], n))[:n_rep_long]
-            drop_short = sorted(shorts, key=lambda n: (-ages[n], n))[:n_rep_short]
+            if config.exit_style == "age":
+                drop_long = sorted(longs, key=lambda n: (-ages[n], n))[:n_rep_long]
+                drop_short = sorted(shorts, key=lambda n: (-ages[n], n))[:n_rep_short]
+            elif config.exit_style == "signal":
+                z_row = z.iloc[t].to_numpy()
+                long_conv = _incumbent_directional_signal(
+                    longs, 1.0, config.information_coefficient, config.alpha_half_life_months,
+                    ages, z_row, noise[t], asset_pos,
+                )
+                short_ic_base = config.information_coefficient if short_ic is None else short_ic
+                short_noise_row = noise[t] if short_ic is None else noise_short[t]
+                short_conv = _incumbent_directional_signal(
+                    shorts, -1.0, short_ic_base, config.alpha_half_life_months,
+                    ages, z_row, short_noise_row, asset_pos,
+                )
+                drop_long = sorted(longs, key=lambda n: (long_conv[n], n))[:n_rep_long]
+                drop_short = sorted(shorts, key=lambda n: (short_conv[n], n))[:n_rep_short]
+            elif config.exit_style == "disposition":
+                trail = S4_DISPOSITION_TRAIL_MONTHS
+                long_gain = _incumbent_trailing_gain(longs, 1.0, idio_matrix, t, trail, asset_pos)
+                short_gain = _incumbent_trailing_gain(shorts, -1.0, idio_matrix, t, trail, asset_pos)
+                drop_long = sorted(longs, key=lambda n: (-long_gain[n], n))[:n_rep_long]
+                drop_short = sorted(shorts, key=lambda n: (-short_gain[n], n))[:n_rep_short]
+            else:  # "random"
+                drop_long = [longs[i] for i in exit_rng.permutation(len(longs))[:n_rep_long]]
+                drop_short = [shorts[i] for i in exit_rng.permutation(len(shorts))[:n_rep_short]]
             for name in (*drop_long, *drop_short):
                 ages.pop(name)
             longs = [n for n in longs if n not in set(drop_long)]

@@ -57,8 +57,9 @@ def test_rng_stream_tags_are_distinct():
         manager._MANAGER_STREAM,
         returns_only._RETURNS_ONLY_STREAM,
         manager._SHORT_SIGNAL_STREAM,
+        manager._EXIT_RANDOM_STREAM,
     }
-    assert len(tags) == 4
+    assert len(tags) == 5
 
 
 def test_invalid_configs_raise():
