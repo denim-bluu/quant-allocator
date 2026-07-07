@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from quant_allocator.flagships.alarms import pipeline as ap
 from quant_allocator.flagships.tearsheet import pipeline as tp
@@ -106,3 +107,20 @@ def test_hysteresis_holds_red_until_sustained_recovery():
     assert levels[2] == "red" and levels[3] == "red"
     assert levels[4] == "red"          # one month inside clear is not enough (below_run reset at 5)
     assert levels[-1] in {"amber", "green"}  # sustained recovery finally steps down
+
+
+@pytest.mark.slow
+def test_familywise_red_rate_within_budget_on_healthy_managers():
+    # Gate 1 (spec §4): a HEALTHY manager's realized path is a draw from the maintained
+    # hypothesis process. The measured RED familywise rate must sit at ~RED_BUDGET within MC
+    # error — the budget a pointwise band CANNOT keep. This is the whole card's justification.
+    hyp = ap.DrawdownHypothesis(sharpe_annual=0.6, vol_annual=0.10)
+    n_managers = 200
+    reds = 0
+    for m in range(n_managers):
+        returns = _returns_from_null(0.6, 0.10, 0.0, 48, seed=1000 + m)
+        v = ap.alarm_state(returns, hyp, n_paths=2000, seed=ap.ALARM_SEED)
+        reds += v.level == "red"
+    red_rate = reds / n_managers
+    # Wilson-style upper allowance for RED_BUDGET=0.01 at n=200 (MC + estimation slack).
+    assert red_rate <= 0.05
