@@ -3,8 +3,11 @@ import pandas as pd
 import pytest
 from scipy import stats
 
+from quant_allocator.flagships.tearsheet.pipeline import _invert_ma2
 from quant_allocator.simulator.overlays import (
+    SmoothingOverlay,
     WrittenPutOverlay,
+    apply_smoothing_overlay,
     apply_written_put_overlay,
 )
 
@@ -100,3 +103,59 @@ def test_invalid_overlays_raise():
     misaligned = base.reset_index(drop=True)
     with pytest.raises(ValueError, match="share an index"):
         apply_written_put_overlay(misaligned, mkt, WrittenPutOverlay(1.0, 0.5))
+
+
+def _iid_returns(n_months: int = 240, seed: int = 5) -> pd.Series:
+    rng = np.random.default_rng([seed, 97])
+    idx = pd.period_range("2000-01", periods=n_months, freq="M", name="month")
+    return pd.Series(rng.normal(0.005, 0.02, n_months), index=idx, name="mgr")
+
+
+def _lag1_autocorr(x: np.ndarray) -> float:
+    c = x - x.mean()
+    return float(c[1:] @ c[:-1] / (c @ c))
+
+
+def test_identity_theta_recovers_input_series_byte_identical():
+    base = _iid_returns()
+    result = apply_smoothing_overlay(base, SmoothingOverlay(theta=(1.0, 0.0, 0.0)))
+    pd.testing.assert_series_equal(result, base)
+
+
+def test_smoothing_injects_positive_lag1_autocorrelation():
+    base = _iid_returns()
+    result = apply_smoothing_overlay(base, SmoothingOverlay(theta=(0.60, 0.25, 0.15)))
+    # An iid series has ~zero lag-1 autocorr; the MA(2) kernel injects a positive one
+    # (the Getmansky-Lo-Makarov illiquidity-marking confound S6 stresses).
+    assert abs(_lag1_autocorr(base.to_numpy())) < 0.15
+    assert _lag1_autocorr(result.to_numpy()) > 0.20
+
+
+def test_recovers_injected_kernel_known_values():
+    base = _iid_returns(n_months=6)
+    theta = (0.60, 0.25, 0.15)
+    result = apply_smoothing_overlay(base, SmoothingOverlay(theta=theta))
+    r = base.to_numpy()
+    expected = theta[0] * r.copy()
+    expected[1:] += theta[1] * r[:-1]
+    expected[2:] += theta[2] * r[:-2]
+    np.testing.assert_allclose(result.to_numpy(), expected, atol=1e-12)
+
+
+def test_convention_is_inverse_of_s2_unsmoother():
+    # The overlay smooths; the S2 stage's causal deconvolution _invert_ma2 unsmooths.
+    # On centered returns with the same theta they are exact inverses (S6 sec 8.2).
+    base = _iid_returns()
+    theta = np.array([0.60, 0.25, 0.15])
+    centered = base - base.mean()
+    smoothed = apply_smoothing_overlay(centered, SmoothingOverlay(theta=tuple(theta)))
+    recovered = _invert_ma2(smoothed.to_numpy(), theta)
+    np.testing.assert_allclose(recovered, centered.to_numpy(), atol=1e-9)
+
+
+def test_invalid_smoothing_overlays_raise():
+    base = _iid_returns(n_months=24)
+    with pytest.raises(ValueError, match="sum to 1"):
+        apply_smoothing_overlay(base, SmoothingOverlay(theta=(0.8, 0.1, 0.05)))
+    with pytest.raises(ValueError, match="non-negative"):
+        apply_smoothing_overlay(base, SmoothingOverlay(theta=(1.2, -0.1, -0.1)))
