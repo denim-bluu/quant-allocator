@@ -19,6 +19,7 @@
       "code": "A01",
       "group": "A",
       "months": 36,
+      "name": "Alderbrook Partners",
       "ols_alpha": {
         "ci_hi": 0.0145,
         "ci_lo": -0.16291,
@@ -40,6 +41,7 @@
       "code": "A02",
       "group": "A",
       "months": 48,
+      "name": "Foxglove Capital",
       "ols_alpha": {
         "ci_hi": 0.071634,
         "ci_lo": -0.065752,
@@ -61,6 +63,7 @@
       "code": "A03",
       "group": "A",
       "months": 60,
+      "name": "Stonereach Advisors",
       "ols_alpha": {
         "ci_hi": 0.098682,
         "ci_lo": -0.046201,
@@ -82,6 +85,7 @@
       "code": "A04",
       "group": "A",
       "months": 36,
+      "name": "Pellbridge Capital",
       "ols_alpha": {
         "ci_hi": 0.09473,
         "ci_lo": -0.092065,
@@ -103,6 +107,7 @@
       "code": "A05",
       "group": "A",
       "months": 48,
+      "name": "Quillhaven Partners",
       "ols_alpha": {
         "ci_hi": 0.103302,
         "ci_lo": -0.064056,
@@ -124,6 +129,7 @@
       "code": "A06",
       "group": "A",
       "months": 60,
+      "name": "Marrowgate Capital",
       "ols_alpha": {
         "ci_hi": 0.181494,
         "ci_lo": 0.057333,
@@ -145,6 +151,7 @@
       "code": "A07",
       "group": "A",
       "months": 36,
+      "name": "Thistledown Advisors",
       "ols_alpha": {
         "ci_hi": 0.255428,
         "ci_lo": 0.099254,
@@ -166,6 +173,7 @@
       "code": "A08",
       "group": "A",
       "months": 48,
+      "name": "Coldbrook Point",
       "ols_alpha": {
         "ci_hi": 0.306428,
         "ci_lo": 0.16301,
@@ -187,6 +195,7 @@
       "code": "A09",
       "group": "A",
       "months": 60,
+      "name": "Fernwick Capital",
       "ols_alpha": {
         "ci_hi": 0.177699,
         "ci_lo": 0.05409,
@@ -208,6 +217,7 @@
       "code": "A10",
       "group": "A",
       "months": 36,
+      "name": "Osprey Hollow Partners",
       "ols_alpha": {
         "ci_hi": 0.378566,
         "ci_lo": 0.207243,
@@ -229,6 +239,7 @@
       "code": "B01",
       "group": "B",
       "months": 36,
+      "name": "Bramblegate Capital",
       "ols_alpha": {
         "ci_hi": 0.042898,
         "ci_lo": -0.11351,
@@ -250,6 +261,7 @@
       "code": "B02",
       "group": "B",
       "months": 48,
+      "name": "Saltmere Partners",
       "ols_alpha": {
         "ci_hi": 0.129749,
         "ci_lo": -0.012089,
@@ -271,6 +283,7 @@
       "code": "B03",
       "group": "B",
       "months": 60,
+      "name": "Duskfield Advisors",
       "ols_alpha": {
         "ci_hi": 0.066589,
         "ci_lo": -0.068617,
@@ -292,6 +305,7 @@
       "code": "B04",
       "group": "B",
       "months": 36,
+      "name": "Harrowdale Capital",
       "ols_alpha": {
         "ci_hi": 0.138001,
         "ci_lo": -0.019059,
@@ -313,6 +327,7 @@
       "code": "B05",
       "group": "B",
       "months": 48,
+      "name": "Wrenmoor Partners",
       "ols_alpha": {
         "ci_hi": 0.094481,
         "ci_lo": -0.071199,
@@ -334,6 +349,7 @@
       "code": "B06",
       "group": "B",
       "months": 60,
+      "name": "Gullwing Point Capital",
       "ols_alpha": {
         "ci_hi": 0.142951,
         "ci_lo": 0.019221,
@@ -355,6 +371,7 @@
       "code": "B07",
       "group": "B",
       "months": 36,
+      "name": "Ashfen Advisors",
       "ols_alpha": {
         "ci_hi": 0.247593,
         "ci_lo": 0.066986,
@@ -376,6 +393,7 @@
       "code": "B08",
       "group": "B",
       "months": 48,
+      "name": "Loomridge Capital",
       "ols_alpha": {
         "ci_hi": 0.183319,
         "ci_lo": 0.046796,
@@ -397,6 +415,7 @@
       "code": "B09",
       "group": "B",
       "months": 60,
+      "name": "Petrelwood Partners",
       "ols_alpha": {
         "ci_hi": 0.200062,
         "ci_lo": 0.07476,
@@ -418,6 +437,7 @@
       "code": "B10",
       "group": "B",
       "months": 36,
+      "name": "Cinderbank Capital",
       "ols_alpha": {
         "ci_hi": 0.29832,
         "ci_lo": 0.093736,

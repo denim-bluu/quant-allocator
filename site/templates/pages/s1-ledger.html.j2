@@ -30,7 +30,7 @@
            data-ols-rank="{{ m.ols_rank }}"
            data-posterior-rank="{{ m.posterior_rank }}">
     <header class="ledger-row__head">
-      <span class="ledger-row__code">{{ m.code }}</span>
+      <span class="ledger-row__code">{{ m.name }} <span class="ledger-row__id">{{ m.code }}</span></span>
       <span class="ledger-row__meta">group {{ m.group }} &middot; {{ m.months }} months</span>
       <span class="advisory-band" data-band="{{ m.advisory_band }}">{{ m.advisory_band }}</span>
     </header>

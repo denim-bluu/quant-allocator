@@ -307,6 +307,7 @@
     "generator": "m5_saydo",
     "horizon_months": 6,
     "manager_code": "M07",
+    "manager_name": "Kestrelmoor Partners",
     "strategy": "equity_long_short"
   },
   "views": [

@@ -7,7 +7,7 @@
 {% block demo_content %}
 <section class="tearsheet-intro">
   <p class="tearsheet-headline">
-    One synthetic manager (<strong>{{ card_data.meta.manager_code }}</strong>, equity
+    One synthetic manager (<strong>{{ card_data.meta.manager_name }}</strong>, equity
     long/short, {{ card_data.meta.months }} months, tier {{ card_data.meta.tier }}). Every
     statistic ships as an interval with a verdict &mdash; no bare point, no overstated
     confidence. Risk-free {{ "%.1f"|format(card_data.meta.rf_annual * 100) }}%/yr

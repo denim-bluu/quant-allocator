@@ -20,6 +20,8 @@ from quant_allocator.simulator.tiers import emit_tiers
 
 BASE_SEED = 20260706
 MANAGER_CODE = "M07"
+# FICTIONAL display name (repo rule: no real manager names; banner discloses).
+MANAGER_NAME = "Kestrelmoor Partners"
 STRATEGY = "equity_long_short"
 N_ASSETS = 300
 N_MONTHS = 18
@@ -125,6 +127,7 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
         "meta": {
             "generator": "m5_saydo",
             "manager_code": MANAGER_CODE,
+            "manager_name": MANAGER_NAME,
             "strategy": STRATEGY,
             "horizon_months": HORIZON_MONTHS,
         },

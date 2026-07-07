@@ -20,6 +20,8 @@ from quant_allocator.simulator.market import MarketConfig, simulate_market
 
 BASE_SEED = 20260706
 MANAGER_CODE = "M07"
+# FICTIONAL display name (repo rule: no real manager names; banner discloses).
+MANAGER_NAME = "Kestrelmoor Partners"
 STRATEGY = "equity_long_short"
 MANAGER_MONTHS = 48
 N_ASSETS = 300
@@ -83,6 +85,7 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
         "meta": {
             "generator": "s2_tearsheet",
             "manager_code": MANAGER_CODE,
+            "manager_name": MANAGER_NAME,
             "strategy": STRATEGY,
             "months": MANAGER_MONTHS,
             "tier": "R",

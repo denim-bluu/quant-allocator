@@ -50,6 +50,7 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
         managers.append(
             {
                 "code": m.code,
+                "name": m.name,
                 "group": m.group,
                 "months": m.months,
                 "true_alpha_annual": float(m.true_alpha_annual),

@@ -27,9 +27,38 @@ _T_CYCLE = (36, 48, 60)  # track length per manager, cycled within a group
 _GROUP_IC_MAX = {"A": 0.12, "B": 0.08}
 
 
+# FICTIONAL fund names for display (repo rule: no real manager names, ever).
+# Authored constants, deliberately invented; any resemblance to real firms is
+# coincidental and the site banner says so. Keyed by code (code stays the
+# stable internal ID).
+MANAGER_NAMES: dict[str, str] = {
+    "A01": "Alderbrook Partners",
+    "A02": "Foxglove Capital",
+    "A03": "Stonereach Advisors",
+    "A04": "Pellbridge Capital",
+    "A05": "Quillhaven Partners",
+    "A06": "Marrowgate Capital",
+    "A07": "Thistledown Advisors",
+    "A08": "Coldbrook Point",
+    "A09": "Fernwick Capital",
+    "A10": "Osprey Hollow Partners",
+    "B01": "Bramblegate Capital",
+    "B02": "Saltmere Partners",
+    "B03": "Duskfield Advisors",
+    "B04": "Harrowdale Capital",
+    "B05": "Wrenmoor Partners",
+    "B06": "Gullwing Point Capital",
+    "B07": "Ashfen Advisors",
+    "B08": "Loomridge Capital",
+    "B09": "Petrelwood Partners",
+    "B10": "Cinderbank Capital",
+}
+
+
 @dataclass(frozen=True)
 class RosterManager:
     code: str
+    name: str
     group: str
     months: int
     true_alpha_annual: float
@@ -69,9 +98,11 @@ def build_skill_ledger_roster(base_seed: int = BASE_SEED) -> list[RosterManager]
             factors = factor_returns[:months]
             alpha, se = ols_alpha_and_se(returns, factors)
             true_alpha = float(history.true_alpha_returns.to_numpy()[:months].mean())
+            code = f"{group}{i + 1:02d}"
             roster.append(
                 RosterManager(
-                    code=f"{group}{i + 1:02d}",
+                    code=code,
+                    name=MANAGER_NAMES[code],
                     group=group,
                     months=months,
                     # S1 spec §3.1: reporting annualizes alpha by ×12 (and its se linearly).

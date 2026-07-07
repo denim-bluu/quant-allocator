@@ -1006,3 +1006,11 @@ button:focus-visible,
   color: var(--dim);
   font-variant-numeric: tabular-nums;
 }
+
+/* Manager code as a small secondary ID beside the fictional display name. */
+.ledger-row__id {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}

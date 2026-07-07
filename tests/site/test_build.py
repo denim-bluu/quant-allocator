@@ -34,7 +34,7 @@ def test_index_lists_all_cards(tmp_path):
     out = tmp_path / "out"
     build(REPO_ROOT / "site", out)
     index = (out / "index.html").read_text(encoding="utf-8")
-    assert "All data on this site is synthetic or public." in index
+    assert "All data on this site is synthetic or public; all manager names are fictional." in index
     assert index.count("card-tile__title") == 20
     assert index.count("card-tile--planned") == 14
     assert 'href="e1.html"' in index
