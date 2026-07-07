@@ -53,3 +53,16 @@
   border-bottom: 1px solid var(--line);
 }
 .m3-roster__pct { font-variant-numeric: tabular-nums; color: var(--dim); }
+
+/* Exhibit explainer: a plain-language reading guide above the split panels.
+   Uses only shared design tokens; no shared stylesheet is touched. */
+.m3-exhibit {
+  border-left: 3px solid var(--accent);
+  padding: 8px 16px;
+  margin: 20px 0;
+}
+.m3-exhibit__title { margin: 4px 0 8px; }
+.m3-exhibit__sub { margin: 12px 0 4px; color: var(--dim); }
+.m3-exhibit__list { margin: 6px 0; padding-left: 18px; }
+.m3-exhibit__list li { margin: 4px 0; }
+.m3-exhibit__bridge { margin-top: 10px; }

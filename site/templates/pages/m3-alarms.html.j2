@@ -73,6 +73,51 @@
   </p>
 </section>
 
+<aside class="m3-exhibit" aria-label="What this exhibit shows">
+  <h2 class="m3-exhibit__title">What this exhibit shows</h2>
+  <div class="m3-exhibit__block">
+    <h3 class="m3-exhibit__sub">What you are looking at</h3>
+    <p>
+      Two synthetic managers posted the <strong>same &minus;12% max drawdown</strong> over
+      {{ card_data.meta.months }} months, yet earn opposite verdicts.
+      {{ split[0].name }} ({{ "%.0f"|format(split[0].vol_annual * 100) }}%/yr vol) lands at the
+      <strong>{{ "%.0f"|format(split[0].mdd_percentile) }}th percentile</strong> of its own
+      simulated null &mdash; an ordinary dip, {{ split[0].level | upper }}.
+      {{ split[1].name }} ({{ "%.0f"|format(split[1].vol_annual * 100) }}%/yr vol) lands at the
+      <strong>{{ "%.1f"|format(split[1].mdd_percentile) }}th percentile</strong> of its null
+      &mdash; a calibrated reason to review, {{ split[1].level | upper }}. Below, a roster
+      heat-list shows <strong>{{ roster.observed_red }} RED{{ "s" if roster.observed_red != 1 else "" }}</strong>
+      this review against <strong>~{{ "%.2f"|format(roster.expected_false_red) }} expected by
+      chance</strong> on a healthy roster of {{ roster.size }}.
+    </p>
+  </div>
+  <div class="m3-exhibit__block">
+    <h3 class="m3-exhibit__sub">How to read it</h3>
+    <ul class="m3-exhibit__list">
+      <li><strong>Verdict chip</strong> (green / amber / red) &mdash; the alarm level: GREEN
+        inside the 95th-percentile null band, AMBER past it, RED past the 99th.</li>
+      <li><strong>The &ldquo;Realized max drawdown&rdquo; rail</strong> &mdash; the point is this
+        manager&rsquo;s realized max drawdown; the shaded band is <em>its own</em> null 95th&ndash;99th
+        (AMBER&ndash;RED) thresholds. The same &minus;12% point sits against very different bands.</li>
+      <li><strong>The running max-drawdown chart</strong> &mdash; the ink line is the realized
+        drawdown-to-date; the amber and red fills are the familywise null band. A breach at the
+        window&rsquo;s right edge <em>is</em> a calibrated &alpha; event (a pointwise band is not).</li>
+      <li><strong>The skepticism dial</strong> &mdash; snaps the maintained Sharpe across a
+        precomputed fan; drag it and watch the percentile, and the verdict, move &mdash; showing
+        how much the call leans on the null.</li>
+      <li><strong>The roster heat-list</strong> &mdash; each row&rsquo;s percentile is read against
+        that manager&rsquo;s own null; the count line prints the expected-false REDs so the list is
+        read with its multiplicity in view.</li>
+      <li><strong>The power gate</strong> &mdash; the honest refusal: detection of slow alpha death
+        is low-power at short track lengths, so this is a flag, never proof or an auto-redeem.</li>
+    </ul>
+    <p class="m3-exhibit__bridge">
+      The full methodology &mdash; with the math and a reference implementation &mdash; is in the
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
+    </p>
+  </div>
+</aside>
+
 <section class="m3-split">
   {{ manager_panel(split[0]) }}
   {{ manager_panel(split[1]) }}

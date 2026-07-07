@@ -55,6 +55,8 @@ def test_provenance_and_page_css(tmp_path):
     assert (out / "assets" / "pages" / "m3.css").exists()
     assert "assets/m3-alarms.js" in html
     assert (out / "assets" / "m3-alarms.js").exists()
+    # Editorial explainer block (deliverable 2).
+    assert "What this exhibit shows" in html
 
 
 def test_two_manager_split_green_vs_red(tmp_path):
