@@ -166,3 +166,53 @@ def test_negative_alpha_persistence_raises():
     market = _market(n_months=24)
     with pytest.raises(ValueError, match="alpha_persistence"):
         simulate_manager(market, ManagerConfig(alpha_persistence=-0.1))
+
+
+def test_short_ic_none_is_byte_identical():
+    market = _market(n_months=120)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    off = simulate_manager(
+        market,
+        ManagerConfig(information_coefficient=0.10, seed=7, short_information_coefficient=None),
+    )
+    pd.testing.assert_frame_equal(base.weights, off.weights)
+    pd.testing.assert_series_equal(base.true_alpha_returns, off.true_alpha_returns)
+
+
+def test_short_ic_zero_makes_short_side_a_noise_basket():
+    # long IC high, short IC 0 -> the SHORT sleeve earns no idiosyncratic edge while the
+    # long sleeve keeps its skill. Compare the short-sleeve realized idio alpha.
+    market = _market(n_months=240, seed=5)
+    skilled_short = simulate_manager(
+        market,
+        ManagerConfig(information_coefficient=0.10, seed=7, short_information_coefficient=0.10),
+    )
+    noise_short = simulate_manager(
+        market,
+        ManagerConfig(information_coefficient=0.10, seed=7, short_information_coefficient=0.0),
+    )
+    def short_alpha(h):
+        return (h.weights.clip(upper=0.0) * market.idio_returns).sum(axis=1).mean()
+
+    assert short_alpha(skilled_short) > short_alpha(noise_short)
+
+
+def test_short_ic_draws_a_decorrelated_panel_not_the_long_one():
+    # A set short IC equal to the long IC still differs from the single-panel manager,
+    # because the short side now reads an INDEPENDENT noise panel (stream tag 4), not
+    # the long panel -> the book changes even though the two ICs match.
+    market = _market(n_months=120)
+    single = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    split = simulate_manager(
+        market,
+        ManagerConfig(information_coefficient=0.10, seed=7, short_information_coefficient=0.10),
+    )
+    assert not single.weights.equals(split.weights)
+
+
+def test_short_ic_out_of_band_raises():
+    market = _market(n_months=24)
+    with pytest.raises(ValueError, match="short_information_coefficient"):
+        simulate_manager(market, ManagerConfig(short_information_coefficient=1.5))
+    with pytest.raises(ValueError, match="short_information_coefficient"):
+        simulate_manager(market, ManagerConfig(short_information_coefficient=-0.1))

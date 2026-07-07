@@ -22,6 +22,10 @@ import pandas as pd
 from quant_allocator.simulator.market import FactorMarket
 
 _MANAGER_STREAM = 1
+# S5 spec §6.5 / §8.7: the decorrelated short-signal noise panel draws under its own
+# stream tag, AFTER the main manager noise, so short_information_coefficient=None is
+# byte-identical. S4's exit-random dial (Task 5) takes tag 3.
+_SHORT_SIGNAL_STREAM = 4
 
 
 @dataclass(frozen=True)
@@ -58,6 +62,10 @@ class ManagerConfig:
     # S3 spec §6.5: deterministic decaying held-name edge on realized idio.
     # 0.0 (default) is byte-identical (edge term is zero, no RNG consumed). Demo 0.5.
     alpha_persistence: float = 0.0
+    # S5 spec §6.5: separate short-side picking skill. None (default) keeps the single
+    # signal panel (byte-identical, no new draws); a value draws a decorrelated short
+    # panel under _SHORT_SIGNAL_STREAM and picks/sizes shorts on it. Demo 0.06.
+    short_information_coefficient: float | None = None
 
 
 @dataclass(frozen=True)
@@ -115,6 +123,13 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
         raise ValueError(f"death_month must be >= 0 or None, got {config.death_month}")
     if config.alpha_persistence < 0.0:
         raise ValueError(f"alpha_persistence must be >= 0, got {config.alpha_persistence}")
+    if config.short_information_coefficient is not None and not (
+        0.0 <= config.short_information_coefficient <= 1.0
+    ):
+        raise ValueError(
+            "short_information_coefficient must be in [0, 1] or None, got "
+            f"{config.short_information_coefficient}"
+        )
     if config.net_drift is not None:
         drift = config.net_drift
         if drift.ramp_months <= 0:
@@ -135,6 +150,12 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
     idio_std = market.idio_returns.std()
     z = market.idio_returns / idio_std
     noise = rng.standard_normal(z.shape)
+    short_ic = config.short_information_coefficient
+    noise_short = (
+        np.random.default_rng([config.seed, _SHORT_SIGNAL_STREAM]).standard_normal(z.shape)
+        if short_ic is not None
+        else None
+    )
 
     persistence_on = config.alpha_persistence != 0.0
     if persistence_on:
@@ -175,13 +196,25 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
             ic_eff * z.iloc[t].to_numpy() + np.sqrt(1.0 - ic_eff**2) * noise[t],
             index=assets,
         )
+        if short_ic is None:
+            short_signals = signals
+        else:
+            short_ic_eff = short_ic * 0.5 ** (age_vec.to_numpy() / config.alpha_half_life_months)
+            if config.death_month is not None and t >= config.death_month:
+                short_ic_eff = np.zeros_like(short_ic_eff)
+            short_signals = pd.Series(
+                short_ic_eff * z.iloc[t].to_numpy()
+                + np.sqrt(1.0 - short_ic_eff**2) * noise_short[t],
+                index=assets,
+            )
 
         held = set(longs) | set(shorts)
-        candidates = signals.drop(index=list(held)).sort_values()
         need_long = config.n_long - len(longs)
         need_short = config.n_short - len(shorts)
-        new_longs = list(candidates.index[-need_long:]) if need_long else []
-        new_shorts = list(candidates.index[:need_short]) if need_short else []
+        long_candidates = signals.drop(index=list(held)).sort_values()
+        new_longs = list(long_candidates.index[-need_long:]) if need_long else []
+        short_candidates = short_signals.drop(index=list(held | set(new_longs))).sort_values()
+        new_shorts = list(short_candidates.index[:need_short]) if need_short else []
         longs += new_longs
         shorts += new_shorts
         for name in (*new_longs, *new_shorts):
@@ -205,7 +238,7 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
             longs, signals, long_total, 1.0, config.sizing_discipline
         )
         weights.loc[shorts] = _side_weights(
-            shorts, signals, short_total, -1.0, config.sizing_discipline
+            shorts, short_signals, short_total, -1.0, config.sizing_discipline
         )
         weight_rows.append(weights)
 

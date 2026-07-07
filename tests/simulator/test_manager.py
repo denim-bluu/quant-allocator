@@ -52,8 +52,13 @@ def test_turnover_matches_rebalance_fraction():
 def test_rng_stream_tags_are_distinct():
     from quant_allocator.simulator import manager, market, returns_only
 
-    tags = {market._MARKET_STREAM, manager._MANAGER_STREAM, returns_only._RETURNS_ONLY_STREAM}
-    assert len(tags) == 3
+    tags = {
+        market._MARKET_STREAM,
+        manager._MANAGER_STREAM,
+        returns_only._RETURNS_ONLY_STREAM,
+        manager._SHORT_SIGNAL_STREAM,
+    }
+    assert len(tags) == 4
 
 
 def test_invalid_configs_raise():
