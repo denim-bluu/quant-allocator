@@ -17,6 +17,8 @@ def test_m5_page_provenance_and_copy(tmp_path):
     assert 'id="card-data"' in html
     assert "specs/m5.html" in html
     assert (out / "specs" / "m5.html").exists()
+    # Editorial explainer: the gallery page teaches how to read the exhibit.
+    assert "What this exhibit shows" in html
 
 
 def test_m5_page_verdict_contract_and_quotes(tmp_path):

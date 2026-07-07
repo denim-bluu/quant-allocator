@@ -16,6 +16,38 @@
   <button type="button" class="saydo-focus" data-saydo-focus>Focus the contradiction</button>
 </section>
 
+<section class="saydo-intro" aria-labelledby="m5-exhibit-shows">
+  <h2 id="m5-exhibit-shows" class="saydo-headline"><strong>What this exhibit shows</strong></h2>
+  <p class="saydo-headline">
+    <strong>What you are looking at.</strong> Three views pulled from one
+    {{ card_data.meta.manager_name }} letter, each read against the manager's
+    measured book over a {{ card_data.meta.horizon_months }}-month horizon. Two
+    match: the value tilt rose {{ "%+.3f"|format(card_data.views[1].measured.move) }}
+    and the net held flat at {{ "%.2f"|format(card_data.views[0].measured.end) }}.
+    One contradicts: after saying it was trimming momentum, the book's momentum
+    beta rose {{ "%+.3f"|format(card_data.views[2].measured.move) }} &mdash; against
+    the stated direction, and more than twice the
+    &plusmn;{{ "%.2f"|format(card_data.views[2].measured.delta) }} dead-band.
+  </p>
+  <div class="saydo-honesty" role="note">
+    <strong>How to read it.</strong>
+    <ul>
+      <li>Each <strong>row</strong> is one stated view: the quote and direction on
+        the &ldquo;Said&rdquo; side, the measured exposure path on the &ldquo;Did&rdquo; side.</li>
+      <li>The <strong>sparkline</strong> is the actual exposure over the horizon;
+        <strong>start &rarr; end (move)</strong> is what the scorer reads.</li>
+      <li>The <strong>dead-band &delta;</strong> is the materiality threshold &mdash; a
+        move smaller than &delta; is noise, not a statement. Here it is
+        illustrative, uncalibrated.</li>
+      <li>The <strong>verdict chip</strong> is a one-word label &mdash; <em>aligned</em>,
+        <em>partial</em>, or <em>contradicted</em> &mdash; set by deterministic code, not by a
+        model, so it never moves between runs.</li>
+      <li>The full methodology &mdash; with the math and a reference implementation &mdash; is
+        in the <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.</li>
+    </ul>
+  </div>
+</section>
+
 <section class="saydo" data-saydo>
   {% for v in card_data.views %}
   <article class="saydo-row saydo-row--{{ v.label }}"
