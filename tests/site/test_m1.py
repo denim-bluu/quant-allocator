@@ -79,3 +79,9 @@ def test_m1_power_gate_renders_operating_characteristics(tmp_path):
     assert 'class="power-gate"' in html
     assert "false-alarm budget" in html
     assert "manager-year" in html
+
+
+def test_m1_gallery_explainer_present(tmp_path):
+    # Editorial explainer block near the top of the exhibit.
+    html, _ = _build_with_m1_live(tmp_path)
+    assert "What this exhibit shows" in html
