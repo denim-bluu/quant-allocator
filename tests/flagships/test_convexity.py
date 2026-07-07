@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 
 from quant_allocator.flagships.convexity import diagnostics as dg
+from quant_allocator.flagships.convexity import screen as sc
 from quant_allocator.flagships.convexity.bootstrap import block_bootstrap_ci
 from quant_allocator.flagships.tearsheet.pipeline import DrawdownHypothesis
 from quant_allocator.simulator.manager import ManagerConfig, simulate_manager
@@ -111,3 +112,38 @@ def test_straddle_loading_played_with_series():
     stat = dg.straddle_loading(overlaid, ptfs, seed=1)
     assert stat.played is True
     assert stat.ci_lo <= stat.point <= stat.ci_hi
+
+
+def _run(kappa, moneyness=1.0, seed=20260707, n_months=48):
+    honest, overlaid, mkt = _honest_and_overlaid(kappa=kappa, moneyness=moneyness, seed=seed, n_months=n_months)
+    series = overlaid if kappa > 0 else honest
+    rf = 0.02 / 12
+    return sc.run_screen(series, mkt, rf, t=n_months, seed=seed)
+
+
+def test_screen_orders_the_five_diagnostics():
+    res = _run(kappa=0.0)
+    assert list(res.diagnostics) == [
+        "treynor_mazuy", "updown_beta", "market_coskew", "drawdown_vol", "straddle_loading"
+    ]
+    assert res.diagnostics["straddle_loading"].played is False  # no PTFS in the demo path
+
+
+def test_powergate_closed_below_min_t_flag():
+    res = _run(kappa=0.9, n_months=36)
+    assert res.t == 36
+    assert res.gate_open is False
+    assert res.composite_chip == "noise"
+    assert res.composite_verdict == "inconclusive"
+
+
+def test_playable_count_excludes_unplayed_straddle():
+    res = _run(kappa=0.0)
+    assert res.playable_count == 4  # TM, updown, coskew, drawdown_vol
+
+
+def test_composite_flags_only_when_k_agree_and_gate_open():
+    res = _run(kappa=0.0)
+    # An honest manager should not reach K short-vol votes.
+    assert res.short_vol_count < sc.M2_COMPOSITE_K
+    assert res.composite_chip == "noise"
