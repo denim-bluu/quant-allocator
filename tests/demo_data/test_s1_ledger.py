@@ -58,7 +58,7 @@ def test_reshuffle_invariant(tmp_path):
     # The whole demo is that OLS and posterior rankings genuinely differ
     # (heavier shrinkage on shorter/noisier tracks). Conservative floor, not
     # pinned to the current count (7), so a constant flip that keeps the
-    # visual alive doesn't break the test (gate hardening).
+    # visual alive doesn't break the test (numerics gate hardening).
     data = _load(s1_ledger.build(out_dir=tmp_path))
     reshuffled = sum(m["ols_rank"] != m["posterior_rank"] for m in data["managers"])
     assert reshuffled >= 3

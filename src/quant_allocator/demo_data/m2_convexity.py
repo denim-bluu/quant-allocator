@@ -47,7 +47,7 @@ RF_ANNUAL = 0.02         # NUMERICS-GATE D-21 convention: synthetic risk-free co
 # NUMERICS-GATE M2-DEMO: overlay params + manager seed PINNED by _scan_overlay so the
 # authored outcome holds (matched 2-dp Sharpe; overlaid flags, honest does not;
 # ≥1 stress month). Provisional pending the numerics gate. Docket DK-7.
-# DK-7 RULING (gate, 2026-07-07): the fair-premium demo was a degenerate
+# DK-7 RULING (numerics gate, 2026-07-07): the fair-premium demo was a degenerate
 # corner — with fair_premium=True the Sharpe gap is SR_h * (1 - sigma_h/sigma_o),
 # so matched 2-dp Sharpe at a composite-flagging overlay was only reachable at a
 # near-zero-Sharpe honest seed. The demo now uses fair_premium=False with

@@ -19,7 +19,7 @@ class SectionDescriptor:
     title: str
     source_card: str  # certifying card id: "s1" | "s2" | "m5" | "m1"
     payload_key: str  # key into the manager payload map; "" when the section carries no rendered payload
-    min_tier: str  # inherited from the source card (the lead reviewer audits it in that card's spec, not here)
+    min_tier: str  # inherited from the source card (the numerics gate audits it in that card's spec, not here)
     gate_metric: str | None  # X1 PowerGate registry metric key, or None when ungated
 
 

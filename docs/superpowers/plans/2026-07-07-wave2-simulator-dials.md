@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- **the lead reviewer plan review (2026-07-07): APPROVED.** One addition — the overlay's
+- **Plan review (2026-07-07): APPROVED.** One addition — the overlay's
   in-sample fair-premium convention is a deliberate look-ahead for controlled
   experiments; any atlas row built on it must state the convention in its
   methodology (a real short-vol book's premium is ex-ante). Binding on the M2
@@ -404,7 +404,7 @@ git commit -m "feat: add piecewise-IC alpha-death dial to equity manager (M3)"
 **Interfaces:**
 - Consumes: the Task-2 state of `manager.py` (`ManagerConfig` now carries `death_month`).
 - Produces:
-  - `NetBetaDrift(total_walk: float, ramp_months: int, onset_month: int = 0)` — frozen dataclass. M1 §4, the lead reviewer-RULED **linear schedule on `target_net`** (NOT candidate-selection tilt).
+  - `NetBetaDrift(total_walk: float, ramp_months: int, onset_month: int = 0)` — frozen dataclass. M1 §4, ruled **linear schedule on `target_net`** (NOT candidate-selection tilt).
   - `ManagerConfig.net_drift: NetBetaDrift | None = None` — when set, `target_net` walks linearly from its base by `total_walk` over `ramp_months`, starting at `onset_month`, then holds. `None` is the honest, byte-identical manager. Drift rescales side totals only — it touches neither candidate selection nor the RNG.
 
 - [ ] **Step 1: Write the failing tests**
@@ -515,7 +515,7 @@ In `src/quant_allocator/simulator/manager.py`, directly above the `ManagerConfig
 ```python
 @dataclass(frozen=True)
 class NetBetaDrift:
-    """Linear net-beta drift schedule on target_net (M1 spec §4, the lead reviewer-RULED linear form).
+    """Linear net-beta drift schedule on target_net (M1 spec §4, ruled linear form).
 
     target_net at month t = base target_net
         + total_walk * clip((t - onset_month) / ramp_months, 0, 1).
@@ -626,7 +626,7 @@ git commit -m "feat: add linear net-beta drift dial to equity manager (M1)"
 
 **1. Spec coverage.**
 - M2 §4 written-put overlay (`premium_annual`, `strike_moneyness`, `overlay_notional` κ; fair premium so in-sample level is unchanged while the left tail fattens; κ=0 recovers the honest manager) → Task 1, all four parameters present, `fair_premium` implements `M2_OVERLAY_FAIR`, κ=0 byte-identity tested.
-- M1 §4 "Alternative (true drift)" + the lead reviewer RULED linear schedule on `target_net` (NOT candidate-selection tilt) → Task 3, `NetBetaDrift` is a pure linear ramp on `target_net`, rescaling side totals only; the RULED-out tilt is not built.
+- M1 §4 "Alternative (true drift)" + ruled linear schedule on `target_net` (NOT candidate-selection tilt) → Task 3, `NetBetaDrift` is a pure linear ramp on `target_net`, rescaling side totals only; the RULED-out tilt is not built.
 - M3 §4 piecewise-IC (IC steps to zero at month k) → Task 2, `death_month` zeroes fresh IC from month k.
 - Global: all three default OFF and are byte-identity-verified; no new RNG stream (all deterministic transforms of pre-drawn arrays); guards mirror the existing dial-guard style; conventional commits, no trailers; branch `wave2-simulator-dials`.
 

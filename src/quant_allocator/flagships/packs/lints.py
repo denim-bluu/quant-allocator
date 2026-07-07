@@ -1,6 +1,6 @@
 """Pack honesty invariants (spec §3.3, §3.4) as build-failing lint checks.
 
-Placement ruling (spec gate review + dispatch): the generic checks INV-1
+Placement ruling (spec method review + dispatch): the generic checks INV-1
 and INV-2 would ideally extend the shared gallery lint, but that lives in the
 prohibited seam build.py:_lint_outputs. So for this plan ALL pack invariants —
 INV-1..INV-4, numeric faithfulness, gate-respect — live here in E2's own builder

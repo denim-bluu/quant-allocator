@@ -3,7 +3,7 @@
 **Date:** 2026-07-05
 **Status:** Approved in section-by-section review; pending final review of this written spec
 **Owner:** Joon Kang
-**Executor:** the assistant (the lead reviewer orchestrator + senior research sub-agents)
+**Executor:** a senior orchestrator directing senior research sub-agents
 
 ---
 
@@ -135,7 +135,7 @@ The simulator is the strategic piece, for three reasons:
 
 ## 8. Convergence — the idea portfolio
 
-the lead reviewer-level synthesis turns the sweeps into the primary deliverable: **a
+senior-level synthesis turns the sweeps into the primary deliverable: **a
 curated portfolio of ~20 project ideas with detailed contexts.**
 
 **Idea card template** (uniform across all cards):
@@ -183,14 +183,14 @@ verifiable retrieval or spec-following.**
 - **Sweeps A, B, D, E:** senior (`model: senior`), dispatched in parallel.
   Breadth-bound retrieval/cataloging; briefs are verifiable at QC and thin
   spots are cheaply re-dispatched.
-- **Sweep C (methods literature):** the lead reviewer (`model: lead-reviewer`). Its value is
+- **Sweep C (methods literature):** the lead reviewer (`model: reviewer`). Its value is
   embedded statistical judgment — what is robust at 36–60 monthly
   observations — which silently poisons idea cards if subtly wrong and cannot
   be cheaply re-derived at QC.
-- **Prototyping:** implementation on senior (implementer acceptable for
-  boilerplate adapters), bracketed at the lead reviewer level on three sides: design
-  specs authored at the lead reviewer level; simulator generative design and power-test
-  methodology are the lead reviewer work (statistics, not plumbing); and a the lead reviewer-level
+- **Prototyping:** implementation on senior (cheaper models acceptable for
+  boilerplate adapters), bracketed at senior level on three sides: design
+  specs authored at senior level; simulator generative design and power-test
+  methodology are lead-reviewer work (statistics, not plumbing); and a senior-level
   numerics review pass gates merges — point-in-time joins, annualization
   conventions, and factor alignment fail silently.
 - **Reasoning effort:** `/effort high` as the session default for running

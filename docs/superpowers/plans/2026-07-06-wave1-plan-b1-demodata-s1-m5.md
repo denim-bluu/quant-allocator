@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-> **NUMERICS ARE HELD FOR THE NUMERICS GATE.** Nothing in this plan merges to `main` or publishes. Every JSON file this plan produces (`site/data/s1_ledger.json`, `site/data/m5_saydo.json`) is committed to a **branch** and stays there until a later numerics-gate pass certifies the numbers (annualization, alignment, seeding are the named failure modes — gallery design §8). The self-consistency tests in this plan catch transcription errors mechanically; **they do not replace the gate.**
+> **NUMERICS ARE HELD FOR THE NUMERICS GATE.** Nothing in this plan merges to `main` or publishes. Every JSON file this plan produces (`site/data/s1_ledger.json`, `site/data/m5_saydo.json`) is committed to a **branch** and stays there until a later the lead reviewer numerics-gate pass certifies the numbers (annualization, alignment, seeding are the named failure modes — gallery design §8). The self-consistency tests in this plan catch transcription errors mechanically; **they do not replace the numerics gate.**
 
 **Goal:** Build the local-only `quant_allocator.demo_data` generation package plus two of the five wave-1 demo-data generators — S1 (skill-ledger posterior strip) and M5 (say–do exposure paths + alignment) — as analytic library code (`flagships/skill_ledger/empirical.py`, `flagships/saydo/alignment.py`) + seeded, deterministic committed JSON under `site/data/` + self-consistency tests.
 
@@ -24,7 +24,7 @@
 
 ---
 
-## the lead reviewer Numerics-Gate Docket
+## Numerics-Gate Docket
 
 The drafter surfaced 7 numeric ambiguities rather than inventing answers. The
 controller (senior) triaged them. **Implementation proceeds on the provisional
@@ -39,7 +39,7 @@ publishes until the lead reviewer clears this docket against the committed JSON.
   ×12 (linear); the √12 is for volatility only (variance additive). Correct.
 
 **Held for the lead reviewer (provisional default → the lead reviewer confirms or flips):**
-| # | Question | Constant | Provisional | Why the lead reviewer |
+| # | Question | Constant | Provisional | Why gated |
 | --- | --- | --- | --- | --- |
 | Q1 | OLS interval distribution (level=90% confirmed) | `_Z90` vs t-quantile | normal-z (1.6449) | normal vs Student-t(T−k−1) is a finite-sample honesty call; affects OLS interval width |
 | Q3 | τ² sample-variance ddof | `ddof=1` | unbiased | method-of-moments τ² convention; affects shrinkage magnitude (the headline reshuffle) |
@@ -535,7 +535,7 @@ The §3.6 empirical-Bayes normal-normal shrinkage and §3.7 advisory weight band
 
 - [ ] **Step 4: Implement `empirical.py`.**
 
-  <!-- CONTROLLER-CONFIRMED: (1) tau_hat^2 PER GROUP is correct — §3.2 writes alpha_i ~ N(mu_s, tau_s^2), the s subscript is per-strategy. Implement as written. HELD FOR NUMERICS (Q3 docket): (2) sample variance ddof=1 is PROVISIONAL — keep the `ddof=1` as a visible choice; the lead reviewer confirms the method-of-moments tau^2 convention before certifying. -->
+  <!-- CONTROLLER-CONFIRMED: (1) tau_hat^2 PER GROUP is correct — §3.2 writes alpha_i ~ N(mu_s, tau_s^2), the s subscript is per-strategy. Implement as written. HELD FOR THE NUMERICS GATE (Q3 docket): (2) sample variance ddof=1 is PROVISIONAL — keep the `ddof=1` as a visible choice; the lead reviewer confirms the method-of-moments tau^2 convention before certifying. -->
 
   Create `src/quant_allocator/flagships/skill_ledger/empirical.py`:
   ```python
@@ -663,7 +663,7 @@ Assembles the roster (Task 2) + shrinkage (Task 3) into `site/data/s1_ledger.jso
 **Files:**
 - Create: `src/quant_allocator/demo_data/s1_ledger.py`
 - Modify: `src/quant_allocator/demo_data/__main__.py` (register `s1_ledger`)
-- Create: `site/data/s1_ledger.json` (generated output — held for gate)
+- Create: `site/data/s1_ledger.json` (generated output — held for numerics gate)
 - Test: `tests/demo_data/test_s1_ledger.py`
 - Modify: `tests/demo_data/test_cli.py` (registry now non-empty)
 
@@ -1058,7 +1058,7 @@ Builds one synthetic manager's exposure paths from the simulator, scores three a
 **Files:**
 - Create: `src/quant_allocator/demo_data/m5_saydo.py`
 - Modify: `src/quant_allocator/demo_data/__main__.py` (register `m5_saydo`)
-- Create: `site/data/m5_saydo.json` (generated output — held for gate)
+- Create: `site/data/m5_saydo.json` (generated output — held for numerics gate)
 - Test: `tests/demo_data/test_m5_saydo.py`
 - Modify: `tests/demo_data/test_cli.py` (registry now has two cards)
 

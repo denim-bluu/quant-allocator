@@ -68,7 +68,7 @@ def test_m2_paired_managers_and_components(tmp_path):
 
 def test_m2_composite_and_copy_obligations(tmp_path):
     html, _ = _build_m2(tmp_path)
-    # gate binding copy.
+    # numerics gate binding copy.
     assert "converging evidence, not a p-value" in html.lower()
     # Investigation framing, not an accusation.
     assert "SHORT-VOL POSTURE — INVESTIGATE" in html

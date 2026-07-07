@@ -1,6 +1,6 @@
 # P3 · Hire/Fire Decision Audit & Journal — Method Spec
 
-**Status: Reviewed (the lead reviewer, 2026-07-07) — implementation-ready**
+**Status: Reviewed (2026-07-07) — implementation-ready**
 **Date:** 2026-07-07
 **Card:** [`docs/ideas/2026-07-05-idea-cards.md`](../2026-07-05-idea-cards.md) § P3
 **Demo:** gallery page `p3.html` (counterfactual cohort panel + one journal
@@ -421,7 +421,7 @@ The demo page's "what this needs to go live" box, expanded:
 
 ---
 
-## gate review (2026-07-07) — APPROVED, implementation-ready
+## Method review (2026-07-07) — APPROVED, implementation-ready
 
 - **`MIN_EVENTS_FOR_AGGREGATE` RULED:** it gates the RAW mean display only; the
   SHRUNK posterior IntervalStat renders at any N — honesty at small N is the

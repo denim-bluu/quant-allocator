@@ -10,19 +10,19 @@
 
 ## Global Constraints
 
-These are binding, pinned decisions. Every task's requirements implicitly include this section. Values are copied verbatim from the the lead reviewer-pinned brief.
+These are binding, pinned decisions. Every task's requirements implicitly include this section. Values are copied verbatim from the lead-reviewer-pinned brief.
 
 - **Branch:** `wave1-plan-b2-pages`, from `main`.
 - **Plan doc:** `docs/superpowers/plans/2026-07-06-wave1-plan-b2-pages-s1-m5.md` (this file).
 - **Scope is exactly:** two demo page templates rendering the two committed JSON files, manifest flips to `status: live` with go-live boxes, page-level JS, and build-integration tests. NO new generators, NO changes to `site/data/*.json`, NO cosmetic CSS overhaul (site-wide visual QA is a later pass — add only the component/page CSS the two pages need, in the existing stylesheet `site/assets/interval.css`).
-- **"90% interval" label:** Every credible/confidence band displayed is labeled exactly `90% interval` (gate obligation, Q1).
-- **δ dead-band label:** The M5 δ dead-band is labeled exactly `illustrative, uncalibrated` wherever δ is shown (gate obligation, Q5).
+- **"90% interval" label:** Every credible/confidence band displayed is labeled exactly `90% interval` (numerics gate obligation, Q1).
+- **δ dead-band label:** The M5 δ dead-band is labeled exactly `illustrative, uncalibrated` wherever δ is shown (numerics gate obligation, Q5).
 - **No statistics in the browser:** JS may map values to pixels, sort, and toggle — every displayed NUMBER comes verbatim from the inline JSON (the `#card-data` block that `demo.html.j2` already emits). Server-side Jinja rendering of those same numbers (unit conversion decimal→percent and rounding for display only) is allowed; inferential computation is not.
 - **S1 headline visual:** the OLS-rank → posterior-rank reshuffle (7 of 20 managers move). Each manager renders an IntervalStat pair (OLS band vs posterior band) using the frozen `.interval-stat` DOM contract.
 - **M5 page:** split screen — left "Said" (letter quote, direction, conviction), right "Did" (measured move vs δ dead-band on the exposure path), verdict rendered with the `.verdict-chip` contract states `aligned` / `partial` / `contradicted`.
 - **Go-live box contents:** drafted from each method spec's go-live section (data ask / sample required / effort), one line each, honest.
 - **Tests are build-level:** render the site to a tmp dir and assert (a) lint passes, (b) required copy present (`90% interval`, `illustrative, uncalibrated`, SYNTHETIC badge, go-live box), (c) the component DOM classes appear, (d) the builder still never imports numpy/pandas (the existing `test_site_build_import_isolation` keeps passing).
-- **Model policy:** implementer implementers (this plan carries complete code so implementation is transcription), senior task reviewers, senior final whole-branch review (the branch carries no new numbers), the lead reviewer copy-obligation spot-check before merge.
+- **Model policy:** implementers (this plan carries complete code so implementation is transcription), senior task reviewers, senior final whole-branch review (the branch carries no new numbers), copy-obligation spot-check before merge.
 
 ### Frozen DOM contracts (from the design spec §6 + `interval.css`)
 
@@ -469,7 +469,7 @@ def test_s1_page_provenance_and_copy(tmp_path):
     assert "synthetic-badge" in html
     assert "SYNTHETIC DATA" in html
     assert "golive-box" in html
-    # the lead reviewer copy obligation: every band labeled exactly "90% interval".
+    # copy obligation: every band labeled exactly "90% interval".
     assert "90% interval" in html
     # Inline JSON block + spec link.
     assert 'id="card-data"' in html
@@ -837,7 +837,7 @@ def test_m5_page_provenance_and_copy(tmp_path):
     assert "synthetic-badge" in html
     assert "SYNTHETIC DATA" in html
     assert "golive-box" in html
-    # gate: the delta dead-band is labeled illustrative wherever shown.
+    # numerics gate: the delta dead-band is labeled illustrative wherever shown.
     assert "illustrative, uncalibrated" in html
     assert 'id="card-data"' in html
     assert "specs/m5.html" in html
@@ -1190,4 +1190,4 @@ git commit -m "chore(site): lint fixups for S1/M5 pages"
 
 **3. Type consistency.** Template field paths match `s1_ledger.json` (`managers[].{code,group,months,ols_alpha.{ci_lo,point,ci_hi},posterior_alpha.{...},ols_rank,posterior_rank,prob_positive,advisory_band}`, `meta.n_managers`) and `m5_saydo.json` (`views[].{quote,direction,theme,conviction,instrument,label,letter_date,measured.{start,end,move,delta}}`, `meta.horizon_months`, `exposure_paths[instrument][].{month,value}`). The builder change adds `card_data` (dict) and JS reads the same JSON via `#card-data`. `dataset.olsRank`/`dataset.posteriorRank` correctly map the `data-ols-rank`/`data-posterior-rank` attributes. Planned-count edits chain consistently: 19 → 18 (Task 2) → 17 (Task 3), matching e1+s1+m5 = 3 live. Consistent.
 
-**4. the lead reviewer plan review (2026-07-06):** approved with three inline fixes — P(α>0) display capped at &lt;0.01 / &gt;0.99 (doctrine: never display certainty as 0.00/1.00; the JSON's 1.0 is 6-digit rounding, not certainty), M5 methodology copy corrected to the actual Q6/Q7 dead-band semantics (partial = inside the dead-band in EITHER direction; stated-flat aligned only within ±δ), and Task 4 commands pinned to `PYTHONPATH=src uv run` + the gitignored `site/_build` output path.
+**4. Plan review (2026-07-06):** approved with three inline fixes — P(α>0) display capped at &lt;0.01 / &gt;0.99 (doctrine: never display certainty as 0.00/1.00; the JSON's 1.0 is 6-digit rounding, not certainty), M5 methodology copy corrected to the actual Q6/Q7 dead-band semantics (partial = inside the dead-band in EITHER direction; stated-flat aligned only within ±δ), and Task 4 commands pinned to `PYTHONPATH=src uv run` + the gitignored `site/_build` output path.

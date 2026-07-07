@@ -1,7 +1,7 @@
 # E1 · Trust-Preserving Transparency Ladder — Method Spec
 
 **Date:** 2026-07-06
-**Status:** Reviewed (the lead reviewer, 2026-07-06) — implementation-ready
+**Status:** Reviewed (2026-07-06) — implementation-ready
 **Card:** [E1 · Trust-preserving transparency ladder](../2026-07-05-idea-cards.md#e1--trust-preserving-transparency-ladder--quick-win-memo)
 **Type:** Process / doctrine card (zero code; effort S). Sections 2, 4, and 5 are adapted for a doctrine artifact — see the note under each.
 

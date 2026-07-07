@@ -12,7 +12,7 @@ TierBadge marks this measured (E); the R-tier rolling-beta version is rendered g
 behind a noise chip to make the tier degradation visible (M1 spec §5, §3.6).
 
 The measurement is exact (Robust); the sustained-drift ALARM is a calibrated rule
-(gate ruling): its threshold h is set on the simulator's autocorrelated
+(numerics gate ruling): its threshold h is set on the simulator's autocorrelated
 honest-wander null, never asserted.
 """
 
@@ -106,7 +106,7 @@ def _percentile_band(paths: list[np.ndarray]) -> tuple[np.ndarray, np.ndarray, n
 
 def _slope_interval(series: np.ndarray) -> dict:
     # OLS slope of the factor-share path vs month with a normal-z CI on the slope SE.
-    # Estimate-bearing (σ̂²_idio feeds the path); rendered as an IntervalStat (the lead reviewer §3.5).
+    # Estimate-bearing (σ̂²_idio feeds the path); rendered as an IntervalStat (spec §3.5).
     t = np.arange(len(series), dtype=float)
     design = np.column_stack([np.ones(len(series)), t])
     coef, *_ = np.linalg.lstsq(design, series, rcond=None)

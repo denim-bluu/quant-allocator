@@ -1,7 +1,7 @@
 # M5 · Say–Do Gap Monitor — Method Spec
 
 **Date:** 2026-07-06
-**Status:** Reviewed (the lead reviewer, 2026-07-06) — implementation-ready
+**Status:** Reviewed (2026-07-06) — implementation-ready
 **Card:** [`2026-07-05-idea-cards.md` → "M5 · Say–do gap monitor"](../2026-07-05-idea-cards.md)
 **Demo page:** [`2026-07-05-wave1-gallery-design.md` §5 "M5 · Say–do split screen"](../../superpowers/specs/2026-07-05-wave1-gallery-design.md)
 

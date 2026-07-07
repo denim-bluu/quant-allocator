@@ -1,7 +1,7 @@
 # S2 · Uncertainty-Honest Tear-Sheet Engine — Method Spec
 
 **Date:** 2026-07-06
-**Status:** Reviewed (the lead reviewer, 2026-07-06) — implementation-ready
+**Status:** Reviewed (2026-07-06) — implementation-ready
 **Card:** [`docs/ideas/2026-07-05-idea-cards.md`](../2026-07-05-idea-cards.md) § S2
 **Demo:** gallery page `s2.html` (single-manager print pack; fully synthetic factors, §5)
 

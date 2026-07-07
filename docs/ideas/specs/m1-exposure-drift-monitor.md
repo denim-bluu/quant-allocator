@@ -1,7 +1,7 @@
 # M1 · Exposure Hygiene & Drift Monitor — Method Spec
 
 **Date:** 2026-07-07
-**Status:** DRAFT (senior) — pending gate review
+**Status:** Draft — pending method review
 **Card:** [`2026-07-05-idea-cards.md` → "M1 · Exposure hygiene & drift monitor"](../2026-07-05-idea-cards.md)
 **Demo page:** wave-2 gallery page `m1.html` (planned; monitoring batch, weeks 3–4)
 **Fulfils:** X1 atlas docket **D-11** — the exposure-drift detector deferred out
@@ -376,7 +376,7 @@ unaided.*
 
 ### Provisional constants (flagged for the numerics gate)
 
-Every value below is a named constant at module top; the lead reviewer flips one and the
+Every value below is a named constant at module top; the numerics gate flips one and the
 calibration/demo regenerates deterministically.
 
 | Constant | Provisional value | Role |
@@ -394,7 +394,7 @@ calibration/demo regenerates deterministically.
 
 ---
 
-## gate review (2026-07-07) — APPROVED, implementation-ready
+## Method review (2026-07-07) — APPROVED, implementation-ready
 
 - **Drift-dial form RULED:** a schedule on `target_net` (linear walk), NOT a
   candidate-selection tilt — the tilt confounds effect size with selection

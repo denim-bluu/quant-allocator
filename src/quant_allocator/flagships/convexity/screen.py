@@ -1,6 +1,6 @@
 """M2 §3.6 composite: de-smooth, run the five diagnostics, tally the playable
 ones, consult the PowerGate. The composite is an evidence tally, never a scalar
-score and never a p-value ("converging evidence, not a p-value" — gate).
+score and never a p-value ("converging evidence, not a p-value" — numerics gate).
 
 De-smoothing (Stage 0, M2 §2) imports S2's `unsmooth`; the drawdown-band reuse
 is inside `drawdown_vol_signature`. This module reimplements neither.

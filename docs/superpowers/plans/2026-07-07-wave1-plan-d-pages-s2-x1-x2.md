@@ -20,9 +20,9 @@
   - X2: dark theme by default; dials for ic/half_life/sizing/T/tier; IntervalStat + VerdictChip + PowerGate per analytic; closed PowerGates render a dashed empty state that, when threshold is null, states `no threshold reached in the measured range`; Wilson half-width footnote SHOWN; go-live box REPLACED by the standing statement `this page is the thesis, not a product — it never goes live`; IC=0 column labeled `false-alarm rate`.
 - **Provenance furniture** (from `demo.html.j2`, unchanged) must survive on every page: `synthetic-badge`, `golive-box` (or, for X2, `golive-replaced`), inlined `card-data` script, spec link. The honest-mockup lint enforces this.
 - **Planned-tile count** in `tests/site/test_build.py` steps down as each card flips: 17 → 16 (S2) → 15 (X1) → 14 (X2).
-- **Model policy:** implementer implementers (this plan carries complete code — transcribe, do not design), senior per-task reviewers, senior final whole-branch review, the lead reviewer copy-obligation certification before merge (pages render already-CERTIFIED data, so **no new numerics gate** — the gate here is the copy gate, the lead reviewer's).
+- **Model policy:** implementers (this plan carries complete code — transcribe, do not design), senior per-task reviewers, senior final whole-branch review, copy-obligation certification before merge (pages render already-CERTIFIED data, so **no new numerics gate** — the gate here is the copy gate, the lead reviewer's).
 - **JS style:** vanilla, ES5-style `(function () { "use strict"; ... })()` IIFE like `s1-ledger.js` / `m5-saydo.js`; SVG via `document.createElementNS("http://www.w3.org/2000/svg", …)` following `m5-saydo.js`. One file per page: `site/assets/s2-tearsheet.js`, `x1-atlas.js`, `x2-playground.js`. No new libraries.
-- **Data is frozen and certified** (gate cleared 2026-07-07). Field references below are transcribed from the committed JSON; do not recompute.
+- **Data is frozen and certified** (numerics gate cleared 2026-07-07). Field references below are transcribed from the committed JSON; do not recompute.
 
 ---
 
@@ -100,7 +100,7 @@ def test_s2_provenance_and_copy(tmp_path):
     assert 'id="card-data"' in html
     assert "specs/s2.html" in html
     assert (out / "specs" / "s2.html").exists()
-    # the lead reviewer copy obligations (verbatim band labels).
+    # copy obligations (verbatim band labels).
     assert "95% interval" in html   # both Sharpe stats
     assert "90% interval" in html   # alpha stat
     assert "pointwise" in html      # drawdown null envelope

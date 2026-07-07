@@ -1,7 +1,7 @@
 # X2 · Transparency Playground — Method Spec
 
 **Date:** 2026-07-06
-**Status:** Reviewed (the lead reviewer, 2026-07-06) — implementation-ready
+**Status:** Reviewed (2026-07-06) — implementation-ready
 **Card:** [`docs/ideas/2026-07-05-idea-cards.md`](../2026-07-05-idea-cards.md) § X2
 **Demo:** gallery page `x2.html` (dark default) — the interactive face of the X1 atlas ([`x1-tier-power-atlas.md`](x1-tier-power-atlas.md)).
 
@@ -42,7 +42,7 @@ and sizing-curve slope additionally at P):
   (e.g. `["closed", 780, "independent_trades"]`);
 - an **MC-uncertainty footnote**: the Wilson 95% half-width on the cell's
   measured power — the verdict's own uncertainty — carried as a number and
-  shown, not hidden. *(Erratum 2026-07-07, copy gate: an earlier draft
+  shown, not hidden. *(Erratum 2026-07-07, numerics gate: an earlier draft
   attached this to "the band itself"; the computed quantity is the power
   proportion's half-width, and the page copy says so.)*
 

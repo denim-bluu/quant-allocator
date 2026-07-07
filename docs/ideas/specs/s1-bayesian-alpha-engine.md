@@ -1,7 +1,7 @@
 # S1 · Hierarchical Bayesian Alpha Engine — Method Spec
 
 **Date:** 2026-07-06
-**Status:** Authored (the lead reviewer) — implementation-ready
+**Status:** Authored — implementation-ready
 **Card:** [`docs/ideas/2026-07-05-idea-cards.md`](../2026-07-05-idea-cards.md) § S1
 **Demo:** gallery page `s1.html` (posterior strip; closed-form variant, §3.6)
 

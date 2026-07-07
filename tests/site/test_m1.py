@@ -68,7 +68,7 @@ def test_m1_tier_degradation_and_noise_chip(tmp_path):
 
 
 def test_m1_factor_share_is_estimate_bearing(tmp_path):
-    # the lead reviewer §3.5 ruling: factor share ships as a slope interval + verdict, not pure measurement.
+    # spec §3.5 ruling: factor share ships as a slope interval + verdict, not pure measurement.
     html, _ = _build_with_m1_live(tmp_path)
     assert "Factor-share slope" in html
     assert "95% interval" in html

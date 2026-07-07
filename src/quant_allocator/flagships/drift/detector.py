@@ -85,7 +85,7 @@ def run_length_rung(
 
 def factor_share(betas_row: np.ndarray, factor_cov: np.ndarray, idio_var: float) -> float:
     # M1 spec §3.5: factor-explained share of predicted variance. Estimate-bearing
-    # via σ̂²_idio (the lead reviewer §3.5 ruling) — rendered as a slope IntervalStat, not a point.
+    # via σ̂²_idio (spec §3.5 ruling) — rendered as a slope IntervalStat, not a point.
     betas_row = np.asarray(betas_row, dtype=float)
     factor_var = float(betas_row @ np.asarray(factor_cov, dtype=float) @ betas_row)
     denom = factor_var + idio_var

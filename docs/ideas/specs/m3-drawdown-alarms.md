@@ -1,6 +1,6 @@
 # M3 · Simulation-Calibrated Drawdown Alarms — Method Spec
 
-**Status: Reviewed (the lead reviewer, 2026-07-07) — implementation-ready**
+**Status: Reviewed (2026-07-07) — implementation-ready**
 **Date:** 2026-07-07
 **Card:** [`docs/ideas/2026-07-05-idea-cards.md`](../2026-07-05-idea-cards.md) § M3
 **Demo:** gallery page `m3.html` (roster heat-list + two-manager same-drawdown split; fully synthetic, §5)
@@ -24,7 +24,7 @@ where the statistics get subtle, and it is the whole of M3.** S2's
 `breaches_p99` flag asks "did the path dip below the *pointwise* 99th percentile
 at *any* month?" — a **familywise** question answered with a **pointwise** band,
 so its false-alarm rate is nowhere near 1% (§3.1). This is a known open issue,
-recorded at the gate as **D-20** ("the pointwise (not familywise) p99
+recorded at the numerics gate as **D-20** ("the pointwise (not familywise) p99
 envelope semantics are a gate question for how the page renders breaches").
 M3 is the answer: a **familywise-calibrated alarm** with a stated per-manager
 and per-roster false-alarm budget, hysteresis so it does not flap, and a null
@@ -469,7 +469,7 @@ unaided.*
 
 ---
 
-## gate review (2026-07-07) — APPROVED, implementation-ready
+## Method review (2026-07-07) — APPROVED, implementation-ready
 
 - **Roster multiplicity RULED:** report-the-expected-false-count default
   CONFIRMED, Bonferroni off by default; the stated distinction from the

@@ -1,7 +1,7 @@
 # X1 · Tier & Power Atlas — Method Spec
 
 **Date:** 2026-07-06
-**Status:** Authored (the lead reviewer) — implementation-ready
+**Status:** Authored — implementation-ready
 **Card:** [`docs/ideas/2026-07-05-idea-cards.md`](../2026-07-05-idea-cards.md) § X1
 **Demo:** gallery page `x1.html` (sampler); the playground (X2) is the
 interactive face of this study.

@@ -12,7 +12,7 @@ def test_m5_page_provenance_and_copy(tmp_path):
     assert "synthetic-badge" in html
     assert "SYNTHETIC DATA" in html
     assert "golive-box" in html
-    # gate: the delta dead-band is labeled illustrative wherever shown.
+    # numerics gate: the delta dead-band is labeled illustrative wherever shown.
     assert "illustrative, uncalibrated" in html
     assert 'id="card-data"' in html
     assert "specs/m5.html" in html
