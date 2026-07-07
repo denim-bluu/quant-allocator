@@ -25,6 +25,21 @@ _MANAGER_STREAM = 1
 
 
 @dataclass(frozen=True)
+class NetBetaDrift:
+    """Linear net-beta drift schedule on target_net (M1 spec §4, the lead reviewer-RULED linear form).
+
+    target_net at month t = base target_net
+        + total_walk * clip((t - onset_month) / ramp_months, 0, 1).
+    A book with net_drift=None is the honest manager; drift rescales the long/short
+    side totals only, so it changes neither candidate selection nor RNG consumption.
+    """
+
+    total_walk: float
+    ramp_months: int
+    onset_month: int = 0
+
+
+@dataclass(frozen=True)
 class ManagerConfig:
     n_long: int = 40
     n_short: int = 25
@@ -35,6 +50,11 @@ class ManagerConfig:
     sizing_discipline: float = 1.0
     rebalance_fraction: float = 0.25
     seed: int = 0
+    # M1 spec §4: linear net-beta drift schedule on target_net (None = honest manager).
+    net_drift: NetBetaDrift | None = None
+    # M3 spec §4: 0-based month at which the fresh IC steps to zero (alpha death).
+    # None (default) or a value >= n_months is the honest, byte-identical manager.
+    death_month: int | None = None
 
 
 @dataclass(frozen=True)
@@ -60,6 +80,18 @@ def _side_weights(
     return sign * total * raw / raw.sum()
 
 
+def _target_net_path(config: ManagerConfig, n_months: int) -> np.ndarray:
+    """Per-month target_net. Constant (= config.target_net) when drift is OFF, so the
+    honest manager is byte-identical; a linear ramp that holds at base+total_walk when ON.
+    """
+    if config.net_drift is None:
+        return np.full(n_months, config.target_net)
+    drift = config.net_drift
+    t = np.arange(n_months, dtype=float)
+    progress = np.clip((t - drift.onset_month) / drift.ramp_months, 0.0, 1.0)
+    return config.target_net + drift.total_walk * progress
+
+
 def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHistory:
     if not 0.0 <= config.information_coefficient <= 1.0:
         raise ValueError(
@@ -76,6 +108,20 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
             f"book size {config.n_long + config.n_short} exceeds asset universe "
             f"of {len(market.betas.index)}"
         )
+    if config.death_month is not None and config.death_month < 0:
+        raise ValueError(f"death_month must be >= 0 or None, got {config.death_month}")
+    if config.net_drift is not None:
+        drift = config.net_drift
+        if drift.ramp_months <= 0:
+            raise ValueError(f"net_drift.ramp_months must be > 0, got {drift.ramp_months}")
+        if drift.onset_month < 0:
+            raise ValueError(f"net_drift.onset_month must be >= 0, got {drift.onset_month}")
+        extreme_net = config.target_net + drift.total_walk
+        if abs(extreme_net) >= config.target_gross:
+            raise ValueError(
+                f"drifted net {extreme_net} must stay within "
+                f"(-target_gross, target_gross)=(-{config.target_gross}, {config.target_gross})"
+            )
 
     rng = np.random.default_rng([config.seed, _MANAGER_STREAM])
     months = market.idio_returns.index
@@ -91,6 +137,7 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
 
     n_rep_long = round(config.rebalance_fraction * config.n_long)
     n_rep_short = round(config.rebalance_fraction * config.n_short)
+    net_path = _target_net_path(config, len(months))
 
     for t in range(len(months)):
         for name in ages:
@@ -108,6 +155,10 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
         for name, age in ages.items():
             age_vec[name] = float(age)
         ic_eff = effective_information_coefficient(age_vec.to_numpy(), config)
+        if config.death_month is not None and t >= config.death_month:
+            # Alpha death: fresh IC -> 0, so signals collapse to pure noise (M3 §4).
+            # The pre-drawn `noise` array is untouched, so death_month=None is byte-identical.
+            ic_eff = np.zeros_like(ic_eff)
         signals = pd.Series(
             ic_eff * z.iloc[t].to_numpy() + np.sqrt(1.0 - ic_eff**2) * noise[t],
             index=assets,
@@ -124,8 +175,9 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
         for name in (*new_longs, *new_shorts):
             ages[name] = 0
 
-        long_total = (config.target_gross + config.target_net) / 2.0
-        short_total = (config.target_gross - config.target_net) / 2.0
+        target_net_t = net_path[t]
+        long_total = (config.target_gross + target_net_t) / 2.0
+        short_total = (config.target_gross - target_net_t) / 2.0
         weights = pd.Series(0.0, index=assets)
         weights.loc[longs] = _side_weights(
             longs, signals, long_total, 1.0, config.sizing_discipline
