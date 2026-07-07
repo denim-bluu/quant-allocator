@@ -44,3 +44,10 @@ def test_s1_page_script_loaded(tmp_path):
     html = (out / "s1.html").read_text(encoding="utf-8")
     assert "assets/s1-ledger.js" in html
     assert (out / "assets" / "s1-ledger.js").exists()
+
+
+def test_s1_page_has_exhibit_explainer(tmp_path):
+    out = tmp_path / "out"
+    build(REPO_ROOT / "site", out)
+    html = (out / "s1.html").read_text(encoding="utf-8")
+    assert "What this exhibit shows" in html
