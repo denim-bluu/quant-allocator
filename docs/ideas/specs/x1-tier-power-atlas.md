@@ -398,10 +398,11 @@ managers per cell (atlas volume 1 raises that to ≥1,000).
   `T` (months, 24 to 120): the OLS *t*-test and the shrinkage posterior. The
   dashed horizontal line marks the 80% power bar. The amber poster label above
   them — "~10% false-attribution at IC=0 — the price of borrowing strength" —
-  is the posterior's *size*: the cost of the extra power it buys. Read the
-  crossings: at the reference effect the OLS *t*-test never reaches the 80% bar
-  within a ten-year record, while the shrinkage posterior is the one estimator
-  that gets there — which is the atlas headline.
+  is the posterior's *size*: the cost of the extra power it buys. These curves
+  are the returns-only (R-tier) slice: even the shrinkage posterior, the
+  fastest climber, tops out just below the 80% bar at the middle effect (0.788
+  at `T` = 120). Pinning betas at tier E is what pushes the posterior over the
+  bar within a ten-year record — which is the atlas headline.
 - **Exhibit 2 — tier degradation table.** At a fixed cell (`T` = 48, IC = 0.04)
   it shows each analytic's power and RMSE by tier: alpha estimation at
   returns-tier (25.2% power) versus exposure-tier (31.8%), hit rate at
