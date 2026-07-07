@@ -791,3 +791,111 @@ button:focus-visible,
 
 .s2-strip__pos { fill: var(--pos); }
 .s2-strip__neg { fill: var(--neg); }
+
+/* === X1 atlas =================================================== */
+.atlas-intro {
+  margin: 8px 0 20px;
+}
+
+.atlas-headline {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.atlas-poster-label {
+  font-size: 12px;
+  color: var(--warn);
+  margin: 0 0 12px;
+}
+
+.atlas-curves {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .atlas-curves {
+    grid-template-columns: 1fr;
+  }
+}
+
+.atlas-curve {
+  margin: 0;
+}
+
+.x1-powercurve {
+  display: block;
+  width: 100%;
+  height: 88px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+}
+
+.x1-powercurve__ref { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 2 2; vector-effect: non-scaling-stroke; }
+.x1-powercurve__ols { fill: none; stroke: var(--dim); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.x1-powercurve__posterior { fill: none; stroke: var(--accent); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+
+.atlas-curve__cap {
+  font-size: 12px;
+  color: var(--dim);
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.atlas-curve__legend {
+  display: flex;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.atlas-legend { font-size: 11px; }
+.atlas-legend--ols { color: var(--dim); }
+.atlas-legend--posterior { color: var(--accent); }
+
+.atlas-degradation {
+  width: 100%;
+  font-size: 13px;
+}
+
+.atlas-degradation th,
+.atlas-degradation td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.x1-registry {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.x1-registry__row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.x1-registry__metric {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.x1-registry__body {
+  margin: 6px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+
+.x1-registry__field {
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.x1-registry__threshold {
+  font-size: 12px;
+  color: var(--warn);
+}

@@ -155,7 +155,14 @@
   one_liner: How much data until a metric means anything — the tier & power atlas.
   decisions: [select, monitor, engage]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/x1-atlas.html.j2
+  data: x1_atlas.json
+  spec: x1-tier-power-atlas.md
+  golive:
+    data_ask: None — simulator study
+    sample: n/a
+    effort: M (vol. 1)
 - id: x2
   title: Transparency playground
   lane: X

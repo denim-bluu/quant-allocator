@@ -1,0 +1,93 @@
+{% extends "demo.html.j2" %}
+
+{% set deg = card_data.degradation_table %}
+{% set reg = card_data.registry_snippet %}
+
+{% block demo_content %}
+<section class="atlas-intro">
+  <p class="atlas-headline">
+    How much data until a metric means anything? At a reference effect,
+    <strong>only the E-tier shrinkage posterior reaches 80% power within a 10-year record</strong>. Frequentist tests never clear the bar in the measured range.
+  </p>
+</section>
+
+<section class="tearsheet-panel">
+  <h2 class="tearsheet-panel__title">Exhibit 1 &mdash; power curves: OLS t-test vs shrinkage posterior</h2>
+  <p class="atlas-poster-label">
+    cohort-informed; ~10% false-attribution at IC=0 &mdash; the price of borrowing strength
+  </p>
+  <div class="atlas-curves">
+    {% for curve in card_data.power_curves %}
+    <figure class="atlas-curve">
+      <svg class="x1-powercurve" viewBox="0 0 100 44" preserveAspectRatio="none"
+           role="img" aria-label="Power vs sample length"
+           data-t="{{ curve.T | join(',') }}"
+           data-ols="{{ curve.ols_ttest | join(',') }}"
+           data-posterior="{{ curve.posterior | join(',') }}"></svg>
+      <figcaption class="atlas-curve__cap">
+        realized IR {{ "%.2f"|format(curve.realized_ir) }}
+        <span class="atlas-curve__legend">
+          <span class="atlas-legend atlas-legend--ols">OLS t-test</span>
+          <span class="atlas-legend atlas-legend--posterior">posterior</span>
+        </span>
+      </figcaption>
+    </figure>
+    {% endfor %}
+  </div>
+  <p class="tearsheet-note">Dashed line marks the 80% power threshold; x-axis is T (months),
+  24 to 120.</p>
+</section>
+
+<section class="tearsheet-panel">
+  <h2 class="tearsheet-panel__title">Exhibit 2 &mdash; tier degradation (T={{ deg.T }}, IC={{ "%.2f"|format(deg.ic) }})</h2>
+  <table class="atlas-degradation">
+    <thead>
+      <tr><th>Analytic</th><th>Tier</th><th>Power</th><th>RMSE</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Alpha estimation</td><td>R</td><td>{{ "%.1f"|format(deg.alpha_estimation.R.power * 100) }}%</td><td>{{ "%.4f"|format(deg.alpha_estimation.R.rmse) }}</td></tr>
+      <tr><td>Alpha estimation</td><td>E</td><td>{{ "%.1f"|format(deg.alpha_estimation.E.power * 100) }}%</td><td>{{ "%.4f"|format(deg.alpha_estimation.E.rmse) }}</td></tr>
+      <tr><td>Hit rate</td><td>P</td><td>{{ "%.1f"|format(deg.hit_rate_P.power * 100) }}%</td><td>&mdash;</td></tr>
+      <tr><td>Sizing skill</td><td>P</td><td>{{ "%.1f"|format(deg.sizing_skill_P.power * 100) }}%</td><td>&mdash;</td></tr>
+      <tr><td>Drift detection</td><td>E vs R</td><td colspan="2">{{ deg.drift_detection }}</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="tearsheet-panel">
+  <h2 class="tearsheet-panel__title">Exhibit 3 &mdash; PowerGate registry (sampler)</h2>
+  <p class="tearsheet-note">The machine-readable thresholds file every gated card consumes.
+  A null threshold means the metric never reaches 80% power in the measured range.</p>
+  <dl class="x1-registry">
+    {% for name, m in reg.metrics.items() %}
+    <div class="x1-registry__row">
+      <dt class="x1-registry__metric">{{ name }}</dt>
+      <dd class="x1-registry__body">
+        <span class="x1-registry__field">min tier {{ m.min_tier }}</span>
+        <span class="x1-registry__field">gate: {{ m.gate_quantity }}</span>
+        <span class="x1-registry__field">effect: {{ m.effect }}</span>
+        <span class="x1-registry__field">size {{ "%.2f"|format(m.size) }}, power@thr {{ "%.2f"|format(m.power_at_threshold) }}</span>
+        <span class="x1-registry__threshold">
+          {% if m.threshold is none %}no tenure in the measured range suffices{% else %}threshold {{ m.threshold }} {{ m.gate_quantity }}{% endif %}
+        </span>
+      </dd>
+    </div>
+    {% endfor %}
+  </dl>
+</section>
+{% endblock %}
+
+{% block methodology %}
+<p>The simulator emits all three transparency tiers of the same known ground truth, so
+every metric is scored against the truth at every tier and sample size. Power =
+P(detect | effect present); size = P(detect | IC = 0); the IC=0 column is the
+false-alarm rate, not filler. Each power number carries a Wilson 95% interval
+(±1.6% at 1,000 reps).</p>
+<p>The shrinkage posterior borrows strength across a strategy cohort, buying power at
+short tenures &mdash; at the cost of ~10% false-attribution at IC=0. That is the price
+of borrowing strength, stated plainly rather than hidden.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/x1-atlas.js"></script>
+{% endblock %}
