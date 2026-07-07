@@ -81,8 +81,9 @@
 <p>The simulator emits all three transparency tiers of the same known ground truth, so
 every metric is scored against the truth at every tier and sample size. Power =
 P(detect | effect present); size = P(detect | IC = 0); the IC=0 column is the
-false-alarm rate, not filler. Each power number carries a Wilson 95% interval
-(±1.6% at 1,000 reps).</p>
+false-alarm rate, not filler. Each power number carries its own Wilson 95%
+half-width (this sampler runs 500 managers per cell; atlas vol.&nbsp;1 raises
+that to &ge;1,000).</p>
 <p>The shrinkage posterior borrows strength across a strategy cohort, buying power at
 short tenures &mdash; at the cost of ~10% false-attribution at IC=0. That is the price
 of borrowing strength, stated plainly rather than hidden.</p>

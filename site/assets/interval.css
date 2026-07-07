@@ -121,10 +121,12 @@
   color: var(--dim);
 }
 
-/* SyntheticBadge: fixed top-right, warn outline chip. */
+/* SyntheticBadge: fixed top-right, warn outline chip. Sits below the ~49px
+   site header so the always-on badge never covers the nav or theme toggle
+   (visual QA 2026-07-07). */
 .synthetic-badge {
   position: fixed;
-  top: 10px;
+  top: 58px;
   right: 10px;
   z-index: 50;
   padding: 3px 8px;
