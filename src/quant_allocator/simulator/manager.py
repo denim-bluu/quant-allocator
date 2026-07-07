@@ -55,6 +55,9 @@ class ManagerConfig:
     # M3 spec §4: 0-based month at which the fresh IC steps to zero (alpha death).
     # None (default) or a value >= n_months is the honest, byte-identical manager.
     death_month: int | None = None
+    # S3 spec §6.5: deterministic decaying held-name edge on realized idio.
+    # 0.0 (default) is byte-identical (edge term is zero, no RNG consumed). Demo 0.5.
+    alpha_persistence: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -110,6 +113,8 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
         )
     if config.death_month is not None and config.death_month < 0:
         raise ValueError(f"death_month must be >= 0 or None, got {config.death_month}")
+    if config.alpha_persistence < 0.0:
+        raise ValueError(f"alpha_persistence must be >= 0, got {config.alpha_persistence}")
     if config.net_drift is not None:
         drift = config.net_drift
         if drift.ramp_months <= 0:
@@ -127,8 +132,15 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
     months = market.idio_returns.index
     assets = market.betas.index
     # Full-history std is deliberate in-sample scaling for synthetic ground truth; z is never emitted to allocator views.
-    z = market.idio_returns / market.idio_returns.std()
+    idio_std = market.idio_returns.std()
+    z = market.idio_returns / idio_std
     noise = rng.standard_normal(z.shape)
+
+    persistence_on = config.alpha_persistence != 0.0
+    if persistence_on:
+        asset_pos = {name: i for i, name in enumerate(assets)}
+        idio_std_arr = idio_std.to_numpy()
+        idio_edge = np.zeros((len(months), len(assets)))
 
     ages: dict[str, int] = {}
     longs: list[str] = []
@@ -175,6 +187,16 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
         for name in (*new_longs, *new_shorts):
             ages[name] = 0
 
+        if persistence_on:
+            decay = config.alpha_persistence
+            hl = config.alpha_half_life_months
+            for name in longs:
+                col = asset_pos[name]
+                idio_edge[t, col] = decay * 0.5 ** (ages[name] / hl) * idio_std_arr[col]
+            for name in shorts:
+                col = asset_pos[name]
+                idio_edge[t, col] = -decay * 0.5 ** (ages[name] / hl) * idio_std_arr[col]
+
         target_net_t = net_path[t]
         long_total = (config.target_gross + target_net_t) / 2.0
         short_total = (config.target_gross - target_net_t) / 2.0
@@ -190,8 +212,15 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
     weights = pd.DataFrame(weight_rows, index=months)
     weights.index.name = "month"
     weights.columns.name = "asset"
-    monthly_returns = (weights * market.asset_returns).sum(axis=1)
-    true_alpha_returns = (weights * market.idio_returns).sum(axis=1)
+    if persistence_on:
+        edge_df = pd.DataFrame(idio_edge, index=months, columns=assets)
+        realized_idio = market.idio_returns + edge_df
+        realized_asset_returns = market.asset_returns + edge_df
+        monthly_returns = (weights * realized_asset_returns).sum(axis=1)
+        true_alpha_returns = (weights * realized_idio).sum(axis=1)
+    else:
+        monthly_returns = (weights * market.asset_returns).sum(axis=1)
+        true_alpha_returns = (weights * market.idio_returns).sum(axis=1)
     return ManagerHistory(
         config=config,
         weights=weights,

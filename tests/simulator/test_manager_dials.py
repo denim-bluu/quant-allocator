@@ -137,3 +137,32 @@ def test_drift_bad_ramp_raises():
             market,
             ManagerConfig(seed=1, net_drift=NetBetaDrift(total_walk=0.2, ramp_months=0)),
         )
+
+
+def test_alpha_persistence_zero_is_byte_identical():
+    market = _market(n_months=120)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    off = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, alpha_persistence=0.0)
+    )
+    pd.testing.assert_frame_equal(base.weights, off.weights)
+    pd.testing.assert_series_equal(base.true_alpha_returns, off.true_alpha_returns)
+    pd.testing.assert_series_equal(base.monthly_returns, off.monthly_returns)
+
+
+def test_alpha_persistence_leaves_weights_but_lifts_realized_alpha():
+    market = _market(n_months=120, seed=5)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    persist = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, alpha_persistence=0.5)
+    )
+    # Selection/sizing read the ORIGINAL idio, so weights are byte-identical...
+    pd.testing.assert_frame_equal(base.weights, persist.weights)
+    # ...but held names now earn a side-aligned decaying edge -> more realized alpha.
+    assert persist.true_alpha_returns.mean() > base.true_alpha_returns.mean()
+
+
+def test_negative_alpha_persistence_raises():
+    market = _market(n_months=24)
+    with pytest.raises(ValueError, match="alpha_persistence"):
+        simulate_manager(market, ManagerConfig(alpha_persistence=-0.1))
