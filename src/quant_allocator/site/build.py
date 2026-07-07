@@ -16,11 +16,21 @@ import yaml
 from jinja2 import Environment, FileSystemLoader
 
 REQUIRED_KEYS = {"id", "title", "lane", "one_liner", "decisions", "tiers", "status"}
-OPTIONAL_KEYS = {"doctrine", "demo", "data", "spec", "golive", "usage_note"}
+OPTIONAL_KEYS = {
+    "doctrine",
+    "demo",
+    "data",
+    "spec",
+    "golive",
+    "usage_note",
+    "standing_note",
+    "theme",
+}
 ALLOWED_KEYS = REQUIRED_KEYS | OPTIONAL_KEYS
 VALID_LANES = {"S", "M", "P", "E", "X"}
 VALID_STATUSES = {"live", "planned"}
 GOLIVE_KEYS = {"data_ask", "sample", "effort"}
+VALID_THEMES = {"light", "dark"}
 
 # Placeholder repo URL; set the real one at Pages enablement (see docs/PUBLISHING.md).
 REPO_URL = "https://github.com/USERNAME/quant-allocator"
@@ -95,6 +105,13 @@ def _validate_entry(entry: object, index: int, path: Path, site_dir: Path) -> No
             f"(must be one of {sorted(VALID_STATUSES)})"
         )
 
+    theme = entry.get("theme")
+    if theme is not None and theme not in VALID_THEMES:
+        raise BuildError(
+            f"{path}: card '{card_id}' has invalid theme '{theme}' "
+            f"(must be one of {sorted(VALID_THEMES)})"
+        )
+
     if entry["status"] == "live":
         _validate_live_entry(entry, card_id, path, site_dir)
 
@@ -103,14 +120,19 @@ def _validate_live_entry(entry: dict, card_id: str, path: Path, site_dir: Path) 
     is_doctrine = entry.get("doctrine", False)
 
     required_live = {"demo", "spec"}
-    required_live |= {"usage_note"} if is_doctrine else {"data", "golive"}
+    if is_doctrine:
+        required_live |= {"usage_note"}
+    else:
+        required_live |= {"data"}
+        if "standing_note" not in entry:
+            required_live |= {"golive"}
     missing = required_live - entry.keys()
     if missing:
         raise BuildError(
             f"{path}: live card '{card_id}' is missing required keys: {sorted(missing)}"
         )
 
-    if not is_doctrine:
+    if not is_doctrine and "golive" in entry:
         golive = entry["golive"]
         if not isinstance(golive, dict) or GOLIVE_KEYS - golive.keys():
             raise BuildError(
@@ -211,7 +233,7 @@ def _render_demo_pages(
             card_data_json=card_data_json,
             card_data=card_data,
             asset_base="",
-            default_theme="light",
+            default_theme=card.get("theme", "light"),
         )
         (out_dir / f"{card['id']}.html").write_text(html, encoding="utf-8")
 
@@ -234,9 +256,10 @@ def _lint_outputs(cards: list[dict], out_dir: Path) -> None:
                 raise BuildError(
                     f"{page_path}: card '{card['id']}' output missing synthetic-badge"
                 )
-            if "golive-box" not in html:
+            if "golive-box" not in html and "golive-replaced" not in html:
                 raise BuildError(
-                    f"{page_path}: card '{card['id']}' output missing golive-box"
+                    f"{page_path}: card '{card['id']}' output missing golive-box "
+                    f"or standing-note (golive-replaced)"
                 )
 
         spec_target = out_dir / "specs" / f"{card['id']}.html"

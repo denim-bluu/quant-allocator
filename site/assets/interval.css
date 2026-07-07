@@ -899,3 +899,15 @@ button:focus-visible,
   font-size: 12px;
   color: var(--warn);
 }
+
+/* === Standing note (never-goes-live pages, e.g. X2) ============= */
+.golive-replaced {
+  border-left: 3px solid var(--warn);
+  padding: 8px 16px;
+  margin: 20px 0;
+}
+
+.golive-replaced h2 {
+  font-size: 13px;
+  margin: 0 0 4px;
+}

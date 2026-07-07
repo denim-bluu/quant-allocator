@@ -50,6 +50,25 @@ def test_lint_missing_golive_raises(tmp_path):
         _lint_outputs([_card()], tmp_path)
 
 
+STANDING_PAGE = (
+    '<span class="synthetic-badge"></span>'
+    '<aside class="golive-replaced">never goes live</aside>'
+)
+
+
+def test_lint_standing_note_accepts_golive_replaced(tmp_path):
+    _write_page(tmp_path, "t1", STANDING_PAGE)
+    _write_spec(tmp_path, "t1")
+    _lint_outputs([_card(standing_note="never goes live")], tmp_path)
+
+
+def test_lint_missing_both_golive_and_replaced_raises(tmp_path):
+    _write_page(tmp_path, "t1", '<span class="synthetic-badge"></span>')
+    _write_spec(tmp_path, "t1")
+    with pytest.raises(BuildError, match="golive-box"):
+        _lint_outputs([_card()], tmp_path)
+
+
 def test_lint_dangling_spec_link_raises(tmp_path):
     _write_page(tmp_path, "t1", VALID_PAGE)
     with pytest.raises(BuildError, match="spec link target missing"):
