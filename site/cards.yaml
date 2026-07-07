@@ -18,7 +18,14 @@
   one_liner: Every statistic as an interval with a verdict — honest by construction.
   decisions: [monitor, select]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/s2-tearsheet.html.j2
+  data: s2_tearsheet.json
+  spec: s2-tear-sheet-engine.md
+  golive:
+    data_ask: Monthly net returns (R) + risk-free series + strategy factor set
+    sample: ≥36 months
+    effort: S–M
 - id: s3
   title: Sizing & alpha-decay lab
   lane: S
@@ -148,11 +155,26 @@
   one_liner: How much data until a metric means anything — the tier & power atlas.
   decisions: [select, monitor, engage]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/x1-atlas.html.j2
+  data: x1_atlas.json
+  spec: x1-tier-power-atlas.md
+  golive:
+    data_ask: None — simulator study
+    sample: n/a
+    effort: M (vol. 1)
 - id: x2
   title: Transparency playground
   lane: X
   one_liner: Drag the dials and watch honest claims dissolve into grey.
   decisions: [engage]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  theme: dark
+  demo: pages/x2-playground.html.j2
+  data: x2_playground.json
+  spec: x2-transparency-playground.md
+  standing_note: >-
+    This page is the thesis, not a product — it never goes live against a real
+    manager. It renders a precomputed subset of the X1 atlas and stays synthetic
+    forever; the only release event is the v1 → v2 atlas regeneration.

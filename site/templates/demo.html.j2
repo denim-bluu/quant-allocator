@@ -25,6 +25,11 @@
     <h2>How to use this</h2>
     <p>{{ card.usage_note }}</p>
   </aside>
+  {% elif card.standing_note %}
+  <aside class="golive-replaced" role="note">
+    <h2>No go-live</h2>
+    <p>{{ card.standing_note }}</p>
+  </aside>
   {% else %}
   <dl class="golive-box">
     <dt>Data ask</dt><dd>{{ card.golive.data_ask }}</dd>

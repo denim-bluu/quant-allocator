@@ -122,6 +122,34 @@ def test_live_dangling_spec_raises(tmp_path):
         load_manifest(manifest)
 
 
+def test_live_standing_note_satisfies_golive(tmp_path):
+    _make_live_files(tmp_path)
+    entry = _live_entry()
+    del entry["golive"]
+    entry["standing_note"] = "this page never goes live"
+    manifest = _write_manifest(tmp_path, [entry])
+    cards = load_manifest(manifest)
+    assert cards[0]["standing_note"] == "this page never goes live"
+
+
+def test_live_missing_golive_and_standing_note_raises(tmp_path):
+    _make_live_files(tmp_path)
+    entry = _live_entry()
+    del entry["golive"]
+    manifest = _write_manifest(tmp_path, [entry])
+    with pytest.raises(BuildError, match="missing required keys"):
+        load_manifest(manifest)
+
+
+def test_invalid_theme_raises(tmp_path):
+    _make_live_files(tmp_path)
+    entry = _live_entry()
+    entry["theme"] = "sepia"
+    manifest = _write_manifest(tmp_path, [entry])
+    with pytest.raises(BuildError, match="invalid theme"):
+        load_manifest(manifest)
+
+
 def test_duplicate_id_raises(tmp_path):
     entry = _planned_entry()
     manifest = _write_manifest(tmp_path, [entry, dict(entry)])

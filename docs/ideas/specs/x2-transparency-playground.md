@@ -40,8 +40,11 @@ and sizing-curve slope additionally at P):
 - a **VerdictChip** state: `robust | shrink | noise`;
 - a **PowerGate** state: `open | closed` plus gate quantity, threshold, and units
   (e.g. `["closed", 780, "independent_trades"]`);
-- an **MC-uncertainty footnote**: the Wilson 95% half-width on the band itself,
-  carried as a number and shown, not hidden — the band is itself an estimate.
+- an **MC-uncertainty footnote**: the Wilson 95% half-width on the cell's
+  measured power — the verdict's own uncertainty — carried as a number and
+  shown, not hidden. *(Erratum 2026-07-07, copy gate: an earlier draft
+  attached this to "the band itself"; the computed quantity is the power
+  proportion's half-width, and the page copy says so.)*
 
 Data budget (§5) is held at the schema level: keys are **short arrays, not verbose
 objects**, and every value is rounded to **4 significant figures**. The byte layout
