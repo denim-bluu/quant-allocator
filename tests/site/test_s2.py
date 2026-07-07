@@ -20,6 +20,8 @@ def test_s2_provenance_and_copy(tmp_path):
     assert 'id="card-data"' in html
     assert "specs/s2.html" in html
     assert (out / "specs" / "s2.html").exists()
+    # Gallery explainer section present.
+    assert "What this exhibit shows" in html
     # numerics gate copy obligations (verbatim band labels).
     assert "95% interval" in html   # both Sharpe stats
     assert "90% interval" in html   # alpha stat
