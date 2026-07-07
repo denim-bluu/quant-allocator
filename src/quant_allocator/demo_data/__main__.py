@@ -14,12 +14,13 @@ from pathlib import Path
 
 
 def _builders() -> dict[str, Callable[[], Path]]:
-    from quant_allocator.demo_data import m5_saydo, s1_ledger, s2_tearsheet
+    from quant_allocator.demo_data import m5_saydo, s1_ledger, s2_tearsheet, x2_playground
 
     return {
         "m5_saydo": m5_saydo.build,
         "s1_ledger": s1_ledger.build,
         "s2_tearsheet": s2_tearsheet.build,
+        "x2_playground": x2_playground.build,
     }
 
 
