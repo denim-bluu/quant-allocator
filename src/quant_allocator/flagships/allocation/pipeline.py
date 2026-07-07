@@ -65,3 +65,69 @@ def allocate_one_draw(
             break
         weights = np.where(under, weights + excess * weights / weights[under].sum(), weights)
     return weights
+
+
+@dataclass(frozen=True)
+class ManagerBand:
+    floor: float       # Q10 of the weight draws (advisory band low)
+    q25: float         # inner clear-band low (hysteresis)
+    anchor: float      # median weight (the interior band tick; never shown alone)
+    q75: float         # inner clear-band high (hysteresis)
+    ceil: float        # Q90 (advisory band high)
+    prob_zero: float   # P(w = 0): the §3.5 z_i fund-or-not signal
+
+
+@dataclass(frozen=True)
+class AllocationBands:
+    floor: np.ndarray
+    q25: np.ndarray
+    anchor: np.ndarray
+    q75: np.ndarray
+    ceil: np.ndarray
+    prob_zero: np.ndarray
+
+    def manager(self, i: int) -> ManagerBand:
+        return ManagerBand(
+            floor=float(self.floor[i]),
+            q25=float(self.q25[i]),
+            anchor=float(self.anchor[i]),
+            q75=float(self.q75[i]),
+            ceil=float(self.ceil[i]),
+            prob_zero=float(self.prob_zero[i]),
+        )
+
+
+def band_from_posterior(
+    post_mean: np.ndarray,
+    post_sd: np.ndarray,
+    sigmas: np.ndarray,
+    config: AllocationConfig,
+    *,
+    rng: np.random.Generator,
+) -> AllocationBands:
+    """§3.5 posterior-draw resampled allocation. Draw alpha^(d)_i ~ N(m_i, s_i^2) INDEPENDENTLY
+    across managers (v1 provisional, §6.4/§8.3), allocate each draw with allocate_one_draw, and
+    summarize the per-manager weight distribution as the 10-90 advisory band, the 25-75 inner
+    band, the median anchor, and P(w=0). Draws are standard normals from `rng` scaled by post_sd,
+    so passing a pre-scaled post_sd with an identically-seeded rng shares draws across the τ-scale
+    dial states (Task 4). No tuning makes the band honest — it inherits honesty from the posterior."""
+    post_mean = np.asarray(post_mean, dtype=float)
+    post_sd = np.asarray(post_sd, dtype=float)
+    sigmas = np.asarray(sigmas, dtype=float)
+    n = len(post_mean)
+    standard = rng.standard_normal((config.n_draws, n))
+    draws = post_mean + post_sd * standard
+    weights = np.array(
+        [allocate_one_draw(draws[d], sigmas, config.alloc_cap, cap_passes=config.cap_passes)
+         for d in range(config.n_draws)]
+    )
+    lo_pct, hi_pct = config.band_pct
+    clear_lo_pct, clear_hi_pct = config.clear_pct
+    return AllocationBands(
+        floor=np.percentile(weights, lo_pct, axis=0),
+        q25=np.percentile(weights, clear_lo_pct, axis=0),
+        anchor=np.median(weights, axis=0),
+        q75=np.percentile(weights, clear_hi_pct, axis=0),
+        ceil=np.percentile(weights, hi_pct, axis=0),
+        prob_zero=(weights == 0.0).mean(axis=0),
+    )

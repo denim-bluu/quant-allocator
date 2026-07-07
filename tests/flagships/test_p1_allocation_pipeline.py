@@ -36,3 +36,50 @@ def test_cap_binds_and_redistributes_pro_rata():
     assert abs(w[0] - 0.50) < 1e-9          # capped
     assert abs(w.sum() - 1.0) < 1e-9        # still fully invested
     assert w[1] / w[2] == 2.0               # redistribution preserves the 0.10:0.05 ratio
+
+
+def test_band_width_tracks_posterior_sd_all_else_equal():
+    # Two managers (index 0, 1) share a posterior MEAN but differ in posterior SD; the wider
+    # posterior must earn the wider band (§3.5: width is inherited honesty). Independent draws
+    # (§8.3). A third absorbing manager is required: under a two-name fully-invested budget
+    # w0 == 1 - w1, which forces identical band widths by mirror symmetry regardless of cap —
+    # the property is only observable once a manager's weight is not pinned to one peer. A
+    # non-binding cap keeps the weights continuous so the sd effect is not masked by the cap.
+    post_mean = np.array([0.12, 0.12, 0.20])
+    post_sd = np.array([0.02, 0.05, 0.03])
+    sigmas = np.full(3, 0.08)
+    cfg = ap.AllocationConfig(n_draws=8000, alloc_cap=1.0)
+    rng = np.random.default_rng([20260707, 17])
+    bands = ap.band_from_posterior(post_mean, post_sd, sigmas, cfg, rng=rng)
+    width = bands.ceil - bands.floor
+    assert width[1] > width[0]
+    # Anchor is inside its own band; the band is a proper interval.
+    assert np.all(bands.floor <= bands.anchor)
+    assert np.all(bands.anchor <= bands.ceil)
+    assert np.all(bands.q25 <= bands.q75)
+
+
+def test_band_from_posterior_is_deterministic_under_fixed_seed():
+    post_mean = np.array([0.10, 0.05, -0.03])
+    post_sd = np.array([0.03, 0.04, 0.03])
+    sigmas = np.full(3, 0.08)
+    cfg = ap.AllocationConfig(n_draws=5000)
+    a = ap.band_from_posterior(post_mean, post_sd, sigmas,
+                               cfg, rng=np.random.default_rng([20260707, 17]))
+    b = ap.band_from_posterior(post_mean, post_sd, sigmas,
+                               cfg, rng=np.random.default_rng([20260707, 17]))
+    assert np.array_equal(a.floor, b.floor) and np.array_equal(a.ceil, b.ceil)
+
+
+def test_prob_zero_is_positive_for_a_marginal_name():
+    # A name whose posterior mean sits near zero spends a nontrivial fraction of draws at w=0
+    # (its drawn alpha goes negative) -> a 0% band floor and a material fund-or-not signal.
+    post_mean = np.array([0.20, 0.005])
+    post_sd = np.array([0.03, 0.03])
+    sigmas = np.full(2, 0.08)
+    cfg = ap.AllocationConfig(n_draws=8000)
+    bands = ap.band_from_posterior(post_mean, post_sd, sigmas,
+                                   cfg, rng=np.random.default_rng([20260707, 17]))
+    assert bands.prob_zero[1] > 0.10       # marginal name funded-or-not is genuinely open
+    assert bands.floor[1] == 0.0           # its band floor is exactly 0%
+    assert bands.prob_zero[0] < 0.01       # the strong name is funded in nearly every world
