@@ -35,6 +35,9 @@ class ManagerConfig:
     sizing_discipline: float = 1.0
     rebalance_fraction: float = 0.25
     seed: int = 0
+    # M3 spec §4: 0-based month at which the fresh IC steps to zero (alpha death).
+    # None (default) or a value >= n_months is the honest, byte-identical manager.
+    death_month: int | None = None
 
 
 @dataclass(frozen=True)
@@ -76,6 +79,8 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
             f"book size {config.n_long + config.n_short} exceeds asset universe "
             f"of {len(market.betas.index)}"
         )
+    if config.death_month is not None and config.death_month < 0:
+        raise ValueError(f"death_month must be >= 0 or None, got {config.death_month}")
 
     rng = np.random.default_rng([config.seed, _MANAGER_STREAM])
     months = market.idio_returns.index
@@ -108,6 +113,10 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
         for name, age in ages.items():
             age_vec[name] = float(age)
         ic_eff = effective_information_coefficient(age_vec.to_numpy(), config)
+        if config.death_month is not None and t >= config.death_month:
+            # Alpha death: fresh IC -> 0, so signals collapse to pure noise (M3 §4).
+            # The pre-drawn `noise` array is untouched, so death_month=None is byte-identical.
+            ic_eff = np.zeros_like(ic_eff)
         signals = pd.Series(
             ic_eff * z.iloc[t].to_numpy() + np.sqrt(1.0 - ic_eff**2) * noise[t],
             index=assets,
