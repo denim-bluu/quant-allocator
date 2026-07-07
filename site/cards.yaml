@@ -169,4 +169,12 @@
   one_liner: Drag the dials and watch honest claims dissolve into grey.
   decisions: [engage]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  theme: dark
+  demo: pages/x2-playground.html.j2
+  data: x2_playground.json
+  spec: x2-transparency-playground.md
+  standing_note: >-
+    This page is the thesis, not a product — it never goes live against a real
+    manager. It renders a precomputed subset of the X1 atlas and stays synthetic
+    forever; the only release event is the v1 → v2 atlas regeneration.

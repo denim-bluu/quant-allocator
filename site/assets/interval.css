@@ -911,3 +911,96 @@ button:focus-visible,
   font-size: 13px;
   margin: 0 0 4px;
 }
+
+/* === X2 playground ============================================== */
+.x2-intro {
+  margin: 8px 0 20px;
+}
+
+.x2-headline {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.x2-controls {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 20px;
+}
+
+.x2-dial {
+  display: grid;
+  gap: 6px;
+}
+
+.x2-dial__label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+}
+
+.x2-dial__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.x2-dial__btn {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  padding: 4px 10px;
+  cursor: pointer;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.x2-dial__btn--active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.x2-falsealarm {
+  border: 1px dashed var(--warn);
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--warn);
+}
+
+.x2-analytics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .x2-analytics {
+    grid-template-columns: 1fr;
+  }
+}
+
+.x2-analytic {
+  display: grid;
+  gap: 10px;
+}
+
+.x2-analytic[hidden] {
+  display: none;
+}
+
+.x2-analytic__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.x2-wilson {
+  font-size: 11px;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}

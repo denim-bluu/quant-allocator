@@ -1,0 +1,84 @@
+{% extends "demo.html.j2" %}
+
+{% macro dial(name, label, values, active, numeric=True) %}
+<div class="x2-dial" data-dial="{{ name }}">
+  <span class="x2-dial__label">{{ label }}</span>
+  <div class="x2-dial__options">
+    {% for v in values %}
+    {% set token = "%g"|format(v) if numeric else v %}
+    <button type="button" class="x2-dial__btn{% if token == active %} x2-dial__btn--active{% endif %}"
+            data-value="{{ token }}"
+            aria-pressed="{{ 'true' if token == active else 'false' }}">{{ token }}</button>
+    {% endfor %}
+  </div>
+</div>
+{% endmacro %}
+
+{% macro analytic_slot(name, label) %}
+<article class="x2-analytic" data-analytic="{{ name }}">
+  <div class="interval-stat" data-point="" data-lo="" data-hi="" data-verdict="noise">
+    <span class="interval-stat__label">{{ label }}</span>
+    <span class="interval-stat__value">&mdash;</span>
+    <div class="interval-stat__rail">
+      <div class="interval-stat__band"></div>
+      <div class="interval-stat__point"></div>
+    </div>
+    <span class="interval-stat__range">95% band</span>
+  </div>
+  <div class="x2-analytic__meta">
+    <span class="verdict-chip" data-verdict="noise">noise</span>
+    <span class="x2-wilson">Wilson 95% half-width &plusmn;<span class="x2-wilson__value">&mdash;</span> &mdash; the band is itself an estimate</span>
+  </div>
+  <div class="power-gate">
+    <span class="power-gate__title">power gate</span>
+    <p class="power-gate__reason">no threshold reached in the measured range</p>
+  </div>
+</article>
+{% endmacro %}
+
+{% block demo_content %}
+<section class="x2-intro">
+  <p class="x2-headline">
+    Drag the dials. Every claim is a precomputed cell of the X1 atlas &mdash; the page
+    computes nothing, it snaps to measured rungs and never interpolates. Watch an interval
+    widen, a verdict flip, a gate stay shut.
+  </p>
+</section>
+
+<section class="x2-controls" data-dials
+         data-default-ic="0.04" data-default-half_life="12"
+         data-default-sizing="0.8" data-default-T="48" data-default-tier="R">
+  {{ dial("ic", "Information coefficient", card_data.meta.dials.ic, "0.04") }}
+  {{ dial("half_life", "Alpha half-life (months)", card_data.meta.dials.half_life, "12") }}
+  {{ dial("sizing", "Sizing discipline", card_data.meta.dials.sizing, "0.8") }}
+  {{ dial("T", "Track length T (months)", card_data.meta.dials.T, "48") }}
+  {{ dial("tier", "Transparency tier", card_data.meta.dials.tier, "R", numeric=False) }}
+</section>
+
+<div class="x2-falsealarm" data-falsealarm hidden>
+  IC = 0: these figures are the <strong>false-alarm rate</strong> &mdash; detection where
+  there is no skill, not power.
+</div>
+
+<section class="x2-analytics" data-analytics>
+  {{ analytic_slot("alpha", "Annualized alpha") }}
+  {{ analytic_slot("sharpe", "Sharpe ratio") }}
+  {{ analytic_slot("hit_rate", "Hit rate (active batting average)") }}
+  {{ analytic_slot("sizing_slope", "Sizing-curve slope (Fama–MacBeth mean b_t)") }}
+</section>
+{% endblock %}
+
+{% block methodology %}
+<p>The page is a communication device, not an analytic: it renders a precomputed subset of
+the X1 atlas grid (450 cells, &ge;500 simulated managers each), shipped as committed JSON.
+Dials snap to computed cells &mdash; interpolating between them would invent precision the
+Monte-Carlo grid does not have.</p>
+<p>The tier selector is the star control: the same ground truth at three honesty levels. R
+estimates betas from returns; E pins them to the true exposures, narrowing the alpha band;
+P adds trade-level analytics behind PowerGates. Every band carries its own Wilson 95%
+half-width because the band is itself an estimate.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/x2-playground.js"></script>
+{% endblock %}
