@@ -8,6 +8,7 @@ stable PR diff — that diff is the artifact the numerics gate reviews
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -27,9 +28,31 @@ def round_floats(obj: Any, ndigits: int = 6) -> Any:
     return obj
 
 
-def write_json(path: Path, data: dict, *, ndigits: int = 6) -> Path:
+def round_sigfigs(obj: Any, sigfigs: int = 4) -> Any:
+    # X2 spec §5: playground JSON rounds every value to 4 significant figures
+    # (round_floats' fixed-decimal rounding would waste bytes on small values
+    # and under-round large ones). inf/-inf/nan pass through unrounded — a
+    # generator maps its own sentinel values (e.g. "no threshold reached") to
+    # JSON null *before* calling this, since json.dumps cannot emit inf/nan.
+    if isinstance(obj, float):
+        if obj == 0.0:
+            # +0.0 normalizes IEEE -0.0 to 0.0, matching round_floats (gate).
+            return 0.0
+        if not math.isfinite(obj):
+            return obj
+        digits = sigfigs - int(math.floor(math.log10(abs(obj)))) - 1
+        return round(obj, digits) + 0.0
+    if isinstance(obj, dict):
+        return {key: round_sigfigs(value, sigfigs) for key, value in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [round_sigfigs(value, sigfigs) for value in obj]
+    return obj
+
+
+def write_json(path: Path, data: dict, *, ndigits: int = 6, sig: int | None = None) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
-    text = json.dumps(round_floats(data, ndigits), sort_keys=True, indent=2)
+    rounded = round_sigfigs(data, sig) if sig is not None else round_floats(data, ndigits)
+    text = json.dumps(rounded, sort_keys=True, indent=2)
     # "</" -> "<\/" (identical JSON: \/ is the escaped solidus) so committed
     # data can never terminate the <script> block the demo pages inline it into.
     text = text.replace("</", "<\\/")

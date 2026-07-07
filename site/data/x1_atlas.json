@@ -1,0 +1,132 @@
+{
+  "degradation_table": {
+    "T": 48,
+    "alpha_estimation": {
+      "E": {
+        "power": 0.318,
+        "rmse": 0.03698
+      },
+      "R": {
+        "power": 0.252,
+        "rmse": 0.040339
+      }
+    },
+    "drift_detection": "deferred (exposure-drift detector, X1 spec \u00a73.2 \u2014 docket D-11)",
+    "hit_rate_P": {
+      "power": 0.132
+    },
+    "ic": 0.04,
+    "sizing_skill_P": {
+      "power": 0.234
+    }
+  },
+  "meta": {
+    "generator": "x1_atlas",
+    "n_reps": 500,
+    "seed": 20260706,
+    "view": "sampler"
+  },
+  "power_curves": [
+    {
+      "T": [
+        24,
+        36,
+        48,
+        60,
+        120
+      ],
+      "ic": 0.02,
+      "ols_ttest": [
+        0.106,
+        0.11,
+        0.096,
+        0.134,
+        0.168
+      ],
+      "posterior": [
+        0.274,
+        0.302,
+        0.346,
+        0.356,
+        0.404
+      ],
+      "realized_ir": 0.295
+    },
+    {
+      "T": [
+        24,
+        36,
+        48,
+        60,
+        120
+      ],
+      "ic": 0.04,
+      "ols_ttest": [
+        0.14,
+        0.184,
+        0.252,
+        0.262,
+        0.468
+      ],
+      "posterior": [
+        0.462,
+        0.534,
+        0.596,
+        0.636,
+        0.788
+      ],
+      "realized_ir": 0.648
+    },
+    {
+      "T": [
+        24,
+        36,
+        48,
+        60,
+        120
+      ],
+      "ic": 0.1,
+      "ols_ttest": [
+        0.56,
+        0.716,
+        0.812,
+        0.908,
+        0.994
+      ],
+      "posterior": [
+        0.834,
+        0.94,
+        0.978,
+        0.99,
+        0.998
+      ],
+      "realized_ir": 1.567
+    }
+  ],
+  "registry_snippet": {
+    "metrics": {
+      "hit_rate": {
+        "effect": "separate hit 55% from 50%",
+        "gate_quantity": "independent_trades",
+        "min_tier": "P",
+        "power_at_threshold": 0.8,
+        "size": 0.05,
+        "threshold": null
+      },
+      "ols_alpha_ttest": {
+        "effect": "true IR 0.5",
+        "gate_quantity": "months",
+        "min_tier": "R",
+        "power_at_threshold": 0.8,
+        "size": 0.05,
+        "threshold": null
+      }
+    },
+    "run": {
+      "atlas_volume": "sampler",
+      "replications": 500,
+      "seed": 20260706
+    },
+    "version": 1
+  }
+}

@@ -40,3 +40,12 @@ def test_write_json_is_byte_for_byte_deterministic(tmp_path):
     first = write_json(tmp_path / "a.json", payload).read_bytes()
     second = write_json(tmp_path / "b.json", payload).read_bytes()
     assert first == second
+
+
+def test_round_sigfigs_rounds_to_significant_figures():
+    from quant_allocator.demo_data._emit import round_sigfigs
+
+    assert round_sigfigs(0.0123456, 4) == 0.01235
+    assert round_sigfigs(1234.5678, 4) == 1235.0
+    assert round_sigfigs(0.0, 4) == 0.0
+    assert round_sigfigs({"a": [0.0009876543]}, 4) == {"a": [0.0009877]}
