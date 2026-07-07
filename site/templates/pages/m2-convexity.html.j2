@@ -42,6 +42,55 @@
   </aside>
 </section>
 
+<section class="m2-exhibit" aria-label="What this exhibit shows">
+  <h2 class="m2-section__title">What this exhibit shows</h2>
+  <div class="m2-exhibit__block">
+    <h3 class="m2-exhibit__subtitle">What you are looking at</h3>
+    <p class="m2-note">
+      {{ honest.name }} and {{ overlaid.name }} both report a Sharpe of
+      {{ "%.2f"|format(honest.sharpe.point) }} over the same
+      {{ card_data.meta.months }} months and the same market &mdash; a linear tear
+      sheet cannot tell them apart. The convexity screen reads payoff <em>shape</em>
+      instead of the average: it leaves {{ honest.name }} unflagged
+      ({{ honest.screen.composite.short_vol_count }} of
+      {{ honest.screen.composite.playable_count }} diagnostics fire) and flags
+      {{ overlaid.name }} for investigation
+      ({{ overlaid.screen.composite.short_vol_count }} of
+      {{ overlaid.screen.composite.playable_count }} fire, at the threshold of
+      {{ overlaid.screen.composite.k }}). The stress-month table below shows the
+      months the hidden written put paid out &mdash; the two books are identical
+      until the tail arrives.
+    </p>
+  </div>
+  <div class="m2-exhibit__block">
+    <h3 class="m2-exhibit__subtitle">How to read it</h3>
+    <ul class="m2-exhibit__map">
+      <li><strong>Reported-Sharpe interval bands</strong> &mdash; each manager's
+        Sharpe point marker sits inside its 95% interval; the two bands overlap, which
+        is the whole point: the average-based statistic separates nothing.</li>
+      <li><strong>Composite verdict chip</strong> &mdash; the badge under each manager.
+        {{ overlaid.name }} reads <code>SHORT-VOL POSTURE &mdash; INVESTIGATE</code>
+        (a <em>shrink</em> chip); {{ honest.name }} reads a <em>noise</em> chip,
+        &ldquo;not resolvable at this track length.&rdquo; It is an investigation
+        prompt, never an accusation.</li>
+      <li><strong>Diagnostic interval-stats</strong> &mdash; the four playable windows
+        onto {{ overlaid.name }}'s payoff shape, each a 90% interval. An interval
+        sitting fully in the short-vol (negative) direction counts toward the tally;
+        an interval that still straddles its band reads <em>inconclusive</em>.</li>
+      <li><strong>Power gate</strong> &mdash; the Fung&ndash;Hsieh straddle rung
+        renders as an unplayed gate, not a fabricated number, because the external
+        PTFS series has no adapter yet.</li>
+      <li><strong>Stress-month receipts</strong> &mdash; the table of months the put
+        paid out, with the market move and both books' returns side by side.</li>
+    </ul>
+    <p class="m2-note">
+      The full methodology &mdash; with the math and a reference implementation
+      &mdash; is in the
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
+    </p>
+  </div>
+</section>
+
 <section class="m2-pair">
   {% for key, m in [("honest", honest), ("overlaid", overlaid)] %}
   <article class="m2-manager m2-manager--{{ key }}">

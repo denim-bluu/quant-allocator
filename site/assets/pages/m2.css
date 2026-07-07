@@ -9,6 +9,14 @@
   font-size: 13px; color: var(--dim); background: var(--paper);
 }
 
+.m2-exhibit { margin: 0 0 28px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+.m2-exhibit__block { margin-top: 8px; }
+.m2-exhibit__subtitle { font-size: 13px; margin: 12px 0 6px; color: var(--ink); }
+.m2-exhibit__block:first-of-type .m2-exhibit__subtitle { margin-top: 0; }
+.m2-exhibit__map { margin: 0 0 10px; padding-left: 18px; font-size: 13px; color: var(--dim); }
+.m2-exhibit__map li { margin: 0 0 6px; line-height: 1.5; }
+.m2-exhibit__map code { font-size: 12px; }
+
 .m2-pair { display: grid; gap: 16px; grid-template-columns: 1fr; margin-bottom: 28px; }
 @media (min-width: 640px) { .m2-pair { grid-template-columns: 1fr 1fr; } }
 .m2-manager { display: grid; gap: 10px; align-content: start; }
