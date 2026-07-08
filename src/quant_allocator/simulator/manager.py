@@ -29,7 +29,7 @@ _SHORT_SIGNAL_STREAM = 4
 # S4 spec §3.8 / §8.5: exit_style="random" draws uniform incumbent choices under its
 # own stream tag, AFTER the main manager noise, so exit_style="age" is byte-identical.
 _EXIT_RANDOM_STREAM = 3
-# S4 spec §3.8 / §8.7: disposition trailing-gain lookback (months).
+# S4 spec §3.8 / §8.7: disposition trailing-gain lookback (months). NUMERICS-GATE.
 S4_DISPOSITION_TRAIL_MONTHS = 3
 _EXIT_STYLES = ("age", "signal", "disposition", "random")
 
@@ -67,6 +67,8 @@ class ManagerConfig:
     death_month: int | None = None
     # S3 spec §6.5: deterministic decaying held-name edge on realized idio.
     # 0.0 (default) is byte-identical (edge term is zero, no RNG consumed). Demo 0.5.
+    # NUMERICS-GATE: the edge scales by the PER-NAME idio std (the std the manager
+    # already uses for z-scoring), not a single market-wide idio_vol.
     alpha_persistence: float = 0.0
     # S5 spec §6.5: separate short-side picking skill. None (default) keeps the single
     # signal panel (byte-identical, no new draws); a value draws a decorrelated short
