@@ -32,28 +32,60 @@
   one_liner: Picking, sizing, or holding? Trade-level event studies, power-gated.
   decisions: [size, select]
   tiers: [P, E]
-  status: planned
+  status: live
+  demo: pages/s3-lab.html.j2
+  data: s3_lab.json
+  spec: s3-sizing-decay-lab.md
+  golive:
+    data_ask: "Dated position snapshots (signed weights) + trades (entry/exit) + factor returns (P)"
+    sample: "A book clearing ~780 independent trades (65-name, 25%-turnover reaches it in ~3-4 years)"
+    effort: "M"
 - id: s4
   title: Sell-discipline diagnostic
   lane: S
   one_liner: Where the edge leaks — exit timing vs a random-sell counterfactual.
   decisions: [engage, monitor]
   tiers: [P, E]
-  status: planned
+  status: live
+  demo: pages/s4-sell.html.j2
+  data: s4_sell.json
+  spec: s4-sell-discipline.md
+  golive:
+    data_ask: >-
+      Tier P — transaction history or monthly holdings with exit dates and security
+      identifiers, plus a factor/risk model for residualization
+    sample: >-
+      150 exits minimum for the headline gap (~270 bp/exit leaks); ~1,900 exits for
+      field-size effects; a 30-name low-turnover book never clears
+    effort: M
 - id: s5
   title: Short-book quality score
   lane: S
   one_liner: Is short alpha real, or just an expensive beta hedge?
   decisions: [size, redeem]
   tiers: [P, E, R]
-  status: planned
+  status: live
+  demo: pages/s5-shortbook.html.j2
+  data: s5_shortbook.json
+  spec: s5-short-book-quality.md
+  golive:
+    data_ask: "Tier P — month-end positions with signed weights, a risk-model loadings feed (bought), per-name borrow fees where disclosed; E buys the factor split only; R refuses unless the manager discloses sleeve returns"
+    sample: "Decomposition and hedge share honest at any T; the alpha verdict needs T ≥ 36 to render (wide until ~60+); the hit rate is gated on independent trades (~10yr for a 25-name quarter-turnover sleeve; high-turnover books certify in 1–2yr)"
+    effort: "M (demo scope; borrow realism and FINRA adapter deferred). Upstream: the short-side IC simulator dial (S)"
 - id: s6
   title: Returns-only sizing & decay signatures
   lane: S
   one_liner: Can monthly returns alone reveal sizing or decay? A pre-registered test.
   decisions: [monitor, select]
   tiers: [R]
-  status: planned
+  status: live
+  demo: pages/s6-signatures.html.j2
+  data: s6_signatures.json
+  spec: s6-returns-only-signatures.md
+  golive:
+    data_ask: None — 100% simulator (tier R by construction); the optional external-validity rung later needs E/P summaries for a handful of transparent managers as labels only
+    sample: The pre-registered grid (500 managers per class per cell); a live read of one manager against a population is honest only as a weak prior nudge
+    effort: M–L — kernels and test layer small; the confirmatory runs, the overlay stress, and the publish-either-way write-up are the work
 - id: m1
   title: Exposure hygiene & drift monitor
   lane: M
@@ -130,7 +162,18 @@
   one_liner: Given posterior skill, how much capital? Sizing that consumes uncertainty.
   decisions: [size, redeem]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/p1-allocation.html.j2
+  data: p1_allocation.json
+  spec: p1-allocation-uncertainty.md
+  golive:
+    data_ask: >-
+      S1's tier-R inputs (monthly net returns >=36m for >=10 managers with strategy labels, factor
+      sets, risk-free) plus a per-manager residual vol (S2 de-smoothed).
+    sample: >-
+      Any T renders honest bands (width carries the honesty); decisive bands (floors clear of zero,
+      the point optimizer reliably beaten) need T >= 48 and true skill dispersion >= 2%/yr.
+    effort: S (+M for the wave-3 policy-regret study).
 - id: p2
   title: Tiered book X-ray
   lane: P

@@ -69,7 +69,7 @@
     "name": "Thornwood Select",
     "reference_effect_never_clears": true,
     "renders_slope": false,
-    "sizing_threshold": 700
+    "sizing_threshold": 780
   },
   "sizing_value": {
     "gap_annual": 0.11556

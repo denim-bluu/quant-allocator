@@ -14,7 +14,7 @@ def _fixture_registry(tmp_path):
     reg = tmp_path / "powergate_registry.json"
     reg.write_text(json.dumps({"version": 1, "metrics": {
         "hit_rate": {"gate_quantity": "independent_trades", "threshold": 780},
-        "sizing_slope": {"gate_quantity": "independent_trades", "threshold": 700},
+        "sizing_slope": {"gate_quantity": "independent_trades", "threshold": 780},
     }}), encoding="utf-8")
     return reg
 
