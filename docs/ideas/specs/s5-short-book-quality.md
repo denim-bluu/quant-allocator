@@ -558,11 +558,13 @@ if __name__ == "__main__":
                   f"  (t = {hit_t:+.2f} vs 50%)")
 ```
 
-Run it and the T = 120 block prints the §5 demo numbers: the alpha-short book
-at hedge share 82.7%, gross short alpha +4.92%/yr (t = +3.55),
-borrow-adjusted +3.52%, hit rate 52.5% (t = +2.99); the hedge-short book at
-hedge share 80.1%, gross alpha −0.11%/yr (t = −0.08), borrow-adjusted
-**−1.51%**, hit rate 50.1% (t = +0.15). The T = 60 block then prints the
+<!-- reconciled to generator output 2026-07-08; teaching-code values differ (numerics gate) -->
+Run it and the T = 120 block prints illustrative teaching-code numbers (the
+committed §5 demo is computed by the real repo pipeline + S2 interval machinery
+and differs — see §5): the alpha-short book at hedge share 82.7%, gross short
+alpha +4.92%/yr (t = +3.55), borrow-adjusted +3.52%, hit rate 52.5% (t = +2.99);
+the hedge-short book at hedge share 80.1%, gross alpha −0.11%/yr (t = −0.08),
+borrow-adjusted **−1.51%**, hit rate 50.1% (t = +0.15). The T = 60 block then prints the
 honesty lesson §6.3 turns into a validation gate: on this single seed the
 *pure-hedge* book posts a nominally significant hit rate (52.1%, t = +2.02)
 — a five-year window of a 25-name sleeve is lucky-draw territory, which is
@@ -577,16 +579,19 @@ gross / 20 net, 40 longs, 25 shorts, same long-side skill) and **identical
 headline returns to the naked eye**, differing only in ground truth the
 simulator knows:
 
-- **Kestrel Point Partners** — shorts carry genuine signal (short-side
-  IC = 0.06, equal to its long side). Panel: hedge share **82.7%**; gross
-  short alpha **+4.92%/yr** with a clearly-positive interval (t = +3.55);
-  borrow-adjusted alpha **+3.52%/yr** after the 1.40%/yr drag (2%/yr flat fee
-  on 0.70 average short gross); hit rate **52.5%** (month-clustered
-  t = +2.99). Chip: **"Short alpha, calibrated."**
+<!-- reconciled to generator output 2026-07-08; teaching-code values differ (numerics gate) -->
+- **Saxbridge Capital** — shorts carry genuine signal (short-side
+  IC = 0.06, equal to its long side). Panel: hedge share **83.5%**; gross
+  short alpha **+6.98%/yr** with a clearly-positive 90% interval
+  (**[+3.79%, +10.29%]**, S2 HAC + block bootstrap); borrow-adjusted alpha
+  **+5.58%/yr** (interval **[+2.39%, +8.89%]**) after the 1.40%/yr drag (2%/yr
+  flat fee on 0.70 average short gross); hit rate **52.8%** (month-clustered
+  t = +3.58). Chip: **"Short alpha, calibrated."**
 - **Drybrook Capital** — shorts picked on pure noise (short-side IC = 0): an
   uninformed basket that exists to offset the longs. Panel: hedge share
-  **80.1%**; gross short alpha **−0.11%/yr**, dead on zero (t = −0.08);
-  borrow-adjusted alpha **−1.51%/yr**; hit rate **50.1%** (t = +0.15). Chip:
+  **84.3%**; gross short alpha **+2.06%/yr** with a 90% interval that spans
+  zero (**[−0.87%, +5.02%]**); borrow-adjusted alpha **+0.66%/yr**, interval
+  **[−2.27%, +3.62%]** including zero; hit rate **51.0%** (t = +1.26). Chip:
   **"No detectable short alpha net of borrow"** — plus the fee-implication
   line, because HS > 0.75: *"~80% of this sleeve is factor offset an index
   overlay replicates at near-zero fee and no borrow."*
@@ -605,7 +610,7 @@ How each visual element maps to the method:
 
 - **The cumulative-P&L split chart** (per manager) — the sleeve's compounded
   P&L drawn as two stacked series: the hedge component $x_t^\top f_t$ and the
-  alpha component $a_t$ (§3.3). Kestrel's alpha line grinds steadily upward;
+  alpha component $a_t$ (§3.3). Saxbridge's alpha line grinds steadily upward;
   Drybrook's wanders around zero while both hedge lines swing with the
   market. This chart *is* the decomposition identity, drawn.
 - **The borrow-adjusted alpha rail** — an IntervalStat: the point is
@@ -614,9 +619,10 @@ How each visual element maps to the method:
 - **The borrow dial** (the Dietvorst adjustable control) — a slider sweeping
   the flat borrow assumption across 0–5%/yr (precomputed grid; the page never
   computes). Dragging it shows Drybrook's verdict is robust to the fee
-  assumption (its gross alpha is already zero) while Kestrel's net alpha
-  stays positive until an implausible ~7%/yr average fee — the skeptical
-  reader can try to break the verdict and watch it hold.
+  assumption (its gross alpha interval already spans zero) while Saxbridge's
+  net-alpha interval stays clear of zero across the whole 0–5%/yr dial (its
+  net point stays positive until an implausible ~10%/yr average fee) — the
+  skeptical reader can try to break the verdict and watch it hold.
 - **The hit-rate PowerGate** — at the demo's T = 120 both hit rates render
   with their clustered t; a companion toggle shows the same books at T = 60,
   where the gate flips to **"insufficient N (385 round trips; gate ~780)"**
@@ -633,9 +639,10 @@ How each visual element maps to the method:
 
 What an allocator should conclude: two mandates that look identical and
 charge identical fees measurably differ in what the short-side fee is buying
-— one funds genuine name-specific alpha (+3.5%/yr net of borrow, calibrated),
-the other funds a beta hedge (−1.5%/yr net of borrow) replicable with
-futures. Underwrite and size them as different products.
+— one funds genuine name-specific alpha (+5.6%/yr net of borrow, calibrated),
+the other funds a beta hedge whose residual is statistically indistinguishable
+from zero (+0.7%/yr net of borrow, 90% interval spans zero) and is replicable
+with futures. Underwrite and size them as different products.
 
 **Demo-vs-live split, stated.** Demo numbers are computed from simulator
 ground truth ($B$ and $\varepsilon$ known exactly, decomposition exact) by

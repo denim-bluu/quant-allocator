@@ -1,0 +1,31 @@
+/* S5 short-book-quality page layout. Component classes (interval-stat, verdict-chip,
+   power-gate, tier-badge) live in interval.css; this file adds only page layout and any
+   verdict-chip variants S5 needs. Colors use the shared design tokens (design-tokens.css). */
+.s5-split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.s5-manager { border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+.s5-manager__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.s5-manager__hs { color: var(--dim); margin: 8px 0; }
+.s5-manager__hs-note { color: var(--dim); font-style: italic; }
+.s5-manager__feeline { border-left: 3px solid var(--warn); padding-left: 10px; margin: 10px 0; }
+.s5-split-chart { width: 100%; height: auto; margin-top: 12px; }
+.s5-split-chart__hedge { fill: none; stroke: var(--dim); stroke-width: 0.7; }
+.s5-split-chart__alpha { fill: none; stroke: var(--ink); stroke-width: 1.0; }
+.s5-dial { margin-top: 12px; }
+.s5-dial__range { width: 100%; }
+.s5-dial__readout { font-variant-numeric: tabular-nums; color: var(--dim); }
+/* Verdict-chip variants S5 introduces (add here, never in interval.css). */
+.verdict-chip[data-verdict="pos"] { color: var(--pos); }
+.verdict-chip[data-verdict="neg"] { color: var(--neg); }
+.verdict-chip[data-verdict="neutral"] { color: var(--dim); }
+.s5-gate { margin: 24px 0; }
+.s5-gate__row { display: grid; gap: 6px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.s5-gate__marginal { color: var(--warn); font-size: 12px; }
+.s5-tiers { display: grid; gap: 12px; margin: 24px 0; }
+.s5-tier { border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+.s5-guide { border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin: 16px 0; }
+.s5-guide__list { margin: 0; padding-left: 18px; }
