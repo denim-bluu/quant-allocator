@@ -1,0 +1,326 @@
+{
+  "contrasts": [
+    {
+      "id": "h_size",
+      "label": "H-SIZE \u2014 sizing discipline 0.8 vs 0.0",
+      "n_deciding_cells": 4,
+      "rows": [
+        {
+          "auc_hi": 0.576534,
+          "auc_lo": 0.445689,
+          "auc_point": 0.511111,
+          "binding_ic": 0.04,
+          "binding_overlay": "smoothed",
+          "declared": false,
+          "direction": null,
+          "n_deciding_cells": 4,
+          "reversed": false,
+          "secondary_t_auc": 0.501911,
+          "signature": "autocorr",
+          "verdict": "null",
+          "worst_adj_p": 1.0
+        },
+        {
+          "auc_hi": 0.55208,
+          "auc_lo": 0.421253,
+          "auc_point": 0.486667,
+          "binding_ic": 0.04,
+          "binding_overlay": "identity",
+          "declared": true,
+          "direction": "+",
+          "n_deciding_cells": 4,
+          "reversed": false,
+          "secondary_t_auc": 0.472311,
+          "signature": "vol_of_vol",
+          "verdict": "null",
+          "worst_adj_p": 1.0
+        },
+        {
+          "auc_hi": 0.596091,
+          "auc_lo": 0.465509,
+          "auc_point": 0.5308,
+          "binding_ic": 0.04,
+          "binding_overlay": "smoothed",
+          "declared": false,
+          "direction": null,
+          "n_deciding_cells": 4,
+          "reversed": false,
+          "secondary_t_auc": 0.467067,
+          "signature": "skew",
+          "verdict": "null",
+          "worst_adj_p": 1.0
+        },
+        {
+          "auc_hi": 0.547614,
+          "auc_lo": 0.416831,
+          "auc_point": 0.482222,
+          "binding_ic": 0.04,
+          "binding_overlay": "identity",
+          "declared": true,
+          "direction": "+",
+          "n_deciding_cells": 4,
+          "reversed": false,
+          "secondary_t_auc": 0.500044,
+          "signature": "kurtosis",
+          "verdict": "null",
+          "worst_adj_p": 1.0
+        },
+        {
+          "auc_hi": 0.386047,
+          "auc_lo": 0.265064,
+          "auc_point": 0.325556,
+          "binding_ic": 0.1,
+          "binding_overlay": "smoothed",
+          "declared": true,
+          "direction": "+",
+          "n_deciding_cells": 4,
+          "reversed": true,
+          "secondary_t_auc": 0.367733,
+          "signature": "drawdown_shape",
+          "verdict": "weak_tell",
+          "worst_adj_p": 0.006997
+        },
+        {
+          "auc_hi": 0.582462,
+          "auc_lo": 0.451671,
+          "auc_point": 0.517067,
+          "binding_ic": 0.04,
+          "binding_overlay": "identity",
+          "declared": false,
+          "direction": null,
+          "n_deciding_cells": 4,
+          "reversed": false,
+          "secondary_t_auc": 0.517022,
+          "signature": "rolling_ir_slope",
+          "verdict": "null",
+          "worst_adj_p": 1.0
+        }
+      ],
+      "significance_floor": 0.587896,
+      "usability_bar": 0.65
+    },
+    {
+      "id": "h_decay",
+      "label": "H-DECAY \u2014 alpha half-life 3 vs 36 (fast vs slow)",
+      "n_deciding_cells": 4,
+      "rows": [
+        {
+          "auc_hi": 0.53274,
+          "auc_lo": 0.402194,
+          "auc_point": 0.467467,
+          "binding_ic": 0.04,
+          "binding_overlay": "smoothed",
+          "declared": true,
+          "direction": "-",
+          "n_deciding_cells": 4,
+          "reversed": false,
+          "secondary_t_auc": 0.446844,
+          "signature": "autocorr",
+          "verdict": "null",
+          "worst_adj_p": 1.0
+        },
+        {
+          "auc_hi": 0.587144,
+          "auc_lo": 0.456411,
+          "auc_point": 0.521778,
+          "binding_ic": 0.1,
+          "binding_overlay": "smoothed",
+          "declared": false,
+          "direction": null,
+          "n_deciding_cells": 4,
+          "reversed": false,
+          "secondary_t_auc": 0.523956,
+          "signature": "vol_of_vol",
+          "verdict": "null",
+          "worst_adj_p": 1.0
+        },
+        {
+          "auc_hi": 0.524286,
+          "auc_lo": 0.393936,
+          "auc_point": 0.459111,
+          "binding_ic": 0.1,
+          "binding_overlay": "identity",
+          "declared": false,
+          "direction": null,
+          "n_deciding_cells": 4,
+          "reversed": false,
+          "secondary_t_auc": 0.514667,
+          "signature": "skew",
+          "verdict": "null",
+          "worst_adj_p": 0.996502
+        },
+        {
+          "auc_hi": 0.528426,
+          "auc_lo": 0.397974,
+          "auc_point": 0.4632,
+          "binding_ic": 0.1,
+          "binding_overlay": "smoothed",
+          "declared": false,
+          "direction": null,
+          "n_deciding_cells": 4,
+          "reversed": false,
+          "secondary_t_auc": 0.481689,
+          "signature": "kurtosis",
+          "verdict": "null",
+          "worst_adj_p": 0.999
+        },
+        {
+          "auc_hi": 0.537003,
+          "auc_lo": 0.406375,
+          "auc_point": 0.471689,
+          "binding_ic": 0.1,
+          "binding_overlay": "smoothed",
+          "declared": true,
+          "direction": "+",
+          "n_deciding_cells": 4,
+          "reversed": false,
+          "secondary_t_auc": 0.476667,
+          "signature": "drawdown_shape",
+          "verdict": "null",
+          "worst_adj_p": 0.9995
+        },
+        {
+          "auc_hi": 0.600312,
+          "auc_lo": 0.469821,
+          "auc_point": 0.535067,
+          "binding_ic": 0.04,
+          "binding_overlay": "smoothed",
+          "declared": true,
+          "direction": "-",
+          "n_deciding_cells": 4,
+          "reversed": false,
+          "secondary_t_auc": 0.494933,
+          "signature": "rolling_ir_slope",
+          "verdict": "null",
+          "worst_adj_p": 0.871064
+        }
+      ],
+      "significance_floor": 0.588098,
+      "usability_bar": 0.65
+    }
+  ],
+  "headline": {
+    "n_null": 11,
+    "n_ship": 0,
+    "n_weak_tell": 1,
+    "text": "Two contrasts, six pre-committed signatures, 0 shippable tells -- 1 statistically-real whisper below the usability bar, 11 nulls, on the bounded pilot grid."
+  },
+  "ladder": [
+    {
+      "label": "simulator verdict (this page)",
+      "rung": 1
+    },
+    {
+      "label": "external validation on E/P-labeled managers where truth is visible",
+      "rung": 2
+    },
+    {
+      "label": "any roster-facing use",
+      "rung": 3
+    }
+  ],
+  "meta": {
+    "auc_min": 0.65,
+    "confirmatory": {
+      "cells": {
+        "h_decay": 8,
+        "h_size": 12
+      },
+      "n_per_class": 500,
+      "n_perm": 5000,
+      "seed": "S6_CONFIRM_SEED (wave-3)"
+    },
+    "decision_t": 60,
+    "familywise_alpha": 0.05,
+    "generator": "s6_signatures",
+    "label": "PILOT",
+    "n_per_class": 150,
+    "n_perm": 2000,
+    "pilot_cells": {
+      "h_decay": 4,
+      "h_size": 4
+    },
+    "pilot_seed": 20260721,
+    "rolling_windows": [
+      6,
+      12
+    ],
+    "secondary_t": 36,
+    "smoothing_theta": [
+      0.6,
+      0.25,
+      0.15
+    ]
+  },
+  "protocol": {
+    "amendment_rule": "Any change after first look -- a new signature, a different window, a moved threshold -- voids the registration and starts a version-2 protocol with a fresh confirmatory seed; results under the old protocol stand as-registered.",
+    "family": [
+      {
+        "confound": "return smoothing (Getmansky-Lo-Makarov): illiquidity marks dominate live lag-1",
+        "direction_h_decay": "-",
+        "direction_h_size": null,
+        "formula": "lag-1 sample autocorrelation",
+        "mechanism": "a slowly-decaying alpha mean adds trend-induced positive autocorrelation",
+        "signature": "autocorr"
+      },
+      {
+        "confound": "leverage changes, vol regimes",
+        "direction_h_decay": null,
+        "direction_h_size": "+",
+        "formula": "CV of rolling 6-month volatility",
+        "mechanism": "conviction sizing wobbles effective breadth -> time-varying book variance",
+        "signature": "vol_of_vol"
+      },
+      {
+        "confound": "option-like overlays (a written-put posture)",
+        "direction_h_decay": null,
+        "direction_h_size": null,
+        "formula": "sample skewness",
+        "mechanism": "asymmetric conviction between book sides",
+        "signature": "skew"
+      },
+      {
+        "confound": "fat-tailed underlying markets, overlays",
+        "direction_h_decay": null,
+        "direction_h_size": "+",
+        "formula": "excess kurtosis",
+        "mechanism": "a scale mixture of normals has fat tails; conviction sizing makes a scale mixture",
+        "signature": "kurtosis"
+      },
+      {
+        "confound": "one-episode dominance (a drawdown is n ~ 1)",
+        "direction_h_decay": "+",
+        "direction_h_size": "+",
+        "formula": "MDD / (sigma * sqrt(T))",
+        "mechanism": "vol clustering deepens MDD; a mid-window alpha death leaves a late deep drawdown",
+        "signature": "drawdown_shape"
+      },
+      {
+        "confound": "AUM growth, regime luck",
+        "direction_h_decay": "-",
+        "direction_h_size": null,
+        "formula": "OLS time-slope of the rolling 12-month IR",
+        "mechanism": "front-loaded alpha -> the rolling IR trends down over the window",
+        "signature": "rolling_ir_slope"
+      }
+    ],
+    "forking_paths_naive_rate": 0.264908,
+    "hypotheses": [
+      {
+        "id": "h_size",
+        "negative": "sizing_discipline = 0.0",
+        "positive": "sizing_discipline = 0.8"
+      },
+      {
+        "id": "h_decay",
+        "negative": "alpha_half_life_months = 36 (slow)",
+        "positive": "alpha_half_life_months = 3 (fast)"
+      }
+    ]
+  },
+  "single_manager_odds": {
+    "auc": 0.65,
+    "pair_odds": "orders a random cross-class pair correctly 2 times in 3",
+    "single_manager": "about a 0.5-standard-deviation class separation -- a whisper, not a score"
+  }
+}
