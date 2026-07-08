@@ -1,0 +1,993 @@
+{
+  "headline": {
+    "anchor": 0.073976,
+    "ceil": 0.103174,
+    "code": "B10",
+    "floor": 0.044876,
+    "n_funded": 19,
+    "naive_ols": 0.108469,
+    "name": "Cinderbank Capital",
+    "top3_anchor": 0.354441,
+    "top3_naive": 0.400422,
+    "width_sd_corr": 0.479062
+  },
+  "managers": [
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.142567,
+      "ceil": 0.176157,
+      "code": "A10",
+      "fan": [
+        {
+          "anchor": 0.146102,
+          "ceil": 0.163397,
+          "floor": 0.129474,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.142567,
+          "ceil": 0.176157,
+          "floor": 0.110476,
+          "prob_zero": 0.0,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.131983,
+          "ceil": 0.193935,
+          "floor": 0.072865,
+          "prob_zero": 0.00352,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.110476,
+      "fund_or_not": false,
+      "group": "A",
+      "months": 36,
+      "naive_ols": 0.162074,
+      "naive_post": 0.14703,
+      "name": "Osprey Hollow Partners",
+      "post_mean": 0.254274,
+      "post_sd": 0.046815,
+      "prob_positive": 1.0,
+      "prob_zero": 0.0,
+      "q25": 0.125584,
+      "q75": 0.159961
+    },
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.120407,
+      "ceil": 0.149836,
+      "code": "A08",
+      "fan": [
+        {
+          "anchor": 0.12329,
+          "ceil": 0.138381,
+          "floor": 0.108556,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.120407,
+          "ceil": 0.149836,
+          "floor": 0.09203,
+          "prob_zero": 0.0,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.111849,
+          "ceil": 0.166152,
+          "floor": 0.059859,
+          "prob_zero": 0.00384,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.09203,
+      "fund_or_not": false,
+      "group": "A",
+      "months": 48,
+      "naive_ols": 0.129878,
+      "naive_post": 0.123916,
+      "name": "Coldbrook Point",
+      "post_mean": 0.214301,
+      "post_sd": 0.040366,
+      "prob_positive": 1.0,
+      "prob_zero": 0.0,
+      "q25": 0.105554,
+      "q75": 0.135657
+    },
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.091468,
+      "ceil": 0.12152,
+      "code": "A07",
+      "fan": [
+        {
+          "anchor": 0.093772,
+          "ceil": 0.10925,
+          "floor": 0.078276,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.091468,
+          "ceil": 0.12152,
+          "floor": 0.061311,
+          "prob_zero": 6e-05,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.084928,
+          "ceil": 0.140658,
+          "floor": 0.028297,
+          "prob_zero": 0.0298,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.061311,
+      "fund_or_not": false,
+      "group": "A",
+      "months": 36,
+      "naive_ols": 0.098129,
+      "naive_post": 0.094375,
+      "name": "Thistledown Advisors",
+      "post_mean": 0.163212,
+      "post_sd": 0.043385,
+      "prob_positive": 0.999916,
+      "prob_zero": 6e-05,
+      "q25": 0.075637,
+      "q75": 0.107301
+    },
+    {
+      "action": "review",
+      "advisory_band": "conviction",
+      "anchor": 0.073976,
+      "ceil": 0.103174,
+      "code": "B10",
+      "fan": [
+        {
+          "anchor": 0.075855,
+          "ceil": 0.090846,
+          "floor": 0.060971,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.073976,
+          "ceil": 0.103174,
+          "floor": 0.044876,
+          "prob_zero": 0.0008,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.068639,
+          "ceil": 0.122618,
+          "floor": 0.013708,
+          "prob_zero": 0.05732,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.044876,
+      "fund_or_not": false,
+      "group": "B",
+      "months": 36,
+      "naive_ols": 0.108469,
+      "naive_post": 0.076391,
+      "name": "Cinderbank Capital",
+      "post_mean": 0.132112,
+      "post_sd": 0.042098,
+      "prob_positive": 0.99915,
+      "prob_zero": 0.0008,
+      "q25": 0.058824,
+      "q75": 0.089252
+    },
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.067042,
+      "ceil": 0.094598,
+      "code": "B07",
+      "fan": [
+        {
+          "anchor": 0.068649,
+          "ceil": 0.082809,
+          "floor": 0.054563,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.067042,
+          "ceil": 0.094598,
+          "floor": 0.039496,
+          "prob_zero": 0.00136,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.062417,
+          "ceil": 0.113663,
+          "floor": 0.010118,
+          "prob_zero": 0.06502,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.039496,
+      "fund_or_not": false,
+      "group": "B",
+      "months": 36,
+      "naive_ols": 0.087034,
+      "naive_post": 0.068978,
+      "name": "Ashfen Advisors",
+      "post_mean": 0.119291,
+      "post_sd": 0.039607,
+      "prob_positive": 0.998702,
+      "prob_zero": 0.00136,
+      "q25": 0.052559,
+      "q75": 0.081679
+    },
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.06684,
+      "ceil": 0.089559,
+      "code": "B09",
+      "fan": [
+        {
+          "anchor": 0.06851,
+          "ceil": 0.080106,
+          "floor": 0.056969,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.06684,
+          "ceil": 0.089559,
+          "floor": 0.044578,
+          "prob_zero": 0.00012,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.062006,
+          "ceil": 0.104338,
+          "floor": 0.020525,
+          "prob_zero": 0.03016,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.044578,
+      "fund_or_not": false,
+      "group": "B",
+      "months": 60,
+      "naive_ols": 0.076034,
+      "naive_post": 0.06891,
+      "name": "Petrelwood Partners",
+      "post_mean": 0.119173,
+      "post_sd": 0.031703,
+      "prob_positive": 0.999915,
+      "prob_zero": 0.00012,
+      "q25": 0.055149,
+      "q75": 0.078732
+    },
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.06524,
+      "ceil": 0.090392,
+      "code": "A06",
+      "fan": [
+        {
+          "anchor": 0.066866,
+          "ceil": 0.079755,
+          "floor": 0.054085,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.06524,
+          "ceil": 0.090392,
+          "floor": 0.04035,
+          "prob_zero": 0.00074,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.060653,
+          "ceil": 0.107593,
+          "floor": 0.013867,
+          "prob_zero": 0.04936,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.04035,
+      "fund_or_not": false,
+      "group": "A",
+      "months": 60,
+      "naive_ols": 0.066076,
+      "naive_post": 0.067266,
+      "name": "Marrowgate Capital",
+      "post_mean": 0.116331,
+      "post_sd": 0.035588,
+      "prob_positive": 0.99946,
+      "prob_zero": 0.00074,
+      "q25": 0.052343,
+      "q75": 0.078526
+    },
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.063433,
+      "ceil": 0.088394,
+      "code": "A09",
+      "fan": [
+        {
+          "anchor": 0.065033,
+          "ceil": 0.077804,
+          "floor": 0.052373,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.063433,
+          "ceil": 0.088394,
+          "floor": 0.0387,
+          "prob_zero": 0.00074,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.058815,
+          "ceil": 0.105241,
+          "floor": 0.012283,
+          "prob_zero": 0.05452,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.0387,
+      "fund_or_not": false,
+      "group": "A",
+      "months": 60,
+      "naive_ols": 0.064128,
+      "naive_post": 0.06547,
+      "name": "Fernwick Capital",
+      "post_mean": 0.113224,
+      "post_sd": 0.035447,
+      "prob_positive": 0.999299,
+      "prob_zero": 0.00074,
+      "q25": 0.050462,
+      "q75": 0.076317
+    },
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.057413,
+      "ceil": 0.081194,
+      "code": "B08",
+      "fan": [
+        {
+          "anchor": 0.058827,
+          "ceil": 0.07095,
+          "floor": 0.046659,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.057413,
+          "ceil": 0.081194,
+          "floor": 0.033826,
+          "prob_zero": 0.00104,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.053353,
+          "ceil": 0.097721,
+          "floor": 0.008905,
+          "prob_zero": 0.06322,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.033826,
+      "fund_or_not": false,
+      "group": "B",
+      "months": 48,
+      "naive_ols": 0.063665,
+      "naive_post": 0.05915,
+      "name": "Loomridge Capital",
+      "post_mean": 0.102294,
+      "post_sd": 0.033589,
+      "prob_positive": 0.998838,
+      "prob_zero": 0.00104,
+      "q25": 0.044988,
+      "q75": 0.069835
+    },
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.04486,
+      "ceil": 0.067226,
+      "code": "B06",
+      "fan": [
+        {
+          "anchor": 0.04604,
+          "ceil": 0.057494,
+          "floor": 0.03473,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.04486,
+          "ceil": 0.067226,
+          "floor": 0.022729,
+          "prob_zero": 0.00472,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.041607,
+          "ceil": 0.083301,
+          "floor": 0.0,
+          "prob_zero": 0.10096,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.022729,
+      "fund_or_not": false,
+      "group": "B",
+      "months": 60,
+      "naive_ols": 0.044868,
+      "naive_post": 0.046357,
+      "name": "Gullwing Point Capital",
+      "post_mean": 0.08017,
+      "post_sd": 0.031425,
+      "prob_positive": 0.994631,
+      "prob_zero": 0.00472,
+      "q25": 0.033201,
+      "q75": 0.05655
+    },
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.037841,
+      "ceil": 0.063298,
+      "code": "B04",
+      "fan": [
+        {
+          "anchor": 0.038656,
+          "ceil": 0.051743,
+          "floor": 0.02531,
+          "prob_zero": 8e-05,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.037841,
+          "ceil": 0.063298,
+          "floor": 0.011546,
+          "prob_zero": 0.03374,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.035407,
+          "ceil": 0.082894,
+          "floor": 0.0,
+          "prob_zero": 0.17972,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.011546,
+      "fund_or_not": false,
+      "group": "B",
+      "months": 36,
+      "naive_ols": 0.032907,
+      "naive_post": 0.0388,
+      "name": "Harrowdale Capital",
+      "post_mean": 0.0671,
+      "post_sd": 0.036652,
+      "prob_positive": 0.966431,
+      "prob_zero": 0.03374,
+      "q25": 0.024046,
+      "q75": 0.051364
+    },
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.037012,
+      "ceil": 0.061046,
+      "code": "B02",
+      "fan": [
+        {
+          "anchor": 0.03788,
+          "ceil": 0.050155,
+          "floor": 0.0254,
+          "prob_zero": 6e-05,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.037012,
+          "ceil": 0.061046,
+          "floor": 0.01255,
+          "prob_zero": 0.02722,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.034528,
+          "ceil": 0.079209,
+          "floor": 0.0,
+          "prob_zero": 0.16854,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.01255,
+      "fund_or_not": false,
+      "group": "B",
+      "months": 48,
+      "naive_ols": 0.032553,
+      "naive_post": 0.038045,
+      "name": "Saltmere Partners",
+      "post_mean": 0.065795,
+      "post_sd": 0.034429,
+      "prob_positive": 0.971999,
+      "prob_zero": 0.02722,
+      "q25": 0.024114,
+      "q75": 0.049577
+    },
+    {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.02301,
+      "ceil": 0.049572,
+      "code": "B05",
+      "fan": [
+        {
+          "anchor": 0.023446,
+          "ceil": 0.037095,
+          "floor": 0.009651,
+          "prob_zero": 0.01554,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.02301,
+          "ceil": 0.049572,
+          "floor": 0.0,
+          "prob_zero": 0.14032,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.021608,
+          "ceil": 0.070917,
+          "floor": 0.0,
+          "prob_zero": 0.2971,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.0,
+      "fund_or_not": true,
+      "group": "B",
+      "months": 48,
+      "naive_ols": 0.006441,
+      "naive_post": 0.023502,
+      "name": "Wrenmoor Partners",
+      "post_mean": 0.040644,
+      "post_sd": 0.037798,
+      "prob_positive": 0.858881,
+      "prob_zero": 0.14032,
+      "q25": 0.008569,
+      "q75": 0.037046
+    },
+    {
+      "action": "inside",
+      "advisory_band": "standard",
+      "anchor": 0.020134,
+      "ceil": 0.048475,
+      "code": "A03",
+      "fan": [
+        {
+          "anchor": 0.020553,
+          "ceil": 0.035137,
+          "floor": 0.005727,
+          "prob_zero": 0.03952,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.020134,
+          "ceil": 0.048475,
+          "floor": 0.0,
+          "prob_zero": 0.19064,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.018866,
+          "ceil": 0.071354,
+          "floor": 0.0,
+          "prob_zero": 0.33084,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.0,
+      "fund_or_not": true,
+      "group": "A",
+      "months": 60,
+      "naive_ols": 0.01452,
+      "naive_post": 0.020662,
+      "name": "Stonereach Advisors",
+      "post_mean": 0.035733,
+      "post_sd": 0.040719,
+      "prob_positive": 0.809905,
+      "prob_zero": 0.19064,
+      "q25": 0.004571,
+      "q75": 0.03521
+    },
+    {
+      "action": "inside",
+      "advisory_band": "standard",
+      "anchor": 0.01851,
+      "ceil": 0.050554,
+      "code": "A05",
+      "fan": [
+        {
+          "anchor": 0.018945,
+          "ceil": 0.035414,
+          "floor": 0.002171,
+          "prob_zero": 0.0746,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.01851,
+          "ceil": 0.050554,
+          "floor": 0.0,
+          "prob_zero": 0.23454,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.017313,
+          "ceil": 0.076485,
+          "floor": 0.0,
+          "prob_zero": 0.36018,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.0,
+      "fund_or_not": true,
+      "group": "A",
+      "months": 48,
+      "naive_ols": 0.010858,
+      "naive_post": 0.019038,
+      "name": "Quillhaven Partners",
+      "post_mean": 0.032925,
+      "post_sd": 0.045934,
+      "prob_positive": 0.763249,
+      "prob_zero": 0.23454,
+      "q25": 0.001312,
+      "q75": 0.035562
+    },
+    {
+      "action": "inside",
+      "advisory_band": "standard",
+      "anchor": 0.01455,
+      "ceil": 0.037927,
+      "code": "B03",
+      "fan": [
+        {
+          "anchor": 0.014869,
+          "ceil": 0.026902,
+          "floor": 0.00257,
+          "prob_zero": 0.06016,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.01455,
+          "ceil": 0.037927,
+          "floor": 0.0,
+          "prob_zero": 0.21772,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.013557,
+          "ceil": 0.056807,
+          "floor": 0.0,
+          "prob_zero": 0.34828,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.0,
+      "fund_or_not": true,
+      "group": "B",
+      "months": 60,
+      "naive_ols": 0.0,
+      "naive_post": 0.014982,
+      "name": "Duskfield Advisors",
+      "post_mean": 0.02591,
+      "post_sd": 0.033376,
+      "prob_positive": 0.781212,
+      "prob_zero": 0.21772,
+      "q25": 0.001957,
+      "q75": 0.027028
+    },
+    {
+      "action": "inside",
+      "advisory_band": "minimum",
+      "anchor": 0.011805,
+      "ceil": 0.046857,
+      "code": "A04",
+      "fan": [
+        {
+          "anchor": 0.012125,
+          "ceil": 0.030206,
+          "floor": 0.0,
+          "prob_zero": 0.20082,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.011805,
+          "ceil": 0.046857,
+          "floor": 0.0,
+          "prob_zero": 0.339,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.010885,
+          "ceil": 0.075505,
+          "floor": 0.0,
+          "prob_zero": 0.4194,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.0,
+      "fund_or_not": true,
+      "group": "A",
+      "months": 36,
+      "naive_ols": 0.000737,
+      "naive_post": 0.012265,
+      "name": "Pellbridge Capital",
+      "post_mean": 0.021211,
+      "post_sd": 0.050143,
+      "prob_positive": 0.663858,
+      "prob_zero": 0.339,
+      "q25": 0.0,
+      "q75": 0.030498
+    },
+    {
+      "action": "inside",
+      "advisory_band": "minimum",
+      "anchor": 0.008077,
+      "ceil": 0.035514,
+      "code": "A02",
+      "fan": [
+        {
+          "anchor": 0.008347,
+          "ceil": 0.022481,
+          "floor": 0.0,
+          "prob_zero": 0.22518,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.008077,
+          "ceil": 0.035514,
+          "floor": 0.0,
+          "prob_zero": 0.35356,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.007406,
+          "ceil": 0.058138,
+          "floor": 0.0,
+          "prob_zero": 0.42694,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.0,
+      "fund_or_not": true,
+      "group": "A",
+      "months": 48,
+      "naive_ols": 0.001627,
+      "naive_post": 0.008494,
+      "name": "Foxglove Capital",
+      "post_mean": 0.01469,
+      "post_sd": 0.038898,
+      "prob_positive": 0.64716,
+      "prob_zero": 0.35356,
+      "q25": 0.0,
+      "q75": 0.022721
+    },
+    {
+      "action": "inside",
+      "advisory_band": "minimum",
+      "anchor": 0.006274,
+      "ceil": 0.031826,
+      "code": "B01",
+      "fan": [
+        {
+          "anchor": 0.006366,
+          "ceil": 0.019493,
+          "floor": 0.0,
+          "prob_zero": 0.27194,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.006274,
+          "ceil": 0.031826,
+          "floor": 0.0,
+          "prob_zero": 0.3803,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.005908,
+          "ceil": 0.053356,
+          "floor": 0.0,
+          "prob_zero": 0.43992,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.0,
+      "fund_or_not": true,
+      "group": "B",
+      "months": 36,
+      "naive_ols": 0.0,
+      "naive_post": 0.00637,
+      "name": "Bramblegate Capital",
+      "post_mean": 0.011015,
+      "post_sd": 0.036562,
+      "prob_positive": 0.618401,
+      "prob_zero": 0.3803,
+      "q25": 0.0,
+      "q75": 0.019858
+    },
+    {
+      "action": "inside",
+      "advisory_band": "review",
+      "anchor": 0.0,
+      "ceil": 0.012026,
+      "code": "A01",
+      "fan": [
+        {
+          "anchor": 0.0,
+          "ceil": 0.0,
+          "floor": 0.0,
+          "prob_zero": 0.95208,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.0,
+          "ceil": 0.012026,
+          "floor": 0.0,
+          "prob_zero": 0.80024,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.0,
+          "ceil": 0.042632,
+          "floor": 0.0,
+          "prob_zero": 0.66056,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.0,
+      "fund_or_not": false,
+      "group": "A",
+      "months": 36,
+      "naive_ols": 0.0,
+      "naive_post": 0.0,
+      "name": "Alderbrook Partners",
+      "post_mean": -0.040546,
+      "post_sd": 0.048145,
+      "prob_positive": 0.199852,
+      "prob_zero": 0.80024,
+      "q25": 0.0,
+      "q75": 0.0
+    }
+  ],
+  "marginal_codes": [
+    "B05",
+    "A03",
+    "A05",
+    "B03",
+    "A04",
+    "A02",
+    "B01"
+  ],
+  "matched_pair": {
+    "B07": {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.067042,
+      "ceil": 0.094598,
+      "code": "B07",
+      "fan": [
+        {
+          "anchor": 0.068649,
+          "ceil": 0.082809,
+          "floor": 0.054563,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.067042,
+          "ceil": 0.094598,
+          "floor": 0.039496,
+          "prob_zero": 0.00136,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.062417,
+          "ceil": 0.113663,
+          "floor": 0.010118,
+          "prob_zero": 0.06502,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.039496,
+      "fund_or_not": false,
+      "group": "B",
+      "months": 36,
+      "naive_ols": 0.087034,
+      "naive_post": 0.068978,
+      "name": "Ashfen Advisors",
+      "post_mean": 0.119291,
+      "post_sd": 0.039607,
+      "prob_positive": 0.998702,
+      "prob_zero": 0.00136,
+      "q25": 0.052559,
+      "q75": 0.081679
+    },
+    "B09": {
+      "action": "inside",
+      "advisory_band": "conviction",
+      "anchor": 0.06684,
+      "ceil": 0.089559,
+      "code": "B09",
+      "fan": [
+        {
+          "anchor": 0.06851,
+          "ceil": 0.080106,
+          "floor": 0.056969,
+          "prob_zero": 0.0,
+          "scale": 0.5
+        },
+        {
+          "anchor": 0.06684,
+          "ceil": 0.089559,
+          "floor": 0.044578,
+          "prob_zero": 0.00012,
+          "scale": 1.0
+        },
+        {
+          "anchor": 0.062006,
+          "ceil": 0.104338,
+          "floor": 0.020525,
+          "prob_zero": 0.03016,
+          "scale": 2.0
+        }
+      ],
+      "floor": 0.044578,
+      "fund_or_not": false,
+      "group": "B",
+      "months": 60,
+      "naive_ols": 0.076034,
+      "naive_post": 0.06891,
+      "name": "Petrelwood Partners",
+      "post_mean": 0.119173,
+      "post_sd": 0.031703,
+      "prob_positive": 0.999915,
+      "prob_zero": 0.00012,
+      "q25": 0.055149,
+      "q75": 0.078732
+    }
+  },
+  "meta": {
+    "alloc_cap": 0.2,
+    "band_pct": [
+      10.0,
+      90.0
+    ],
+    "clear_pct": [
+      25.0,
+      75.0
+    ],
+    "generator": "p1_allocation",
+    "n_draws": 50000,
+    "n_managers": 20,
+    "sigma_demo": 0.08,
+    "tau_scales": [
+      0.5,
+      1.0,
+      2.0
+    ]
+  }
+}

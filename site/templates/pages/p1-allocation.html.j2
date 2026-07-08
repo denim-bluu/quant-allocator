@@ -1,0 +1,158 @@
+{% extends "demo.html.j2" %}
+
+{% set headline = card_data.headline %}
+{% set managers = card_data.managers %}
+{% set marginal = card_data.marginal_codes %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/p1.css">
+{% endblock %}
+
+{% macro pct(x) %}{{ "%.1f"|format(x * 100) }}%{% endmacro %}
+
+{% macro band_row(m) %}
+<article class="p1-row{% if m.action == 'review' %} p1-row--review{% endif %}"
+         data-floor="{{ m.floor }}" data-q25="{{ m.q25 }}" data-anchor="{{ m.anchor }}"
+         data-q75="{{ m.q75 }}" data-ceil="{{ m.ceil }}" data-naive="{{ m.naive_ols }}"
+         data-fan="{{ m.fan | tojson }}">
+  <header class="p1-row__head">
+    <span class="p1-row__name">{{ m.name }} <span class="p1-row__id">{{ m.code }}</span></span>
+    <span class="p1-row__meta">group {{ m.group }} &middot; {{ m.months }} months</span>
+    <span class="advisory-band" data-band="{{ m.advisory_band }}">{{ m.advisory_band }}</span>
+    {% if m.fund_or_not %}<span class="p1-chip p1-chip--fund" title="band floor at 0%">fund-or-not</span>{% endif %}
+  </header>
+  <div class="interval-stat" data-domain="weight"
+       data-lo="{{ m.floor }}" data-point="{{ m.anchor }}" data-hi="{{ m.ceil }}">
+    <span class="interval-stat__label">Advisory band (share of book)</span>
+    <span class="interval-stat__value">{{ pct(m.floor) }}&ndash;{{ pct(m.ceil) }}</span>
+    <div class="interval-stat__rail p1-band__rail">
+      <div class="interval-stat__band"></div>
+      <div class="interval-stat__point" title="median anchor {{ pct(m.anchor) }}"></div>
+      <div class="p1-naive" title="point optimizer (raw OLS) {{ pct(m.naive_ols) }}"></div>
+    </div>
+    <span class="interval-stat__range">
+      10th&ndash;90th percentile of posterior-draw weights &middot;
+      anchor {{ pct(m.anchor) }} &middot;
+      <span class="p1-naive-note">point optimizer {{ pct(m.naive_ols) }}</span>
+    </span>
+  </div>
+  <div class="p1-dial" data-dial="{{ m.code }}">
+    <span class="p1-dial__label">Skepticism dial (&tau;-scale)</span>
+    <div class="p1-dial__options">
+      {% for f in m.fan %}
+      <button type="button" class="p1-dial__btn{% if f.scale == 1.0 %} p1-dial__btn--active{% endif %}"
+              data-scale="{{ f.scale }}" data-floor="{{ f.floor }}" data-anchor="{{ f.anchor }}"
+              data-ceil="{{ f.ceil }}" aria-pressed="{{ 'true' if f.scale == 1.0 else 'false' }}">
+        &times;{{ "%.1f"|format(f.scale) }}</button>
+      {% endfor %}
+    </div>
+    <p class="p1-dial__readout" data-dial-readout>
+      &times;1 &tau;: band {{ pct(m.floor) }}&ndash;{{ pct(m.ceil) }}</p>
+  </div>
+</article>
+{% endmacro %}
+
+{% block demo_content %}
+<section class="p1-intro">
+  <p class="p1-headline">
+    {{ headline.name }} ({{ headline.code }}) gets
+    <strong>{{ pct(headline.naive_ols) }}</strong> of the book from the point optimizer on its raw
+    OLS alpha &mdash; but its honest band is
+    <strong>{{ pct(headline.floor) }}&ndash;{{ pct(headline.ceil) }}</strong>: the naive weight sits
+    <strong>above the entire range</strong> the posterior evidence supports. The width of a band is
+    the honesty; this page decides <em>how much</em>, where the S1 ledger decided <em>how good</em>.
+  </p>
+  <p class="p1-disclose">
+    SYNTHETIC: every input is the certified S1 ledger posterior on the simulator roster. The demo
+    holds <strong>residual volatility constant at 8%/yr</strong> for every manager, so band
+    differences are driven purely by the posteriors; the live build substitutes each manager's
+    de-smoothed residual volatility from the S2 pipeline. The demo draws also
+    <strong>treat manager posteriors as independent</strong>; the live joint-posterior draws carry
+    group-level dependence and widen the bands slightly.
+  </p>
+</section>
+
+<aside class="p1-exhibit" aria-label="What this exhibit shows">
+  <h2 class="p1-exhibit__title">What this exhibit shows</h2>
+  <div class="p1-exhibit__block">
+    <h3 class="p1-exhibit__sub">What you are looking at</h3>
+    <p>
+      One row per manager, ordered by band anchor. Each row's bar is the
+      <strong>advisory band</strong> &mdash; the 10th&ndash;90th percentile of that manager's weight
+      across {{ "{:,}".format(card_data.meta.n_draws) }} posterior draws &mdash; with the median
+      anchor as the interior tick. The separate marker is the
+      <strong>point optimizer</strong> weight on raw OLS alphas: where it sits relative to the band
+      is a per-manager verdict on the naive method. {{ headline.name }}'s marker sits above its
+      whole band; across the book the top-3 concentration is
+      <strong>{{ pct(headline.top3_naive) }}</strong> under the point optimizer versus
+      <strong>{{ pct(headline.top3_anchor) }}</strong> at the band anchors.
+    </p>
+  </div>
+  <div class="p1-exhibit__block">
+    <h3 class="p1-exhibit__sub">How to read it</h3>
+    <ul class="p1-exhibit__list">
+      <li><strong>The band bar</strong> &mdash; the range of allocations the evidence supports;
+        the tick inside is the median anchor, never shown alone (no bare points).</li>
+      <li><strong>The point-optimizer marker</strong> &mdash; the cautionary contrast; a weight
+        outside the band is a sizing-review trigger. It is never exported as an actionable number.</li>
+      <li><strong>The band pill</strong> (review / minimum / standard / conviction) &mdash; the S1
+        advisory label, carried over so the page reads as the ledger's sequel.</li>
+      <li><strong>The fund-or-not chip</strong> &mdash; on names whose band floor is 0%: the
+        evidence is consistent both with a small allocation and with none.</li>
+      <li><strong>The skepticism dial</strong> &mdash; turn the house &tau;-prior scale up and the
+        bands widen; the states are precomputed at &times;0.5/&times;1/&times;2.</li>
+    </ul>
+    <p class="p1-exhibit__bridge">
+      The full methodology &mdash; with the math and a reference implementation &mdash; is in the
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
+    </p>
+  </div>
+</aside>
+
+<section class="p1-rows" data-rows>
+  {% for m in managers %}{{ band_row(m) }}{% endfor %}
+</section>
+
+<section class="p1-marginal">
+  <h2 class="p1-marginal__title">Fund-or-not names</h2>
+  <p class="p1-marginal__body">
+    {{ marginal | length }} funded managers carry a band floor of exactly 0%
+    ({{ marginal | join(", ") }}): in a nontrivial fraction of posterior draws the rule allocates
+    them nothing. The chart says so, rather than hiding it behind a confident 1.5%. This is a
+    judgement call routed to the redeem/re-up review &mdash; <strong>never</strong> a mechanical
+    redemption.
+  </p>
+</section>
+
+<div class="power-gate">
+  <span class="power-gate__title">power gate</span>
+  <p class="power-gate__reason">
+    Bands render at any track length &mdash; width carries the honesty. <em>Decisive</em> bands
+    (floors clear of zero, the point optimizer reliably beaten) need the favourable regime:
+    realistically <strong>T &ge; 48</strong> and true skill dispersion <strong>&ge; 2%/yr</strong>.
+    At 1% dispersion and T = 36 the posterior barely separates managers, so this page shows wide
+    bands, not decisive ones. The <strong>policy-regret study</strong> that will license decisive
+    language across the grid is <strong>pending</strong> (wave 3); until it lands,
+    <strong>every band on this page is advisory</strong>.
+  </p>
+</div>
+{% endblock %}
+
+{% block methodology %}
+<p>The band is the image of the S1 posterior under the allocation rule: draw an alpha vector from
+each manager's posterior, size it with a long-only edge-over-variance rule (weight proportional to
+the positive part of alpha over residual variance, fully invested, capped at
+{{ pct(card_data.meta.alloc_cap) }} per manager), and repeat
+{{ "{:,}".format(card_data.meta.n_draws) }} times. The 10th&ndash;90th percentile of the resulting
+weight distribution is the advisory band; the median is the anchor. Nothing tunes the band to look
+honest &mdash; it inherits honesty from the posterior and narrows mechanically as the evidence
+tightens (see the B09/B07 matched pair).</p>
+<p>A point-estimate optimizer fed noisy alphas is an estimation-error maximizer: it allocates most
+aggressively exactly where the inputs are least reliable. The naive marker is that method,
+displayed as a cautionary contrast &mdash; not a product. Where a band is wide, that width is the
+finding, not a failure to conclude.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/p1-allocation.js"></script>
+{% endblock %}
