@@ -154,7 +154,7 @@ should earn about +1.0%, and a 12-month-old position about +0.5%. Averaging the
 directional idiosyncratic return of every position at each age traces exactly this
 decaying curve, and fitting a line to its logarithm recovers the 6-month half-life.
 The lab's job is to recover that number, with an honest interval, from a real book —
-and §5 shows it landing at 6.04 months against a dialled truth of 6.0 when enough
+and §5 shows it landing at 6.27 months against a dialled truth of 6.0 when enough
 positions are pooled, while a single manager's estimate carries a wide band.
 
 ### 3.3 The trade-level primitives, symbol by symbol
@@ -242,7 +242,7 @@ month-to-month variability of those measurements tell you how uncertain the aver
 is. This is the estimator the X1 grid already ships as its `sizing_slope` kernel —
 S3 consumes it, it does not reinvent it. The **realized value of sizing** reported
 alongside the slope is the counterfactual gap: the book's actual alpha minus the
-alpha of the same names held equal-weight. In the demo (§5) that gap is +4.1%/yr,
+alpha of the same names held equal-weight. In the demo (§5) that gap is +11.6%/yr,
 and the slope's job is to certify it is real, not luck.
 
 ### 3.5 The event-time alpha-decay curve
@@ -272,7 +272,7 @@ Two honesty notes are built into the estimator. First, **fit from age 1, not age
 the entry month carries an extra selection premium (the position was *chosen* that
 month because its signal was strongest), which sits on top of the ongoing decaying
 edge and would bias the half-life short if included; §5 shows the fit moving from
-5.5 months (ages 0–12) to 6.04 (ages 1–12, matching the 6.0 truth) once the entry
+5.67 months (ages 0–12) to 6.27 (ages 1–12, close to the 6.0 truth) once the entry
 premium is excluded. Second, **the curve is only as long as the turnover allows**:
 a book that retires a quarter of each side every month rarely holds anything past
 age four, so its decay curve simply stops there — you cannot observe a decay you
@@ -292,8 +292,8 @@ $$
 where $S_{[\ell,h]}$ is the share of the book's total idiosyncratic alpha earned by
 positions whose age fell in the bucket $[\ell,h]$ months. The bucket edges are a
 named constant **`HOLDING_BUCKETS` (provisional — {0–2, 3–5, 6–11, 12+ months})**.
-The decomposition converts "your alpha decays with a 6-month half-life" into "53% of
-your P&L is earned in the first quarter and your year-plus positions contribute 1%"
+The decomposition converts "your alpha decays with a 6-month half-life" into "57% of
+your P&L is earned in the first quarter and your year-plus positions contribute under 1%"
 (§5) — the sentence that actually moves a turnover decision.
 
 ### 3.7 Cluster-bootstrap intervals — why not a textbook standard error
@@ -617,30 +617,30 @@ sizing discipline 0.9) and Kelso Bay Partners (the picker, equal-weight) run the
 identical set of positions:
 
 - **At the returns tier they look like two different-quality books.** Meridian posts
-  a +12.3% idiosyncratic alpha (IR 1.68); Kelso posts +8.2% (IR 1.25). An allocator
+  a +17.3% idiosyncratic alpha (IR 1.87); Kelso posts +5.7% (IR 0.78). An allocator
   screening tear sheets would rank Meridian well ahead and might question Kelso — and
   would have no idea *why* they differ.
 - **The sizing curve explains the entire gap.** Meridian's Fama–MacBeth sizing slope
-  is **+0.0121, t = 4.68**, with a month-cluster bootstrap interval **[+0.0068,
-  +0.0175]** that clears zero: its bigger bets genuinely earned more, and its
-  conviction is worth the +4.1%/yr it adds over the equal-weight counterfactual.
-  Kelso's slope is **+0.0033, t = 0.51**, interval **[−0.0099, +0.0170]** straddling
+  is **+0.0240, t = 7.84**, with a month-cluster bootstrap interval **[+0.0181,
+  +0.0299]** that clears zero: its bigger bets genuinely earned more, and its
+  conviction is worth the +11.6%/yr it adds over the equal-weight counterfactual.
+  Kelso's slope is **+0.0101, t = 1.03**, interval **[−0.0083, +0.0293]** straddling
   zero: *on the very same picks*, there is no evidence its (absent) sizing helps or
   hurts. The verdict is not "redeem Kelso" — it is "Kelso has real picks and is
   leaving a conviction premium on the table; this is a sizing conversation."
 
 **The alpha-decay curve.** Because the two managers share picks, they share this
 exhibit. The curve traces the directional idiosyncratic return by holding age; the
-fitted half-life lands at **6.0 months** when positions are pooled across the
+fitted half-life lands at **6.27 months** when positions are pooled across the
 validation replications, against a dialled truth of 6.0 (the ages-1-to-12 fit; the
 entry month is shown separately because it carries the extra selection premium of
 §3.5). For a **single** manager the same fit is far less certain — its bootstrap
-interval on the half-life spans roughly 4 to 14 months — and the page shows that
+interval on the half-life spans roughly 3 to 11 months — and the page shows that
 honest width rather than a false-precise point. The reading: "this edge halves in
 about half a year, so a book holding names for two years is running stale risk."
 
-**The holding-period decomposition.** A stacked bar: **53% of the book's alpha is
-earned in the first three months, 21% in months 3–5, 25% in months 6–11, and 1%
+**The holding-period decomposition.** A stacked bar: **57% of the book's alpha is
+earned in the first three months, 21% in months 3–5, 21% in months 6–11, and under 1%
 beyond a year.** The dollar-denominated turnover verdict — the year-plus tail of the
 book is dead weight — sits next to the decay curve that explains why.
 
@@ -663,6 +663,11 @@ conclude: two managers who look a tier apart on returns are the same picker with
 different sizing discipline, worth a coaching conversation rather than a
 reallocation — and for the concentrated book, the honest answer is that the trades
 simply cannot support the claim yet.
+
+*Numbers regenerated from the substrate pipeline on 2026-07-08; deltas vs teaching
+code held for the numerics gate. The §4 self-contained teaching listing keeps its own
+numpy output; the trade counts (174 / 833 / 1,985) are exact by the
+`independent_trades` formula and are unchanged.*
 
 ## 6. Honest limits & go-live
 
@@ -733,7 +738,7 @@ Acceptance gates:
 1. **Dial recovery (the load-bearing gate).** The sizing slope must be monotone
    increasing in `sizing_discipline` and the fitted half-life must track
    `alpha_half_life_months` within tolerance when pooled. Measured: the ages-1-to-12
-   half-life fit lands at **6.04 months against a 6.0 truth** (§5); the sizing slope
+   half-life fit lands at **6.27 months against a 6.0 truth** (§5); the sizing slope
    separates discipline-0.9 from discipline-0.0 books cleanly at high trade counts.
    If a statistic does not recover its dial monotonically, it is decoration and is
    demoted to descriptive.
@@ -902,7 +907,7 @@ exercises a half-life.
    while $w(\tilde r - \bar{\tilde r})$ does not.
 3. **Half-life from a log-linear fit** (§3.5): from $D(m)=D_1\,2^{-(m-1)/H}$ recover
    $H = -\ln 2 / \text{slope}$ of $\log D$ on age, and explain why fitting from age 1
-   (not 0) removes the entry-selection premium — the 5.5-vs-6.04 month difference in
+   (not 0) removes the entry-selection premium — the 5.67-vs-6.27 month difference in
    §5.
 4. **The independent-trade count and the ~780 number** (§6.4, X1 §3.3): derive the
    one-sample binomial sample size to separate a 55% hitter from a coin at 80% power,
