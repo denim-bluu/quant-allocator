@@ -758,6 +758,22 @@ non-registered analysis would have marketed as a discovery, and renders its null
 with full standing. Whether the *simulator* verdict lands SHIP or NULL, the reader
 has already seen the instrument that makes either answer trustworthy.
 
+**Pilot reconciliation note (real-path pilot; NUMERICS-GATE flag).** The verdict
+counts quoted above ("four statistically-real whispers"; the `rolling_ir_slope` ×
+H-DECAY reversal) are the §4 *stand-in generator's* teaching output. The demo page
+instead renders the protocol run end-to-end on real `simulate_manager` paths at the
+burned pilot seed `S6_PILOT_SEED = 20260721`, over the bounded pilot grid (2 + 2
+deciding cells, 150 managers per class, 2000 permutations, smoothing-θ stress). That
+real pilot returns **0 SHIP, 1 WEAK TELL, 11 NULL**: the lone WEAK TELL is
+`drawdown_shape` under **H-SIZE**, familywise-significant (adj p ≈ 0.007) in the
+direction *opposite* to its declared "+" — disciplined-sizing books show a
+*shallower* σ√T-normalized drawdown here, not a deeper one — so the direction rule
+records it as a reversal anomaly, exactly as designed. This differs from the §4
+exhibit in whisper count and in which row reverses, but matches it qualitatively:
+mostly-null, no SHIP, and one registered direction reversal that a non-registered
+analysis would have sold as a discovery. Flagged for the numerics gate; the §3.4
+family, the direction table, and every §8 constant are unchanged.
+
 ## 6. Honest limits & go-live
 
 ### 6.1 What S6 does not do (do-not-build adjacency)
