@@ -10,7 +10,7 @@ GATE.
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
 import numpy as np
@@ -34,7 +34,7 @@ S3_BOOTSTRAP_STREAM = 16
 
 __all__ = [
     "PositionPanel", "DecayCurve", "Interval", "build_panel", "sizing_slope_estimate",
-    "annualized_alpha_ir",
+    "annualized_alpha_ir", "decay_curve", "fit_half_life", "holding_decomposition",
     "independent_trades", "cluster_bootstrap", "HOLDING_BUCKETS", "SIZING_BOOTSTRAP_N",
     "DECAY_MAX_AGE", "MIN_ENTRIES_PER_AGE", "CLUSTER_AXES", "S3_BOOTSTRAP_STREAM",
 ]
@@ -132,3 +132,48 @@ def cluster_bootstrap(
         lo=float(np.percentile(draws, 2.5)),
         hi=float(np.percentile(draws, 97.5)),
     )
+
+
+def decay_curve(
+    panels: Sequence[PositionPanel], idio_vol: float, max_age: int = DECAY_MAX_AGE
+) -> DecayCurve:
+    # §3.5 event-time curve: pool positions across panels by holding age m, average the
+    # directional standardized idio side·(r̃/σ). Ages below MIN_ENTRIES_PER_AGE stay nan so the
+    # curve truncates where turnover stops holding names long enough to observe decay (§6.3).
+    total = np.zeros(max_age + 1)
+    count = np.zeros(max_age + 1)
+    for panel in panels:
+        z = panel.idio / idio_vol
+        for m in range(max_age + 1):
+            rows, cols = np.where((panel.ages == m) & (panel.weights != 0.0))
+            if len(rows):
+                total[m] += float(np.sum(panel.side[rows, cols] * z[rows, cols]))
+                count[m] += len(rows)
+    values = np.divide(total, count, out=np.full(max_age + 1, np.nan), where=count > 0)
+    values[count < MIN_ENTRIES_PER_AGE] = np.nan
+    return DecayCurve(ages=np.arange(max_age + 1), values=values, counts=count)
+
+
+def fit_half_life(curve: DecayCurve, ages_used: np.ndarray) -> float:
+    # §3.5: H = -ln 2 / slope of log D(m) on age, fit over ages_used (>= 1 to drop the
+    # entry-selection premium). Only finite, positive D(m) contribute.
+    ages_used = np.asarray(ages_used)
+    values = curve.values[ages_used]
+    ok = np.isfinite(values) & (values > 0)
+    if ok.sum() < 2:
+        return float("nan")
+    slope = np.polyfit(ages_used[ok], np.log(values[ok]), 1)[0]
+    return float(-np.log(2.0) / slope)
+
+
+def holding_decomposition(
+    panel: PositionPanel, buckets: tuple[tuple[int, int, str], ...] = HOLDING_BUCKETS
+) -> dict[str, float]:
+    # §3.6: share of total idiosyncratic alpha w·r̃ attributable to each holding-age bucket.
+    contribution = panel.weights * panel.idio
+    total = float(contribution.sum())
+    held = panel.weights != 0.0
+    return {
+        label: float(contribution[(panel.ages >= lo) & (panel.ages <= hi) & held].sum()) / total
+        for lo, hi, label in buckets
+    }

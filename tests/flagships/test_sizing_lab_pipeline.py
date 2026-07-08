@@ -72,3 +72,47 @@ def test_cluster_bootstrap_brackets_the_point_and_is_seed_reproducible():
     b = sp.cluster_bootstrap(stat, panel, n=300, rng=np.random.default_rng([sp.S3_BOOTSTRAP_STREAM, 5]))
     assert a == b                                            # deterministic given the rng
     assert a.lo <= a.point <= a.hi
+
+
+def _decaying_panel(half_life, T=120, N=60, seed=7):
+    # A held book whose held-name idio decays with a known half-life: age-m idio = 2^{-m/H}·base.
+    rng = np.random.default_rng([20260707, seed])
+    idio = rng.normal(0, 0.02, (T, N))
+    weights = np.zeros((T, N))
+    # Ten names entered on a stagger, each held 24 months, re-entered on a cycle.
+    for j in range(N):
+        start = (j * 2) % T
+        for k in range(min(24, T - start)):
+            t = start + k
+            weights[t, j] = 0.03
+            idio[t, j] = 0.02 * 0.5 ** (k / half_life)  # deterministic decaying edge
+    return sp.build_panel(weights, idio)
+
+
+def test_decay_curve_pools_by_age_and_counts_thin_out():
+    panels = [_decaying_panel(6.0, seed=s) for s in range(8)]
+    curve = sp.decay_curve(panels, idio_vol=0.02, max_age=12)
+    assert curve.values[0] > curve.values[6] > curve.values[12]  # monotone decay
+    assert curve.counts[0] >= curve.counts[12]                    # older ages are thinner
+
+
+def test_fit_half_life_recovers_the_dial_from_age_one():
+    panels = [_decaying_panel(6.0, seed=s) for s in range(20)]
+    curve = sp.decay_curve(panels, idio_vol=0.02, max_age=12)
+    hl = sp.fit_half_life(curve, np.arange(1, 13))
+    assert abs(hl - 6.0) < 0.6                                    # recovers the 6.0 truth
+
+
+def test_fit_half_life_is_invariant_to_idio_vol_scale():
+    panels = [_decaying_panel(6.0, seed=s) for s in range(10)]
+    a = sp.fit_half_life(sp.decay_curve(panels, idio_vol=0.02), np.arange(1, 13))
+    b = sp.fit_half_life(sp.decay_curve(panels, idio_vol=0.99), np.arange(1, 13))
+    assert abs(a - b) < 1e-9                                       # y-scale cancels in the log-slope
+
+
+def test_holding_decomposition_shares_sum_to_one_and_front_load():
+    panel = _decaying_panel(6.0, seed=3)
+    shares = sp.holding_decomposition(panel)
+    assert abs(sum(shares.values()) - 1.0) < 1e-9
+    assert shares["0-2m"] > shares["12m+"]                         # fresh positions earn more
+    assert set(shares) == {"0-2m", "3-5m", "6-11m", "12m+"}
