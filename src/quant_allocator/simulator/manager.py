@@ -29,6 +29,10 @@ _SHORT_SIGNAL_STREAM = 4
 # S4 spec §3.8 / §8.5: exit_style="random" draws uniform incumbent choices under its
 # own stream tag, AFTER the main manager noise, so exit_style="age" is byte-identical.
 _EXIT_RANDOM_STREAM = 3
+# M4 spec §6.6 / §8 ruling 3: the shared crowded sub-signal draws under its OWN stream tag,
+# from a crowd_seed shared across participating managers, AFTER the main manager noise, so
+# crowd_participation=0.0 is byte-identical. Tags 0-4 taken; ADV took 5 (market.py).
+_CROWD_STREAM = 6
 # S4 spec §3.8 / §8.7: disposition trailing-gain lookback (months). NUMERICS-GATE.
 S4_DISPOSITION_TRAIL_MONTHS = 3
 _EXIT_STYLES = ("age", "signal", "disposition", "random")
@@ -79,6 +83,18 @@ class ManagerConfig:
     # disciplined/flawed managers; "random" is the validation-only specificity control
     # and consumes RNG under _EXIT_RANDOM_STREAM.
     exit_style: str = "age"
+    # M4 spec §6.6: fraction of fresh-signal NOISE VARIANCE drawn from a crowded sub-signal
+    # shared (via crowd_seed) across participating managers. 0.0 (default) draws no crowd
+    # RNG and is byte-identical. NUMERICS-GATE: variance-fraction convention; short panel
+    # left uncontaminated in v1.
+    crowd_participation: float = 0.0
+    # M4 spec §6.6: seed of the SHARED crowd generator; managers sharing it draw the same
+    # crowded sub-signal. Ignored when crowd_participation == 0.0.
+    crowd_seed: int = 0
+    # M6 spec §6.6: target fraction of long SLOTS placed in ineligible names, so 13F
+    # coverage drops below 1. 0.0 (default) reserves no slots -> byte-identical. Reads
+    # market.eligible. NUMERICS-GATE: slots-fraction (not gross); rounding; shorts untouched.
+    noneligible_long_share: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -169,6 +185,14 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
         )
     if config.exit_style not in _EXIT_STYLES:
         raise ValueError(f"exit_style must be one of {_EXIT_STYLES}, got {config.exit_style!r}")
+    if not 0.0 <= config.crowd_participation <= 1.0:
+        raise ValueError(
+            f"crowd_participation must be in [0, 1], got {config.crowd_participation}"
+        )
+    if not 0.0 <= config.noneligible_long_share <= 1.0:
+        raise ValueError(
+            f"noneligible_long_share must be in [0, 1], got {config.noneligible_long_share}"
+        )
     if config.net_drift is not None:
         drift = config.net_drift
         if drift.ramp_months <= 0:
@@ -189,6 +213,14 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
     idio_std = market.idio_returns.std()
     z = market.idio_returns / idio_std
     noise = rng.standard_normal(z.shape)
+    if config.crowd_participation > 0.0:
+        c = config.crowd_participation
+        crowd_noise = np.random.default_rng(
+            [config.crowd_seed, _CROWD_STREAM]
+        ).standard_normal(z.shape)
+        # Variance-preserving convex blend: a share c of the noise variance is the shared
+        # crowded sub-signal, so participating managers correlate by a known fraction.
+        noise = np.sqrt(1.0 - c) * noise + np.sqrt(c) * crowd_noise
     short_ic = config.short_information_coefficient
     noise_short = (
         np.random.default_rng([config.seed, _SHORT_SIGNAL_STREAM]).standard_normal(z.shape)
@@ -280,8 +312,26 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
         held = set(longs) | set(shorts)
         need_long = config.n_long - len(longs)
         need_short = config.n_short - len(shorts)
-        long_candidates = signals.drop(index=list(held)).sort_values()
-        new_longs = list(long_candidates.index[-need_long:]) if need_long else []
+        if config.noneligible_long_share > 0.0 and need_long:
+            eligible_mask = market.eligible
+            n_inelig_held = sum(1 for name in longs if not eligible_mask[name])
+            n_inelig_target = round(config.noneligible_long_share * config.n_long)
+            need_inelig = max(0, min(need_long, n_inelig_target - n_inelig_held))
+            # held/picked span both eligibility classes, so drop only the labels that are
+            # actually in each single-class candidate pool (errors="ignore").
+            inelig_cands = (
+                signals[~eligible_mask].drop(index=list(held), errors="ignore").sort_values()
+            )
+            new_inelig = list(inelig_cands.index[-need_inelig:]) if need_inelig else []
+            picked = held | set(new_inelig)
+            need_elig = need_long - len(new_inelig)
+            elig_cands = (
+                signals[eligible_mask].drop(index=list(picked), errors="ignore").sort_values()
+            )
+            new_longs = (new_inelig + list(elig_cands.index[-need_elig:])) if need_elig else new_inelig
+        else:
+            long_candidates = signals.drop(index=list(held)).sort_values()
+            new_longs = list(long_candidates.index[-need_long:]) if need_long else []
         short_candidates = short_signals.drop(index=list(held | set(new_longs))).sort_values()
         new_shorts = list(short_candidates.index[:need_short]) if need_short else []
         longs += new_longs
