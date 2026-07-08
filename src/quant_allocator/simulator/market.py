@@ -46,6 +46,20 @@ def _draw_adv_dollar(assets: pd.Index, adv_range: tuple[float, float], seed: int
     return pd.Series(np.exp(log_adv), index=assets, name="adv_dollar")
 
 
+def _authored_eligible_mask(assets: pd.Index, ineligible_fraction: float) -> pd.Series:
+    """Deterministic authored 13(f)-eligibility mask (M6 §8 ruling 5): no RNG. Marks an
+    evenly-SPREAD set of positions ineligible so eligibility does not correlate with the
+    index-ordered betas. NUMERICS-GATE: the spread rule and fraction are provisional."""
+    n = len(assets)
+    n_ineligible = round(ineligible_fraction * n)
+    eligible = np.ones(n, dtype=bool)
+    if n_ineligible > 0:
+        stride = n / n_ineligible
+        positions = (np.arange(n_ineligible) * stride).astype(int)
+        eligible[positions] = False
+    return pd.Series(eligible, index=assets, name="eligible")
+
+
 @dataclass(frozen=True)
 class MarketConfig:
     n_assets: int = 500
@@ -64,6 +78,9 @@ class MarketConfig:
     # _LIQUIDITY_STREAM (separate generator) so it is byte-identical to the pre-ADV
     # market. NUMERICS-GATE: MARKET_ADV_RANGE and the log-uniform draw are provisional.
     adv_dollar_range: tuple[float, float] = MARKET_ADV_RANGE
+    # M6 spec §6.6 / §8 ruling 5: authored fraction of the universe that is NOT 13(f)-
+    # eligible. 0.0 (default) -> all eligible. Deterministic authored assignment, no RNG.
+    ineligible_asset_fraction: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -73,6 +90,7 @@ class FactorMarket:
     factor_returns: pd.DataFrame
     idio_returns: pd.DataFrame
     adv_dollar: pd.Series
+    eligible: pd.Series
 
     @property
     def asset_returns(self) -> pd.DataFrame:
@@ -92,6 +110,10 @@ def simulate_market(config: MarketConfig) -> FactorMarket:
     if not (0.0 < low <= high):
         raise ValueError(
             f"adv_dollar_range must be (low, high) with 0 < low <= high, got {config.adv_dollar_range}"
+        )
+    if not 0.0 <= config.ineligible_asset_fraction < 1.0:
+        raise ValueError(
+            f"ineligible_asset_fraction must be in [0, 1), got {config.ineligible_asset_fraction}"
         )
     rng = np.random.default_rng([config.seed, _MARKET_STREAM])
     months = pd.period_range(config.start_month, periods=config.n_months, freq="M", name="month")
@@ -120,10 +142,12 @@ def simulate_market(config: MarketConfig) -> FactorMarket:
     idio = _apply_idio_ar1(innovations, config.idio_ar1)
     idio_returns = pd.DataFrame(idio, index=months, columns=assets)
     adv_dollar = _draw_adv_dollar(assets, config.adv_dollar_range, config.seed)
+    eligible = _authored_eligible_mask(assets, config.ineligible_asset_fraction)
     return FactorMarket(
         config=config,
         betas=betas,
         factor_returns=factor_returns,
         idio_returns=idio_returns,
         adv_dollar=adv_dollar,
+        eligible=eligible,
     )

@@ -91,6 +91,10 @@ class ManagerConfig:
     # M4 spec §6.6: seed of the SHARED crowd generator; managers sharing it draw the same
     # crowded sub-signal. Ignored when crowd_participation == 0.0.
     crowd_seed: int = 0
+    # M6 spec §6.6: target fraction of long SLOTS placed in ineligible names, so 13F
+    # coverage drops below 1. 0.0 (default) reserves no slots -> byte-identical. Reads
+    # market.eligible. NUMERICS-GATE: slots-fraction (not gross); rounding; shorts untouched.
+    noneligible_long_share: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -184,6 +188,10 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
     if not 0.0 <= config.crowd_participation <= 1.0:
         raise ValueError(
             f"crowd_participation must be in [0, 1], got {config.crowd_participation}"
+        )
+    if not 0.0 <= config.noneligible_long_share <= 1.0:
+        raise ValueError(
+            f"noneligible_long_share must be in [0, 1], got {config.noneligible_long_share}"
         )
     if config.net_drift is not None:
         drift = config.net_drift
@@ -304,8 +312,26 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
         held = set(longs) | set(shorts)
         need_long = config.n_long - len(longs)
         need_short = config.n_short - len(shorts)
-        long_candidates = signals.drop(index=list(held)).sort_values()
-        new_longs = list(long_candidates.index[-need_long:]) if need_long else []
+        if config.noneligible_long_share > 0.0 and need_long:
+            eligible_mask = market.eligible
+            n_inelig_held = sum(1 for name in longs if not eligible_mask[name])
+            n_inelig_target = round(config.noneligible_long_share * config.n_long)
+            need_inelig = max(0, min(need_long, n_inelig_target - n_inelig_held))
+            # held/picked span both eligibility classes, so drop only the labels that are
+            # actually in each single-class candidate pool (errors="ignore").
+            inelig_cands = (
+                signals[~eligible_mask].drop(index=list(held), errors="ignore").sort_values()
+            )
+            new_inelig = list(inelig_cands.index[-need_inelig:]) if need_inelig else []
+            picked = held | set(new_inelig)
+            need_elig = need_long - len(new_inelig)
+            elig_cands = (
+                signals[eligible_mask].drop(index=list(picked), errors="ignore").sort_values()
+            )
+            new_longs = (new_inelig + list(elig_cands.index[-need_elig:])) if need_elig else new_inelig
+        else:
+            long_candidates = signals.drop(index=list(held)).sort_values()
+            new_longs = list(long_candidates.index[-need_long:]) if need_long else []
         short_candidates = short_signals.drop(index=list(held | set(new_longs))).sort_values()
         new_shorts = list(short_candidates.index[:need_short]) if need_short else []
         longs += new_longs

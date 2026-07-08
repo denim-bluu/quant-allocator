@@ -325,3 +325,47 @@ def test_crowd_participation_out_of_band_raises():
         simulate_manager(market, ManagerConfig(crowd_participation=1.5))
     with pytest.raises(ValueError, match="crowd_participation"):
         simulate_manager(market, ManagerConfig(crowd_participation=-0.1))
+
+
+def _quarter_ends(index):
+    return index[2::3]  # every third month, mirroring quarter-end down-sampling
+
+
+def test_noneligible_long_share_zero_is_byte_identical():
+    market = simulate_market(
+        MarketConfig(n_assets=300, n_months=120, seed=3, ineligible_asset_fraction=0.3)
+    )
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    off = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, noneligible_long_share=0.0)
+    )
+    pd.testing.assert_frame_equal(base.weights, off.weights)
+    pd.testing.assert_series_equal(base.monthly_returns, off.monthly_returns)
+
+
+def test_noneligible_long_share_lowers_13f_coverage():
+    market = simulate_market(
+        MarketConfig(n_assets=300, n_months=120, seed=3, ineligible_asset_fraction=0.3)
+    )
+    visible_mgr = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    hidden_mgr = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, noneligible_long_share=0.5)
+    )
+    q = _quarter_ends(market.idio_returns.index)
+
+    def mean_coverage(history):
+        longs = history.weights.loc[q].clip(lower=0.0)
+        # Mask ineligible names column-wise (market.eligible is asset-indexed; a plain
+        # DataFrame.where would align it on the month index instead and zero everything).
+        visible = longs.mul(market.eligible, axis=1)
+        return float((visible.sum(axis=1) / longs.sum(axis=1)).mean())
+
+    assert mean_coverage(hidden_mgr) < mean_coverage(visible_mgr)
+
+
+def test_noneligible_long_share_out_of_band_raises():
+    market = _market(n_months=24)
+    with pytest.raises(ValueError, match="noneligible_long_share"):
+        simulate_manager(market, ManagerConfig(noneligible_long_share=1.5))
+    with pytest.raises(ValueError, match="noneligible_long_share"):
+        simulate_manager(market, ManagerConfig(noneligible_long_share=-0.1))
