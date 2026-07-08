@@ -1,0 +1,169 @@
+/* S6 returns-only signatures page layout. Component classes (interval-stat,
+   verdict-chip, power-gate) live in interval.css; this file adds only page layout,
+   the dual-threshold rail, and the ship/weak_tell/null verdict-chip variants.
+   Colors use the shared design tokens (design-tokens.css). */
+
+.verdict-chip[data-verdict="ship"] { color: var(--pos); }
+.verdict-chip[data-verdict="weak_tell"] { color: var(--warn); }
+.verdict-chip[data-verdict="null"] { color: var(--dim); }  /* a null is a finding: neutral, not hidden */
+
+/* PILOT banner. */
+.s6-pilot-banner {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border: 1px dashed var(--warn);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 16px 0 24px;
+}
+.s6-pilot-banner__tag {
+  flex: none;
+  padding: 2px 8px;
+  border: 1px solid var(--warn);
+  border-radius: 4px;
+  color: var(--warn);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+}
+.s6-pilot-banner p { margin: 0; font-size: 13px; color: var(--dim); }
+
+/* Panels. */
+.s6-panel { margin: 28px 0; padding-top: 16px; border-top: 1px solid var(--line); }
+.s6-panel__title { font-size: 16px; margin: 0 0 12px; }
+
+.s6-registration__lede { font-size: 15px; line-height: 1.55; }
+
+.s6-hypotheses { display: grid; gap: 8px; margin: 16px 0; }
+.s6-hypothesis {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  border-left: 3px solid var(--accent);
+  padding: 4px 12px;
+}
+.s6-hypothesis__id { font-weight: 600; letter-spacing: -0.01em; }
+.s6-hypothesis__body { font-size: 14px; }
+
+/* Family table. */
+.s6-family { width: 100%; font-size: 13px; margin: 16px 0; }
+.s6-family caption {
+  caption-side: top;
+  text-align: left;
+  font-size: 13px;
+  color: var(--dim);
+  margin-bottom: 8px;
+}
+.s6-family th, .s6-family td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.s6-family__dir { text-align: center; font-variant-numeric: tabular-nums; }
+
+/* Frozen constants. */
+.s6-constants {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+  margin: 16px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  font-size: 13px;
+}
+.s6-constants dt {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+  align-self: center;
+}
+.s6-constants dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+.s6-shiprule { margin: 16px 0; }
+.s6-shiprule h3 { font-size: 14px; margin: 0 0 6px; }
+.s6-taxonomy { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 6px; }
+.s6-taxonomy li { font-size: 13px; }
+
+.s6-amendment, .s6-forking { font-size: 13px; color: var(--dim); }
+.s6-forking strong { color: var(--ink); }
+
+/* Exhibit explainer. */
+.s6-exhibit { border-left: 3px solid var(--accent); padding: 8px 16px; margin: 24px 0; }
+.s6-exhibit__title { margin: 4px 0 8px; }
+.s6-exhibit__sub { margin: 12px 0 4px; color: var(--dim); }
+.s6-exhibit__list { margin: 6px 0; padding-left: 18px; }
+.s6-exhibit__list li { margin: 4px 0; }
+.s6-exhibit__bridge { margin-top: 10px; }
+
+/* Verdict grid. */
+.s6-grid__gapnote { font-size: 13px; color: var(--dim); margin: 0 0 16px; }
+.s6-contrast { margin: 20px 0; }
+.s6-contrast__label { font-size: 15px; margin: 0 0 4px; }
+.s6-contrast__meta { font-size: 12px; color: var(--dim); margin: 0 0 12px; }
+.s6-contrast__rows {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+}
+.s6-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.s6-row--weak_tell { border-left: 3px solid var(--warn); }
+.s6-row--ship { border-left: 3px solid var(--pos); }
+.s6-row__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.s6-row__name { font-weight: 600; text-transform: capitalize; }
+.s6-row__stats { font-size: 12px; color: var(--dim); margin: 8px 0 0; font-variant-numeric: tabular-nums; }
+.s6-row__note { font-size: 12px; color: var(--dim); margin: 6px 0 0; }
+.s6-row__note--reversed { color: var(--warn); }
+
+/* Dual-threshold rail: two extra marks on the shared interval-stat rail.
+   Domain 0.5 -> 1.0 mapped to 0 -> 100% by s6-signatures.js. */
+.s6-rail__mark {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: 12px;
+  border-radius: 1px;
+}
+.s6-rail__floor { background: var(--warn); }   /* familywise significance floor */
+.s6-rail__bar { background: var(--accent); }   /* usability bar 0.65 */
+
+/* Close panel. */
+.s6-headline { font-size: 16px; line-height: 1.5; font-weight: 600; }
+.s6-ladder { list-style: none; counter-reset: none; padding: 0; margin: 16px 0; display: grid; gap: 8px; }
+.s6-ladder__rung {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 14px;
+}
+.s6-ladder__num {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--dim);
+  font-size: 12px;
+}
+.s6-close__note { font-size: 13px; color: var(--dim); margin-top: 12px; }
+
+@media (max-width: 640px) {
+  .s6-contrast__rows { grid-template-columns: 1fr; }
+}
