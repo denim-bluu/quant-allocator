@@ -1,0 +1,28 @@
+/* S3 sizing & alpha-decay lab page layout. Components (interval-stat, verdict-chip,
+   power-gate) live in interval.css; this file adds only page layout and the scatter/
+   decay/holding-bar marks. */
+.s3-split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.s3-manager { border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+.s3-manager__head { display: flex; align-items: center; justify-content: space-between; }
+.s3-scatter, .s3-decay-svg { width: 100%; height: auto; margin-top: 12px; }
+.s3-scatter__pt { fill: var(--accent); }
+.s3-scatter__fit { fill: none; stroke: var(--ink); stroke-width: 0.6; }
+.s3-decay-svg__pt { fill: none; stroke: var(--accent); stroke-width: 0.8; }
+.s3-holding-bar {
+  display: flex; height: 28px; border-radius: 4px; overflow: hidden;
+  border: 1px solid var(--line); margin: 12px 0;
+}
+.s3-holding-bar > span { display: block; height: 100%; }
+.s3-holding-legend { list-style: none; padding: 0; display: flex; gap: 16px; color: var(--dim); }
+.s3-reference-effect { color: var(--dim); font-size: 0.9em; }
+.s3-synthetic { color: var(--dim); }
+/* Fresh-to-stale bucket ramp; explicit low-alpha fills (house CSS avoids color-mix). */
+.s3-holding-bar > span:nth-child(1) { background: rgba(51, 110, 123, 0.85); }
+.s3-holding-bar > span:nth-child(2) { background: rgba(51, 110, 123, 0.60); }
+.s3-holding-bar > span:nth-child(3) { background: rgba(51, 110, 123, 0.38); }
+.s3-holding-bar > span:nth-child(4) { background: rgba(51, 110, 123, 0.18); }
