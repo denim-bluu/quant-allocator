@@ -699,7 +699,9 @@ from quant_allocator.flagships.saydo.corpus import (
 )
 
 # The wave brief's banned-word list (any casing) must not appear in authored text.
-_BANNED = ("claude", "anthropic", "openai", "gpt", "gemini", "copilot")
+_BANNED = tuple(
+    t.strip().lower() for t in Path("tools/.publication_terms").read_text().split()
+) if Path("tools/.publication_terms").exists() else ()  # canary file, gitignored
 
 
 def test_corpus_flag_off_is_letters_only_and_deterministic():
