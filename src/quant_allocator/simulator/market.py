@@ -10,6 +10,14 @@ import pandas as pd
 MONTHS_PER_YEAR = 12
 # Distinct per-module stream tags keep same-seed modules statistically independent.
 _MARKET_STREAM = 0
+# M4 spec §6.6 / §8 ruling 5: the per-asset dollar-ADV vector draws on its OWN stream tag,
+# a separate generator from the stream-0 market draws, so every existing draw is
+# byte-identical and a build that never reads adv_dollar is unaffected. Simulator-family
+# tags 0-4 are taken (market/manager/returns_only/exit-random/short-signal, batch-2).
+_LIQUIDITY_STREAM = 5
+# M4 spec §6.3 (NUMERICS-GATE): provisional per-asset dollar average-daily-volume range,
+# spanning microcap-to-megacap. Drawn log-uniformly (see _draw_adv_dollar).
+MARKET_ADV_RANGE = (2e6, 5e8)
 
 
 def _apply_idio_ar1(innovations: np.ndarray, rho: float) -> np.ndarray:
@@ -29,6 +37,15 @@ def _apply_idio_ar1(innovations: np.ndarray, rho: float) -> np.ndarray:
     return idio
 
 
+def _draw_adv_dollar(assets: pd.Index, adv_range: tuple[float, float], seed: int) -> pd.Series:
+    """Per-asset dollar ADV, log-uniform over adv_range (M4 §3.4). Drawn on a SEPARATE
+    generator (_LIQUIDITY_STREAM) so the stream-0 market draws stay byte-identical."""
+    low, high = adv_range
+    liq_rng = np.random.default_rng([seed, _LIQUIDITY_STREAM])
+    log_adv = liq_rng.uniform(np.log(low), np.log(high), size=len(assets))
+    return pd.Series(np.exp(log_adv), index=assets, name="adv_dollar")
+
+
 @dataclass(frozen=True)
 class MarketConfig:
     n_assets: int = 500
@@ -43,6 +60,10 @@ class MarketConfig:
     # existing innovation draws. 0.0 (default) is the byte-identical iid generator; a
     # value makes a name's idio edge persist forward. Demo S4_IDIO_AR1_DEMO = 0.4.
     idio_ar1: float = 0.0
+    # M4 spec §3.4 / §6.6: per-asset dollar ADV range for the liquidity lens. Drawn on
+    # _LIQUIDITY_STREAM (separate generator) so it is byte-identical to the pre-ADV
+    # market. NUMERICS-GATE: MARKET_ADV_RANGE and the log-uniform draw are provisional.
+    adv_dollar_range: tuple[float, float] = MARKET_ADV_RANGE
 
 
 @dataclass(frozen=True)
@@ -51,6 +72,7 @@ class FactorMarket:
     betas: pd.DataFrame
     factor_returns: pd.DataFrame
     idio_returns: pd.DataFrame
+    adv_dollar: pd.Series
 
     @property
     def asset_returns(self) -> pd.DataFrame:
@@ -66,6 +88,11 @@ class FactorMarket:
 def simulate_market(config: MarketConfig) -> FactorMarket:
     if not -1.0 < config.idio_ar1 < 1.0:
         raise ValueError(f"idio_ar1 must be in (-1, 1) for stationarity, got {config.idio_ar1}")
+    low, high = config.adv_dollar_range
+    if not (0.0 < low <= high):
+        raise ValueError(
+            f"adv_dollar_range must be (low, high) with 0 < low <= high, got {config.adv_dollar_range}"
+        )
     rng = np.random.default_rng([config.seed, _MARKET_STREAM])
     months = pd.period_range(config.start_month, periods=config.n_months, freq="M", name="month")
     assets = pd.Index([f"A{i:04d}" for i in range(config.n_assets)], name="asset")
@@ -92,6 +119,11 @@ def simulate_market(config: MarketConfig) -> FactorMarket:
     innovations = rng.normal(0.0, idio_monthly_vols, size=(config.n_months, config.n_assets))
     idio = _apply_idio_ar1(innovations, config.idio_ar1)
     idio_returns = pd.DataFrame(idio, index=months, columns=assets)
+    adv_dollar = _draw_adv_dollar(assets, config.adv_dollar_range, config.seed)
     return FactorMarket(
-        config=config, betas=betas, factor_returns=factor_returns, idio_returns=idio_returns
+        config=config,
+        betas=betas,
+        factor_returns=factor_returns,
+        idio_returns=idio_returns,
+        adv_dollar=adv_dollar,
     )

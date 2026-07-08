@@ -58,8 +58,9 @@ def test_rng_stream_tags_are_distinct():
         returns_only._RETURNS_ONLY_STREAM,
         manager._SHORT_SIGNAL_STREAM,
         manager._EXIT_RANDOM_STREAM,
+        market._LIQUIDITY_STREAM,
     }
-    assert len(tags) == 5
+    assert len(tags) == 6
 
 
 def test_invalid_configs_raise():
