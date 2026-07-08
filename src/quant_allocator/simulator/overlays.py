@@ -1,5 +1,9 @@
 """Composable return overlays that give a manager a posture the core generator lacks.
 
+Two overlays live here: `WrittenPutOverlay` (a short-vol posture) and
+`SmoothingOverlay` (an MA(2) return-smoothing kernel, S6 §3.7). Both are pure,
+deterministic functions of a return series that draw no random numbers.
+
 M2 spec (`docs/ideas/specs/m2-hidden-convexity-screen.md`) §4/§5: the
 `WrittenPutOverlay` gives an otherwise-honest manager a short-vol posture — it
 collects a steady premium and pays out on large down-moves of a reference market
@@ -76,3 +80,45 @@ def apply_written_put_overlay(
 
     overlay_return = premium - payout
     return returns + pd.Series(overlay_return, index=returns.index, name=returns.name)
+
+
+_MA_SUM_TOL = 1e-9
+
+
+@dataclass(frozen=True)
+class SmoothingOverlay:
+    """GLM-style MA(2) return-smoothing overlay (S6 spec §3.7).
+
+    theta: the convex smoothing kernel (theta0, theta1, theta2), theta_k >= 0 and
+        sum(theta) = 1, in the SAME parameterization as the S2 unsmoothing stage
+        (tearsheet/pipeline.py): theta0 is the contemporaneous, dominant weight.
+        theta = (1, 0, 0) recovers the input series exactly.  # NUMERICS-GATE: S6
+        stress grid theta in {identity, (0.60, 0.25, 0.15)} (S6 §8.2).
+
+    The overlay injects the lag-1/lag-2 autocorrelation that illiquidity marking
+    gives real fund series (Getmansky-Lo-Makarov) — a nuisance confound, drawing
+    no random numbers, so it consumes no RNG stream. With the pre-sample returns
+    treated as zero it is the exact causal inverse of the S2 de-smoother's
+    _invert_ma2, so overlay and de-smoother are convention-inverses.
+    """
+
+    theta: tuple[float, float, float]
+
+
+def apply_smoothing_overlay(returns: pd.Series, overlay: SmoothingOverlay) -> pd.Series:
+    """Apply the MA(2) smoothing kernel to a return series.
+
+    observed_t = theta0 * r_t + theta1 * r_{t-1} + theta2 * r_{t-2},
+    with pre-sample returns (t-1, t-2 < 0) treated as zero. Deterministic; RNG-free.
+    """
+    theta = np.asarray(overlay.theta, dtype=float)
+    if np.any(theta < 0.0):
+        raise ValueError(f"smoothing theta must be non-negative, got {overlay.theta}")
+    if abs(float(theta.sum()) - 1.0) > _MA_SUM_TOL:
+        raise ValueError(f"smoothing theta must sum to 1, got {overlay.theta} (sum {theta.sum()})")
+
+    r = returns.to_numpy()
+    observed = theta[0] * r.copy()
+    observed[1:] += theta[1] * r[:-1]
+    observed[2:] += theta[2] * r[:-2]
+    return pd.Series(observed, index=returns.index, name=returns.name)

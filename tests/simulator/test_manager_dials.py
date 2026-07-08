@@ -137,3 +137,137 @@ def test_drift_bad_ramp_raises():
             market,
             ManagerConfig(seed=1, net_drift=NetBetaDrift(total_walk=0.2, ramp_months=0)),
         )
+
+
+def test_alpha_persistence_zero_is_byte_identical():
+    market = _market(n_months=120)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    off = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, alpha_persistence=0.0)
+    )
+    pd.testing.assert_frame_equal(base.weights, off.weights)
+    pd.testing.assert_series_equal(base.true_alpha_returns, off.true_alpha_returns)
+    pd.testing.assert_series_equal(base.monthly_returns, off.monthly_returns)
+
+
+def test_alpha_persistence_leaves_weights_but_lifts_realized_alpha():
+    market = _market(n_months=120, seed=5)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    persist = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, alpha_persistence=0.5)
+    )
+    # Selection/sizing read the ORIGINAL idio, so weights are byte-identical...
+    pd.testing.assert_frame_equal(base.weights, persist.weights)
+    # ...but held names now earn a side-aligned decaying edge -> more realized alpha.
+    assert persist.true_alpha_returns.mean() > base.true_alpha_returns.mean()
+
+
+def test_negative_alpha_persistence_raises():
+    market = _market(n_months=24)
+    with pytest.raises(ValueError, match="alpha_persistence"):
+        simulate_manager(market, ManagerConfig(alpha_persistence=-0.1))
+
+
+def test_short_ic_none_is_byte_identical():
+    market = _market(n_months=120)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    off = simulate_manager(
+        market,
+        ManagerConfig(information_coefficient=0.10, seed=7, short_information_coefficient=None),
+    )
+    pd.testing.assert_frame_equal(base.weights, off.weights)
+    pd.testing.assert_series_equal(base.true_alpha_returns, off.true_alpha_returns)
+
+
+def test_short_ic_zero_makes_short_side_a_noise_basket():
+    # long IC high, short IC 0 -> the SHORT sleeve earns no idiosyncratic edge while the
+    # long sleeve keeps its skill. Compare the short-sleeve realized idio alpha.
+    market = _market(n_months=240, seed=5)
+    skilled_short = simulate_manager(
+        market,
+        ManagerConfig(information_coefficient=0.10, seed=7, short_information_coefficient=0.10),
+    )
+    noise_short = simulate_manager(
+        market,
+        ManagerConfig(information_coefficient=0.10, seed=7, short_information_coefficient=0.0),
+    )
+    def short_alpha(h):
+        return (h.weights.clip(upper=0.0) * market.idio_returns).sum(axis=1).mean()
+
+    assert short_alpha(skilled_short) > short_alpha(noise_short)
+
+
+def test_short_ic_draws_a_decorrelated_panel_not_the_long_one():
+    # A set short IC equal to the long IC still differs from the single-panel manager,
+    # because the short side now reads an INDEPENDENT noise panel (stream tag 4), not
+    # the long panel -> the book changes even though the two ICs match.
+    market = _market(n_months=120)
+    single = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    split = simulate_manager(
+        market,
+        ManagerConfig(information_coefficient=0.10, seed=7, short_information_coefficient=0.10),
+    )
+    assert not single.weights.equals(split.weights)
+
+
+def test_short_ic_out_of_band_raises():
+    market = _market(n_months=24)
+    with pytest.raises(ValueError, match="short_information_coefficient"):
+        simulate_manager(market, ManagerConfig(short_information_coefficient=1.5))
+    with pytest.raises(ValueError, match="short_information_coefficient"):
+        simulate_manager(market, ManagerConfig(short_information_coefficient=-0.1))
+
+
+def test_exit_style_age_is_byte_identical():
+    market = _market(n_months=120)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    aged = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, exit_style="age")
+    )
+    pd.testing.assert_frame_equal(base.weights, aged.weights)
+    pd.testing.assert_series_equal(base.true_alpha_returns, aged.true_alpha_returns)
+
+
+def test_active_exit_styles_change_the_book():
+    market = _market(n_months=120)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    for style in ("signal", "disposition", "random"):
+        alt = simulate_manager(
+            market, ManagerConfig(information_coefficient=0.10, seed=7, exit_style=style)
+        )
+        assert not base.weights.equals(alt.weights)
+
+
+def test_exit_random_is_seed_reproducible_and_consumes_its_stream():
+    market = _market(n_months=120)
+    a = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, exit_style="random")
+    )
+    b = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, exit_style="random")
+    )
+    pd.testing.assert_frame_equal(a.weights, b.weights)  # deterministic given seed + tag
+    c = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=8, exit_style="random")
+    )
+    assert not a.weights.equals(c.weights)  # a different seed draws different exits
+
+
+def test_signal_exit_beats_disposition_under_persistence():
+    # S4 ground truth: under idio persistence, selling the lowest-signal incumbents
+    # (disciplined) retains names whose edge still pays, while selling trailing winners
+    # (disposition) forgoes forward alpha -> signal earns more realized true alpha.
+    market = simulate_market(MarketConfig(n_assets=300, n_months=240, seed=5, idio_ar1=0.4))
+    signal = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=11, exit_style="signal")
+    )
+    dispo = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=11, exit_style="disposition")
+    )
+    assert signal.true_alpha_returns.mean() > dispo.true_alpha_returns.mean()
+
+
+def test_bad_exit_style_raises():
+    market = _market(n_months=24)
+    with pytest.raises(ValueError, match="exit_style"):
+        simulate_manager(market, ManagerConfig(exit_style="bogus"))
