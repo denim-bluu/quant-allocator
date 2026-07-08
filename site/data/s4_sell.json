@@ -1,0 +1,530 @@
+{
+  "managers": [
+    {
+      "curve": [
+        {
+          "hi": -0.01211,
+          "horizon": 1,
+          "lo": -0.025214,
+          "point": -0.018691
+        },
+        {
+          "hi": -0.021667,
+          "horizon": 2,
+          "lo": -0.044025,
+          "point": -0.033018
+        },
+        {
+          "hi": -0.024708,
+          "horizon": 3,
+          "lo": -0.052891,
+          "point": -0.038728
+        },
+        {
+          "hi": -0.021246,
+          "horizon": 4,
+          "lo": -0.053237,
+          "point": -0.03721
+        }
+      ],
+      "exit_style": "signal",
+      "headline": {
+        "ci_hi": -0.021246,
+        "ci_lo": -0.053237,
+        "design_effect": 0.865408,
+        "events_per_cohort": 6.0,
+        "gap": -0.03721,
+        "gated": false,
+        "intra_cohort_rho": -0.026918,
+        "min_detectable_gap": 0.027588,
+        "se": 0.009853
+      },
+      "horizons": [
+        {
+          "ci_hi": -0.01211,
+          "ci_lo": -0.025214,
+          "gap": -0.018691,
+          "horizon": 1,
+          "n_exits": 546,
+          "se": 0.003991
+        },
+        {
+          "ci_hi": -0.021667,
+          "ci_lo": -0.044025,
+          "gap": -0.033018,
+          "horizon": 2,
+          "n_exits": 546,
+          "se": 0.006693
+        },
+        {
+          "ci_hi": -0.024708,
+          "ci_lo": -0.052891,
+          "gap": -0.038728,
+          "horizon": 3,
+          "n_exits": 546,
+          "se": 0.008545
+        },
+        {
+          "ci_hi": -0.021246,
+          "ci_lo": -0.053237,
+          "gap": -0.03721,
+          "horizon": 4,
+          "n_exits": 546,
+          "se": 0.009853
+        },
+        {
+          "ci_hi": -0.010758,
+          "ci_lo": -0.045792,
+          "gap": -0.02862,
+          "horizon": 5,
+          "n_exits": 546,
+          "se": 0.010683
+        },
+        {
+          "ci_hi": -0.000124,
+          "ci_lo": -0.039874,
+          "gap": -0.020417,
+          "horizon": 6,
+          "n_exits": 546,
+          "se": 0.012007
+        }
+      ],
+      "n_exits": 546,
+      "name": "Larkspur Ridge Partners",
+      "role": "disciplined",
+      "trend": {
+        "min_exits_bucket": 60,
+        "quarterly_exits_per_bucket": 17.612903,
+        "quarterly_refused": true,
+        "quarterly_se_bp": 817.81518,
+        "yearly": [
+          {
+            "ci_hi": -0.004341,
+            "ci_lo": -0.084403,
+            "gap": -0.046182,
+            "label": "2020",
+            "n_exits": 66,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.026802,
+            "ci_lo": -0.081536,
+            "gap": -0.026531,
+            "label": "2021",
+            "n_exits": 72,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.034923,
+            "ci_lo": -0.083181,
+            "gap": -0.025027,
+            "label": "2022",
+            "n_exits": 72,
+            "sufficient": true
+          },
+          {
+            "ci_hi": -0.009801,
+            "ci_lo": -0.069673,
+            "gap": -0.041092,
+            "label": "2023",
+            "n_exits": 72,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.009581,
+            "ci_lo": -0.077564,
+            "gap": -0.034445,
+            "label": "2024",
+            "n_exits": 72,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.017271,
+            "ci_lo": -0.030757,
+            "gap": -0.005499,
+            "label": "2025",
+            "n_exits": 72,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.004035,
+            "ci_lo": -0.092992,
+            "gap": -0.044189,
+            "label": "2026",
+            "n_exits": 72,
+            "sufficient": true
+          },
+          {
+            "ci_hi": -0.05626,
+            "ci_lo": -0.122419,
+            "gap": -0.094591,
+            "label": "2027",
+            "n_exits": 48,
+            "sufficient": false
+          }
+        ]
+      },
+      "verdict_chip": "culls well"
+    },
+    {
+      "curve": [
+        {
+          "hi": 0.019596,
+          "horizon": 1,
+          "lo": 0.006919,
+          "point": 0.013046
+        },
+        {
+          "hi": 0.033834,
+          "horizon": 2,
+          "lo": 0.012785,
+          "point": 0.023066
+        },
+        {
+          "hi": 0.038611,
+          "horizon": 3,
+          "lo": 0.009914,
+          "point": 0.024
+        },
+        {
+          "hi": 0.039008,
+          "horizon": 4,
+          "lo": 0.004185,
+          "point": 0.022189
+        }
+      ],
+      "exit_style": "disposition",
+      "headline": {
+        "ci_hi": 0.039008,
+        "ci_lo": 0.004185,
+        "design_effect": 0.799889,
+        "events_per_cohort": 5.494505,
+        "gap": 0.022189,
+        "gated": false,
+        "intra_cohort_rho": -0.044523,
+        "min_detectable_gap": 0.029877,
+        "se": 0.01067
+      },
+      "horizons": [
+        {
+          "ci_hi": 0.019596,
+          "ci_lo": 0.006919,
+          "gap": 0.013046,
+          "horizon": 1,
+          "n_exits": 500,
+          "se": 0.003853
+        },
+        {
+          "ci_hi": 0.033834,
+          "ci_lo": 0.012785,
+          "gap": 0.023066,
+          "horizon": 2,
+          "n_exits": 500,
+          "se": 0.006433
+        },
+        {
+          "ci_hi": 0.038611,
+          "ci_lo": 0.009914,
+          "gap": 0.024,
+          "horizon": 3,
+          "n_exits": 500,
+          "se": 0.008674
+        },
+        {
+          "ci_hi": 0.039008,
+          "ci_lo": 0.004185,
+          "gap": 0.022189,
+          "horizon": 4,
+          "n_exits": 500,
+          "se": 0.01067
+        },
+        {
+          "ci_hi": 0.040055,
+          "ci_lo": 0.002155,
+          "gap": 0.021527,
+          "horizon": 5,
+          "n_exits": 500,
+          "se": 0.011585
+        },
+        {
+          "ci_hi": 0.04523,
+          "ci_lo": 0.002526,
+          "gap": 0.024305,
+          "horizon": 6,
+          "n_exits": 500,
+          "se": 0.012931
+        }
+      ],
+      "n_exits": 500,
+      "name": "Redgate Harbor Capital",
+      "role": "disposition",
+      "trend": {
+        "min_exits_bucket": 60,
+        "quarterly_exits_per_bucket": 16.129032,
+        "quarterly_refused": true,
+        "quarterly_se_bp": 871.563062,
+        "yearly": [
+          {
+            "ci_hi": 0.003699,
+            "ci_lo": -0.062869,
+            "gap": -0.029709,
+            "label": "2020",
+            "n_exits": 59,
+            "sufficient": false
+          },
+          {
+            "ci_hi": 0.074662,
+            "ci_lo": -0.010101,
+            "gap": 0.030349,
+            "label": "2021",
+            "n_exits": 65,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.07815,
+            "ci_lo": -0.017723,
+            "gap": 0.029997,
+            "label": "2022",
+            "n_exits": 67,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.014849,
+            "ci_lo": -0.081085,
+            "gap": -0.031834,
+            "label": "2023",
+            "n_exits": 64,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.067527,
+            "ci_lo": -0.021377,
+            "gap": 0.022194,
+            "label": "2024",
+            "n_exits": 65,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.106282,
+            "ci_lo": 0.017075,
+            "gap": 0.062398,
+            "label": "2025",
+            "n_exits": 64,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.084693,
+            "ci_lo": -0.029742,
+            "gap": 0.025292,
+            "label": "2026",
+            "n_exits": 70,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.128529,
+            "ci_lo": 0.034466,
+            "gap": 0.080337,
+            "label": "2027",
+            "n_exits": 46,
+            "sufficient": false
+          }
+        ]
+      },
+      "verdict_chip": "edge leaks at the exit"
+    },
+    {
+      "curve": [
+        {
+          "hi": 0.001129,
+          "horizon": 1,
+          "lo": -0.011092,
+          "point": -0.004828
+        },
+        {
+          "hi": 0.005568,
+          "horizon": 2,
+          "lo": -0.016814,
+          "point": -0.005095
+        },
+        {
+          "hi": 0.014765,
+          "horizon": 3,
+          "lo": -0.013694,
+          "point": 0.000893
+        },
+        {
+          "hi": 0.020085,
+          "horizon": 4,
+          "lo": -0.014885,
+          "point": 0.002801
+        }
+      ],
+      "exit_style": "random",
+      "headline": {
+        "ci_hi": 0.020085,
+        "ci_lo": -0.014885,
+        "design_effect": 0.892454,
+        "events_per_cohort": 5.505495,
+        "gap": 0.002801,
+        "gated": false,
+        "intra_cohort_rho": -0.02387,
+        "min_detectable_gap": 0.029661,
+        "se": 0.010593
+      },
+      "horizons": [
+        {
+          "ci_hi": 0.001129,
+          "ci_lo": -0.011092,
+          "gap": -0.004828,
+          "horizon": 1,
+          "n_exits": 501,
+          "se": 0.003673
+        },
+        {
+          "ci_hi": 0.005568,
+          "ci_lo": -0.016814,
+          "gap": -0.005095,
+          "horizon": 2,
+          "n_exits": 501,
+          "se": 0.006797
+        },
+        {
+          "ci_hi": 0.014765,
+          "ci_lo": -0.013694,
+          "gap": 0.000893,
+          "horizon": 3,
+          "n_exits": 501,
+          "se": 0.008554
+        },
+        {
+          "ci_hi": 0.020085,
+          "ci_lo": -0.014885,
+          "gap": 0.002801,
+          "horizon": 4,
+          "n_exits": 501,
+          "se": 0.010593
+        },
+        {
+          "ci_hi": 0.029213,
+          "ci_lo": -0.011484,
+          "gap": 0.009253,
+          "horizon": 5,
+          "n_exits": 501,
+          "se": 0.012232
+        },
+        {
+          "ci_hi": 0.033676,
+          "ci_lo": -0.011744,
+          "gap": 0.011409,
+          "horizon": 6,
+          "n_exits": 501,
+          "se": 0.013881
+        }
+      ],
+      "n_exits": 501,
+      "name": "Random-sell ghost",
+      "role": "ghost",
+      "trend": {
+        "min_exits_bucket": 60,
+        "quarterly_exits_per_bucket": 16.16129,
+        "quarterly_refused": true,
+        "quarterly_se_bp": 1415.362428,
+        "yearly": [
+          {
+            "ci_hi": 0.056163,
+            "ci_lo": -0.092829,
+            "gap": -0.013409,
+            "label": "2020",
+            "n_exits": 64,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.059387,
+            "ci_lo": -0.021178,
+            "gap": 0.019125,
+            "label": "2021",
+            "n_exits": 67,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.018629,
+            "ci_lo": -0.07585,
+            "gap": -0.029899,
+            "label": "2022",
+            "n_exits": 68,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.068866,
+            "ci_lo": -0.017578,
+            "gap": 0.026025,
+            "label": "2023",
+            "n_exits": 65,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.038465,
+            "ci_lo": -0.025807,
+            "gap": 0.005984,
+            "label": "2024",
+            "n_exits": 64,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.029401,
+            "ci_lo": -0.069407,
+            "gap": -0.018692,
+            "label": "2025",
+            "n_exits": 65,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.033054,
+            "ci_lo": -0.043679,
+            "gap": -0.006838,
+            "label": "2026",
+            "n_exits": 64,
+            "sufficient": true
+          },
+          {
+            "ci_hi": 0.099849,
+            "ci_lo": 0.015515,
+            "gap": 0.05889,
+            "label": "2027",
+            "n_exits": 44,
+            "sufficient": false
+          }
+        ]
+      },
+      "verdict_chip": "indistinguishable from a random sell"
+    }
+  ],
+  "meta": {
+    "book_size": 40,
+    "bootstrap_reps": 2000,
+    "exits_per_month": 6,
+    "generator": "s4_sell",
+    "horizon_months": 4,
+    "idio_ar1": 0.4,
+    "information_coefficient": 0.35,
+    "manager_seed": 11,
+    "market_seed": 8,
+    "max_horizon_months": 6,
+    "min_exits_gap": 150,
+    "months": 98
+  },
+  "roster": [
+    {
+      "name": "Larkspur Ridge Partners",
+      "raw_gap": -0.03721,
+      "shrunk_gap": -0.035568,
+      "shrunk_sd": 0.009577
+    },
+    {
+      "name": "Redgate Harbor Capital",
+      "raw_gap": 0.022189,
+      "shrunk_gap": 0.020281,
+      "shrunk_sd": 0.010322
+    }
+  ]
+}

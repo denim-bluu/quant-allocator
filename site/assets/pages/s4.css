@@ -1,0 +1,49 @@
+/* site/assets/pages/s4.css — S4 page layout only. Component classes (interval-stat,
+   verdict-chip, power-gate, golive-box, tier-badge) come from interval.css. */
+
+.s4-intro { margin: 8px 0 20px; }
+.s4-headline { font-size: 15px; line-height: 1.5; }
+.s4-signconv { font-size: 13px; color: var(--dim); margin: 10px 0 0; }
+.s4-synthetic { color: var(--warn); }
+
+.s4-exhibit { margin: 20px 0; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+.s4-exhibit__title { font-size: 15px; margin: 0 0 10px; }
+.s4-exhibit__sub { font-size: 11px; text-transform: uppercase; letter-spacing: 0.10em; color: var(--dim); margin: 12px 0 6px; }
+.s4-exhibit__list { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.5; }
+.s4-exhibit__bridge { font-size: 12px; color: var(--dim); margin: 10px 0 0; }
+
+.s4-panel { margin: 20px 0; padding-top: 16px; border-top: 1px solid var(--line); }
+.s4-panel__title { font-size: 15px; margin: 0 0 10px; }
+
+.s4-verdict { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin: 6px 0 16px; }
+.s4-verdict__note, .s4-ghost-note, .s4-trend__note, .s4-roster__note {
+  font-size: 12px; color: var(--dim); }
+
+/* Zero reference tick inside the gap IntervalStat rail. */
+.interval-stat__zero { position: absolute; top: -3px; width: 1px; height: 10px; background: var(--dim); }
+
+.s4-slider { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-size: 13px; }
+.s4-slider__out { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+.s4-curve { margin: 0 0 14px; }
+.s4-curve__cap { font-size: 12px; color: var(--dim); margin-bottom: 4px; }
+.s4-curve__svg { display: block; width: 100%; height: 120px; }
+.s4-curve__band { fill: var(--line); opacity: 0.5; }
+.s4-curve__line { fill: none; stroke: var(--ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.s4-curve__zero { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 2 2; vector-effect: non-scaling-stroke; }
+
+.s4-trend { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 4px; }
+.s4-trend__bucket { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.s4-trend__label { font-weight: 600; min-width: 3em; }
+.s4-trend__n { color: var(--dim); }
+
+.s4-roster { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 4px; }
+.s4-roster__row { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.s4-roster__name { font-weight: 600; }
+
+.s4-tier { display: flex; gap: 10px; align-items: baseline; margin: 6px 0; font-size: 13px; }
+.s4-demo-live { font-size: 13px; color: var(--dim); }
+
+@media (max-width: 640px) {
+  .s4-trend__bucket, .s4-roster__row { flex-direction: column; gap: 2px; }
+}

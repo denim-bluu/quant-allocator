@@ -611,16 +611,20 @@ power gate below), identical entry skill; **only the exit rule differs.**
 **The two-manager split — the centrepiece.**
 
 - **Larkspur Ridge Partners** (disciplined exits — sells its lowest-conviction
-  incumbents): counterfactual gap **−159 bp per exit** [−241, −82], curve
-  −108 / −144 / −149 / −159 bp over forward months 1–4. Verdict chip:
-  **culls well** — its sold names underperform the book it keeps.
+  incumbents): counterfactual gap **−372 bp per exit** [−532, −212], curve
+  −187 / −330 / −387 / −372 bp over forward months 1–4, across 546 exits. Verdict
+  chip: **culls well** — its sold names underperform the book it keeps.
 - **Redgate Harbor Capital** (disposition exits — sells its biggest 3-month
-  winners): counterfactual gap **+385 bp per exit** [+292, +479], curve
-  +245 / +338 / +368 / +384 bp. Verdict chip: **edge leaks at the exit** — the
-  names it sells keep beating its book for roughly three months after the sale.
+  winners): counterfactual gap **+222 bp per exit** [+42, +390], curve
+  +130 / +231 / +240 / +222 bp, across 500 exits. Verdict chip: **edge leaks at
+  the exit** — the names it sells keep beating its book for roughly three months
+  after the sale.
 - **The ghost line:** the random-sell counterfactual on the same books reads
-  **+16 bp** [−74, +107] — a visible zero. The page says why this line exists:
-  it is the diagnostic auditing itself.
+  **+28 bp** [−149, +201], across 501 exits — a visible zero. The page says why
+  this line exists: it is the diagnostic auditing itself.
+
+§5 numbers reconciled to the generator output on 2026-07-07; deltas from the
+teaching-code figures are flagged for the numerics gate.
 
 How each element maps to the method:
 
@@ -634,8 +638,8 @@ How each element maps to the method:
   drag it and watch the gap and its band recompute; the verdict does not live
   at one hand-picked horizon.
 - **The trend strip** = §3.7: yearly buckets render with wide bands; the
-  **quarterly toggle refuses** — at 18 exits/quarter the per-bucket standard
-  error (≈ 290 bp) exceeds any plausible effect, and the PowerGate prints
+  **quarterly toggle refuses** — at ~18 exits/quarter the worst-bucket standard
+  error (≈ 820 bp) exceeds any plausible effect, and the PowerGate prints
   exactly that arithmetic instead of a chart. The refusal is the pitch.
 - **The tier tabs** = the §6.1 contract made visible: the P tab is the page;
   the E tab shows only a low-confidence descriptive chip ("turnover
@@ -652,9 +656,10 @@ build residualizes with a bought risk model and inherits its estimation error;
 bands widen accordingly.
 
 What an allocator should conclude: two managers with identical entry skill and
-identical-looking tear sheets differ by ~540 bp per exit in sell quality; the
-diagnostic separates them cleanly at 546 exits, states its uncertainty, refuses
-the quarterly trend it cannot support, and refuses the R tier entirely.
+identical-looking tear sheets differ by ~590 bp per exit in sell quality; the
+diagnostic separates them cleanly at 500–546 exits per book, states its
+uncertainty, refuses the quarterly trend it cannot support, and refuses the R
+tier entirely.
 
 ## 6. Honest limits & go-live
 

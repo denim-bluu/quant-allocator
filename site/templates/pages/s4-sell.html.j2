@@ -1,0 +1,215 @@
+{% extends "demo.html.j2" %}
+
+{% set managers = card_data.managers %}
+{% set meta = card_data.meta %}
+{% set named = managers | rejectattr("role", "equalto", "ghost") | list %}
+{% set ghost = managers | selectattr("role", "equalto", "ghost") | first %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/s4.css">
+{% endblock %}
+
+{% macro gap_rail(m) %}
+<div class="interval-stat" data-domain="gap" data-zero="0"
+     data-lo="{{ m.headline.ci_lo }}" data-point="{{ m.headline.gap }}"
+     data-hi="{{ m.headline.ci_hi }}" data-horizons="{{ m.horizons | tojson }}">
+  <span class="interval-stat__label">{{ m.name }} — counterfactual gap per exit</span>
+  <span class="interval-stat__value">{{ "%+.0f"|format(m.headline.gap * 10000) }} bp</span>
+  <div class="interval-stat__rail">
+    <div class="interval-stat__band"></div>
+    <div class="interval-stat__zero"></div>
+    <div class="interval-stat__point"></div>
+  </div>
+  <span class="interval-stat__range">90% interval
+    {{ "%+.0f"|format(m.headline.ci_lo * 10000) }} …
+    {{ "%+.0f"|format(m.headline.ci_hi * 10000) }} bp
+    · {{ m.n_exits }} exits · deff {{ "%.2f"|format(m.headline.design_effect) }}</span>
+</div>
+{% endmacro %}
+
+{% block demo_content %}
+<section class="s4-intro">
+  <p class="s4-headline">
+    Two managers with <strong>identical entry skill</strong> and identical-looking tear
+    sheets differ by hundreds of basis points per exit in <strong>sell</strong> quality.
+    S4 asks one question of every realized exit: did the name you chose to sell go on to
+    beat the names you kept — against a <strong>random-sell ghost</strong> drawn from the
+    same book at the same moment? <span class="s4-synthetic">Fully synthetic.</span>
+  </p>
+  <p class="s4-signconv">
+    Sign convention: <strong>positive gap = the sold names beat the book = the exits leak;
+    negative = the exits cull well; zero = you sell no better than the lottery.</strong>
+  </p>
+</section>
+
+<aside class="s4-exhibit" aria-label="What this exhibit shows">
+  <h2 class="s4-exhibit__title">What this exhibit shows</h2>
+  <div class="s4-exhibit__block">
+    <h3 class="s4-exhibit__sub">What you are looking at</h3>
+    <p>
+      {{ named[0].name }} ({{ named[0].verdict_chip }}) and {{ named[1].name }}
+      ({{ named[1].verdict_chip }}) trade the <strong>same {{ meta.book_size }}-name book</strong>
+      at {{ meta.exits_per_month }} exits/month over {{ meta.months }} months — only the
+      <strong>exit rule</strong> differs. Each gap is the sold names' forward residual minus
+      the equal-weighted incumbent pool's, averaged over {{ named[0].n_exits }} exits, with a
+      month-block bootstrap band. The <strong>ghost line</strong> is the random-sell
+      counterfactual on the same book — a visible zero: it is
+      <strong>the diagnostic auditing itself</strong>.
+    </p>
+  </div>
+  <div class="s4-exhibit__block">
+    <h3 class="s4-exhibit__sub">How to read it</h3>
+    <ul class="s4-exhibit__list">
+      <li><strong>The gap rail</strong> — one point per manager (mean gap per exit); the band
+        is the 5th–95th month-block bootstrap interval; the tick is the random-sell zero.</li>
+      <li><strong>The forgone-alpha curve</strong> — the cumulative out-performance of the
+        sold names over the kept book, month by month after the exit. The disposition seller's
+        rises and plateaus; the disciplined seller's dives.</li>
+      <li><strong>The horizon slider</strong> — drag H from 1 to {{ meta.max_horizon_months }};
+        the gap and its band recompute from precomputed horizons. The verdict does not live at
+        one hand-picked horizon.</li>
+      <li><strong>The trend strip</strong> — yearly buckets render with wide bands; the
+        <strong>quarterly toggle refuses</strong>, printing the arithmetic instead of a chart.</li>
+      <li><strong>The tier tabs</strong> — P is this page; E is a low-confidence hint; R refuses.</li>
+    </ul>
+    <p class="s4-exhibit__bridge">
+      The full methodology — with the math and a reference implementation — is in the
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
+    </p>
+  </div>
+</aside>
+
+<section class="s4-panel">
+  <h2 class="s4-panel__title">The counterfactual-gap rail — two managers and the ghost</h2>
+  {{ gap_rail(named[0]) }}
+  <p class="s4-verdict">
+    <span class="verdict-chip"
+          data-verdict="{{ 'aligned' if named[0].headline.gap < 0 else 'contradicted' }}">
+      {{ named[0].verdict_chip }}</span>
+    <span class="s4-verdict__note">its sold names underperform the book it keeps.</span>
+  </p>
+  {{ gap_rail(named[1]) }}
+  <p class="s4-verdict">
+    <span class="verdict-chip"
+          data-verdict="{{ 'aligned' if named[1].headline.gap < 0 else 'contradicted' }}">
+      {{ named[1].verdict_chip }}</span>
+    <span class="s4-verdict__note">the names it sells keep beating its book after the sale.</span>
+  </p>
+  {{ gap_rail(ghost) }}
+  <p class="s4-ghost-note">
+    The ghost sells at random from the same book; its gap sits on zero because the
+    random-sell counterfactual is unbiased — the diagnostic's own control group.
+  </p>
+</section>
+
+<section class="s4-panel">
+  <h2 class="s4-panel__title">The forgone-alpha curve — when the leak accrues</h2>
+  <div class="s4-slider">
+    <label class="s4-slider__label" for="s4-horizon">Forward horizon (months)</label>
+    <input type="range" id="s4-horizon" min="1" max="{{ meta.max_horizon_months }}"
+           value="{{ meta.horizon_months }}" step="1">
+    <output class="s4-slider__out" for="s4-horizon">{{ meta.horizon_months }}</output>
+  </div>
+  {% for m in named %}
+  <figure class="s4-curve" data-role="{{ m.role }}"
+          data-horizons="{{ m.horizons | tojson }}">
+    <figcaption class="s4-curve__cap">{{ m.name }}</figcaption>
+    <svg class="s4-curve__svg" viewBox="0 0 100 40" preserveAspectRatio="none" role="img"
+         aria-label="Forgone-alpha curve with band for {{ m.name }}"></svg>
+  </figure>
+  {% endfor %}
+</section>
+
+<section class="s4-panel">
+  <h2 class="s4-panel__title">Trend strip — is the discipline improving?</h2>
+  {% set tr = named[1].trend %}
+  <ul class="s4-trend">
+    {% for b in tr.yearly %}
+    <li class="s4-trend__bucket">
+      <span class="s4-trend__label">{{ b.label }}</span>
+      <span class="s4-trend__gap">{{ "%+.0f"|format(b.gap * 10000) }} bp
+        [{{ "%+.0f"|format(b.ci_lo * 10000) }}, {{ "%+.0f"|format(b.ci_hi * 10000) }}]</span>
+      <span class="s4-trend__n">{{ b.n_exits }} exits</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% if tr.quarterly_refused %}
+  <div class="power-gate" role="note">
+    <span class="power-gate__title">Quarterly trend refused</span>
+    <p class="power-gate__reason">
+      At ≈ {{ "%.0f"|format(tr.quarterly_exits_per_bucket) }} exits/quarter the per-bucket
+      standard error is ≈ {{ "%.0f"|format(tr.quarterly_se_bp) }} bp — several times any
+      plausible effect. A quarterly trend is astrology; below
+      {{ tr.min_exits_bucket }} exits/bucket S4 falls back to yearly or pooled rendering.
+      The refusal is the pitch.
+    </p>
+  </div>
+  {% endif %}
+  <p class="s4-trend__note">
+    This is a <strong>descriptive</strong> within-manager series with intervals — not a
+    persistence test, no claim that past gap predicts future returns, and never a manager ranking.
+  </p>
+</section>
+
+<section class="s4-panel">
+  <h2 class="s4-panel__title">Roster view — shrunk toward the transparent-roster mean</h2>
+  <ul class="s4-roster">
+    {% for r in card_data.roster %}
+    <li class="s4-roster__row">
+      <span class="s4-roster__name">{{ r.name }}</span>
+      <span class="s4-roster__raw">raw {{ "%+.0f"|format(r.raw_gap * 10000) }} bp</span>
+      <span class="s4-roster__shrunk">shrunk {{ "%+.0f"|format(r.shrunk_gap * 10000) }} bp</span>
+    </li>
+    {% endfor %}
+  </ul>
+  <p class="s4-roster__note">
+    Per-manager gaps shrink toward the transparent-roster mean with the house small-N
+    machinery — a decision-quality measurement pooled for stability, <strong>not</strong> an
+    FDR luck-screen on alphas.
+  </p>
+</section>
+
+<section class="s4-panel s4-tiers" aria-label="Tier contract">
+  <h2 class="s4-panel__title">Tier contract — what each tier can honestly produce</h2>
+  <div class="s4-tier s4-tier--p"><span class="tier-badge" data-tier="P">P</span>
+    <span>Position-level transparency with exit dates: the full diagnostic above.</span></div>
+  <div class="s4-tier s4-tier--e"><span class="tier-badge" data-tier="E">E</span>
+    <span>Exit-behavior hint only, low-confidence: turnover accelerates after gains — an
+      exit-behavior hint, not a measurement. Never a counterfactual gap, never a verdict.</span></div>
+  <div class="s4-tier s4-tier--r"><span class="tier-badge" data-tier="R">R</span>
+    <span>Refusal: exit quality cannot be inferred from monthly returns. This page needs
+      transaction-level data.</span></div>
+</section>
+
+<section class="s4-panel s4-demo-live">
+  <p>
+    The demo's residual returns are the simulator's <strong>ground-truth</strong> idio
+    returns — zero estimation error in the factor adjustment — and the demo world's dials
+    (ρ = {{ meta.idio_ar1 }}, IC = {{ meta.information_coefficient }}, loud exit flaws) are
+    <strong>teaching-scale</strong>: the measured field effect in the literature is
+    an order of magnitude smaller, which is exactly why the live version is power-gated.
+    A live build residualizes with a bought risk model and inherits its estimation error; bands widen
+    accordingly. The headline gap refuses below {{ meta.min_exits_gap }} exits.
+  </p>
+</section>
+{% endblock %}
+
+{% block methodology %}
+<p>For every realized exit, freeze the book at the moment of sale and compare the sold
+name's forward factor-adjusted return against the equal-weighted forward return of the
+incumbents it was sold out of — the closed-form random-sell counterfactual (Selling Fast
+and Buying Slow). Averaging that gap over hundreds of exits is the whole diagnostic;
+positive means the exits leak, negative means they cull well, zero means no better than a
+coin-flip. The counterfactual pool is the incumbents carried <em>into</em> the exit month,
+excluding that month's fresh buys — including them manufactures phantom sell-skill.</p>
+<p>Uncertainty is a month-cohort block bootstrap: exits sold in the same month share their
+forward market path, so whole calendar months are the resampled block, and the design
+effect is printed beside every interval. Because a selective exit rule stratifies the month
+cohorts, the design effect runs <em>below</em> one in this synthetic world; on a live book,
+imperfect residualization pushes it above one — the bootstrap adapts honestly in both
+directions.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/s4-sell.js"></script>
+{% endblock %}
