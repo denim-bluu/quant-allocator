@@ -29,6 +29,10 @@ _SHORT_SIGNAL_STREAM = 4
 # S4 spec §3.8 / §8.5: exit_style="random" draws uniform incumbent choices under its
 # own stream tag, AFTER the main manager noise, so exit_style="age" is byte-identical.
 _EXIT_RANDOM_STREAM = 3
+# M4 spec §6.6 / §8 ruling 3: the shared crowded sub-signal draws under its OWN stream tag,
+# from a crowd_seed shared across participating managers, AFTER the main manager noise, so
+# crowd_participation=0.0 is byte-identical. Tags 0-4 taken; ADV took 5 (market.py).
+_CROWD_STREAM = 6
 # S4 spec §3.8 / §8.7: disposition trailing-gain lookback (months). NUMERICS-GATE.
 S4_DISPOSITION_TRAIL_MONTHS = 3
 _EXIT_STYLES = ("age", "signal", "disposition", "random")
@@ -79,6 +83,14 @@ class ManagerConfig:
     # disciplined/flawed managers; "random" is the validation-only specificity control
     # and consumes RNG under _EXIT_RANDOM_STREAM.
     exit_style: str = "age"
+    # M4 spec §6.6: fraction of fresh-signal NOISE VARIANCE drawn from a crowded sub-signal
+    # shared (via crowd_seed) across participating managers. 0.0 (default) draws no crowd
+    # RNG and is byte-identical. NUMERICS-GATE: variance-fraction convention; short panel
+    # left uncontaminated in v1.
+    crowd_participation: float = 0.0
+    # M4 spec §6.6: seed of the SHARED crowd generator; managers sharing it draw the same
+    # crowded sub-signal. Ignored when crowd_participation == 0.0.
+    crowd_seed: int = 0
 
 
 @dataclass(frozen=True)
@@ -169,6 +181,10 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
         )
     if config.exit_style not in _EXIT_STYLES:
         raise ValueError(f"exit_style must be one of {_EXIT_STYLES}, got {config.exit_style!r}")
+    if not 0.0 <= config.crowd_participation <= 1.0:
+        raise ValueError(
+            f"crowd_participation must be in [0, 1], got {config.crowd_participation}"
+        )
     if config.net_drift is not None:
         drift = config.net_drift
         if drift.ramp_months <= 0:
@@ -189,6 +205,14 @@ def simulate_manager(market: FactorMarket, config: ManagerConfig) -> ManagerHist
     idio_std = market.idio_returns.std()
     z = market.idio_returns / idio_std
     noise = rng.standard_normal(z.shape)
+    if config.crowd_participation > 0.0:
+        c = config.crowd_participation
+        crowd_noise = np.random.default_rng(
+            [config.crowd_seed, _CROWD_STREAM]
+        ).standard_normal(z.shape)
+        # Variance-preserving convex blend: a share c of the noise variance is the shared
+        # crowded sub-signal, so participating managers correlate by a known fraction.
+        noise = np.sqrt(1.0 - c) * noise + np.sqrt(c) * crowd_noise
     short_ic = config.short_information_coefficient
     noise_short = (
         np.random.default_rng([config.seed, _SHORT_SIGNAL_STREAM]).standard_normal(z.shape)

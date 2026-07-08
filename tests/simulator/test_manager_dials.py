@@ -271,3 +271,57 @@ def test_bad_exit_style_raises():
     market = _market(n_months=24)
     with pytest.raises(ValueError, match="exit_style"):
         simulate_manager(market, ManagerConfig(exit_style="bogus"))
+
+
+def test_crowd_participation_zero_is_byte_identical():
+    market = _market(n_months=120)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    off = simulate_manager(
+        market, ManagerConfig(information_coefficient=0.10, seed=7, crowd_participation=0.0)
+    )
+    pd.testing.assert_frame_equal(base.weights, off.weights)
+    pd.testing.assert_series_equal(base.true_alpha_returns, off.true_alpha_returns)
+    pd.testing.assert_series_equal(base.monthly_returns, off.monthly_returns)
+
+
+def test_crowd_participation_shared_seed_correlates_two_managers():
+    # Two managers on the same market, same crowd_seed, high participation: their books
+    # overlap far more than two independent managers (the ground-truth crowding M4 reads).
+    market = _market(n_months=240, seed=5)
+    indep_a = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=1))
+    indep_b = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=2))
+    crowd_a = simulate_manager(
+        market,
+        ManagerConfig(information_coefficient=0.10, seed=1, crowd_participation=0.8, crowd_seed=99),
+    )
+    crowd_b = simulate_manager(
+        market,
+        ManagerConfig(information_coefficient=0.10, seed=2, crowd_participation=0.8, crowd_seed=99),
+    )
+
+    def held_overlap(x, y):  # mean fraction of long names co-held month by month
+        lx = x.weights > 0.0
+        ly = y.weights > 0.0
+        both = (lx & ly).sum(axis=1)
+        either = (lx | ly).sum(axis=1).replace(0, np.nan)
+        return float((both / either).mean())
+
+    assert held_overlap(crowd_a, crowd_b) > held_overlap(indep_a, indep_b)
+
+
+def test_crowd_participation_changes_the_book_but_not_the_stream_of_others():
+    market = _market(n_months=120)
+    base = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    crowded = simulate_manager(
+        market,
+        ManagerConfig(information_coefficient=0.10, seed=7, crowd_participation=0.5, crowd_seed=1),
+    )
+    assert not base.weights.equals(crowded.weights)
+
+
+def test_crowd_participation_out_of_band_raises():
+    market = _market(n_months=24)
+    with pytest.raises(ValueError, match="crowd_participation"):
+        simulate_manager(market, ManagerConfig(crowd_participation=1.5))
+    with pytest.raises(ValueError, match="crowd_participation"):
+        simulate_manager(market, ManagerConfig(crowd_participation=-0.1))
