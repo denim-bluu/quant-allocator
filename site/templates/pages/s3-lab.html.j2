@@ -58,7 +58,10 @@
   <p>The two managers hold identical picks, so the <strong>{{ "%+.1f"|format(card_data.sizing_value.gap_annual * 100) }}%/yr</strong>
   gap between them is entirely {{ sizer.name }}'s conviction sizing &mdash; which the slope certifies.
   The verdict for {{ picker.name }} is not &ldquo;redeem&rdquo;: it has real picks and is
-  <strong>leaving a conviction premium on the table</strong>; this is a sizing conversation.</p>
+  <strong>leaving a conviction premium on the table</strong>; this is a sizing conversation.
+  {{ picker.name }}'s own small non-zero slope is a long-vs-short position-size step &mdash;
+  equal-weight within each side, but the sides differ &mdash; not conviction, so its statistical
+  insignificance is the honest verdict.</p>
   <p class="s3-reference-effect">At the atlas reference effect (realized IR &approx; 0.65) the sizing
   slope <strong>never clears 80%</strong> power within T &le; 120, so this strong-effect exhibit does
   not contradict the X1 headline.</p>

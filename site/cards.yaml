@@ -31,7 +31,7 @@
   lane: S
   one_liner: Picking, sizing, or holding? Trade-level event studies, power-gated.
   decisions: [size, select]
-  tiers: [P, E]
+  tiers: [P]
   status: live
   demo: pages/s3-lab.html.j2
   data: s3_lab.json

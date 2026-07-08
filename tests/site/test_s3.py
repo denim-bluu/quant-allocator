@@ -60,6 +60,9 @@ def test_picker_sizer_split_and_verdict(tmp_path):
     assert html.count('class="interval-stat"') >= 2          # slopes as IntervalStats, no bare points
     assert "leaving a conviction premium on the table" in html
     assert "this is a sizing conversation" in html
+    # Honest note (§3.2/§3.4 correction): the picker's small residual slope is the
+    # long/short size step, not conviction — its insignificance is the honest verdict.
+    assert "long-vs-short position-size step" in html
 
 
 def test_powergate_refusal_arithmetic(tmp_path):

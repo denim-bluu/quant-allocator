@@ -226,8 +226,10 @@ where:
   month, so the regressor is size **centred within the month**.
 - $b_t$ — the month-$t$ sizing slope: extra active contribution per unit of size.
   A month with (near-)equal sizes has $\overline{|w|}$-deviations of zero, a
-  singular regression, and is dropped — an equal-weight book yields no slope by
-  construction.
+  singular regression, and is dropped — but only a book with one uniform size
+  across both sides is slope-free by construction; a long/short book that is
+  equal-weight *within* each side still carries a well-defined, near-zero slope
+  from the long-vs-short size step alone, not conviction.
 - $M$ — the number of usable months; $s_b$ — the sample standard deviation of the
   $b_t$ across months; $\operatorname{se}(\hat b)$ — the **month-clustered** standard
   error, which is the whole point: it is built from the spread of independent monthly
