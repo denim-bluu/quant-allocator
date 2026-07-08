@@ -1,13 +1,30 @@
+from pathlib import Path
+
 from quant_allocator.flagships.saydo.corpus import (
     Document,
     build_corpus,
     planted_relevance,
 )
 
-# The wave brief's banned-word list (any casing) must not appear in authored text. The two
-# restricted assistant-brand tokens are assembled from fragments so the literal words never
-# appear anywhere in this public repo, while the runtime check still matches them.
-_BANNED = ("clau" + "de", "anthro" + "pic", "openai", "gpt", "gemini", "copilot")
+
+def _load_publication_terms() -> tuple[str, ...]:
+    # Source the publication-canary terms from the gitignored canary rather than
+    # inlining/obfuscating them. Parsed like tools/publication_check.sh: one term
+    # per line, '#' comments and blanks skipped, lowercased. Skip-if-missing (the
+    # canary is absent from worktrees/CI) -> returns () there.
+    canary = Path(__file__).resolve().parents[2] / "tools" / ".publication_terms"
+    if not canary.exists():
+        return ()
+    terms = []
+    for line in canary.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            terms.append(line.lower())
+    return tuple(terms)
+
+
+# The wave brief's banned-word list (any casing) must not appear in authored text.
+_BANNED = _load_publication_terms() + ("openai", "gpt", "gemini", "copilot")
 
 
 def test_corpus_flag_off_is_letters_only_and_deterministic():

@@ -14,7 +14,8 @@ import pandas as pd
 def emit_13f_long_book(
     weights: pd.DataFrame, quarter_ends: pd.PeriodIndex, eligible: pd.Series
 ) -> pd.DataFrame:
-    """Reported long-book shares per quarter (M6 §3.3).
+    """Reported long-book shares per quarter, snapshotted at each quarter's LAST
+    (quarter-end) month (M6 §3.3).
 
     weights: month x asset signed portfolio weights.
     quarter_ends: the months to snapshot (the last business month of each quarter).
@@ -25,11 +26,12 @@ def emit_13f_long_book(
     """
     eligible_aligned = eligible.reindex(weights.columns).fillna(False).to_numpy()
     # Accept quarter-spanning periods (freq "3M") as well as explicit quarter-end months:
-    # snapshot at each quarter's first month, the quarter-end label the caller names
-    # (M6 §3.3). asfreq keeps the emitter pure and index-freq agnostic.
+    # snapshot at each quarter's LAST month -- 13F reports positions as of the last
+    # business day of the quarter (M6 §3.3), never the quarter's first month. asfreq
+    # keeps the emitter pure and index-freq agnostic.
     snapshot_months = quarter_ends
     if isinstance(quarter_ends, pd.PeriodIndex) and quarter_ends.freq != weights.index.freq:
-        snapshot_months = quarter_ends.asfreq(weights.index.freqstr, how="start")
+        snapshot_months = quarter_ends.asfreq(weights.index.freqstr, how="end")
     snapshots = weights.loc[snapshot_months]
     longs = snapshots.clip(lower=0.0)
     # Column-wise mask: zero every ineligible name. eligible_aligned is ordered like
