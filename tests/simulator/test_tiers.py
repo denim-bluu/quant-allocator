@@ -3,7 +3,7 @@ import pandas as pd
 
 from quant_allocator.simulator.manager import ManagerConfig, simulate_manager
 from quant_allocator.simulator.market import MarketConfig, simulate_market
-from quant_allocator.simulator.tiers import emit_tiers
+from quant_allocator.simulator.tiers import OP_BUCKET_WIDTH, emit_tiers
 
 
 def _fixture():
@@ -41,3 +41,34 @@ def test_transparency_tier_round_trips_to_weights():
         .fillna(0.0)
     )
     np.testing.assert_allclose(rebuilt.to_numpy(), history.weights.to_numpy())
+
+
+def _history():
+    market = simulate_market(MarketConfig(n_assets=200, n_months=48, seed=3))
+    history = simulate_manager(market, ManagerConfig(information_coefficient=0.10, seed=7))
+    return market, history
+
+
+def test_coarsen_default_off_is_byte_identical():
+    market, history = _history()
+    base = emit_tiers(market, history)
+    off = emit_tiers(market, history, coarsen_e_tier=False)
+    pd.testing.assert_frame_equal(base.exposures, off.exposures)
+    pd.testing.assert_series_equal(base.returns_only, off.returns_only)
+    pd.testing.assert_frame_equal(base.transparency, off.transparency)
+
+
+def test_coarsen_rounds_beta_columns_to_bucket_grid():
+    market, history = _history()
+    coarse = emit_tiers(market, history, coarsen_e_tier=True)
+    beta_cols = [c for c in coarse.exposures.columns if c.startswith("beta_")]
+    grid = (coarse.exposures[beta_cols] / OP_BUCKET_WIDTH).to_numpy()
+    np.testing.assert_allclose(grid, np.round(grid), atol=1e-9)
+
+
+def test_coarsen_leaves_gross_net_top10_untouched():
+    market, history = _history()
+    base = emit_tiers(market, history)
+    coarse = emit_tiers(market, history, coarsen_e_tier=True)
+    for col in ("gross", "net", "top10_share"):
+        pd.testing.assert_series_equal(base.exposures[col], coarse.exposures[col])
