@@ -61,6 +61,7 @@ def _reconstruct_ages(weights: np.ndarray, config) -> np.ndarray:
     # purely age-ordered (oldest first, name tiebreak), so replaying that rule against the
     # observed weights recovers the true age with no RNG/signal — the 1e-9 cross-check in
     # _panel_from_history self-validates it.
+    assert config.exit_style == "age", "s3_lab._reconstruct_ages only replays the exit_style='age' rule"
     n_months, n_names = weights.shape
     n_rep_long = round(config.rebalance_fraction * config.n_long)
     n_rep_short = round(config.rebalance_fraction * config.n_short)

@@ -66,7 +66,14 @@ def build_panel(weights: np.ndarray, idio: np.ndarray) -> PositionPanel:
     """Reconstruct holding ages and side from a signed weight panel (S3 §3.3).
 
     A name is held iff its weight is nonzero; age is the length of the current
-    consecutive-held run (0 in the entry month), resetting after any gap.
+    consecutive-held run (0 in the entry month). This is correct ONLY when every
+    re-entry is separated from its prior exit by at least one zero-weight month.
+    Books with same-month drop-and-re-add (e.g. the simulator's exit_style="age"
+    rule combined with signal-driven re-selection, which can drop and re-select
+    a name in the same rebalance with no zero-weight gap in between) will get
+    WRONG ages from this function — it cannot detect that case from weights
+    alone. Such books must source ages from trade records or a config-aware
+    replay, as demo_data/s3_lab.py's `_reconstruct_ages` does.
     """
     weights = np.asarray(weights, dtype=float)
     idio = np.asarray(idio, dtype=float)

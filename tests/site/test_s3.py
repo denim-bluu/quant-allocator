@@ -68,8 +68,11 @@ def test_powergate_refusal_arithmetic(tmp_path):
     assert "insufficient N" in html
     assert "174" in html
     assert "indistinguishable from luck" in html
-    # ~780 attributed to the hit-rate gate (rendered from JSON when the registry is populated).
-    assert "of ~780 independent trades" in html or "hit-rate gate" in html
+    # Pin the binding "174 of ~780 independent trades" refusal arithmetic verbatim. The
+    # template's {% if gate.hit_rate_threshold %} block renders across a line break, so "of"
+    # and "~780" are separated by a newline + indent, not a single space — match that exactly
+    # so the assertion actually fails if the ~780 figure disappears from the refusal copy.
+    assert "174 of\n      ~780\n      independent trades" in html
 
 
 def test_cluster_axis_and_reference_effect_statements(tmp_path):
