@@ -13,7 +13,7 @@ S3 is a **trade-level lab** for one question an allocator can only ask of a
 position-transparent manager: *when this book makes money, is the edge in the
 picking, the sizing, or the holding?* Three separate managers can post the same
 headline return for three completely different reasons — one picks the right
-names and equal-weights them, one picks ordinary names but sizes conviction
+names and equal-weights them, one picks ordinary names but sizes by signal strength
 brilliantly, one picks well but clings to positions long after the edge has
 decayed. The tear sheet cannot tell them apart. Their trades can.
 
@@ -23,7 +23,7 @@ The lab computes three diagnostics from a manager's dated positions and trades:
   entry and trace the idiosyncratic return it earns as it ages, so you can read
   off how long this manager's edge actually lasts;
 - a **sizing-vs-outcome curve** — ask whether the manager's bigger positions
-  actually earned more, and measure the return their conviction added over an
+  actually earned more on the observed path, and measure the realized sizing contribution over an
   equal-weight version of the same book;
 - a **holding-period decomposition** — split the book's total alpha by the age at
   which it was earned, so you can see what fraction comes from fresh positions
@@ -45,8 +45,8 @@ high-turnover books where the power actually clears.
 The decision the lab serves is not primarily *hire or fire* — it is **size the
 mandate and shape the engagement**. A manager with genuine name-selection skill
 but flat or inverted sizing is not a redemption; it is a coaching or a resizing
-conversation ("your picks are real, but you are leaving the conviction premium on
-the table"). A manager whose alpha decays in six weeks but who holds positions for
+conversation ("larger positions did not earn more on this measured path; walk us through the
+sizing process"). A manager whose alpha decays in six weeks but who holds positions for
 two years is running the wrong turnover, not the wrong strategy. These are
 *constructive* findings — the specific, P&L-driver-level feedback that
 distinguishes a partner from a monitor — and none of them is reachable from
@@ -101,7 +101,7 @@ turnover the book *should* be running.
 earned more than the smaller ones. If a manager truly knows which ideas are best
 and sizes accordingly, their largest positions should, on average, out-earn their
 smallest — the sizing curve slopes up. If they size by habit or by liquidity rather
-than by conviction, the curve is flat. And there is a clean counterfactual sitting
+than by signal strength, the curve is flat. And there is a clean counterfactual sitting
 right next to the real book: *what would this manager have earned holding exactly
 these names equal-weighted?* The gap between the real book and its equal-weight
 shadow is the **realized value of the manager's sizing** — the properly-computed
@@ -141,7 +141,7 @@ $$b_t = \frac{\sum_i (|w_i|-\bar{|w|})\,c_i}{\sum_i (|w_i|-\bar{|w|})^2}
       = \frac{0.00008}{0.0008} = 0.10.$$
 
 A positive slope: the biggest position (C) earned the most, so this manager's
-conviction was rewarded this month. Now imagine the same three names sized
+larger positions were rewarded this month. Now imagine the same three names sized
 **equal-weight**, all at $|w| = 0.04$. The size deviations are all zero, the
 denominator collapses, and the slope is undefined — an equal-weight month carries
 *no* sizing information, which is exactly right, and the lab skips it. The full
@@ -229,7 +229,7 @@ where:
   singular regression, and is dropped — but only a book with one uniform size
   across both sides is slope-free by construction; a long/short book that is
   equal-weight *within* each side still carries a well-defined, near-zero slope
-  from the long-vs-short size step alone, not conviction.
+  from the long-vs-short size step alone, not within-side sizing information.
 - $M$ — the number of usable months; $s_b$ — the sample standard deviation of the
   $b_t$ across months; $\operatorname{se}(\hat b)$ — the **month-clustered** standard
   error, which is the whole point: it is built from the spread of independent monthly
@@ -245,7 +245,7 @@ is. This is the estimator the X1 grid already ships as its `sizing_slope` kernel
 S3 consumes it, it does not reinvent it. The **realized value of sizing** reported
 alongside the slope is the counterfactual gap: the book's actual alpha minus the
 alpha of the same names held equal-weight. In the demo (§5) that gap is +11.6%/yr,
-and the slope's job is to certify it is real, not luck.
+and the slope's job is to estimate that controlled-path association with an interval.
 
 ### 3.5 The event-time alpha-decay curve
 
@@ -411,7 +411,7 @@ def simulate_book(ic, half_life, discipline, rebalance_fraction, n_long, n_short
     Each month: score every name by a signal whose correlation with that month's
     idiosyncratic return is `ic` decayed by holding age at `half_life`; buy the
     top names, sell the bottom, retire the oldest `rebalance_fraction` of each
-    side, and size by conviction (`discipline` blends signal-proportional toward
+    side, and size by signal strength (`discipline` blends signal-proportional toward
     equal-weight). alpha_persistence > 0 adds a decaying entry edge to each held
     name's realized idio; = 0 recovers the v1 book.
     """
@@ -464,7 +464,7 @@ def simulate_book(ic, half_life, discipline, rebalance_fraction, n_long, n_short
         long_total, short_total = (gross + net) / 2, (gross - net) / 2
         for names, total, sgn in [(longs, long_total, 1.0), (shorts, short_total, -1.0)]:
             strength = np.abs(signal[names])
-            raw = discipline * strength + (1 - discipline)  # 1 = conviction, 0 = equal-weight
+            raw = discipline * strength + (1 - discipline)  # 1 = signal-proportional, 0 = equal-weight
             weights[t, names] = sgn * total * raw / raw.sum()
         for name, age in ages.items():
             ages_out[t, name] = age; side_out[t, name] = side[name]
@@ -607,7 +607,7 @@ sizing), so their picks, hit rate, and decay curve are the same; the entire +4.1
 gap between them is the realized sizing contribution on this controlled synthetic path;
 the slope detects association between size and contribution (t=4.68, interval clear of
 zero) while the picker's remains unresolved (t=0.51, interval straddling zero). This
-construction does not establish manager intent or a live conviction premium.
+construction does not establish manager intent, prevalence, or a live-manager premium.
 
 ## 5. Reading the demo
 
@@ -811,7 +811,7 @@ exercises a half-life.
 - **Political — the most sensitive analytic in the portfolio.** Sizing and holding
   feedback to an external manager is **adjustable-output only** (Dietvorst): the
   factor set, the age buckets, and the counterfactual are controls the manager can
-  move, and the copy is help-not-audit ("here is what your conviction added," never
+  move, and the copy is help-not-audit ("here is the measured sizing contribution," never
   "your sizing is wrong"). An **inverted-sizing** finding (a negative slope — the
   manager's bigger bets earned *less*) is the single most delicate output; it ships
   **only** inside an established E1 ladder relationship, framed as a shared question,
@@ -822,8 +822,8 @@ exercises a half-life.
 - **Manager-facing, help-framed, in the QBR.** The lab is engagement material for
   transparent managers, delivered inside the E2 pack at review cadence — not a
   standing dashboard. The sizing curve opens the highest-value, least-threatening
-  conversation ("your picks are real; here is the conviction premium you are not
-  capturing"), which is why the card's senior-role score is a 5.
+  conversation ("larger positions did not earn more on this controlled path; walk us through
+  the sizing process"), which is why the card's senior-role score is a 5.
 - **Every number gated and interval-reported.** No bare slope, no bare hit rate, no
   bare half-life; each renders as an IntervalStat with a VerdictChip and a PowerGate,
   and below threshold the PowerGate refuses. A bare point is a design-system lint
@@ -921,9 +921,9 @@ exercises a half-life.
 **Questions you should be able to answer after reading this page:**
 
 - **Tell the picker from the sizer to a non-quant.** Two managers hold the identical
-  names; one posts 12% alpha, the other 8%. Why? — because one sizes its conviction
-  and the other equal-weights, and the sizing curve (bigger bets earned more, on
-  evidence that clears the trade gate) is the whole difference. Why is that a coaching
+  names; one posts 12% alpha, the other 8%. Why? — because one sizes by signal strength
+  and the other equal-weights, and the controlled sizing curve (larger positions earned
+  more on this path, with an interval that clears zero) is the whole difference. Why is that a coaching
   conversation, not a redemption?
 - **Why a pooled sizing regression lies.** Explain that positions in a month share
   shocks, so a pooled t-statistic counts correlated observations as independent and

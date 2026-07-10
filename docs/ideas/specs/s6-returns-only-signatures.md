@@ -1018,13 +1018,12 @@ conversations; leadership sees the one-line outcome in the program review.
   and wrong for a product where one false tell is fatal.
 - **Defend the two-threshold honesty.** Why "significant" (a statement about
   n = 500 per class resolving AUC ≈ 0.55) and "usable" (0.65 across the worst
-  nuisance cell) are different claims, why the pilot's four WEAK TELLs land exactly
-  in the gap, and why publishing that gap is the card's central product.
+  nuisance cell) are different claims, why the pilot's one WEAK TELL and eleven NULLs
+  remain below the usability bar, and why publishing that gap is the card's central product.
 - **Explain the direction rule with the pilot's own anomaly.** Why
-  `rolling_ir_slope` coming out significant *opposite* to its declared direction is
-  not a discovery with a sign flip — and give the mechanistic post-hoc story (the
-  long dead tail flattens the fast-decay slope) plus what would be required to
-  promote it (a v2 registration with a fresh seed).
+  `drawdown_shape` under H-SIZE coming out significant *opposite* to its declared
+  direction remains the pilot's sole WEAK TELL rather than a discovery with a sign
+  flip — and what would be required to promote it (a v2 registration with a fresh seed).
 - **State what even a SHIP would not mean.** AUC 0.65 orders a random *pair* right
   2 times in 3; applied to a single manager it is a whisper (≈ 0.5 sd of class
   separation), which is why the decision hook is a conversation prompt after

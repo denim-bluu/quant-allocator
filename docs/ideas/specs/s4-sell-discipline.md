@@ -643,9 +643,9 @@ How each element maps to the method:
   error (≈ 820 bp) exceeds any plausible effect, and the PowerGate prints
   exactly that arithmetic instead of a chart. The refusal is the pitch.
 - **The tier rows** = the §6.1 contract made visible: the P row is the page;
-  the E tab shows only a low-confidence descriptive chip ("turnover
+  the E row shows only a low-confidence descriptive chip ("turnover
   accelerates after gains — exit-behavior hint, not a measurement"); the
-  R tab is a refusal card: *"Exit quality cannot be inferred from monthly
+  R row is a refusal card: *"Exit quality cannot be inferred from monthly
   returns. This page needs transaction-level data."* No number is faked.
 
 **Demo-vs-live split (stated on the page).** The demo's residual returns are
