@@ -64,16 +64,28 @@ def test_borrow_adjusted_alpha_uses_the_s2_interval_and_shifts_by_the_drag():
 
 
 def test_trade_count_and_gate_render_rule():
-    # §3.5: 25 + 6 x months. 385 at T=60 (refuse), 745 at T=120 (render, marginal).
+    # §3.5: 25 + 6 x months. Both observed windows stay below the approved 780 line.
     assert sb.short_trade_count(25, 0.25, 60) == 385
     assert sb.short_trade_count(25, 0.25, 120) == 745
     market, history = _book()
     w, ar = history.weights.to_numpy(), market.asset_returns.to_numpy()
     gate_full = sb.hit_rate_gate(w, ar, n_short=25, turnover=0.25, months=120)
     gate_half = sb.hit_rate_gate(w[:60], ar[:60], n_short=25, turnover=0.25, months=60)
-    assert gate_full.trades == 745 and gate_full.gate == 780 and gate_full.renders is True
+    assert gate_full.trades == 745 and gate_full.gate == 780 and gate_full.renders is False
     assert gate_half.trades == 385 and gate_half.renders is False
     assert 0.0 <= gate_full.hit_rate <= 1.0
+
+
+def test_trade_gate_boundary_is_exactly_780(monkeypatch):
+    monkeypatch.setattr(
+        sb, "short_hit_rate", lambda *_: sb.Estimate(0.55, 0.025, 2.0, True, 0.55)
+    )
+    monkeypatch.setattr(sb, "short_trade_count", lambda *_: 779)
+    below = sb.hit_rate_gate([], [], n_short=1, turnover=0.0, months=1)
+    monkeypatch.setattr(sb, "short_trade_count", lambda *_: 780)
+    at = sb.hit_rate_gate([], [], n_short=1, turnover=0.0, months=1)
+    assert below.renders is False
+    assert at.renders is True
 
 
 def test_verdict_chip_text_is_pinned():

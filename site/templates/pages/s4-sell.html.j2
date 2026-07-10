@@ -12,18 +12,20 @@
 {% macro gap_rail(m) %}
 <div class="interval-stat" data-domain="gap" data-zero="0"
      data-lo="{{ m.headline.ci_lo }}" data-point="{{ m.headline.gap }}"
-     data-hi="{{ m.headline.ci_hi }}" data-horizons="{{ m.horizons | tojson }}">
+     data-hi="{{ m.headline.ci_hi }}" data-n-exits="{{ m.n_exits }}"
+     data-horizons="{{ m.horizons | tojson | forceescape }}">
   <span class="interval-stat__label">{{ m.name }} — counterfactual gap per exit</span>
-  <span class="interval-stat__value">{{ "%+.0f"|format(m.headline.gap * 10000) }} bp</span>
+  <span class="interval-stat__value" data-horizon-value="point">{{ "%+.0f"|format(m.headline.gap * 10000) }} bp</span>
   <div class="interval-stat__rail">
     <div class="interval-stat__band"></div>
     <div class="interval-stat__zero"></div>
     <div class="interval-stat__point"></div>
   </div>
-  <span class="interval-stat__range">90% interval
+  <span class="interval-stat__range"><span data-horizon-value="range">90% interval
     {{ "%+.0f"|format(m.headline.ci_lo * 10000) }} …
-    {{ "%+.0f"|format(m.headline.ci_hi * 10000) }} bp
-    · {{ m.n_exits }} exits · deff {{ "%.2f"|format(m.headline.design_effect) }}</span>
+    {{ "%+.0f"|format(m.headline.ci_hi * 10000) }} bp</span>
+    · <span data-horizon-value="exits">{{ m.n_exits }} exits</span>
+    · deff {{ "%.2f"|format(m.headline.design_effect) }}</span>
 </div>
 {% endmacro %}
 
@@ -66,11 +68,11 @@
         sold names over the kept book, month by month after the exit. The disposition seller's
         rises and plateaus; the disciplined seller's dives.</li>
       <li><strong>The horizon slider</strong> — drag H from 1 to {{ meta.max_horizon_months }};
-        the gap and its band recompute from precomputed horizons. The verdict does not live at
+        the gap, band, exit count, and curve switch among precomputed horizons. The verdict does not live at
         one hand-picked horizon.</li>
       <li><strong>The trend strip</strong> — yearly buckets render with wide bands; the
-        <strong>quarterly toggle refuses</strong>, printing the arithmetic instead of a chart.</li>
-      <li><strong>The tier tabs</strong> — P is this page; E is a low-confidence hint; R refuses.</li>
+        <strong>quarterly view refuses</strong>, printing the arithmetic instead of a chart.</li>
+      <li><strong>The tier rows</strong> — P is this page; E is a low-confidence hint; R refuses.</li>
     </ul>
     <p class="s4-exhibit__bridge">
       The full methodology — with the math and a reference implementation — is in the
@@ -112,7 +114,7 @@
   </div>
   {% for m in named %}
   <figure class="s4-curve" data-role="{{ m.role }}"
-          data-horizons="{{ m.horizons | tojson }}">
+          data-horizons="{{ m.horizons | tojson | forceescape }}">
     <figcaption class="s4-curve__cap">{{ m.name }}</figcaption>
     <svg class="s4-curve__svg" viewBox="0 0 100 40" preserveAspectRatio="none" role="img"
          aria-label="Forgone-alpha curve with band for {{ m.name }}"></svg>

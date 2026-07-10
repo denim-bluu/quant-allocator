@@ -604,8 +604,10 @@ Independent trades: T=48 -> 833, T=120 -> 1985; 30-name book T=48 -> 174
 
 The sizer and picker hold **identical positions** (selection does not depend on
 sizing), so their picks, hit rate, and decay curve are the same; the entire +4.1%/yr
-gap between them is the sizer's conviction sizing, which the slope certifies (t=4.68,
-interval clear of zero) and the picker lacks (t=0.51, interval straddling zero).
+gap between them is the realized sizing contribution on this controlled synthetic path;
+the slope detects association between size and contribution (t=4.68, interval clear of
+zero) while the picker's remains unresolved (t=0.51, interval straddling zero). This
+construction does not establish manager intent or a live conviction premium.
 
 ## 5. Reading the demo
 
@@ -624,12 +626,13 @@ identical set of positions:
   would have no idea *why* they differ.
 - **The sizing curve explains the entire gap.** Meridian's Fama–MacBeth sizing slope
   is **+0.0240, t = 7.84**, with a month-cluster bootstrap interval **[+0.0181,
-  +0.0299]** that clears zero: its bigger bets genuinely earned more, and its
-  conviction is worth the +11.6%/yr it adds over the equal-weight counterfactual.
+  +0.0299]** that clears zero: bigger synthetic positions earned more on this path.
+  The +11.6%/yr difference is a descriptive realized-path subtraction, not an
+  externally calibrated premium or evidence about intent.
   Kelso's slope is **+0.0101, t = 1.03**, interval **[−0.0083, +0.0293]** straddling
   zero: *on the very same picks*, there is no evidence its (absent) sizing helps or
-  hurts. The verdict is not "redeem Kelso" — it is "Kelso has real picks and is
-  leaving a conviction premium on the table; this is a sizing conversation."
+  hurts. The verdict is not "redeem Kelso" — it is a sizing conversation about
+  an unresolved slope, not a claim about the manager's mental state.
 
 **The alpha-decay curve.** Because the two managers share picks, they share this
 exhibit. The curve traces the directional idiosyncratic return by holding age; the

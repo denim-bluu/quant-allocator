@@ -5,6 +5,10 @@
 {% set alpha_mgr = (split | selectattr("role", "equalto", "alpha") | list)[0] %}
 {% set hedge_mgr = (split | selectattr("role", "equalto", "hedge") | list)[0] %}
 
+{% block card_data %}
+<script type="application/json" id="card-data">{"generator":"s5_shortbook","hit_rate_gate":{{ meta.short_trade_gate }}}</script>
+{% endblock %}
+
 {% block head_extra %}
 <link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/s5.css">
 {% endblock %}
@@ -12,10 +16,11 @@
 {% macro pct(x) %}{{ "%+.2f"|format(x * 100) }}%{% endmacro %}
 
 {% macro manager_panel(m) %}
+{% set default_borrow = m.borrow_dial[(meta.borrow_cost_annual / 0.005) | int] %}
 <article class="s5-manager s5-manager--{{ m.role }}" data-role="{{ m.role }}"
-         data-cum-hedge="{{ m.cum_hedge | tojson }}"
-         data-cum-alpha="{{ m.cum_alpha | tojson }}"
-         data-borrow-dial="{{ m.borrow_dial | tojson }}">
+         data-cum-hedge="{{ m.cum_hedge | tojson | forceescape }}"
+         data-cum-alpha="{{ m.cum_alpha | tojson | forceescape }}"
+         data-borrow-dial="{{ m.borrow_dial | tojson | forceescape }}">
   <header class="s5-manager__head">
     <h3 class="s5-manager__name">{{ m.name }}</h3>
     <span class="verdict-chip" data-verdict="{{ 'pos' if m.role == 'alpha' else 'neg' }}">
@@ -45,7 +50,10 @@
     <input type="range" class="s5-dial__range" min="0" max="{{ m.borrow_dial | length - 1 }}"
            value="{{ (meta.borrow_cost_annual / 0.005) | int }}" step="1"
            aria-label="borrow fee assumption">
-    <p class="s5-dial__readout" data-dial-readout></p>
+    <p class="s5-dial__readout" data-dial-readout>at {{ "%.1f"|format(default_borrow.fee * 100) }}%/yr borrow:
+      net {{ pct(default_borrow.net) }} ({{ pct(default_borrow.net_ci_lo) }} …
+      {{ pct(default_borrow.net_ci_hi) }}) —
+      {{ "still calibrated" if default_borrow.calibrated else "no detectable alpha" }}</p>
   </div>
 </article>
 {% endmacro %}
@@ -82,8 +90,8 @@
         the point net of borrow, the band its 90% interval, with a tick for the gross.</li>
       <li><strong>The borrow dial</strong> sweeps the flat fee across 0–5%/yr — drag it and watch
         Drybrook stay negative and Saxbridge stay positive.</li>
-      <li><strong>The hit-rate power gate</strong> renders the clustered t at the full window and
-        refuses at half — the trade count, not the manager, is the binding constraint.</li>
+      <li><strong>The hit-rate power gate</strong> refuses both displayed windows because 745 and
+        385 are below the approved 780-trade line. The borrow-adjusted alpha panels remain available.</li>
     </ul>
     <p>The full methodology is in the
       <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.</p>
@@ -99,20 +107,29 @@
   <h2 class="s5-gate__title">Short-side hit rate — power-gated</h2>
   <p class="s5-window">The demo window is ten years ({{ meta.months }} months),
     <strong>deliberately generous</strong>: even with a decade of positions the hit-rate
-    certification barely clears ({{ alpha_mgr.hit_full.trades }} round trips vs the
-    ~{{ meta.short_trade_gate }}-trade line), and at a realistic five-year window the gate refuses.</p>
+    estimate stays below the {{ meta.short_trade_gate }}-trade certification line; the
+    realistic five-year window is farther below it. Borrow-adjusted alpha remains reported.</p>
   <div class="s5-gate__toggle">
     {% for m in split %}
     <div class="s5-gate__row" data-role="{{ m.role }}">
       <span class="s5-gate__name">{{ m.name }}</span>
-      <span class="s5-gate__full">T={{ meta.months }}: hit rate
+      {% if m.hit_full.renders %}
+      <span class="s5-gate__full" data-hit-rate>T={{ meta.months }}: hit rate
         {{ "%.1f"|format(m.hit_full.hit_rate * 100) }}% (t = {{ "%+.2f"|format(m.hit_full.hit_t) }},
         {{ m.hit_full.trades }} round trips)</span>
-      <span class="s5-gate__marginal">{{ m.hit_full.trades }} of ~{{ m.hit_full.gate }} — below the certification line</span>
+      {% else %}
+      <div class="power-gate s5-gate__full">
+        <span class="power-gate__title">power gate · T={{ meta.months }}</span>
+        <p class="power-gate__reason">Insufficient N ({{ m.hit_full.trades }} round trips;
+          {{ m.hit_full.gate - m.hit_full.trades }} trades short of the
+          {{ m.hit_full.gate }} certification line) — the hit-rate point and clustered t are refused.</p>
+      </div>
+      {% endif %}
       <div class="power-gate s5-gate__reduced">
         <span class="power-gate__title">power gate · T={{ meta.toggle_months }}</span>
         <p class="power-gate__reason">Insufficient N ({{ m.hit_reduced.trades }} round trips;
-          gate ~{{ m.hit_reduced.gate }}) — the number is refused, not shown. A five-year window
+          {{ m.hit_reduced.gate - m.hit_reduced.trades }} trades short of the
+          {{ m.hit_reduced.gate }} certification line) — the number is refused, not shown. A five-year window
           of a {{ meta.n_short }}-name sleeve is lucky-draw territory.</p>
       </div>
     </div>

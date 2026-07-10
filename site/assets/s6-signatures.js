@@ -2,10 +2,10 @@
   "use strict";
 
   // Value -> pixel only (mirrors m3-alarms.js): the AUC rail spans the domain
-  // 0.5 -> 1.0. Read precomputed data attributes and place the band, the point,
+  // 0.0 -> 1.0. Read precomputed data attributes and place the band, the point,
   // and the two threshold marks (familywise significance floor + usability bar).
   // No computation, no fetch: the committed JSON is already the answer.
-  var LO = 0.5, HI = 1.0;
+  var LO = 0.0, HI = 1.0;
 
   function pct(auc) {
     var f = (auc - LO) / (HI - LO);
@@ -23,6 +23,7 @@
     var dot = stat.querySelector(".interval-stat__point");
     var floorMark = stat.querySelector(".s6-rail__floor");
     var barMark = stat.querySelector(".s6-rail__bar");
+    var nullMark = stat.querySelector(".s6-rail__null");
 
     if (band) {
       var left = pct(lo);
@@ -32,6 +33,7 @@
     if (dot) { dot.style.left = pct(point) + "%"; }
     if (floorMark) { floorMark.style.left = pct(floor) + "%"; }
     if (barMark) { barMark.style.left = pct(bar) + "%"; }
+    if (nullMark) { nullMark.style.left = pct(0.5) + "%"; }
   }
 
   function init() {

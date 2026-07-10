@@ -480,7 +480,7 @@
         "gate": 780,
         "hit_rate": 0.527667,
         "hit_t": 3.58149,
-        "renders": true,
+        "renders": false,
         "trades": 745
       },
       "hit_reduced": {
@@ -968,7 +968,7 @@
         "gate": 780,
         "hit_rate": 0.51,
         "hit_t": 1.264132,
-        "renders": true,
+        "renders": false,
         "trades": 745
       },
       "hit_reduced": {

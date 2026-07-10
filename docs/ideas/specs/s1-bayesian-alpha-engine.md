@@ -8,8 +8,8 @@
 ## 1. What this is
 
 This engine takes a roster of managers, each with a short track record of
-monthly returns, and produces for every one of them a **posterior alpha**: a
-skill estimate that has been corrected for how much of a track record is luck.
+monthly returns, and produces for every one of them a **posterior alpha**: an
+uncertainty-adjusted estimate shrunk toward the relevant strategy peer group.
 Alongside each estimate it reports an honest uncertainty band (a 90% credible
 interval), the probability that the manager's true skill is positive, and an
 advisory capital band. The audience is an allocator deciding whom to hire, whom
@@ -34,8 +34,7 @@ manager with a true annualized information ratio of 0.5 produces an expected
 t-statistic of only about $0.5\sqrt{60/12} \approx 1.1$. Against a standard 5%
 two-sided test, that is statistical power below 30% — the good manager fails to
 look significant more than two times in three. A ranking built directly on these
-estimates therefore rewards whoever got the luckiest draw, not whoever has the
-most skill. **Rankings built on raw OLS alpha hire the lucky.**
+estimates can therefore reward an extreme sampling draw rather than durable skill.
 
 The naive alternatives fail for reasons worth stating plainly. *Rank on trailing
 alpha* is the default, and it is exactly the failure above: the top of the list
@@ -45,11 +44,9 @@ manager, because at this sample size almost nobody clears the bar — and the fe
 who do are disproportionately the lucky. False-discovery-rate machinery, built
 for thousands of simultaneous tests, has nothing to work with at $n$ = tens of
 managers; there simply is not enough cross-sectional signal to estimate a null
-distribution. What shrinkage wins instead is *rank recovery under noise*: by
-borrowing strength across the cross-section, it produces an ordering that tracks
-true skill more reliably than any single-manager estimate can, and it carries
-its own uncertainty so the allocator knows when the ordering is not to be
-trusted.
+distribution. Shrinkage instead borrows strength across the cross-section and
+carries its own uncertainty. Whether that improves rank recovery is an empirical
+validation question, not a property established by the pinned gallery roster.
 
 The engine improves three decisions:
 
@@ -472,8 +469,9 @@ moves. Contrast Cinderbank Capital (B10): a raw +19.6% (rank #3) is pulled all
 the way down to +13.2% (rank #4), because its 36-month record earns a shrinkage
 weight of only 0.46 — the peer mean gets nearly as much say as its own number.
 Alderbrook Partners (A01) sits at the bottom: a raw −7.4% softens to −4.1%, with
-$P(\alpha > 0)$ of just 0.20. The lucky get pulled down, the unlucky get pulled
-up, and the ordering that survives is the one built on evidence.
+$P(\alpha > 0)$ of just 0.20. Extreme noisy estimates are pulled toward their
+peer mean. That produces a different, uncertainty-aware ordering; it does not by
+itself prove a better true-skill ordering.
 
 **How to read it.** Each visual element maps to a piece of the method:
 
@@ -494,8 +492,20 @@ up, and the ordering that survives is the one built on evidence.
 
 What an allocator should conclude: the raw ranking and the posterior ranking
 disagree for 7 of these 20 managers, and the disagreements are concentrated in
-the short-record, heavily-shrunk names. Sizing to the raw list would over-weight
-managers whose lead is not yet earned.
+the short-record, heavily-shrunk names. The exhibit demonstrates peer shrinkage,
+not better true-skill recovery: against the simulator's known truth, this pinned
+roster's posterior order is slightly worse than OLS. Repeated-grid rank recovery
+and live calibration remain binding gates before the order informs sizing.
+
+**Displayed-field reproduction map.**
+
+| Displayed field | JSON field | Generator | Enforcing test |
+| --- | --- | --- | --- |
+| OLS alpha and 90% interval | `managers[].ols_alpha.{point,ci_lo,ci_hi}` | `demo_data/s1_ledger.py` | `tests/demo_data/test_s1_ledger.py` |
+| Posterior alpha and 90% interval | `managers[].posterior_alpha.{point,ci_lo,ci_hi}` | `demo_data/s1_ledger.py` | `tests/demo_data/test_s1_ledger.py` |
+| OLS → posterior rank | `managers[].{ols_rank,posterior_rank}` | `demo_data/s1_ledger.py` | `tests/site/test_s1.py` |
+| Shrinkage weight and positive probability | `managers[].{shrinkage_weight,prob_positive}` | `demo_data/s1_ledger.py` | `tests/demo_data/test_s1_ledger.py` |
+| Advisory band | `managers[].advisory_band` | `demo_data/s1_ledger.py` | `tests/demo_data/test_s1_ledger.py` |
 
 ## 6. Honest limits & go-live
 

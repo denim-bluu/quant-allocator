@@ -1,4 +1,6 @@
+import json
 import shutil
+from html.parser import HTMLParser
 from pathlib import Path
 
 import yaml
@@ -25,6 +27,17 @@ def _load_publication_terms() -> tuple[str, ...]:
 
 
 _BANNED = _load_publication_terms()
+
+
+class _StructuredAttrs(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.values = []
+
+    def handle_starttag(self, tag, attrs):
+        for key, value in attrs:
+            if key in {"data-cum-hedge", "data-cum-alpha", "data-borrow-dial"}:
+                self.values.append((key, value))
 
 S5_CARD = {
     "id": "s5",
@@ -106,15 +119,34 @@ def test_fee_implication_line_pinned(tmp_path):
 
 def test_demo_window_copy_and_gate_toggle(tmp_path):
     html, _ = _build(tmp_path)
+    text = " ".join(html.split())
     # §8 ruling 2: the "deliberately generous" sentence is required, test-pinned.
     assert "deliberately generous" in html
     # The mandatory T=60 gate-refusal toggle with the trade arithmetic.
     assert "Insufficient N" in html
     assert "385" in html and "780" in html
     assert "power-gate" in html
-    # Coordinator ruling (binding): the T=120 hit rate carries the marginal-state annotation
-    # VERBATIM so it can never read as certified.
-    assert "745 of ~780 — below the certification line" in html
+    assert text.count("745 round trips; 35 trades short of the 780 certification line") == 2
+    assert text.count("385 round trips; 395 trades short of the 780 certification line") == 2
+    assert "52.8%" not in html
+    assert "t = +3.58" not in html
+    assert '"hit_rate"' not in html
+    assert '"hit_t"' not in html
+    assert "0.527667" not in html
+    assert "3.58149" not in html
+
+
+def test_structured_attributes_and_default_borrow_readouts(tmp_path):
+    html, _ = _build(tmp_path)
+    parser = _StructuredAttrs()
+    parser.feed(html)
+    assert len(parser.values) == 6
+    for _, value in parser.values:
+        json.loads(value)
+    assert 'data-borrow-dial="[{&#34;' in html
+    text = " ".join(html.split())
+    assert "at 2.0%/yr borrow: net +5.58% (+2.39% … +8.89%) — still calibrated" in text
+    assert "at 2.0%/yr borrow: net +0.66% (-2.27% … +3.62%) — no detectable alpha" in text
 
 
 def test_borrow_dial_and_tier_strip(tmp_path):

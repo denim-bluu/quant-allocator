@@ -635,13 +635,14 @@ How each element maps to the method:
 - **The forgone-alpha curve** = §3.5's $C(h)$ with its band: Redgate's rises
   and plateaus (the give-back accrues for ~3 months), Larkspur's dives. The
   **horizon slider** (H = 1..6) is the card's adjustable-output requirement —
-  drag it and watch the gap and its band recompute; the verdict does not live
+  move it and watch the gap, band, exit count, and curve switch among committed
+  precomputed states; the verdict does not live
   at one hand-picked horizon.
 - **The trend strip** = §3.7: yearly buckets render with wide bands; the
-  **quarterly toggle refuses** — at ~18 exits/quarter the worst-bucket standard
+  **quarterly view refuses** — at ~18 exits/quarter the worst-bucket standard
   error (≈ 820 bp) exceeds any plausible effect, and the PowerGate prints
   exactly that arithmetic instead of a chart. The refusal is the pitch.
-- **The tier tabs** = the §6.1 contract made visible: the P tab is the page;
+- **The tier rows** = the §6.1 contract made visible: the P row is the page;
   the E tab shows only a low-confidence descriptive chip ("turnover
   accelerates after gains — exit-behavior hint, not a measurement"); the
   R tab is a refusal card: *"Exit quality cannot be inferred from monthly

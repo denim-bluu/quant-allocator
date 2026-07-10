@@ -1,4 +1,6 @@
+import json
 import shutil
+from html.parser import HTMLParser
 from pathlib import Path
 
 import yaml
@@ -26,6 +28,17 @@ def _load_publication_terms() -> tuple[str, ...]:
 
 
 _BANNED = _load_publication_terms()
+
+
+class _HorizonAttrs(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.values = []
+
+    def handle_starttag(self, tag, attrs):
+        for key, value in attrs:
+            if key == "data-horizons":
+                self.values.append(value)
 
 # The exact fields the integration task will paste into cards.yaml to flip S4 live.
 _CARD = {
@@ -115,6 +128,29 @@ def test_horizon_slider_and_curve(tmp_path):
     assert 'id="s4-horizon"' in html
     assert "s4-curve" in html
     assert "Forward horizon" in html
+    parser = _HorizonAttrs()
+    parser.feed(html)
+    assert len(parser.values) == 5
+    for value in parser.values:
+        states = json.loads(value)
+        assert [state["horizon"] for state in states] == [1, 2, 3, 4, 5, 6]
+    assert 'data-horizons="[{&#34;' in html
+
+
+def test_horizon_control_updates_text_attributes_paths_and_rails(tmp_path):
+    html, out = _build(tmp_path)
+    js = (out / "assets" / "s4-sell.js").read_text(encoding="utf-8")
+    for marker in (
+        "dataset.lo", "dataset.point", "dataset.hi", "dataset.nExits",
+        "data-horizon-value", "drawCurve",
+        "interval-stat__band", "interval-stat__point",
+    ):
+        assert marker in js
+    assert 'data-horizon-value="point"' in html
+    assert 'data-horizon-value="range"' in html
+    assert 'data-horizon-value="exits"' in html
+    assert "quarterly toggle" not in html
+    assert "tier tabs" not in html
 
 
 def test_quarterly_trend_refused_with_arithmetic(tmp_path):

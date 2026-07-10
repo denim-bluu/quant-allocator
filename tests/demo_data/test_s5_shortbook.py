@@ -78,7 +78,7 @@ def test_borrow_dial_grid_is_precomputed(tmp_path):
 def test_trade_gate_toggle(tmp_path):
     data = _load(s5_shortbook.build(out_dir=tmp_path))
     for m in data["split"]:
-        assert m["hit_full"]["trades"] == 745 and m["hit_full"]["renders"] is True
+        assert m["hit_full"]["trades"] == 745 and m["hit_full"]["renders"] is False
         assert m["hit_reduced"]["trades"] == 385 and m["hit_reduced"]["renders"] is False
         assert m["hit_full"]["gate"] == 780
 

@@ -538,6 +538,12 @@ risk-free 2.0%/yr (synthetic). Every number below is the demo's actual output;
 the demo generator imports the same pipeline the live sheet would use, so the
 mapping from visual element to method is exact.
 
+**Decision first:** keep monitoring and open a fees-for-beta conversation; do not
+add on the point estimates. The known-truth construction exercises de-smoothing,
+interval estimation, factor attribution, and drawdown-refusal mechanics. It does
+not establish external calibration, predictive accuracy, or a conclusion about a
+live manager.
+
 - **De-smoothing panel.** Two side-by-side **interval stats**: reported Sharpe
   **0.71** (95% interval $[-0.26, 1.67]$) and de-smoothed Sharpe **0.60** (95%
   interval $[-0.29, 1.46]$). The fitted kernel is
@@ -568,6 +574,17 @@ drawdown), but every interval is wide and the alpha interval includes zero — s
 the honest read is "consistent with real skill, not yet demonstrated at this
 track length," which argues for continued monitoring and a fees-for-beta
 conversation rather than a conviction add.
+
+**Displayed-field reproduction map.**
+
+| Displayed field | JSON field | Generator | Enforcing test |
+| --- | --- | --- | --- |
+| Reported/de-smoothed Sharpe and intervals | `statistics.sharpe_{reported,desmoothed}` | `demo_data/s2_tearsheet.py` | `tests/demo_data/test_s2_tearsheet.py` |
+| Smoothing kernel and volatility ratio | `theta`, `unsmoothing.vol_ratio` | `demo_data/s2_tearsheet.py` | `tests/demo_data/test_s2_tearsheet.py` |
+| Alpha, interval, and factor betas | `statistics.alpha`, `factor_betas` | `demo_data/s2_tearsheet.py` | `tests/demo_data/test_s2_tearsheet.py` |
+| Alternative-beta chip | `alt_beta` | `demo_data/s2_tearsheet.py` | `tests/site/test_s2.py` |
+| Drawdown envelope and realized path | `drawdown_band` | `demo_data/s2_tearsheet.py` | `tests/demo_data/test_s2_tearsheet.py` |
+| Monthly-return strip | `monthly_returns` | `demo_data/s2_tearsheet.py` | `tests/site/test_s2.py` |
 
 ## 6. Honest limits & go-live
 
