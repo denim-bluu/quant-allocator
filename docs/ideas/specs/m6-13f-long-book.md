@@ -580,8 +580,10 @@ things are meant to jump out. First, the book *concentrates*: the effective brea
 annotation falls from **6.92 names to 2.78** across six quarters, while the Herfindahl
 more than doubles from **0.144 to 0.360**. The panel marks **Q6 as the quarter the top
 name (A0001) first crossed 50% of the reported book, reaching 56.1%** — "the quarter
-the concentration doubled," entirely from free data. Second, the concentration is a
-*hardening of old convictions*: the latest top-3 names (A0001, A0065, and A0038) each
+the concentration doubled." The fully synthetic exhibit illustrates what a live adapter
+could derive from free filing data; the displayed values do not come from a public feed.
+Second, the concentration is a *hardening of old convictions*: the latest top-3 names
+(A0001, A0065, and A0038) each
 carry a full **6-quarter** held bar, so this is doubling-down, not rotation. That is the
 engagement hook, stated as a question, never an accusation.
 

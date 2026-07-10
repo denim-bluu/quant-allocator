@@ -58,6 +58,12 @@ def test_centerpiece_has_concentration_persistence_and_moderate_overlap(tmp_path
     crossing = vesper["timeline"]["first_majority_crossing"]
     assert crossing is not None
     assert crossing["share"] > 0.50
+    crossing_quarter = next(
+        quarter for quarter in quarters if quarter["label"] == crossing["label"]
+    )
+    assert crossing["as_of"] == crossing_quarter["as_of"]
+    assert crossing["known_at"] == crossing_quarter["known_at"]
+    assert crossing["lag_days"] == 45
     latest_top_three = vesper["timeline"]["positions"][:3]
     assert len(latest_top_three) == 3
     assert all(row["quarters_held"] == 6 for row in latest_top_three)

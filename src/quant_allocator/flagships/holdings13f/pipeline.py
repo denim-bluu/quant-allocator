@@ -22,7 +22,8 @@ M6_FILING_LAG_DAYS = 45
 M6_CAVEATS = (
     "45-day staleness: every filing is labelled with as-of and known-at dates.",
     "Longs-only: shorts and net exposure are invisible to Form 13F.",
-    "Coverage holes: confidential-treatment, non-US, and non-equity positions may be missing.",
+    "Coverage holes: positions omitted under SEC withholding, non-US, and non-equity "
+    "positions may be missing.",
     "Option-notional distortion: option lines are excluded from v1 share calculations.",
 )
 

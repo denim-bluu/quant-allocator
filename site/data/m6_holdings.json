@@ -2,7 +2,7 @@
   "caveats": [
     "45-day staleness: every filing is labelled with as-of and known-at dates.",
     "Longs-only: shorts and net exposure are invisible to Form 13F.",
-    "Coverage holes: confidential-treatment, non-US, and non-equity positions may be missing.",
+    "Coverage holes: positions omitted under SEC withholding, non-US, and non-equity positions may be missing.",
     "Option-notional distortion: option lines are excluded from v1 share calculations."
   ],
   "filers": {
@@ -250,7 +250,10 @@
     },
     "timeline": {
       "first_majority_crossing": {
+        "as_of": "2024-06-30",
+        "known_at": "2024-08-14",
         "label": "Q6",
+        "lag_days": 45,
         "name": "A0001",
         "share": 0.560526
       },

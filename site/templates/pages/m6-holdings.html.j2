@@ -11,12 +11,17 @@
 {% block demo_content %}
 <section class="m6-intro">
   <p class="m6-headline">
-    A free public filing shows <strong>{{ v.name }}</strong>&rsquo;s visible long book compressing
+    This fully synthetic 13F-style filing crop shows
+    <strong>{{ v.name }}</strong>&rsquo;s visible long book compressing
     from {{ "%.1f"|format(quarters[0].effective_names) }} effective names to
     {{ "%.1f"|format(quarters[-1].effective_names) }}. The latest leader reaches
     {{ "%.1f"|format(quarters[-1].leader_share * 100) }}%, while the latest top three have
     remained visible for all six quarters. This is an engagement prompt, not a return prediction:
     <strong>Your reported book concentrated into one name &mdash; walk us through the conviction?</strong>
+  </p>
+  <p class="m6-receipt" data-receipt="headline">
+    Q1 as of {{ quarters[0].as_of }} &middot; known at {{ quarters[0].known_at }} &middot; 45-day lag;
+    Q6 as of {{ quarters[-1].as_of }} &middot; known at {{ quarters[-1].known_at }} &middot; 45-day lag
   </p>
 </section>
 
@@ -87,7 +92,10 @@
   {% if v.timeline.first_majority_crossing %}
   <p class="m6-crossing"><strong>{{ v.timeline.first_majority_crossing.label }}</strong> is the
     first reported quarter in which {{ v.timeline.first_majority_crossing.name }} exceeds 50%
-    ({{ "%.1f"|format(v.timeline.first_majority_crossing.share * 100) }}%).</p>
+    ({{ "%.1f"|format(v.timeline.first_majority_crossing.share * 100) }}%).
+    <small data-receipt="crossing">as of {{ v.timeline.first_majority_crossing.as_of }} &middot;
+      known at {{ v.timeline.first_majority_crossing.known_at }} &middot;
+      {{ v.timeline.first_majority_crossing.lag_days }}-day lag</small></p>
   {% endif %}
 </section>
 
@@ -160,6 +168,6 @@ Herfindahl, inverse-Herfindahl effective names, quarters-held, and cosine overla
 functions of that crop. No estimator or return model is fitted.</p>
 <p>Coverage divides usable visible long weight by the simulator&rsquo;s true positive long weight.
 The denominator is known only because this exhibit is synthetic. Live coverage must be inferred
-from disclosed gross, confidential-treatment evidence, and option share; the exact 45-calendar-day
+from disclosed gross, withheld-position evidence, and option share; the exact 45-calendar-day
 staleness distortion audit remains deferred because the simulator has monthly, not daily, holdings.</p>
 {% endblock %}

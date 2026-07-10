@@ -135,7 +135,14 @@ def _timeline(panel: pd.DataFrame) -> dict:
         }
         quarters.append(quarter)
         if first_crossing is None and leader_share > 0.50:
-            first_crossing = {"label": quarter["label"], "share": leader_share, "name": leader}
+            first_crossing = {
+                "label": quarter["label"],
+                "share": leader_share,
+                "name": leader,
+                "as_of": as_of,
+                "known_at": known_at,
+                "lag_days": hp.M6_FILING_LAG_DAYS,
+            }
     positions = [
         {
             "name": str(name),
