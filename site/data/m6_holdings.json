@@ -1,0 +1,438 @@
+{
+  "caveats": [
+    "45-day staleness: every filing is labelled with as-of and known-at dates.",
+    "Longs-only: shorts and net exposure are invisible to Form 13F.",
+    "Coverage holes: confidential-treatment, non-US, and non-equity positions may be missing.",
+    "Option-notional distortion: option lines are excluded from v1 share calculations."
+  ],
+  "filers": {
+    "Bexley Court Capital": "synthetic",
+    "Corbin Vale Capital": "synthetic",
+    "Hensley Park Advisors": "synthetic",
+    "Kettering Partners": "synthetic",
+    "Tanager Hill Capital": "synthetic",
+    "Vesper Lane Capital": "synthetic"
+  },
+  "hensley": {
+    "as_of": "2024-06-30",
+    "audit": {
+      "coverage": 0.2,
+      "crop_effective_names": 2.0,
+      "crop_hhi": 0.5,
+      "exact_45_day_staleness_audit": false,
+      "hhi_distortion": 0.4,
+      "true_effective_names": 10.0,
+      "true_hhi": 0.1
+    },
+    "concentration": null,
+    "coverage": 0.2,
+    "gate": {
+      "pass": false,
+      "threshold": 0.6
+    },
+    "known_at": "2024-08-14",
+    "name": "Hensley Park Advisors",
+    "option_heavy": false,
+    "option_share": 0.0,
+    "overlap": null,
+    "persistence": {
+      "A0061": 6,
+      "A0069": 6
+    },
+    "timeline": {
+      "first_majority_crossing": null,
+      "leader": "A0061",
+      "positions": [
+        {
+          "name": "A0061",
+          "quarters_held": 6,
+          "shares": [
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "name": "A0069",
+          "quarters_held": 6,
+          "shares": [
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      ],
+      "quarters": [
+        {
+          "as_of": "2023-03-31",
+          "effective_names": 2.0,
+          "hhi": 0.5,
+          "known_at": "2023-05-15",
+          "label": "Q1",
+          "lag_days": 45,
+          "leader_share": 0.5,
+          "period": "2023-03",
+          "top5_weight": 1.0
+        },
+        {
+          "as_of": "2023-06-30",
+          "effective_names": 2.0,
+          "hhi": 0.5,
+          "known_at": "2023-08-14",
+          "label": "Q2",
+          "lag_days": 45,
+          "leader_share": 0.5,
+          "period": "2023-06",
+          "top5_weight": 1.0
+        },
+        {
+          "as_of": "2023-09-30",
+          "effective_names": 2.0,
+          "hhi": 0.5,
+          "known_at": "2023-11-14",
+          "label": "Q3",
+          "lag_days": 45,
+          "leader_share": 0.5,
+          "period": "2023-09",
+          "top5_weight": 1.0
+        },
+        {
+          "as_of": "2023-12-31",
+          "effective_names": 2.0,
+          "hhi": 0.5,
+          "known_at": "2024-02-14",
+          "label": "Q4",
+          "lag_days": 45,
+          "leader_share": 0.5,
+          "period": "2023-12",
+          "top5_weight": 1.0
+        },
+        {
+          "as_of": "2024-03-31",
+          "effective_names": 2.0,
+          "hhi": 0.5,
+          "known_at": "2024-05-15",
+          "label": "Q5",
+          "lag_days": 45,
+          "leader_share": 0.5,
+          "period": "2024-03",
+          "top5_weight": 1.0
+        },
+        {
+          "as_of": "2024-06-30",
+          "effective_names": 2.0,
+          "hhi": 0.5,
+          "known_at": "2024-08-14",
+          "label": "Q6",
+          "lag_days": 45,
+          "leader_share": 0.5,
+          "period": "2024-06",
+          "top5_weight": 1.0
+        }
+      ]
+    }
+  },
+  "meta": {
+    "coverage_min": 0.6,
+    "eligibility_assignment": "round-count, floored-stride, authored without RNG",
+    "generator": "m6_holdings",
+    "held_for_gate": true,
+    "manager_seeds": [
+      68,
+      39,
+      123,
+      135,
+      158,
+      900
+    ],
+    "market_seed": 20260708,
+    "n_assets": 80,
+    "n_months": 18,
+    "noneligible_dial_basis": "long slots; gross coverage measured ex post",
+    "option_flag_share": 0.1,
+    "overlap_depth": 25,
+    "persistence_topk": 10,
+    "top_n": 5
+  },
+  "peers": [
+    {
+      "latest_reported_names": 9,
+      "name": "Corbin Vale Capital"
+    },
+    {
+      "latest_reported_names": 9,
+      "name": "Bexley Court Capital"
+    },
+    {
+      "latest_reported_names": 9,
+      "name": "Tanager Hill Capital"
+    },
+    {
+      "latest_reported_names": 9,
+      "name": "Kettering Partners"
+    }
+  ],
+  "short_interest": {
+    "status": "requires FINRA adapter",
+    "top_longs": [
+      "A0001",
+      "A0065",
+      "A0038",
+      "A0011",
+      "A0061"
+    ]
+  },
+  "validation": {
+    "crop_vs_true": [
+      {
+        "coverage": 0.822493,
+        "crop_effective_names": 2.780343,
+        "crop_hhi": 0.359668,
+        "exact_45_day_staleness_audit": false,
+        "hhi_distortion": 0.084846,
+        "true_effective_names": 3.638716,
+        "true_hhi": 0.274822
+      },
+      {
+        "coverage": 0.2,
+        "crop_effective_names": 2.0,
+        "crop_hhi": 0.5,
+        "exact_45_day_staleness_audit": false,
+        "hhi_distortion": 0.4,
+        "true_effective_names": 10.0,
+        "true_hhi": 0.1
+      }
+    ],
+    "staleness_note": "The monthly simulator cannot run an exact 45-calendar-day distortion audit; the statutory receipt is rendered, and the exact-lag audit remains deferred."
+  },
+  "vesper": {
+    "as_of": "2024-06-30",
+    "audit": {
+      "coverage": 0.822493,
+      "crop_effective_names": 2.780343,
+      "crop_hhi": 0.359668,
+      "exact_45_day_staleness_audit": false,
+      "hhi_distortion": 0.084846,
+      "true_effective_names": 3.638716,
+      "true_hhi": 0.274822
+    },
+    "concentration": {
+      "effective_names": 2.780343,
+      "hhi": 0.359668,
+      "top5_weight": 0.952513
+    },
+    "coverage": 0.822493,
+    "gate": {
+      "pass": true,
+      "threshold": 0.6
+    },
+    "known_at": "2024-08-14",
+    "name": "Vesper Lane Capital",
+    "option_heavy": false,
+    "option_share": 0.0,
+    "overlap": 0.243633,
+    "persistence": {
+      "A0001": 6,
+      "A0011": 6,
+      "A0037": 6,
+      "A0038": 6,
+      "A0054": 6,
+      "A0061": 6,
+      "A0065": 6,
+      "A0068": 6,
+      "A0072": 6
+    },
+    "timeline": {
+      "first_majority_crossing": {
+        "label": "Q6",
+        "name": "A0001",
+        "share": 0.560526
+      },
+      "leader": "A0001",
+      "positions": [
+        {
+          "name": "A0001",
+          "quarters_held": 6,
+          "shares": [
+            0.095294,
+            0.059837,
+            0.004877,
+            0.141786,
+            0.041448,
+            0.560526
+          ]
+        },
+        {
+          "name": "A0065",
+          "quarters_held": 6,
+          "shares": [
+            0.067187,
+            0.231995,
+            0.183594,
+            0.299274,
+            0.090501,
+            0.140299
+          ]
+        },
+        {
+          "name": "A0038",
+          "quarters_held": 6,
+          "shares": [
+            0.105278,
+            0.073255,
+            0.1414,
+            0.06867,
+            0.131227,
+            0.13288
+          ]
+        },
+        {
+          "name": "A0011",
+          "quarters_held": 6,
+          "shares": [
+            0.210872,
+            0.061341,
+            0.097843,
+            0.006989,
+            0.190022,
+            0.07296
+          ]
+        },
+        {
+          "name": "A0061",
+          "quarters_held": 6,
+          "shares": [
+            0.065005,
+            0.040228,
+            0.151689,
+            0.179419,
+            0.235639,
+            0.045849
+          ]
+        },
+        {
+          "name": "A0037",
+          "quarters_held": 6,
+          "shares": [
+            0.151431,
+            0.204538,
+            0.009613,
+            0.108413,
+            0.021811,
+            0.019584
+          ]
+        },
+        {
+          "name": "A0072",
+          "quarters_held": 6,
+          "shares": [
+            0.106921,
+            0.269726,
+            0.081959,
+            0.025111,
+            0.083268,
+            0.016003
+          ]
+        },
+        {
+          "name": "A0054",
+          "quarters_held": 6,
+          "shares": [
+            0.006451,
+            0.056552,
+            0.085939,
+            0.000293,
+            0.109655,
+            0.007048
+          ]
+        },
+        {
+          "name": "A0068",
+          "quarters_held": 6,
+          "shares": [
+            0.191562,
+            0.002526,
+            0.243084,
+            0.170045,
+            0.096428,
+            0.004851
+          ]
+        }
+      ],
+      "quarters": [
+        {
+          "as_of": "2023-03-31",
+          "effective_names": 6.921754,
+          "hhi": 0.144472,
+          "known_at": "2023-05-15",
+          "label": "Q1",
+          "lag_days": 45,
+          "leader_share": 0.095294,
+          "period": "2023-03",
+          "top5_weight": 0.766064
+        },
+        {
+          "as_of": "2023-06-30",
+          "effective_names": 5.378015,
+          "hhi": 0.185942,
+          "known_at": "2023-08-14",
+          "label": "Q2",
+          "lag_days": 45,
+          "leader_share": 0.059837,
+          "period": "2023-06",
+          "top5_weight": 0.840856
+        },
+        {
+          "as_of": "2023-09-30",
+          "effective_names": 6.265945,
+          "hhi": 0.159593,
+          "known_at": "2023-11-14",
+          "label": "Q3",
+          "lag_days": 45,
+          "leader_share": 0.004877,
+          "period": "2023-09",
+          "top5_weight": 0.817611
+        },
+        {
+          "as_of": "2023-12-31",
+          "effective_names": 5.321326,
+          "hhi": 0.187923,
+          "known_at": "2024-02-14",
+          "label": "Q4",
+          "lag_days": 45,
+          "leader_share": 0.141786,
+          "period": "2023-12",
+          "top5_weight": 0.898937
+        },
+        {
+          "as_of": "2024-03-31",
+          "effective_names": 6.77989,
+          "hhi": 0.147495,
+          "known_at": "2024-05-15",
+          "label": "Q5",
+          "lag_days": 45,
+          "leader_share": 0.041448,
+          "period": "2024-03",
+          "top5_weight": 0.762971
+        },
+        {
+          "as_of": "2024-06-30",
+          "effective_names": 2.780343,
+          "hhi": 0.359668,
+          "known_at": "2024-08-14",
+          "label": "Q6",
+          "lag_days": 45,
+          "leader_share": 0.560526,
+          "period": "2024-06",
+          "top5_weight": 0.952513
+        }
+      ]
+    }
+  }
+}
