@@ -48,17 +48,41 @@ LANE_HEADINGS = {
     "X": "X — Meta / infrastructure",
 }
 MARKDOWN_EXTENSIONS = ["tables", "fenced_code", "toc"]
-MATH_PATTERN = (
-    r"(?<!\\)\$\$(?:\\.|[^\\$]|\$(?!\$))+?(?<!\\)\$\$"
-    r"|(?<![\\$])\$(?!\$)(?:\\.|[^\\$\n])+?(?<!\\)\$(?!\$)"
-)
+MATH_OPEN_PATTERN = r"(?<!\\)(?P<slash_pairs>(?:\\\\)*)(?P<delimiter>\$\$|\$(?!\$))"
+
+
+def _preceding_backslashes(data: str, index: int) -> int:
+    count = 0
+    while index > count and data[index - count - 1] == "\\":
+        count += 1
+    return count
+
+
+def _closing_math_delimiter(data: str, start: int, delimiter: str) -> int | None:
+    """Find a matching delimiter whose preceding backslash run has even parity."""
+    index = start
+    while index < len(data):
+        if delimiter == "$" and data[index] == "\n":
+            return None
+        if data.startswith(delimiter, index) and _preceding_backslashes(data, index) % 2 == 0:
+            if delimiter == "$" and index + 1 < len(data) and data[index + 1] == "$":
+                index += 1
+                continue
+            return index
+        index += 1
+    return None
 
 
 class _MathInlineProcessor(InlineProcessor):
     """Keep balanced TeX delimiters opaque to Markdown's escape/emphasis passes."""
 
     def handleMatch(self, match, data):  # noqa: N802 - Python-Markdown public API
-        return AtomicString(match.group(0)), match.start(0), match.end(0)
+        delimiter = match.group("delimiter")
+        close_start = _closing_math_delimiter(data, match.end(0), delimiter)
+        if close_start is None:
+            return None, None, None
+        close_end = close_start + len(delimiter)
+        return AtomicString(data[match.start(0) : close_end]), match.start(0), close_end
 
 
 class _EscapedDollarInlineProcessor(InlineProcessor):
@@ -74,7 +98,9 @@ class _MathProtectionExtension(Extension):
     """Protect code first, then TeX, then Markdown escapes and emphasis."""
 
     def extendMarkdown(self, md):  # noqa: N802 - Python-Markdown public API
-        md.inlinePatterns.register(_MathInlineProcessor(MATH_PATTERN, md), "protected_math", 186)
+        md.inlinePatterns.register(
+            _MathInlineProcessor(MATH_OPEN_PATTERN, md), "protected_math", 186
+        )
         md.inlinePatterns.register(
             _EscapedDollarInlineProcessor(r"\\\$", md), "escaped_dollar", 185
         )

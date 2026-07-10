@@ -10,11 +10,6 @@ from pathlib import Path
 
 from quant_allocator.site.build import build
 
-MATH_PAIR_RE = re.compile(
-    r"(?<!\\)\$\$(?P<display>(?:\\.|[^\\$]|\$(?!\$))+?)(?<!\\)\$\$"
-    r"|(?<![\\$])\$(?!\$)(?P<inline>(?:\\.|[^\\$\n])+?)(?<!\\)\$(?!\$)",
-    re.DOTALL,
-)
 FENCED_CODE_RE = re.compile(r"^```.*?^```[ \t]*$", re.MULTILINE | re.DOTALL)
 INLINE_CODE_RE = re.compile(r"`[^`]*`")
 SPEC_BODY_RE = re.compile(
@@ -42,11 +37,43 @@ class _MathTextCollector(HTMLParser):
             self.text_nodes.append(data)
 
 
+def _test_preceding_backslashes(text: str, index: int) -> int:
+    count = 0
+    while index > count and text[index - count - 1] == "\\":
+        count += 1
+    return count
+
+
 def _expressions_in_text(text: str) -> list[str]:
-    return [
-        match.group("display") if match.group("display") is not None else match.group("inline")
-        for match in MATH_PAIR_RE.finditer(text)
-    ]
+    """Independent delimiter scanner; intentionally does not reuse the production regex."""
+    expressions = []
+    index = 0
+    while index < len(text):
+        if text[index] != "$" or _test_preceding_backslashes(text, index) % 2:
+            index += 1
+            continue
+        delimiter = "$$" if text.startswith("$$", index) else "$"
+        if delimiter == "$" and index > 0 and text[index - 1] == "$":
+            index += 1
+            continue
+        content_start = index + len(delimiter)
+        close = content_start
+        while close < len(text):
+            if delimiter == "$" and text[close] == "\n":
+                close = -1
+                break
+            if text.startswith(delimiter, close) and _test_preceding_backslashes(text, close) % 2 == 0:
+                if delimiter == "$" and close + 1 < len(text) and text[close + 1] == "$":
+                    close += 1
+                    continue
+                break
+            close += 1
+        if close < 0 or close >= len(text):
+            index = content_start
+            continue
+        expressions.append(text[content_start:close])
+        index = close + len(delimiter)
+    return expressions
 
 
 def _math_expressions(rendered_body: str) -> list[str]:
@@ -183,6 +210,45 @@ def test_spec_markdown_protects_tex_before_inline_formatting(tmp_path):
         [{"spec": "t1", "index": 1, "expression": inline_expression}]
     )
     assert result.returncode == 0, result.stderr
+
+
+def test_math_delimiters_use_even_odd_backslash_parity(tmp_path):
+    site = _fixture_site(tmp_path)
+    spec = tmp_path / "docs" / "ideas" / "specs" / "t1.md"
+    source = (
+        "# Parity\n\n"
+        r"Even opening \\$x_i$; even inline close $y_i\\$."
+        "\n\n"
+        r"Even display opening \\$$z_i\\$$."
+    )
+    spec.write_text(source, encoding="utf-8")
+
+    build(site, tmp_path / "out")
+
+    body = _rendered_spec_bodies(tmp_path / "out")["t1"]
+    active = ["x_i", r"y_i\\", r"z_i\\"]
+    assert _source_math_expressions(source) == active
+    assert _math_expressions(body) == active
+    result = _katex_result(
+        [
+            {"spec": "t1", "index": index, "expression": expression}
+            for index, expression in enumerate(active, start=1)
+        ]
+    )
+    assert result.returncode == 0, result.stderr
+
+    escaped_source = (
+        "# Escaped parity\n\n"
+        r"Odd inline opening and close: \$not_math\$."
+        "\n\n"
+        r"Odd display opening and close: \$\$not_display\$\$."
+    )
+    spec.write_text(escaped_source, encoding="utf-8")
+    build(site, tmp_path / "escaped-out")
+    escaped_body = _rendered_spec_bodies(tmp_path / "escaped-out")["t1"]
+    assert _source_math_expressions(escaped_source) == []
+    assert _math_expressions(escaped_body) == []
+    assert escaped_body.count('class="escaped-dollar"') == 6
 
 
 def test_all_live_specs_have_contiguous_balanced_katex_parseable_math(tmp_path):
