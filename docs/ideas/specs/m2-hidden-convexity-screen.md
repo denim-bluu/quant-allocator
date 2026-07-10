@@ -1,7 +1,7 @@
 # M2 · Hidden-Convexity / Short-Vol Screen — Method Spec
 
 **Date:** 2026-07-07
-**Status:** Draft — pending method review
+**Status:** Reviewed — method gate passed 2026-07-07 (rulings in §8)
 **Card:** [`docs/ideas/2026-07-05-idea-cards.md`](../2026-07-05-idea-cards.md) § M2
 **Demo:** gallery page `m2.html` (wave-2 batch 1; two-manager convexity screen, fully synthetic, §5)
 

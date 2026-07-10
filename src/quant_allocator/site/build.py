@@ -9,11 +9,15 @@ from __future__ import annotations
 
 import json
 import shutil
+import xml.etree.ElementTree as etree
 from pathlib import Path
 
 import markdown
 import yaml
 from jinja2 import Environment, FileSystemLoader
+from markdown.extensions import Extension
+from markdown.inlinepatterns import InlineProcessor
+from markdown.util import AtomicString
 
 REQUIRED_KEYS = {"id", "title", "lane", "one_liner", "decisions", "tiers", "status"}
 OPTIONAL_KEYS = {
@@ -44,6 +48,40 @@ LANE_HEADINGS = {
     "X": "X — Meta / infrastructure",
 }
 MARKDOWN_EXTENSIONS = ["tables", "fenced_code", "toc"]
+MATH_PATTERN = (
+    r"(?<!\\)\$\$(?:.+?)(?<!\\)\$\$"
+    r"|(?<![\\$])\$(?!\$)(?:[^\n]+?)(?<![\\$])\$(?!\$)"
+)
+
+
+class _MathInlineProcessor(InlineProcessor):
+    """Keep balanced TeX delimiters opaque to Markdown's escape/emphasis passes."""
+
+    def handleMatch(self, match, data):  # noqa: N802 - Python-Markdown public API
+        return AtomicString(match.group(0)), match.start(0), match.end(0)
+
+
+class _EscapedDollarInlineProcessor(InlineProcessor):
+    r"""Render ``\$`` as visible currency without offering it to KaTeX as a delimiter."""
+
+    def handleMatch(self, match, data):  # noqa: N802 - Python-Markdown public API
+        span = etree.Element("span", {"class": "escaped-dollar"})
+        span.text = AtomicString("$")
+        return span, match.start(0), match.end(0)
+
+
+class _MathProtectionExtension(Extension):
+    """Protect code first, then TeX, then Markdown escapes and emphasis."""
+
+    def extendMarkdown(self, md):  # noqa: N802 - Python-Markdown public API
+        md.inlinePatterns.register(
+            _EscapedDollarInlineProcessor(r"\\\$", md), "escaped_dollar", 186
+        )
+        md.inlinePatterns.register(_MathInlineProcessor(MATH_PATTERN, md), "protected_math", 185)
+
+
+def _markdown_extensions() -> list[str | Extension]:
+    return [*MARKDOWN_EXTENSIONS, _MathProtectionExtension()]
 
 
 class BuildError(Exception):
@@ -85,9 +123,7 @@ def _validate_entry(entry: object, index: int, path: Path, site_dir: Path) -> No
 
     missing = REQUIRED_KEYS - entry.keys()
     if missing:
-        raise BuildError(
-            f"{path}: card '{card_id}' is missing required keys: {sorted(missing)}"
-        )
+        raise BuildError(f"{path}: card '{card_id}' is missing required keys: {sorted(missing)}")
 
     unknown = entry.keys() - ALLOWED_KEYS
     if unknown:
@@ -213,7 +249,7 @@ def _render_specs(env: Environment, cards: list[dict], site_dir: Path, out_dir: 
             continue
         source = specs_dir / card["spec"]
         body_html = markdown.markdown(
-            source.read_text(encoding="utf-8"), extensions=MARKDOWN_EXTENSIONS
+            source.read_text(encoding="utf-8"), extensions=_markdown_extensions()
         )
         html = template.render(
             page_title=card["title"],
@@ -225,9 +261,7 @@ def _render_specs(env: Environment, cards: list[dict], site_dir: Path, out_dir: 
         (out_specs / f"{card['id']}.html").write_text(html, encoding="utf-8")
 
 
-def _render_demo_pages(
-    env: Environment, cards: list[dict], site_dir: Path, out_dir: Path
-) -> None:
+def _render_demo_pages(env: Environment, cards: list[dict], site_dir: Path, out_dir: Path) -> None:
     for card in cards:
         if card["status"] != "live":
             continue
@@ -262,9 +296,7 @@ def _lint_outputs(cards: list[dict], out_dir: Path) -> None:
                 )
         else:
             if "synthetic-badge" not in html:
-                raise BuildError(
-                    f"{page_path}: card '{card['id']}' output missing synthetic-badge"
-                )
+                raise BuildError(f"{page_path}: card '{card['id']}' output missing synthetic-badge")
             if "golive-box" not in html and "golive-replaced" not in html:
                 raise BuildError(
                     f"{page_path}: card '{card['id']}' output missing golive-box "

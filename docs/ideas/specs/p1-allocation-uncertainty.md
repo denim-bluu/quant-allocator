@@ -199,7 +199,7 @@ $\alpha$ and return covariance $\Sigma$ across $n$ managers, the unconstrained
 mean-variance investor with risk aversion $\gamma$ holds
 
 $$
-w^\* = \frac{1}{\gamma}\,\Sigma^{-1}\alpha
+w^* = \frac{1}{\gamma}\,\Sigma^{-1}\alpha
 $$
 
 where:
@@ -211,18 +211,18 @@ where:
   returns; $\Sigma^{-1}$ is its inverse.
 - $\gamma$ — the investor's risk-aversion coefficient; it scales the overall
   gross but cancels once weights are normalized to a budget.
-- $w^\*$ — the optimal weight vector *if $\alpha$ and $\Sigma$ were known*.
+- $w^*$ — the optimal weight vector *if $\alpha$ and $\Sigma$ were known*.
 
 In words: tilt toward high alpha, penalize variance, and — through
 $\Sigma^{-1}$ — exploit correlations by pairing longs against shorts. Every
 term of that sentence is correct at true parameters and dangerous at
 estimated ones:
 
-- **Selection on noise.** $w^\*(\hat\alpha)$ loads on the largest entries of
+- **Selection on noise.** $w^*(\hat\alpha)$ loads on the largest entries of
   $\hat\alpha$; conditional on being largest, an estimate is biased upward
   ($\mathbb{E}[\eta_i \mid \hat\alpha_i \text{ ranked top}] > 0$). The
   portfolio concentrates in the names whose luck was best, and the in-sample
-  portfolio alpha $\hat\alpha^\top w^\*(\hat\alpha)$ overstates the
+  portfolio alpha $\hat\alpha^\top w^*(\hat\alpha)$ overstates the
   achievable alpha — the optimizer *maximizes into the error*.
 - **Correlation leverage.** As §3.2's closed form shows, for correlated
   assets the tilt is driven by alpha *differences* scaled by
