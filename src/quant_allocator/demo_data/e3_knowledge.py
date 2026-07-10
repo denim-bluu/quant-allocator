@@ -47,6 +47,36 @@ APPROVED_NAMES = (
     "Selby Point Advisors",
     "Wexford Green Capital",
 )
+RELATIONSHIP_RECORD_ID = "E3-RELATIONSHIPS"
+RELATIONSHIP_RECORD_AS_OF = "2024-06"
+_RELATIONSHIP_SENTENCES = (
+    "E3-RELATIONSHIPS is an authored relationship record dated 2024-06.",
+    "Corvid Lane Capital is an Equity long/short manager at tier R, granted 2024-01.",
+    "Selby Point Advisors is an Equity long/short manager at tier R, granted 2023-01.",
+    "Wexford Green Capital is an Equity long/short manager at tier R, granted 2024-01.",
+    "Elena Voss is a Portfolio manager.",
+    "Priya Anand is a Portfolio manager.",
+    "Elena Voss was employed by Corvid Lane Capital from 2024-01 with no recorded end date.",
+    "Elena Voss was employed by Selby Point Advisors from 2020-01 through 2023-12.",
+    "Priya Anand was employed by Selby Point Advisors from 2020-01 with no recorded end date.",
+    "Elena Voss authored document L-2024Q1.",
+    "Elena Voss authored document MTG-2024-05.",
+    "Priya Anand authored document L-2023Q4.",
+    "Document L-2024Q1 is attributed to Corvid Lane Capital.",
+    "Document DDQ-2024 is attributed to Corvid Lane Capital.",
+    "Document L-2023Q4 is attributed to Selby Point Advisors.",
+    "Document DDQ-WEX is attributed to Wexford Green Capital.",
+    "Meeting M-2024-05 occurred in 2024-05 with attendee Elena Voss and linked document MTG-2024-05.",
+    "View V-LIQ-LETTER is a neutral-explicit quarterly view with conviction 2.",
+    "View V-LIQ-MEETING is a neutral-explicit stress view with conviction 2.",
+    "Theme LIQ is labelled Liquidity.",
+    "Document L-2024Q1 expresses view V-LIQ-LETTER.",
+    "Document MTG-2024-05 expresses view V-LIQ-MEETING.",
+    "View V-LIQ-LETTER is about theme LIQ.",
+    "View V-LIQ-MEETING is about theme LIQ.",
+    "View V-LIQ-MEETING was discussed at meeting M-2024-05.",
+)
+RELATIONSHIP_RECORD_TEXT = " ".join(_RELATIONSHIP_SENTENCES)
 
 _NODE_ID = {
     "strategy": "strategy_id",
@@ -87,19 +117,16 @@ def _span(documents: dict[str, Document], doc_id: str, index: int = 0) -> str:
     return sentence
 
 
-def _fact(
-    documents: dict[str, Document], provenance_doc_id: str, span_index: int = 0, **values
-) -> dict:
+def _relationship_fact(span_index: int, **values) -> dict:
     return {
         **values,
-        "source_doc": provenance_doc_id,
-        "source_span": _span(documents, provenance_doc_id, span_index),
-        "as_of": documents[provenance_doc_id].as_of,
+        "source_doc": RELATIONSHIP_RECORD_ID,
+        "source_span": _RELATIONSHIP_SENTENCES[span_index],
+        "as_of": RELATIONSHIP_RECORD_AS_OF,
     }
 
 
 def _graph_fixture(corpus: list[Document]) -> GraphFixture:
-    documents = {document.doc_id: document for document in corpus}
     document_rows = [
         {
             "doc_id": document.doc_id,
@@ -114,20 +141,30 @@ def _graph_fixture(corpus: list[Document]) -> GraphFixture:
         }
         for document in corpus
     ]
+    document_rows.append(
+        {
+            "doc_id": RELATIONSHIP_RECORD_ID,
+            "doc_type": "relationship_record",
+            "text": RELATIONSHIP_RECORD_TEXT,
+            "date": RELATIONSHIP_RECORD_AS_OF,
+            "file_path": "authored/E3-RELATIONSHIPS.txt",
+            "ingest_date": RELATIONSHIP_RECORD_AS_OF,
+            "source_doc": RELATIONSHIP_RECORD_ID,
+            "source_span": _RELATIONSHIP_SENTENCES[0],
+            "as_of": RELATIONSHIP_RECORD_AS_OF,
+        }
+    )
     return GraphFixture(
         tables={
             "strategy": [
-                _fact(
-                    documents,
-                    "L-2024Q1",
+                _relationship_fact(
+                    1,
                     strategy_id="ELS",
                     label="Equity long/short",
                 )
             ],
             "manager": [
-                _fact(
-                    documents,
-                    "L-2024Q1",
+                _relationship_fact(
                     1,
                     manager_id="CLC",
                     name="Corvid Lane Capital",
@@ -135,19 +172,16 @@ def _graph_fixture(corpus: list[Document]) -> GraphFixture:
                     strategy_id="ELS",
                     tier_grant_date="2024-01",
                 ),
-                _fact(
-                    documents,
-                    "L-2023Q4",
+                _relationship_fact(
+                    2,
                     manager_id="SPA",
                     name="Selby Point Advisors",
                     tier="R",
                     strategy_id="ELS",
                     tier_grant_date="2023-01",
                 ),
-                _fact(
-                    documents,
-                    "DDQ-WEX",
-                    1,
+                _relationship_fact(
+                    3,
                     manager_id="WGC",
                     name="Wexford Green Capital",
                     tier="R",
@@ -156,16 +190,14 @@ def _graph_fixture(corpus: list[Document]) -> GraphFixture:
                 ),
             ],
             "person": [
-                _fact(
-                    documents,
-                    "MTG-2024-05",
+                _relationship_fact(
+                    4,
                     person_id="EV",
                     name="Elena Voss",
                     role="Portfolio manager",
                 ),
-                _fact(
-                    documents,
-                    "L-2023Q4",
+                _relationship_fact(
+                    5,
                     person_id="PA",
                     name="Priya Anand",
                     role="Portfolio manager",
@@ -173,17 +205,15 @@ def _graph_fixture(corpus: list[Document]) -> GraphFixture:
             ],
             "document": document_rows,
             "view": [
-                _fact(
-                    documents,
-                    "L-2024Q1",
+                _relationship_fact(
+                    17,
                     view_id="V-LIQ-LETTER",
                     direction="neutral-explicit",
                     horizon="quarterly",
                     conviction=2,
                 ),
-                _fact(
-                    documents,
-                    "MTG-2024-05",
+                _relationship_fact(
+                    18,
                     view_id="V-LIQ-MEETING",
                     direction="neutral-explicit",
                     horizon="stress",
@@ -191,17 +221,15 @@ def _graph_fixture(corpus: list[Document]) -> GraphFixture:
                 ),
             ],
             "theme": [
-                _fact(
-                    documents,
-                    "L-2024Q1",
+                _relationship_fact(
+                    19,
                     theme_id="LIQ",
                     label="Liquidity",
                 )
             ],
             "meeting": [
-                _fact(
-                    documents,
-                    "MTG-2024-05",
+                _relationship_fact(
+                    16,
                     meeting_id="M-2024-05",
                     date="2024-05",
                     attendees="Elena Voss",
@@ -209,41 +237,37 @@ def _graph_fixture(corpus: list[Document]) -> GraphFixture:
                 )
             ],
             "authored_by": [
-                _fact(documents, "L-2024Q1", doc_id="L-2024Q1", person_id="EV"),
-                _fact(
-                    documents,
-                    "MTG-2024-05",
+                _relationship_fact(9, doc_id="L-2024Q1", person_id="EV"),
+                _relationship_fact(
+                    10,
                     doc_id="MTG-2024-05",
                     person_id="EV",
                 ),
-                _fact(documents, "L-2023Q4", doc_id="L-2023Q4", person_id="PA"),
+                _relationship_fact(11, doc_id="L-2023Q4", person_id="PA"),
             ],
             "attributed_to": [
-                _fact(documents, "L-2024Q1", doc_id="L-2024Q1", manager_id="CLC"),
-                _fact(documents, "DDQ-2024", doc_id="DDQ-2024", manager_id="CLC"),
-                _fact(documents, "L-2023Q4", doc_id="L-2023Q4", manager_id="SPA"),
-                _fact(documents, "DDQ-WEX", doc_id="DDQ-WEX", manager_id="WGC"),
+                _relationship_fact(12, doc_id="L-2024Q1", manager_id="CLC"),
+                _relationship_fact(13, doc_id="DDQ-2024", manager_id="CLC"),
+                _relationship_fact(14, doc_id="L-2023Q4", manager_id="SPA"),
+                _relationship_fact(15, doc_id="DDQ-WEX", manager_id="WGC"),
             ],
             "employed_by": [
-                _fact(
-                    documents,
-                    "MTG-2024-05",
+                _relationship_fact(
+                    6,
                     person_id="EV",
                     manager_id="CLC",
                     from_date="2024-01",
                     to_date=None,
                 ),
-                _fact(
-                    documents,
-                    "L-2023Q4",
+                _relationship_fact(
+                    7,
                     person_id="EV",
                     manager_id="SPA",
                     from_date="2020-01",
                     to_date="2023-12",
                 ),
-                _fact(
-                    documents,
-                    "L-2023Q4",
+                _relationship_fact(
+                    8,
                     person_id="PA",
                     manager_id="SPA",
                     from_date="2020-01",
@@ -251,37 +275,32 @@ def _graph_fixture(corpus: list[Document]) -> GraphFixture:
                 ),
             ],
             "expresses": [
-                _fact(
-                    documents,
-                    "L-2024Q1",
+                _relationship_fact(
+                    20,
                     doc_id="L-2024Q1",
                     view_id="V-LIQ-LETTER",
                 ),
-                _fact(
-                    documents,
-                    "MTG-2024-05",
+                _relationship_fact(
+                    21,
                     doc_id="MTG-2024-05",
                     view_id="V-LIQ-MEETING",
                 ),
             ],
             "about_theme": [
-                _fact(
-                    documents,
-                    "L-2024Q1",
+                _relationship_fact(
+                    22,
                     view_id="V-LIQ-LETTER",
                     theme_id="LIQ",
                 ),
-                _fact(
-                    documents,
-                    "MTG-2024-05",
+                _relationship_fact(
+                    23,
                     view_id="V-LIQ-MEETING",
                     theme_id="LIQ",
                 ),
             ],
             "discussed_at": [
-                _fact(
-                    documents,
-                    "MTG-2024-05",
+                _relationship_fact(
+                    24,
                     view_id="V-LIQ-MEETING",
                     meeting_id="M-2024-05",
                 )
@@ -319,6 +338,8 @@ def _graph_payload(fixture: GraphFixture, conn) -> dict:
                     "edge_type": edge_type,
                     "source": source,
                     "target": target,
+                    "from_date": row.get("from_date"),
+                    "to_date": row.get("to_date"),
                     "provenance": _provenance(row),
                 }
             )
@@ -421,6 +442,7 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
             "corpus_count": len(corpus),
             "corpus_doc_ids": sorted(documents),
             "approved_names": list(APPROVED_NAMES),
+            "graph_receipt_doc_ids": [RELATIONSHIP_RECORD_ID],
             "active_retrieval": gate["active_retrieval"],
             "graph_status": gate["graph_status"],
             "extraction": "authored_demo_only",

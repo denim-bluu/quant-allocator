@@ -103,6 +103,8 @@ def test_graph_has_all_types_signature_edge_and_clickable_receipts(tmp_path):
     assert "Tier R" in html and "granted 2024-01" in html
     assert 'class="e3-fact"' in html
     assert 'id="e3-provenance"' in html
+    assert "E3-owned authored relationship receipt" in html
+    assert "excluded from\n      retrieval rankings" in html
 
 
 def test_partial_brief_and_live_extraction_boundaries(tmp_path):

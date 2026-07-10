@@ -128,167 +128,197 @@
       {
         "edge_id": "about_theme:V-LIQ-LETTER:LIQ",
         "edge_type": "about_theme",
+        "from_date": null,
         "provenance": {
-          "as_of": "2024-03",
-          "source_doc": "L-2024Q1",
-          "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "View V-LIQ-LETTER is about theme LIQ."
         },
         "source": "V-LIQ-LETTER",
-        "target": "LIQ"
+        "target": "LIQ",
+        "to_date": null
       },
       {
         "edge_id": "about_theme:V-LIQ-MEETING:LIQ",
         "edge_type": "about_theme",
+        "from_date": null,
         "provenance": {
-          "as_of": "2024-05",
-          "source_doc": "MTG-2024-05",
-          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "View V-LIQ-MEETING is about theme LIQ."
         },
         "source": "V-LIQ-MEETING",
-        "target": "LIQ"
+        "target": "LIQ",
+        "to_date": null
       },
       {
         "edge_id": "attributed_to:DDQ-2024:CLC",
         "edge_type": "attributed_to",
+        "from_date": null,
         "provenance": {
-          "as_of": "2024-02",
-          "source_doc": "DDQ-2024",
-          "source_span": "Liquidity terms: the fund offers quarterly redemption with ninety day notice."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document DDQ-2024 is attributed to Corvid Lane Capital."
         },
         "source": "DDQ-2024",
-        "target": "CLC"
+        "target": "CLC",
+        "to_date": null
       },
       {
         "edge_id": "attributed_to:DDQ-WEX:WGC",
         "edge_type": "attributed_to",
+        "from_date": null,
         "provenance": {
-          "as_of": "2024-02",
-          "source_doc": "DDQ-WEX",
-          "source_span": "Liquidity and notice terms: investors may redeem semi-annually subject to standard notice."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document DDQ-WEX is attributed to Wexford Green Capital."
         },
         "source": "DDQ-WEX",
-        "target": "WGC"
+        "target": "WGC",
+        "to_date": null
       },
       {
         "edge_id": "attributed_to:L-2023Q4:SPA",
         "edge_type": "attributed_to",
+        "from_date": null,
         "provenance": {
-          "as_of": "2023-12",
-          "source_doc": "L-2023Q4",
-          "source_span": "Selby Point closed the year with a modest net long and a value tilt."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document L-2023Q4 is attributed to Selby Point Advisors."
         },
         "source": "L-2023Q4",
-        "target": "SPA"
+        "target": "SPA",
+        "to_date": null
       },
       {
         "edge_id": "attributed_to:L-2024Q1:CLC",
         "edge_type": "attributed_to",
+        "from_date": null,
         "provenance": {
-          "as_of": "2024-03",
-          "source_doc": "L-2024Q1",
-          "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document L-2024Q1 is attributed to Corvid Lane Capital."
         },
         "source": "L-2024Q1",
-        "target": "CLC"
+        "target": "CLC",
+        "to_date": null
       },
       {
         "edge_id": "authored_by:L-2023Q4:PA",
         "edge_type": "authored_by",
+        "from_date": null,
         "provenance": {
-          "as_of": "2023-12",
-          "source_doc": "L-2023Q4",
-          "source_span": "Selby Point closed the year with a modest net long and a value tilt."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Priya Anand authored document L-2023Q4."
         },
         "source": "L-2023Q4",
-        "target": "PA"
+        "target": "PA",
+        "to_date": null
       },
       {
         "edge_id": "authored_by:L-2024Q1:EV",
         "edge_type": "authored_by",
+        "from_date": null,
         "provenance": {
-          "as_of": "2024-03",
-          "source_doc": "L-2024Q1",
-          "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Elena Voss authored document L-2024Q1."
         },
         "source": "L-2024Q1",
-        "target": "EV"
+        "target": "EV",
+        "to_date": null
       },
       {
         "edge_id": "authored_by:MTG-2024-05:EV",
         "edge_type": "authored_by",
+        "from_date": null,
         "provenance": {
-          "as_of": "2024-05",
-          "source_doc": "MTG-2024-05",
-          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Elena Voss authored document MTG-2024-05."
         },
         "source": "MTG-2024-05",
-        "target": "EV"
+        "target": "EV",
+        "to_date": null
       },
       {
         "edge_id": "discussed_at:V-LIQ-MEETING:M-2024-05",
         "edge_type": "discussed_at",
+        "from_date": null,
         "provenance": {
-          "as_of": "2024-05",
-          "source_doc": "MTG-2024-05",
-          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "View V-LIQ-MEETING was discussed at meeting M-2024-05."
         },
         "source": "V-LIQ-MEETING",
-        "target": "M-2024-05"
+        "target": "M-2024-05",
+        "to_date": null
       },
       {
         "edge_id": "employed_by:EV:CLC",
         "edge_type": "employed_by",
+        "from_date": "2024-01",
         "provenance": {
-          "as_of": "2024-05",
-          "source_doc": "MTG-2024-05",
-          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Elena Voss was employed by Corvid Lane Capital from 2024-01 with no recorded end date."
         },
         "source": "EV",
-        "target": "CLC"
+        "target": "CLC",
+        "to_date": null
       },
       {
         "edge_id": "employed_by:EV:SPA",
         "edge_type": "employed_by",
+        "from_date": "2020-01",
         "provenance": {
-          "as_of": "2023-12",
-          "source_doc": "L-2023Q4",
-          "source_span": "Selby Point closed the year with a modest net long and a value tilt."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Elena Voss was employed by Selby Point Advisors from 2020-01 through 2023-12."
         },
         "source": "EV",
-        "target": "SPA"
+        "target": "SPA",
+        "to_date": "2023-12"
       },
       {
         "edge_id": "employed_by:PA:SPA",
         "edge_type": "employed_by",
+        "from_date": "2020-01",
         "provenance": {
-          "as_of": "2023-12",
-          "source_doc": "L-2023Q4",
-          "source_span": "Selby Point closed the year with a modest net long and a value tilt."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Priya Anand was employed by Selby Point Advisors from 2020-01 with no recorded end date."
         },
         "source": "PA",
-        "target": "SPA"
+        "target": "SPA",
+        "to_date": null
       },
       {
         "edge_id": "expresses:L-2024Q1:V-LIQ-LETTER",
         "edge_type": "expresses",
+        "from_date": null,
         "provenance": {
-          "as_of": "2024-03",
-          "source_doc": "L-2024Q1",
-          "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document L-2024Q1 expresses view V-LIQ-LETTER."
         },
         "source": "L-2024Q1",
-        "target": "V-LIQ-LETTER"
+        "target": "V-LIQ-LETTER",
+        "to_date": null
       },
       {
         "edge_id": "expresses:MTG-2024-05:V-LIQ-MEETING",
         "edge_type": "expresses",
+        "from_date": null,
         "provenance": {
-          "as_of": "2024-05",
-          "source_doc": "MTG-2024-05",
-          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document MTG-2024-05 expresses view V-LIQ-MEETING."
         },
         "source": "MTG-2024-05",
-        "target": "V-LIQ-MEETING"
+        "target": "V-LIQ-MEETING",
+        "to_date": null
       }
     ],
     "expansion_hops": 1,
@@ -313,6 +343,18 @@
           "as_of": "2024-02",
           "source_doc": "DDQ-WEX",
           "source_span": "Liquidity and notice terms: investors may redeem semi-annually subject to standard notice. Wexford Green publishes its liquidity framework annually."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "E3-RELATIONSHIPS",
+        "node_id": "E3-RELATIONSHIPS",
+        "node_type": "document",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "E3-RELATIONSHIPS is an authored relationship record dated 2024-06."
         },
         "tier": null,
         "tier_grant_date": null
@@ -358,9 +400,9 @@
         "node_id": "CLC",
         "node_type": "manager",
         "provenance": {
-          "as_of": "2024-03",
-          "source_doc": "L-2024Q1",
-          "source_span": "Corvid Lane continues to favour durable cash generators over crowded momentum names."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Corvid Lane Capital is an Equity long/short manager at tier R, granted 2024-01."
         },
         "tier": "R",
         "tier_grant_date": "2024-01"
@@ -370,9 +412,9 @@
         "node_id": "SPA",
         "node_type": "manager",
         "provenance": {
-          "as_of": "2023-12",
-          "source_doc": "L-2023Q4",
-          "source_span": "Selby Point closed the year with a modest net long and a value tilt."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Selby Point Advisors is an Equity long/short manager at tier R, granted 2023-01."
         },
         "tier": "R",
         "tier_grant_date": "2023-01"
@@ -382,9 +424,9 @@
         "node_id": "WGC",
         "node_type": "manager",
         "provenance": {
-          "as_of": "2024-02",
-          "source_doc": "DDQ-WEX",
-          "source_span": "Wexford Green publishes its liquidity framework annually."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Wexford Green Capital is an Equity long/short manager at tier R, granted 2024-01."
         },
         "tier": "R",
         "tier_grant_date": "2024-01"
@@ -394,9 +436,9 @@
         "node_id": "M-2024-05",
         "node_type": "meeting",
         "provenance": {
-          "as_of": "2024-05",
-          "source_doc": "MTG-2024-05",
-          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Meeting M-2024-05 occurred in 2024-05 with attendee Elena Voss and linked document MTG-2024-05."
         },
         "tier": null,
         "tier_grant_date": null
@@ -406,9 +448,9 @@
         "node_id": "EV",
         "node_type": "person",
         "provenance": {
-          "as_of": "2024-05",
-          "source_doc": "MTG-2024-05",
-          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Elena Voss is a Portfolio manager."
         },
         "tier": null,
         "tier_grant_date": null
@@ -418,9 +460,9 @@
         "node_id": "PA",
         "node_type": "person",
         "provenance": {
-          "as_of": "2023-12",
-          "source_doc": "L-2023Q4",
-          "source_span": "Selby Point closed the year with a modest net long and a value tilt."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Priya Anand is a Portfolio manager."
         },
         "tier": null,
         "tier_grant_date": null
@@ -430,9 +472,9 @@
         "node_id": "ELS",
         "node_type": "strategy",
         "provenance": {
-          "as_of": "2024-03",
-          "source_doc": "L-2024Q1",
-          "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Corvid Lane Capital is an Equity long/short manager at tier R, granted 2024-01."
         },
         "tier": null,
         "tier_grant_date": null
@@ -442,9 +484,9 @@
         "node_id": "LIQ",
         "node_type": "theme",
         "provenance": {
-          "as_of": "2024-03",
-          "source_doc": "L-2024Q1",
-          "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Theme LIQ is labelled Liquidity."
         },
         "tier": null,
         "tier_grant_date": null
@@ -454,9 +496,9 @@
         "node_id": "V-LIQ-LETTER",
         "node_type": "view",
         "provenance": {
-          "as_of": "2024-03",
-          "source_doc": "L-2024Q1",
-          "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "View V-LIQ-LETTER is a neutral-explicit quarterly view with conviction 2."
         },
         "tier": null,
         "tier_grant_date": null
@@ -466,9 +508,9 @@
         "node_id": "V-LIQ-MEETING",
         "node_type": "view",
         "provenance": {
-          "as_of": "2024-05",
-          "source_doc": "MTG-2024-05",
-          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals."
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "View V-LIQ-MEETING is a neutral-explicit stress view with conviction 2."
         },
         "tier": null,
         "tier_grant_date": null
@@ -496,6 +538,9 @@
     "dense_backend": "authored_concept_table_demo_only",
     "extraction": "authored_demo_only",
     "generator": "e3_knowledge",
+    "graph_receipt_doc_ids": [
+      "E3-RELATIONSHIPS"
+    ],
     "graph_status": "candidate_gate_not_cleared",
     "manager_id": "CLC",
     "manager_name": "Corvid Lane Capital",

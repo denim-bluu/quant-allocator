@@ -585,7 +585,9 @@ The gallery page `e3.html` runs on the **five-document authored synthetic corpus
 the shared say–do substrate: one Corvid Lane letter, one Selby Point letter, a Corvid Lane
 DDQ, a wrong-firm Wexford DDQ, and one Corvid Lane meeting note. Authored facts, rather than
 real-document extraction, are the exhibit. The SYNTHETIC badge and "what this needs to go
-live" box are always present.
+live" box are always present. The candidate graph also carries one E3-owned authored
+relationship-record document, excluded from retrieval rankings, whose exact sentences support
+the displayed identities, tiers, roles, and effective-dated employment edges.
 
 **The active product — the fallback is the result.** E3 ships deterministic hybrid search,
 typed extraction tables, and a document-native meeting brief. The graph is visible only as a

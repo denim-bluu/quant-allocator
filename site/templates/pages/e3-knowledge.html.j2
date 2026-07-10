@@ -27,8 +27,9 @@
   <div class="exhibit-intro__block">
     <h3 class="exhibit-intro__sub">What you are looking at</h3>
     <p>A sourced memory layer for {{ card_data.meta.manager_name }}. The active product is
-      document-native preparation and deterministic hybrid search. The graph is shown only as
-      a candidate evaluation because its formal gate has not cleared.</p>
+      document-native preparation and deterministic hybrid search over five documents. The
+      candidate graph also carries one E3-owned authored relationship receipt, excluded from
+      retrieval rankings, whose sentences support its structural facts.</p>
   </div>
   <div class="exhibit-intro__block">
     <h3 class="exhibit-intro__sub">How to read it</h3>
@@ -89,6 +90,7 @@
           data-source-span="{{ edge.provenance.source_span }}"
           data-as-of="{{ edge.provenance.as_of }}">
           <span>{{ edge.edge_type }}</span><strong>{{ edge.source }} → {{ edge.target }}</strong>
+          {% if edge.from_date %}<small>{{ edge.from_date }} → {{ edge.to_date or 'open' }}</small>{% endif %}
         </button>
       {% endfor %}
       </div>

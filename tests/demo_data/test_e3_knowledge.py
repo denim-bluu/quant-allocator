@@ -31,6 +31,9 @@ def test_schema_and_binding_fallback_states(tmp_path):
     assert data["meta"]["extraction"] == "authored_demo_only"
     assert data["meta"]["dense_backend"] == "authored_concept_table_demo_only"
     assert data["meta"]["corpus_count"] == 5
+    assert data["meta"]["graph_receipt_doc_ids"] == [
+        e3_knowledge.RELATIONSHIP_RECORD_ID
+    ]
 
 
 def test_exact_rankings_and_gate_numbers(tmp_path):
@@ -64,6 +67,7 @@ def test_graph_provenance_and_wrong_firm_exclusion(tmp_path):
         document.doc_id: document.text
         for document in build_corpus(include_ddq_and_notes=True)
     }
+    corpus[e3_knowledge.RELATIONSHIP_RECORD_ID] = e3_knowledge.RELATIONSHIP_RECORD_TEXT
     graph = data["graph_candidate"]
     assert {node["node_type"] for node in graph["nodes"]} == {
         "manager",
@@ -81,6 +85,58 @@ def test_graph_provenance_and_wrong_firm_exclusion(tmp_path):
         assert provenance["source_span"] in corpus[provenance["source_doc"]]
     assert "DDQ-WEX" in data["meta"]["corpus_doc_ids"]
     assert "DDQ-WEX" not in graph["candidate_doc_ids"]
+    assert e3_knowledge.RELATIONSHIP_RECORD_ID not in graph["candidate_doc_ids"]
+    assert all(
+        row["doc_id"] != e3_knowledge.RELATIONSHIP_RECORD_ID
+        for ranking in (data["retrieval"]["lexical"], data["retrieval"]["plain_hybrid"], data["retrieval"]["graph_candidate"])
+        for row in ranking
+    )
+
+
+def test_relationship_receipts_substantiate_displayed_claims(tmp_path):
+    data = _load(e3_knowledge.build(out_dir=tmp_path))
+    graph = data["graph_candidate"]
+    managers = {
+        node["node_id"]: node
+        for node in graph["nodes"]
+        if node["node_type"] == "manager"
+    }
+    for manager_id, strategy in (
+        ("CLC", "Equity long/short"),
+        ("SPA", "Equity long/short"),
+        ("WGC", "Equity long/short"),
+    ):
+        node = managers[manager_id]
+        span = node["provenance"]["source_span"]
+        assert node["label"] in span
+        assert f"tier {node['tier']}" in span
+        assert node["tier_grant_date"] in span
+        assert strategy in span
+
+    people = {
+        node["node_id"]: node
+        for node in graph["nodes"]
+        if node["node_type"] == "person"
+    }
+    for node in people.values():
+        span = node["provenance"]["source_span"]
+        assert node["label"] in span
+        assert "Portfolio manager" in span
+
+    names = {
+        **{key: node["label"] for key, node in managers.items()},
+        **{key: node["label"] for key, node in people.items()},
+    }
+    employment = [edge for edge in graph["edges"] if edge["edge_type"] == "employed_by"]
+    for edge in employment:
+        span = edge["provenance"]["source_span"]
+        assert names[edge["source"]] in span
+        assert names[edge["target"]] in span
+        assert edge["from_date"] in span
+        if edge["to_date"] is None:
+            assert "no recorded end date" in span
+        else:
+            assert edge["to_date"] in span
 
 
 def test_partial_brief_names_missing_same_manager_sources(tmp_path):
