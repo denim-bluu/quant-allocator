@@ -49,6 +49,16 @@ class FusedBook:
     provenance: np.ndarray
 
 
+@dataclass(frozen=True)
+class InformationGain:
+    all_r_sd: float
+    actual_sd: float
+    all_e_sd: float
+    gain_all_r_to_all_e: float
+    floor: float
+    renders: bool
+
+
 def measurement_posterior(
     prior_mean: float, prior_sd: float, observation: float, meas_sd: float
 ) -> MeasurementPosterior:
@@ -154,3 +164,52 @@ def fuse_book(
         book=book_posterior(weights, means, sds, level=config.credible_level),
         provenance=provenance(weights, sds),
     )
+
+
+def transparency_counterfactuals(
+    capital_weights,
+    observations,
+    tiers: Sequence[str],
+    config: FusionConfig,
+) -> InformationGain:
+    """Compare the same book under all-R, actual, and all-at-least-E precision."""
+    if not 0.0 <= config.info_gain_floor <= 1.0:
+        raise ValueError("information-gain floor must lie in [0, 1]")
+    n = len(tiers)
+    all_r = fuse_book(capital_weights, observations, ("R",) * n, config)
+    actual = fuse_book(capital_weights, observations, tiers, config)
+    # Preserve already-position-transparent sleeves; upgrade only R sleeves to E.
+    at_least_e = tuple("P" if tier == "P" else "E" for tier in tiers)
+    all_e = fuse_book(capital_weights, observations, at_least_e, config)
+    gain = 1.0 - all_e.book.sd / all_r.book.sd
+    return InformationGain(
+        all_r_sd=all_r.book.sd,
+        actual_sd=actual.book.sd,
+        all_e_sd=all_e.book.sd,
+        gain_all_r_to_all_e=gain,
+        floor=config.info_gain_floor,
+        renders=bool(gain >= config.info_gain_floor),
+    )
+
+
+def tier_monotonicity(
+    capital_weights,
+    observations,
+    tiers: Sequence[str],
+    config: FusionConfig,
+    *,
+    atol: float = 1e-12,
+) -> bool:
+    """True only if upgrading any one sleeve R→E→P never widens the book band."""
+    base_tiers = list(tiers)
+    for index in range(len(base_tiers)):
+        sds: list[float] = []
+        for candidate in ("R", "E", "P"):
+            changed = base_tiers.copy()
+            changed[index] = candidate
+            sds.append(
+                fuse_book(capital_weights, observations, tuple(changed), config).book.sd
+            )
+        if not (sds[0] + atol >= sds[1] and sds[1] + atol >= sds[2]):
+            return False
+    return True
