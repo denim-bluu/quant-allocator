@@ -1,0 +1,12 @@
+.x1-powercurve__uncertainty {
+  stroke: none;
+  opacity: 0.12;
+}
+
+.x1-powercurve__uncertainty--ols {
+  fill: var(--dim);
+}
+
+.x1-powercurve__uncertainty--posterior {
+  fill: var(--accent);
+}

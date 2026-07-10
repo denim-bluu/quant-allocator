@@ -1,5 +1,8 @@
 from pathlib import Path
 
+import json
+import shutil
+
 from quant_allocator.site.build import build
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -9,6 +12,20 @@ def _build(tmp_path):
     out = tmp_path / "out"
     build(REPO_ROOT / "site", out)
     return (out / "x2.html").read_text(encoding="utf-8"), out
+
+
+def _build_with_modified_cells(tmp_path):
+    site = tmp_path / "site"
+    shutil.copytree(REPO_ROOT / "site", site)
+    shutil.copytree(REPO_ROOT / "docs" / "ideas" / "specs", tmp_path / "docs" / "ideas" / "specs")
+    data_path = site / "data" / "x2_playground.json"
+    data = json.loads(data_path.read_text(encoding="utf-8"))
+    data["cells"]["0.04|12|0.8|48|R"]["alpha"][:3] = [0.061, -0.02, 0.13]
+    data["cells"]["0.04|12|0.8|120|E"]["alpha"][:4] = [0.057, 0.004, 0.099, "robust"]
+    data_path.write_text(json.dumps(data), encoding="utf-8")
+    out = tmp_path / "out"
+    build(site, out)
+    return (out / "x2.html").read_text(encoding="utf-8")
 
 
 def test_x2_provenance_dark_and_standing_note(tmp_path):
@@ -34,12 +51,12 @@ def test_x2_dials_snap_values(tmp_path):
     for dial in ["ic", "half_life", "sizing", "T", "tier"]:
         assert 'data-dial="%s"' % dial in html
     # Snap-to-grid values present as button data-values (%g-formatted).
-    assert 'data-value="0.04"' in html   # ic
-    assert 'data-value="0.1"' in html    # ic
-    assert 'data-value="36"' in html     # half_life or T
-    assert 'data-value="0.8"' in html    # sizing
-    assert 'data-value="120"' in html    # T
-    assert 'data-value="R"' in html      # tier
+    assert 'data-value="0.04"' in html  # ic
+    assert 'data-value="0.1"' in html  # ic
+    assert 'data-value="36"' in html  # half_life or T
+    assert 'data-value="0.8"' in html  # sizing
+    assert 'data-value="120"' in html  # T
+    assert 'data-value="R"' in html  # tier
     assert 'data-value="P"' in html
 
 
@@ -64,6 +81,28 @@ def test_x2_component_scaffolding_and_copy(tmp_path):
 def test_x2_exhibit_explainer(tmp_path):
     html, _ = _build(tmp_path)
     assert "What this exhibit shows" in html
+    source = (REPO_ROOT / "site" / "templates" / "pages" / "x2-playground.html.j2").read_text()
+    assert "Drag" not in source
+    assert "drag" not in source
+
+
+def test_x2_opening_and_comparison_follow_named_cells(tmp_path):
+    html = _build_with_modified_cells(tmp_path)
+    explainer = html.split('<section class="x2-exhibit"', 1)[1].split(
+        '<section class="x2-controls"', 1
+    )[0]
+    for expected in (
+        "0.061",
+        "&minus;0.02000",
+        "+0.1300",
+        "0.057",
+        "+0.004000",
+        "+0.09900",
+        "robust",
+    ):
+        assert expected in explainer
+    for stale in ("0.053", "&minus;0.02951", "+0.1249", "0.0482", "+0.001816", "+0.09213"):
+        assert stale not in explainer
 
 
 def test_x2_script_loaded(tmp_path):

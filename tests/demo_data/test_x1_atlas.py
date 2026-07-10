@@ -1,4 +1,5 @@
 import json
+import math
 
 from quant_allocator.demo_data import x1_atlas
 from quant_allocator.demo_data._emit import SITE_DATA_DIR
@@ -15,8 +16,18 @@ def test_three_exhibits_present(tmp_path):
     curves = data["power_curves"]
     assert len(curves) == len(x1_atlas.SAMPLER_IC_LEVELS)
     for curve in curves:
-        assert set(curve) >= {"ic", "realized_ir", "T", "ols_ttest", "posterior"}
+        assert set(curve) >= {
+            "ic",
+            "realized_ir",
+            "T",
+            "ols_ttest",
+            "posterior",
+            "ols_ttest_wilson",
+            "posterior_wilson",
+        }
         assert len(curve["T"]) == len(curve["ols_ttest"]) == len(curve["posterior"])
+        assert len(curve["T"]) == len(curve["ols_ttest_wilson"])
+        assert len(curve["T"]) == len(curve["posterior_wilson"])
     # Exhibit 2: alpha degradation R vs E, plus P-only metrics.
     table = data["degradation_table"]
     assert "alpha_estimation" in table
@@ -24,7 +35,49 @@ def test_three_exhibits_present(tmp_path):
     # Exhibit 3: registry snippet in the X1 §2 shape.
     snippet = data["registry_snippet"]["metrics"]
     assert "hit_rate" in snippet
-    assert {"min_tier", "gate_quantity", "threshold", "power_at_threshold"} <= set(snippet["hit_rate"])
+    assert {"min_tier", "gate_quantity", "threshold", "power_at_threshold"} <= set(
+        snippet["hit_rate"]
+    )
+    headline = data["headline"]
+    assert headline["e_tier"]["threshold_months"] == 120
+    assert headline["e_tier"]["power"] == 0.82
+    assert headline["r_tier"]["power"] == 0.788
+
+
+def _wilson_half_width(power, n, z=1.96):
+    denominator = 1.0 + z * z / n
+    radicand = power * (1.0 - power) / n + z * z / (4.0 * n * n)
+    return (z / denominator) * math.sqrt(radicand)
+
+
+def _wilson_center(power, n, z=1.96):
+    return (power + z * z / (2.0 * n)) / (1.0 + z * z / n)
+
+
+def test_every_emitted_wilson_value_rederives_from_power_and_n(tmp_path):
+    data = _load(x1_atlas.build(out_dir=tmp_path))
+    n = data["meta"]["n_reps"]
+
+    def check(power, wilson):
+        expected = _wilson_half_width(power, n)
+        center = _wilson_center(power, n)
+        assert wilson["n"] == n
+        assert wilson["half_width"] == round(expected, 6)
+        assert wilson["lo"] == round(max(0.0, center - expected), 6)
+        assert wilson["hi"] == round(min(1.0, center + expected), 6)
+
+    for curve in data["power_curves"]:
+        for name in ("ols_ttest", "posterior"):
+            for power, wilson in zip(curve[name], curve[f"{name}_wilson"]):
+                check(power, wilson)
+    for row in data["degradation_table"]["alpha_estimation"].values():
+        check(row["power"], row["wilson"])
+    for name in ("hit_rate_P", "sizing_skill_P"):
+        row = data["degradation_table"][name]
+        check(row["power"], row["wilson"])
+    for name in ("e_tier", "r_tier", "r_tier_false_attribution"):
+        row = data["headline"][name]
+        check(row["power"], row["wilson"])
 
 
 def test_power_curves_rise_with_T(tmp_path):

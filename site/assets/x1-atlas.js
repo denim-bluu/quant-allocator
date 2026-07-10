@@ -20,7 +20,11 @@
   function drawCurve(svg) {
     var T = nums(svg.dataset.t);
     var ols = nums(svg.dataset.ols);
+    var olsLo = nums(svg.dataset.olsLo);
+    var olsHi = nums(svg.dataset.olsHi);
     var posterior = nums(svg.dataset.posterior);
+    var posteriorLo = nums(svg.dataset.posteriorLo);
+    var posteriorHi = nums(svg.dataset.posteriorHi);
     if (!T.length) {
       return;
     }
@@ -39,12 +43,22 @@
     ref.setAttribute("y2", String(y(0.8)));
     svg.appendChild(ref);
 
+    function envelope(lo, hi, cls) {
+      var upper = hi.map(function (p, i) { return x(T[i]) + "," + y(p); });
+      var lower = lo.map(function (p, i) { return x(T[i]) + "," + y(p); }).reverse();
+      var polygon = makeEl("polygon", cls);
+      polygon.setAttribute("points", upper.concat(lower).join(" "));
+      svg.appendChild(polygon);
+    }
+
     function line(arr, cls) {
       var pts = arr.map(function (p, i) { return x(T[i]) + "," + y(p); }).join(" ");
       var pl = makeEl("polyline", cls);
       pl.setAttribute("points", pts);
       svg.appendChild(pl);
     }
+    envelope(olsLo, olsHi, "x1-powercurve__uncertainty x1-powercurve__uncertainty--ols");
+    envelope(posteriorLo, posteriorHi, "x1-powercurve__uncertainty x1-powercurve__uncertainty--posterior");
     line(ols, "x1-powercurve__ols");
     line(posterior, "x1-powercurve__posterior");
   }

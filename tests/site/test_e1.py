@@ -14,4 +14,8 @@ def test_e1_ladder_page(tmp_path):
     assert "usage-note" in html
     assert "What this exhibit shows" in html
     assert "Standing rules" in html
+    assert "how to request the next tier without shrinking the grant" in html
+    assert "one reciprocal rung per conversation" in html
+    assert "No synthetic manager evidence is shown" in html
+    assert "tracked pilot outcomes" in html
     assert (tmp_path / "out" / "specs" / "e1.html").exists()
