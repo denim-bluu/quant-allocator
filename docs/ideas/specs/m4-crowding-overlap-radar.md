@@ -488,22 +488,28 @@ already models this), rendered at the **P tier** (full holdings). It has three p
 diversifiers:
 
 - **Hollowmere Capital** — a concentrated long book (its largest bets in liquid names
-  N4–N5).
-- **Brackenford Partners** — an event-driven book (its largest bets in liquid names
-  N6–N7).
+  outside the shared illiquid tail).
+- **Brackenford Partners** — an event-driven book with a distinct set of larger
+  positions outside that tail.
 
-By the lenses an allocator usually trusts they look independent: **22%** raw dollar
-overlap, a return-vector cosine of **0.07**. But their overlap concentrates in three
-thin shared names, so their **liquidity-adjusted overlap is 52%** — in unwind space
-they are more than half the same book. The panel's unwind scenario shows the most
-crowded shared name at **8.8 days** of stressed volume for the two combined.
+The strategy labels suggest different books, but the holdings measurement finds
+**26.4%** raw directional overlap and a signed holdings-vector cosine of **0.327**.
+Their shared positions are harder to exit than their distinct positions, so the
+**liquidity-adjusted overlap rises to 40.2%**. The panel's 50%-of-normal-volume
+scenario shows the most crowded shared name, **A0106 (long)**, at **39.4 days** of
+stressed volume for the two combined.
+
+**Section 5 numbers were reconciled to the committed real-pipeline generator output
+on 2026-07-10; deltas from the teaching-code figures are flagged for the numerics
+gate.**
 
 How each visual element maps to the method:
 
-- **The two overlap numbers** (raw 22% vs liquidity-adjusted 52%) = §3.3 and §3.4. The
+- **The two overlap numbers** (raw 26.4% vs liquidity-adjusted 40.2%) = §3.3 and §3.4. The
   gap between them *is the finding*: crowding hidden in the illiquid tail. Rendered as
-  two IntervalStats side by side, the second annotated "of combined unwind time."
-- **The unwind bar chart** = §3.4 days-of-volume per shared name, worst name (8.8 days)
+  exact-snapshot IntervalStats with degenerate rails, explicitly labelled as having no
+  sampling interval.
+- **The unwind bar chart** = §3.4 days-of-volume per shared name, with A0106 at 39.4 days
   highlighted. The bars are the **robust** measurement (what the crowd holds); an
   optional dashed **illustrative-impact** overlay (the §3.4 square-root cost) is drawn
   separately and labelled "illustrative — not a forecast," keeping measurement and
@@ -517,20 +523,21 @@ liquidity-adjusted overlap of a pair, shaded by intensity. The diversifier pair 
 is the hot cell an allocator would not have expected. The heat-map is the "is our
 diversification illusory?" question answered at a glance.
 
-**The tier ladder and the power gate.** A TierBadge strip shows what each rung sees:
-P (the demo's robust rung), 13F (the live rung, badged stale / longs-only / CTR-holes /
-non-US-blind), E (factor crowding only), R (a descriptive return-clustering chip,
-labelled "not a holdings measurement"). The **PowerGate** is the honest refusal on the
-*predictive* claim: the panel measures overlap robustly, but "high overlap ⇒ this crowd
-will co-drawdown" is a **gated hypothesis** (§6.4), so the page renders the unwind as a
-**scenario** and refuses to print a predicted loss until the atlas gate passes.
+**The tier ladder and the power gate.** A TierBadge strip shows what each rendered rung
+sees: P (the demo's robust rung), E (factor crowding only), and R (a descriptive
+return-clustering chip labelled "not a holdings measurement"). The public-filings view
+is withheld entirely until gate 3 measures its 45-day lag, longs-only coverage,
+CTR coverage holes, and non-US blindness. The **PowerGate** is the honest
+refusal on the *predictive* claim: the panel measures overlap robustly, but "high overlap
+⇒ this crowd will co-drawdown" is a **gated hypothesis** (§6.4), so the page renders the
+unwind as a **scenario** and refuses predicted loss and a size-cap recommendation until
+the atlas gate passes.
 
-What an allocator should conclude from these numbers: the returns-and-labels view said
-Hollowmere and Brackenford were diversifiers; M4 shows that where it counts — the exit —
-they are the same trade, and the roster's real concentration is larger than the pair
-count suggests. That is a **size** decision (cap the shared theme) and a **monitor** flag
-(this pair unwinds together), delivered as a measurement with its data-tier caveats on
-its face.
+What an allocator should conclude from these numbers: the labels understate how much of
+Hollowmere and Brackenford's exit footprint is shared. That is a **monitoring and
+conversation input**, delivered as a measurement with its data-tier caveats on its face.
+It is not yet a predicted-loss claim or a recommendation to cap the shared theme; those
+claims remain behind gate 2.
 
 ## 6. Honest limits & go-live
 

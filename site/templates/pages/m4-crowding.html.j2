@@ -1,0 +1,166 @@
+{% extends "demo.html.j2" %}
+
+{% set pair = card_data.pair_centerpiece %}
+{% set stress = card_data.stress_scenarios[2] %}
+
+{% macro exact_stat(stat_id, label, value, domain="overlap") -%}
+{% set rail_position = value * 100 if domain == "overlap" else (value + 1) * 50 %}
+<div class="interval-stat m4-exact" id="{{ stat_id }}-stat" data-domain="{{ domain }}"
+     data-lo="{{ value }}" data-point="{{ value }}" data-hi="{{ value }}">
+  <span class="interval-stat__label">{{ label }}</span>
+  <span class="interval-stat__value" id="{{ stat_id }}-value">{% if domain == "cosine" %}{{ "%.3f"|format(value) }}{% else %}{{ "%.1f"|format(value * 100) }}%{% endif %}</span>
+  <div class="interval-stat__rail">
+    <div class="interval-stat__band" style="left: {{ rail_position }}%; width: 0"></div>
+    <div class="interval-stat__point" style="left: {{ rail_position }}%"></div>
+  </div>
+  <span class="interval-stat__range">exact for this snapshot; no sampling interval</span>
+</div>
+{%- endmacro %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/m4.css">
+{% endblock %}
+
+{% block demo_content %}
+<section class="m4-intro">
+  <p class="m4-headline">
+    The labels say diversifiers. Their P-tier holdings say otherwise: {{ pair.manager_a }} and
+    {{ pair.manager_b }} share {{ "%.1f"|format(pair.raw * 100) }}% of their signed books, but
+    {{ "%.1f"|format(pair.liquidity * 100) }}% of their unwind footprints because the shared
+    names are harder to exit. This is a point-in-time measurement and a liquidation
+    <strong>scenario, not a forecast</strong>.
+  </p>
+  <span class="tier-badge" data-tier="P">P &middot; position measurement</span>
+  <span class="verdict-chip" data-verdict="robust">measurement only</span>
+</section>
+
+<aside class="m4-guide" aria-label="What this exhibit shows">
+  <h2>What this exhibit shows</h2>
+  <div>
+    <h3>What you are looking at</h3>
+    <p>
+      A six-manager synthetic roster on one shared market. The heat map measures the common
+      unwind footprint of every pair; the centrepiece opens the hottest unexpected pair and
+      shows the same-direction positions they would both need to exit.
+    </p>
+  </div>
+  <div>
+    <h3>How to read it</h3>
+    <ul>
+      <li>Raw overlap is the common signed weight; opposite directions are offsets.</li>
+      <li>Liquidity overlap re-expresses each book in days-to-cover shares.</li>
+      <li>The slider selects a committed stressed-volume scenario; it does not predict loss.</li>
+      <li>The dashed impact annotation is illustrative and is not part of the robust bars.</li>
+    </ul>
+    <p>
+      The formulas, tier contract, and validation gates are in the
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
+    </p>
+  </div>
+</aside>
+
+<section class="m4-panel" aria-labelledby="m4-pair-title">
+  <h2 id="m4-pair-title">The two-manager unwind panel</h2>
+  <p id="m4-selected-pair" class="m4-selected">{{ pair.manager_a }} &times; {{ pair.manager_b }}</p>
+  <div class="m4-stats">
+    {{ exact_stat("m4-raw", "Raw directional overlap", pair.raw) }}
+    {{ exact_stat("m4-liquidity", "Liquidity-adjusted overlap", pair.liquidity) }}
+    {{ exact_stat("m4-cosine", "Signed holdings-vector cosine", pair.cosine, "cosine") }}
+  </div>
+  <p class="m4-note">
+    The first two values are fractions of book and unwind time. The cosine is an angle between
+    signed holdings vectors, not a return-correlation estimate.
+  </p>
+</section>
+
+<section class="m4-panel" aria-labelledby="m4-heatmap-title">
+  <h2 id="m4-heatmap-title">Roster liquidity-overlap heat map</h2>
+  <p class="m4-note">Select any off-diagonal cell to inspect its three precomputed measurements.</p>
+  <div class="m4-heatmap" role="grid" aria-label="Pairwise liquidity-adjusted overlap">
+    {% for row_name in card_data.heatmap.managers %}
+      {% set i = loop.index0 %}
+      {% for col_name in card_data.heatmap.managers %}
+        {% set j = loop.index0 %}
+        {% set value = card_data.heatmap.liquidity[i][j] %}
+        <button type="button" class="m4-cell{% if i == j %} m4-cell--self{% endif %}"
+                role="gridcell" data-i="{{ i }}" data-j="{{ j }}"
+                aria-label="{{ row_name }} and {{ col_name }}, liquidity-adjusted overlap {{ '%.1f'|format(value * 100) }} percent"
+                style="--heat: {{ value }}" {% if i == j %}disabled{% endif %}>
+          {{ "%.0f"|format(value * 100) }}%
+        </button>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</section>
+
+<section class="m4-panel" aria-labelledby="m4-stress-title">
+  <h2 id="m4-stress-title">Common-holder unwind scenario</h2>
+  <div class="m4-slider">
+    <label for="m4-stress-delta">Stressed volume available</label>
+    <input id="m4-stress-delta" type="range" min="0" max="4" step="1" value="2">
+    <output id="m4-stress-output" for="m4-stress-delta">50%</output>
+  </div>
+  <p class="m4-note">
+    At the selected 50% volume state, {{ pair.worst_asset }} ({{ pair.worst_direction }}) is
+    {{ "%.1f"|format(pair.worst_days_stressed_volume) }} days of stressed volume. Robust bars
+    measure the footprint under the chosen input; they do not predict a liquidation.
+  </p>
+  <div id="m4-unwind-bars" class="m4-bars" aria-live="polite">
+    {% for row in stress.rows %}
+    <div class="m4-bar" data-row="{{ loop.index0 }}">
+      <div class="m4-bar__label">
+        <span>{{ row.asset }} &middot; {{ row.direction }}</span>
+        <strong class="m4-bar__value">{{ "%.1f"|format(row.days_stressed_volume) }} days</strong>
+      </div>
+      <div class="m4-bar__track"><span style="width: {{ row.days_stressed_volume / stress.worst.days_stressed_volume * 100 }}%"></span></div>
+      <div class="m4-impact">illustrative impact {{ "%.2f"|format(row.illustrative.impact_rate * 100) }}% &mdash; illustrative &mdash; not a forecast</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="m4-panel" aria-labelledby="m4-tier-title">
+  <h2 id="m4-tier-title">Tier limits are part of the result</h2>
+  <div class="m4-tier"><span class="tier-badge" data-tier="P">P</span><p>Position holdings: name-level overlap and unwind measurement render.</p></div>
+  <div class="m4-tier"><span class="tier-badge" data-tier="E">E</span><p>Factor crowding only; no name-level overlap and no unwind stress.</p></div>
+  <div class="m4-tier"><span class="tier-badge" data-tier="R">R</span><p>Descriptive return co-movement only &mdash; not a holdings measurement, no unwind scenario, no size cap.</p></div>
+  <div class="power-gate">
+    <span class="power-gate__title">13F view withheld pending degradation gate</span>
+    <p class="power-gate__reason">
+      No public-filings panel renders before gate 3 quantifies the 45-day lag, longs-only
+      coverage, CTR coverage holes, and non-US blindness.
+    </p>
+  </div>
+</section>
+
+<section class="m4-panel" aria-labelledby="m4-gate-title">
+  <h2 id="m4-gate-title">Predictive claim refused</h2>
+  <div class="power-gate">
+    <span class="power-gate__title">Scenario, not forecast &middot; gate 2 missing</span>
+    <p class="power-gate__reason">
+      Overlap and stressed-volume measurements render. No predicted loss or size-cap
+      recommendation renders before the overlap-decile versus co-drawdown operating
+      characteristic exists. If gate 2 fails, the measurement stays while exit-risk and
+      size-cap framing are removed.
+    </p>
+  </div>
+  <p class="m4-note">
+    M4 measures crowding; it does not allocate. P1 may consume a certified measurement as a
+    constraint later, but this card never computes portfolio weights.
+  </p>
+</section>
+{% endblock %}
+
+{% block methodology %}
+<p>
+  Raw overlap is directional common weight: the smaller absolute position counts only where
+  both managers hold the name in the same direction. Liquidity overlap applies the same
+  measure after each book is normalized in days-to-cover space. The unwind report then sums
+  same-direction dollar holders and divides by stressed dollar volume. These are exact
+  snapshot measurements at tier P; the loss interpretation remains gated.
+</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/m4-crowding.js"></script>
+{% endblock %}

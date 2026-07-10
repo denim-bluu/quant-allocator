@@ -1,0 +1,33 @@
+/* M4 page layout; shared components remain in interval.css. */
+.m4-intro, .m4-guide, .m4-panel { margin: 20px 0; }
+.m4-headline { font-size: 15px; line-height: 1.55; }
+.m4-guide { padding: 16px; border: 1px solid var(--line); border-radius: 8px; }
+.m4-guide h2, .m4-panel h2 { margin: 0 0 10px; font-size: 16px; }
+.m4-guide h3 { margin: 12px 0 4px; font-size: 13px; }
+.m4-guide p, .m4-guide li, .m4-note { font-size: 13px; line-height: 1.5; color: var(--dim); }
+.m4-panel { padding-top: 16px; border-top: 1px solid var(--line); }
+.m4-selected { font-weight: 600; }
+.m4-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.m4-exact .interval-stat__band { min-width: 2px; }
+
+.m4-heatmap { display: grid; grid-template-columns: repeat(6, minmax(52px, 1fr)); gap: 4px; }
+.m4-cell { min-height: 46px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); background: color-mix(in srgb, var(--accent) calc(var(--heat) * 75%), var(--paper)); font-variant-numeric: tabular-nums; cursor: pointer; }
+.m4-cell:hover, .m4-cell:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.m4-cell--self { opacity: 0.35; cursor: default; }
+
+.m4-slider { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 13px; }
+.m4-slider output { min-width: 3em; font-weight: 600; font-variant-numeric: tabular-nums; }
+.m4-bars { display: grid; gap: 12px; margin-top: 12px; }
+.m4-bar__label { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
+.m4-bar__value { font-variant-numeric: tabular-nums; }
+.m4-bar__track { height: 8px; margin-top: 4px; background: var(--track); border-radius: 4px; overflow: hidden; }
+.m4-bar__track span { display: block; height: 100%; background: var(--accent); }
+.m4-impact { margin-top: 3px; padding-top: 3px; border-top: 1px dashed var(--dim); font-size: 11px; color: var(--dim); }
+.m4-tier { display: grid; grid-template-columns: 32px 1fr; gap: 8px; align-items: baseline; }
+.m4-tier p { margin: 4px 0; font-size: 13px; }
+
+@media (max-width: 700px) {
+  .m4-stats { grid-template-columns: 1fr; }
+  .m4-heatmap { grid-template-columns: repeat(6, minmax(40px, 1fr)); }
+  .m4-cell { min-height: 40px; font-size: 11px; }
+}
