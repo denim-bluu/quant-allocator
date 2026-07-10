@@ -14,7 +14,8 @@
   <p class="ledger-headline">
     Shrinking each manager toward their strategy peers reshuffles the ranking:
     <strong>{{ ns.movers }} of {{ card_data.meta.n_managers }} managers change rank</strong>
-    once luck is separated from skill. Rankings built on raw OLS alpha hire the lucky.
+    under peer shrinkage and uncertainty-aware ordering. This is a change in estimates,
+    not proof that this roster's true-skill order improved.
   </p>
   <div class="ledger-controls">
     <button type="button" class="sort-toggle" data-sort-toggle data-order="ols">
@@ -37,8 +38,10 @@
     is trusted. Cinderbank Capital (B10) instead falls from +19.6% (#3) to +13.2%
     (#4): its 36-month record earns a shrinkage weight of only 0.46, so the peer
     mean pulls it down. Across the roster, {{ ns.movers }} of
-    {{ card_data.meta.n_managers }} managers change rank once luck is separated
-    from skill.
+    {{ card_data.meta.n_managers }} managers change rank under peer shrinkage.
+    The pinned roster does not prove better true-skill recovery: its known-truth ordering
+    is slightly worse after shrinkage. Repeated-grid rank recovery and live calibration
+    remain gates.
   </p>
   <p class="exhibit-guide__subhead">How to read it</p>
   <ul class="exhibit-guide__map">
@@ -124,6 +127,9 @@
   full hierarchical MCMC model &mdash; the demo formula is the intuition, not the
   product. See method spec &sect;3.7.
 </p>
+<p class="ledger-footnote"><strong>Evidence boundary.</strong> This synthetic roster shows how
+  peer shrinkage changes estimates, intervals, and order. It does not establish better
+  true-skill recovery, predictive accuracy, or live calibration.</p>
 {% endblock %}
 
 {% block methodology %}
@@ -133,8 +139,8 @@ peer mean; a long, clean record barely moves. The band shown is the 90% interval
 a bare point alpha is never shown without it.</p>
 <p>Shrinkage never claims &ldquo;your alpha was cut&rdquo; &mdash; it reports
 &ldquo;shrunk toward strategy peers by the weight your track length earns.&rdquo;
-Ranking on the posterior mean and P(&alpha; &gt; 0) is what separates skill from
-luck at 36&ndash;60 months.</p>
+The resulting order is uncertainty-aware, but its true-skill recovery must clear the
+repeated-grid and live-calibration gates before it informs ranking decisions.</p>
 {% endblock %}
 
 {% block body_scripts %}

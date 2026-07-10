@@ -38,6 +38,30 @@ def test_s1_page_component_dom_and_numbers(tmp_path):
     assert ">1.00<" not in html
 
 
+def test_s1_copy_is_shrinkage_not_true_skill_recovery(tmp_path):
+    out = tmp_path / "out"
+    build(REPO_ROOT / "site", out)
+    html = (out / "s1.html").read_text(encoding="utf-8")
+    text = " ".join(html.split())
+    assert "7 of 20 managers change rank" in html
+    assert "peer shrinkage" in html
+    assert "does not prove better true-skill recovery" in html
+    assert "Repeated-grid rank recovery and live calibration remain gates" in text
+    template = (REPO_ROOT / "site" / "templates" / "pages" / "s1-ledger.html.j2").read_text()
+    for overclaim in ("skill, not luck", "separated from skill", "hire the lucky"):
+        assert overclaim not in template
+
+
+def test_s1_spec_has_reproduction_map(tmp_path):
+    out = tmp_path / "out"
+    build(REPO_ROOT / "site", out)
+    html = (out / "specs" / "s1.html").read_text(encoding="utf-8")
+    assert "Displayed field" in html
+    assert "JSON field" in html
+    assert "s1_ledger.py" in html
+    assert "test_s1_ledger.py" in html
+
+
 def test_s1_page_script_loaded(tmp_path):
     out = tmp_path / "out"
     build(REPO_ROOT / "site", out)

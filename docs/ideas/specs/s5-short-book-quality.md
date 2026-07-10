@@ -585,13 +585,14 @@ simulator knows:
   short alpha **+6.98%/yr** with a clearly-positive 90% interval
   (**[+3.79%, +10.29%]**, S2 HAC + block bootstrap); borrow-adjusted alpha
   **+5.58%/yr** (interval **[+2.39%, +8.89%]**) after the 1.40%/yr drag (2%/yr
-  flat fee on 0.70 average short gross); hit rate **52.8%** (month-clustered
-  t = +3.58). Chip: **"Short alpha, calibrated."**
+  flat fee on 0.70 average short gross). Its 745-trade hit-rate point and clustered
+  t are refused, 35 trades short of the 780 line. Chip: **"Short alpha, calibrated."**
 - **Drybrook Capital** — shorts picked on pure noise (short-side IC = 0): an
   uninformed basket that exists to offset the longs. Panel: hedge share
   **84.3%**; gross short alpha **+2.06%/yr** with a 90% interval that spans
   zero (**[−0.87%, +5.02%]**); borrow-adjusted alpha **+0.66%/yr**, interval
-  **[−2.27%, +3.62%]** including zero; hit rate **51.0%** (t = +1.26). Chip:
+  **[−2.27%, +3.62%]** including zero; its 745-trade hit-rate point and clustered
+  t are likewise refused. Chip:
   **"No detectable short alpha net of borrow"** — plus the fee-implication
   line, because HS > 0.75: *"~80% of this sleeve is factor offset an index
   overlay replicates at near-zero fee and no borrow."*
@@ -602,9 +603,9 @@ convict anyone** — and the entire fee-relevant difference lives in the
 residual, which only an interval-reported, borrow-adjusted decomposition
 surfaces. The demo window is ten years (**`S5_DEMO_MONTHS` = 120,
 provisional — NUMERICS-GATE**), deliberately generous: the honest message is
-that *even with* a decade of positions, the hit-rate certification barely
-clears (745 round trips vs the ~780-trade line), and at a realistic five-year
-window the gate refuses.
+that *even with* a decade of positions, the hit-rate estimate refuses (745 round
+trips, 35 short of the 780-trade line), and at a realistic five-year window the
+gate also refuses (385 round trips, 395 short). Borrow-adjusted alpha remains available.
 
 How each visual element maps to the method:
 
@@ -623,10 +624,9 @@ How each visual element maps to the method:
   net-alpha interval stays clear of zero across the whole 0–5%/yr dial (its
   net point stays positive until an implausible ~10%/yr average fee) — the
   skeptical reader can try to break the verdict and watch it hold.
-- **The hit-rate PowerGate** — at the demo's T = 120 both hit rates render
-  with their clustered t; a companion toggle shows the same books at T = 60,
-  where the gate flips to **"insufficient N (385 round trips; gate ~780)"**
-  and refuses the number. The refusal is the pitch: the T = 60 single-seed
+- **The hit-rate PowerGate** — at the demo's T = 120 and T = 60, both hit-rate
+  points and clustered t statistics refuse because 745 and 385 are below 780.
+  The refusal is the pitch: the T = 60 single-seed
   table in §4 shows a noise book luck-passing a naive test at exactly this
   window.
 - **The tier strip** — the same two managers rendered at E (factor split
@@ -844,7 +844,7 @@ thin pipeline.
   T (measurement); the **alpha verdict** needs the interval to speak
   (T ≥ 36 to render, wide until ~60+); the **hit rate** is gated on
   independent trades — a 25-name, quarter-turnover sleeve needs ~10 years
-  (745 trades vs the ~780 line); high-turnover short books certify in 1–2
+  (745 trades, 35 short of the 780 line); high-turnover short books certify in 1–2
   years. Below gates the panel refuses, and the refusal is stated as the
   product working.
 - **Build effort:** M (demo scope; borrow realism and FINRA adapter

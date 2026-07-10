@@ -5,9 +5,17 @@
   "use strict";
   var SVGNS = "http://www.w3.org/2000/svg";
 
+  function domainFor(stat) {
+    var horizons = JSON.parse(stat.dataset.horizons);
+    var values = [0];
+    horizons.forEach(function (state) { values.push(state.ci_lo, state.gap, state.ci_hi); });
+    return { min: Math.min.apply(null, values), max: Math.max.apply(null, values) };
+  }
+
   function positionGap(stat, lo, point, hi) {
     var zero = parseFloat(stat.dataset.zero || "0");
-    var min = Math.min(lo, zero), max = Math.max(hi, zero), span = (max - min) || 1;
+    var domain = domainFor(stat);
+    var min = domain.min, max = domain.max, span = (max - min) || 1;
     function pct(v) { return ((v - min) / span) * 100 + "%"; }
     stat.querySelector(".interval-stat__band").style.left = pct(lo);
     stat.querySelector(".interval-stat__band").style.width = ((hi - lo) / span) * 100 + "%";
@@ -25,6 +33,11 @@
   }
 
   function el(name) { return document.createElementNS(SVGNS, name); }
+
+  function fmtBp(value) {
+    var bp = (value * 10000).toFixed(0);
+    return (value >= 0 ? "+" : "") + bp + " bp";
+  }
 
   function drawCurve(fig, horizon) {
     // Sourced from the full data-horizons series (6 points), not the shorter
@@ -69,6 +82,17 @@
       if (!s.dataset.horizons) { return; }
       var hz = JSON.parse(s.dataset.horizons);
       var chosen = hz[Math.min(h, hz.length) - 1];
+      s.dataset.lo = String(chosen.ci_lo);
+      s.dataset.point = String(chosen.gap);
+      s.dataset.hi = String(chosen.ci_hi);
+      s.dataset.nExits = String(chosen.n_exits);
+      var value = s.querySelector('[data-horizon-value="point"]');
+      var range = s.querySelector('[data-horizon-value="range"]');
+      var exits = s.querySelector('[data-horizon-value="exits"]');
+      if (value) { value.textContent = fmtBp(chosen.gap); }
+      if (range) { range.textContent = "90% interval " +
+        fmtBp(chosen.ci_lo).replace(" bp", "") + " … " + fmtBp(chosen.ci_hi); }
+      if (exits) { exits.textContent = chosen.n_exits + " exits"; }
       positionGap(s, chosen.ci_lo, chosen.gap, chosen.ci_hi);
     });
     var figs = document.querySelectorAll(".s4-curve");

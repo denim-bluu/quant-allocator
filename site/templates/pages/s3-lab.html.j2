@@ -28,25 +28,29 @@
   <p><strong>What you are looking at:</strong> two synthetic managers holding the
   <em>identical</em> book of picks &mdash; same names, same entry and exit dates, same holding
   ages &mdash; who differ in exactly one thing: how they size. On returns they look a tier apart.</p>
-  <p><strong>How to read it:</strong> the sizing slope asks whether the bigger bets earned more.
-  A slope whose month-cluster interval clears zero certifies real conviction; one that straddles
-  zero says the sizing is doing nothing. Every number is trade-level and power-gated &mdash; below
-  the trade gate the lab prints a refusal, never a point. cluster axis: {{ card_data.meta.cluster_axes | join('×') }} (months);
+  <p><strong>How to read it:</strong> the sizing slope asks whether bigger synthetic positions
+  earned more on this controlled path. A month-cluster interval that clears zero identifies a
+  sizing contribution in this construction; one that straddles zero leaves it unresolved.
+  Realized path summaries below are descriptive, while inferential slopes carry intervals and
+  the low-trade case refuses. This known-truth construction isolates sizing, but it does not
+  establish manager intent, live prevalence, external calibration, or a live conviction premium.
+  Cluster axis: {{ card_data.meta.cluster_axes | join('×') }} (months);
   <a href="{{ asset_base | default('') }}specs/s3.html">the full method spec</a> derives the
   date&times;name live extension.</p>
 </section>
 
 <section class="s3-split">
   {% for m in [sizer, picker] %}
-  <article class="s3-manager s3-manager--{{ m.role }}" data-scatter="{{ m.sizing_scatter | tojson }}">
+  <article class="s3-manager s3-manager--{{ m.role }}"
+           data-scatter="{{ m.sizing_scatter | tojson | forceescape }}">
     <header class="s3-manager__head">
       <h3>{{ m.name }}</h3>
       <span class="verdict-chip" data-verdict="{{ 'robust' if m.slope.detected else 'noise' }}">
-        {{ "sizing certified" if m.slope.detected else "no sizing signal" }}</span>
+        {{ "sizing contribution detected" if m.slope.detected else "sizing contribution unresolved" }}</span>
     </header>
-    <p class="s3-manager__alpha">Idiosyncratic alpha
+    <p class="s3-manager__alpha">Realized synthetic-path idiosyncratic alpha
       <strong>{{ "%+.1f"|format(m.alpha_annual * 100) }}%/yr</strong>, IR {{ "%.2f"|format(m.ir) }}
-      <span class="s3-synthetic">(synthetic)</span></p>
+      <span class="verdict-chip" data-verdict="neutral">descriptive path output</span></p>
     {{ slope_stat(m) }}
     <svg class="s3-scatter" viewBox="0 0 100 60" preserveAspectRatio="none" role="img"
          aria-label="Per-position active contribution against position size"></svg>
@@ -55,10 +59,12 @@
 </section>
 
 <section class="s3-verdict">
-  <p>The two managers hold identical picks, so the <strong>{{ "%+.1f"|format(card_data.sizing_value.gap_annual * 100) }}%/yr</strong>
-  gap between them is entirely {{ sizer.name }}'s conviction sizing &mdash; which the slope certifies.
-  The verdict for {{ picker.name }} is not &ldquo;redeem&rdquo;: it has real picks and is
-  <strong>leaving a conviction premium on the table</strong>; this is a sizing conversation.
+  <p>The two managers hold identical synthetic picks, so the realized
+  <strong>{{ "%+.1f"|format(card_data.sizing_value.gap_annual * 100) }}%/yr</strong>
+  gap is this path's <strong>realized synthetic-path sizing contribution</strong>
+  <span class="verdict-chip" data-verdict="neutral">descriptive subtraction</span>.
+  The verdict for {{ picker.name }} is not &ldquo;redeem&rdquo;: this controlled comparison
+  isolates a sizing mechanism; this is a sizing conversation, not evidence of manager intent.
   {{ picker.name }}'s own small non-zero slope is a long-vs-short position-size step &mdash;
   equal-weight within each side, but the sides differ &mdash; not conviction, so its statistical
   insignificance is the honest verdict.</p>
@@ -76,15 +82,16 @@
   selection premium. For a <em>single</em> manager the half-life band is honestly wide &mdash;
   roughly {{ "%.0f"|format(decay.single_manager_ci.lo) }} to {{ "%.0f"|format(decay.single_manager_ci.hi) }}
   months &mdash; and the page shows that width, not a false-precise point.</p>
-  <svg class="s3-decay-svg" data-curve="{{ decay.curve | tojson }}"
+  <svg class="s3-decay-svg" data-curve="{{ decay.curve | tojson | forceescape }}"
        viewBox="0 0 100 50" preserveAspectRatio="none" role="img"
        aria-label="Directional idiosyncratic return by holding age"></svg>
 </section>
 
 <section class="s3-holding">
   <h2>Holding-period decomposition</h2>
-  <div class="s3-holding-bar" data-shares="{{ card_data.holding.shares | tojson }}"
-       data-order="{{ card_data.meta.holding_buckets | tojson }}"></div>
+  <div class="s3-holding-bar"
+       data-shares="{{ card_data.holding.shares | tojson | forceescape }}"
+       data-order="{{ card_data.meta.holding_buckets | tojson | forceescape }}"></div>
   <ul class="s3-holding-legend">
     {% for label in card_data.meta.holding_buckets %}
     <li>{{ label }}: <strong>{{ "%.0f"|format(card_data.holding.shares[label] * 100) }}%</strong></li>

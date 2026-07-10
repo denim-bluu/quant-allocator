@@ -61,6 +61,8 @@ def test_pilot_label_and_registration_document(tmp_path):
     assert "FDR" in html and "not an FDR" in html
     # The forking-paths footnote does the naive-scan arithmetic (~26%).
     assert "26%" in html or "26 %" in html
+    assert html.index("0 ship / 1 weak tell / 11 null") < html.index("Panel 1")
+    assert "Panel 2 · PILOT" in html or "Panel 2 &middot; PILOT" in html
 
 
 def test_verdict_grid_no_bare_points(tmp_path):
@@ -82,3 +84,23 @@ def test_two_threshold_honesty_and_single_manager_refusal(tmp_path):
     assert "power-gate" in html
     assert "2 times in 3" in html                          # AUC 0.65 pair-odds
     assert "unknown by design" in html                     # confirmatory outcome disclaimer
+
+
+def test_auc_rail_uses_full_domain_and_marks_null(tmp_path):
+    html, out = _build(tmp_path)
+    js = (out / "assets" / "s6-signatures.js").read_text(encoding="utf-8")
+    assert "var LO = 0.0, HI = 1.0" in js
+    assert "s6-rail__null" in html
+    assert "data-domain-min=\"0\"" in html
+    assert "data-domain-max=\"1\"" in html
+    assert "0.326" in html
+
+
+def test_s6_spec_pins_pilot_exclusion_and_reversal(tmp_path):
+    _, out = _build(tmp_path)
+    html = (out / "specs" / "s6.html").read_text(encoding="utf-8")
+    assert "0 SHIP, 1 WEAK TELL, 11 NULL" in html
+    assert "written-put stress axis" in html
+    assert "excluded from the bounded pilot" in html
+    assert "drawdown_shape" in html
+    assert "opposite" in html

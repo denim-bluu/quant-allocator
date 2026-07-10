@@ -1,4 +1,6 @@
+import json
 import shutil
+from html.parser import HTMLParser
 from pathlib import Path
 
 import yaml
@@ -18,6 +20,17 @@ _CARD = {
         "effort": "M",
     },
 }
+
+
+class _Attrs(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.values = []
+
+    def handle_starttag(self, tag, attrs):
+        for key, value in attrs:
+            if key in {"data-scatter", "data-curve", "data-shares", "data-order"}:
+                self.values.append((key, value))
 
 
 def _build(tmp_path):
@@ -58,11 +71,24 @@ def test_picker_sizer_split_and_verdict(tmp_path):
     assert "Meridian Arc Capital" in html and "Kelso Bay Partners" in html
     assert html.count('class="verdict-chip"') >= 2
     assert html.count('class="interval-stat"') >= 2          # slopes as IntervalStats, no bare points
-    assert "leaving a conviction premium on the table" in html
+    assert "realized synthetic-path sizing contribution" in html
     assert "this is a sizing conversation" in html
     # Honest note (§3.2/§3.4 correction): the picker's small residual slope is the
     # long/short size step, not conviction — its insignificance is the honest verdict.
     assert "long-vs-short position-size step" in html
+    assert "certifies real conviction" not in html
+    assert "manager intent" in html
+    assert "does not\n  establish" in html or "does not establish" in html
+
+
+def test_structured_attributes_are_html_safe_and_parseable(tmp_path):
+    html, _ = _build(tmp_path)
+    parser = _Attrs()
+    parser.feed(html)
+    assert len(parser.values) == 5
+    for _, value in parser.values:
+        json.loads(value)
+    assert 'data-scatter="[{&#34;' in html
 
 
 def test_powergate_refusal_arithmetic(tmp_path):
@@ -80,7 +106,7 @@ def test_powergate_refusal_arithmetic(tmp_path):
 
 def test_cluster_axis_and_reference_effect_statements(tmp_path):
     html, _ = _build(tmp_path)
-    assert "cluster axis: date" in html
+    assert "Cluster axis: date" in html
     assert "never clears 80%" in html and "T &le; 120" in html or "T ≤ 120" in html
 
 

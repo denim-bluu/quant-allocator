@@ -13,6 +13,7 @@ def _build(tmp_path):
 
 def test_s2_provenance_and_copy(tmp_path):
     html, out = _build(tmp_path)
+    text = " ".join(html.split())
     # Provenance furniture from demo.html.j2.
     assert "synthetic-badge" in html
     assert "SYNTHETIC DATA" in html
@@ -29,6 +30,9 @@ def test_s2_provenance_and_copy(tmp_path):
     # rf_annual labeled synthetic.
     assert "2.0%" in html
     assert "(synthetic)" in html
+    assert "Decision:" in html
+    assert "known-truth construction exercises" in html
+    assert "does not establish external calibration" in text
 
 
 def test_s2_desmoothing_and_altbeta(tmp_path):
@@ -60,3 +64,12 @@ def test_s2_script_loaded(tmp_path):
     html, out = _build(tmp_path)
     assert "assets/s2-tearsheet.js" in html
     assert (out / "assets" / "s2-tearsheet.js").exists()
+
+
+def test_s2_spec_has_reproduction_map(tmp_path):
+    _, out = _build(tmp_path)
+    html = (out / "specs" / "s2.html").read_text(encoding="utf-8")
+    assert "Displayed field" in html
+    assert "JSON field" in html
+    assert "s2_tearsheet.py" in html
+    assert "test_s2_tearsheet.py" in html

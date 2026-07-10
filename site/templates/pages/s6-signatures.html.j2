@@ -20,12 +20,14 @@
     <span class="verdict-chip" data-verdict="{{ row.verdict }}">{{ row.verdict | replace("_", " ") }}</span>
   </div>
   <div class="interval-stat" data-domain="auc"
+       data-domain-min="0" data-domain-max="1"
        data-point="{{ row.auc_point }}" data-lo="{{ row.auc_lo }}" data-hi="{{ row.auc_hi }}"
        data-floor="{{ c.significance_floor }}" data-bar="{{ c.usability_bar }}">
     <span class="interval-stat__label">worst deciding-cell directional AUC</span>
     <span class="interval-stat__value">{{ "%.3f"|format(row.auc_point) }}</span>
     <div class="interval-stat__rail s6-rail">
       <div class="interval-stat__band"></div>
+      <div class="s6-rail__mark s6-rail__null" title="null AUC 0.5"></div>
       <div class="s6-rail__mark s6-rail__floor" title="familywise significance floor"></div>
       <div class="s6-rail__mark s6-rail__bar" title="usability bar 0.65"></div>
       <div class="interval-stat__point"></div>
@@ -66,6 +68,13 @@
     written-put stress axis &mdash; is wave-3 scope, and its outcome is <strong>unknown by
     design</strong>.
   </p>
+</section>
+
+<section class="s6-pilot-result" aria-label="Pilot result">
+  <span class="verdict-chip" data-verdict="weak_tell">PILOT RESULT</span>
+  <strong>0 ship / 1 weak tell / 11 null</strong>
+  <p>The bounded pilot produces no shippable returns-only tell. Its one weak tell is a
+    registered direction reversal, not a result whose sign may be flipped after inspection.</p>
 </section>
 
 <section class="s6-panel s6-registration">
@@ -176,7 +185,7 @@
 </aside>
 
 <section class="s6-panel s6-grid">
-  <h2 class="s6-panel__title">Panel 2 &middot; The verdict grid</h2>
+  <h2 class="s6-panel__title">Panel 2 &middot; PILOT <span class="verdict-chip" data-verdict="weak_tell">PILOT</span> &middot; The verdict grid</h2>
   <p class="s6-grid__gapnote">The <strong>real-but-useless</strong> zone is the gap between the two
     rail marks &mdash; the familywise significance floor and the usability bar. The machinery
     <em>detects</em> whispers there and the ship rule then correctly refuses to sell them.</p>

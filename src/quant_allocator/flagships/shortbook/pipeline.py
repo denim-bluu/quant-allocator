@@ -33,11 +33,6 @@ HEDGE_SHARE_HIGH = 0.75
 # NUMERICS-GATE (§8 ruling 8): interim ~780-independent-trade power line for a 55%-vs-50%
 # hit rate at 80% power; replaced by the §6.3 gate-2 curves from the X1 registry.
 SHORT_TRADE_GATE = 780
-# NUMERICS-GATE: render floor for the hit-rate statistic. Below it the trade count is too
-# low to display a clustered t (the number would mislead). Sits between the 5-yr window's
-# 385 trades (refuse) and the 10-yr window's 745 (render as marginal), honoring §8 ruling 2's
-# mandatory T=60-refusal toggle. Distinct from SHORT_TRADE_GATE, the certification line.
-SHORT_TRADE_RENDER_MIN = 500
 # Alpha interval level (S2 house convention: 90% for alpha).
 ALPHA_CI_LEVEL = 0.90
 # Decorrelated from S2's PIPELINE_SEED (20260706) and M3's ALARM_SEED (20260707).
@@ -59,7 +54,6 @@ __all__ = [
     "BORROW_COST_ANNUAL",
     "HEDGE_SHARE_HIGH",
     "SHORT_TRADE_GATE",
-    "SHORT_TRADE_RENDER_MIN",
     "ALPHA_CI_LEVEL",
 ]
 
@@ -167,7 +161,7 @@ def hit_rate_gate(weights, asset_returns, *, n_short, turnover, months) -> HitRa
     trades = short_trade_count(n_short, turnover, months)
     return HitRateGate(
         hit_rate=est.point, hit_t=est.tstat, trades=trades, gate=SHORT_TRADE_GATE,
-        renders=bool(trades >= SHORT_TRADE_RENDER_MIN),
+        renders=bool(trades >= SHORT_TRADE_GATE),
     )
 
 

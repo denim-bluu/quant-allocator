@@ -716,24 +716,26 @@ time per cell; a vendor free to scan dozens of features and pick the winner
 essentially always "finds" a tell.
 
 **Panel 2 — the verdict grid.** Two contrast blocks (H-SIZE, H-DECAY) × six
-signature rows. Each row is:
+signature rows, explicitly labeled **PILOT**. The bounded real-path pilot result
+appears before the registration inventory: **0 SHIP, 1 WEAK TELL, 11 NULL**. Each row is:
 
 - an **IntervalStat**: the worst-deciding-cell directional AUC as the point, a 95%
   band (Hanley–McNeil SE at the observed AUC; bootstrap variant at the gate), drawn
-  on a rail that marks **both** thresholds — the familywise significance floor
+  on the full **[0, 1] AUC domain** with a null mark at 0.5 and **both** thresholds —
+  the familywise significance floor
   (≈ 0.55 at this replication count) and the usability bar at 0.65. The gap between
   the two marks is the page's central graphic: the zone where a signature is *real
   but useless*, which is where every significant pilot row lands.
 - a **VerdictChip**: SHIP / WEAK TELL / NULL per the frozen taxonomy. NULL chips get
   the same visual weight as SHIP chips — a null here is a finding, not an absence.
-  The `rolling_ir_slope` × H-DECAY row carries its "direction reversed vs
-  declaration" flag with the mechanism note from §4.
+  The `drawdown_shape` × H-SIZE row carries its "direction reversed vs
+  declaration" flag: AUC 0.326 is familywise-significant in the direction opposite
+  to the frozen `+` declaration, so it remains a WEAK TELL anomaly.
 - the familywise-adjusted p and the deciding-cell count, always together ("adj
   p = 0.032 across 8 deciding cells"), never a bare point.
 
-**Panel 3 — the honest headline and the sim-to-live ladder.** The pilot headline:
-*"Two contrasts, six pre-committed signatures, zero shippable tells — four
-statistically-real whispers, all below the usability bar."* Next to it, the
+**Panel 3 — the honest headline and the sim-to-live ladder.** The pilot headline is
+the committed **0 SHIP / 1 WEAK TELL / 11 NULL** result. Next to it, the
 PowerGate-style refusal explains what even a SHIP would and would not mean: an AUC
 of 0.65 orders a random pair correctly 2 times in 3 — for a **single** manager it
 shifts the odds barely (about a 0.5-standard-deviation separation between class
@@ -763,7 +765,9 @@ counts quoted above ("four statistically-real whispers"; the `rolling_ir_slope` 
 H-DECAY reversal) are the §4 *stand-in generator's* teaching output. The demo page
 instead renders the protocol run end-to-end on real `simulate_manager` paths at the
 burned pilot seed `S6_PILOT_SEED = 20260721`, over the bounded pilot grid (2 + 2
-deciding cells, 150 managers per class, 2000 permutations, smoothing-θ stress). That
+deciding cells, 150 managers per class, 2000 permutations, smoothing-θ stress). The
+written-put stress axis was explicitly **excluded from the bounded pilot** and remains
+part of the fresh confirmatory run. That
 real pilot returns **0 SHIP, 1 WEAK TELL, 11 NULL**: the lone WEAK TELL is
 `drawdown_shape` under **H-SIZE**, familywise-significant (adj p ≈ 0.007) in the
 direction *opposite* to its declared "+" — disciplined-sizing books show a
@@ -1014,13 +1018,12 @@ conversations; leadership sees the one-line outcome in the program review.
   and wrong for a product where one false tell is fatal.
 - **Defend the two-threshold honesty.** Why "significant" (a statement about
   n = 500 per class resolving AUC ≈ 0.55) and "usable" (0.65 across the worst
-  nuisance cell) are different claims, why the pilot's four WEAK TELLs land exactly
-  in the gap, and why publishing that gap is the card's central product.
+  nuisance cell) are different claims, why the pilot's one WEAK TELL and eleven NULLs
+  remain below the usability bar, and why publishing that gap is the card's central product.
 - **Explain the direction rule with the pilot's own anomaly.** Why
-  `rolling_ir_slope` coming out significant *opposite* to its declared direction is
-  not a discovery with a sign flip — and give the mechanistic post-hoc story (the
-  long dead tail flattens the fast-decay slope) plus what would be required to
-  promote it (a v2 registration with a fresh seed).
+  `drawdown_shape` under H-SIZE coming out significant *opposite* to its declared
+  direction remains the pilot's sole WEAK TELL rather than a discovery with a sign
+  flip — and what would be required to promote it (a v2 registration with a fresh seed).
 - **State what even a SHIP would not mean.** AUC 0.65 orders a random *pair* right
   2 times in 3; applied to a single manager it is a whisper (≈ 0.5 sd of class
   separation), which is why the decision hook is a conversation prompt after

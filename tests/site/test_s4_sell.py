@@ -1,4 +1,7 @@
+import json
 import shutil
+import subprocess
+from html.parser import HTMLParser
 from pathlib import Path
 
 import yaml
@@ -26,6 +29,17 @@ def _load_publication_terms() -> tuple[str, ...]:
 
 
 _BANNED = _load_publication_terms()
+
+
+class _HorizonAttrs(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.values = []
+
+    def handle_starttag(self, tag, attrs):
+        for key, value in attrs:
+            if key == "data-horizons":
+                self.values.append(value)
 
 # The exact fields the integration task will paste into cards.yaml to flip S4 live.
 _CARD = {
@@ -115,6 +129,100 @@ def test_horizon_slider_and_curve(tmp_path):
     assert 'id="s4-horizon"' in html
     assert "s4-curve" in html
     assert "Forward horizon" in html
+    parser = _HorizonAttrs()
+    parser.feed(html)
+    assert len(parser.values) == 5
+    for value in parser.values:
+        states = json.loads(value)
+        assert [state["horizon"] for state in states] == [1, 2, 3, 4, 5, 6]
+    assert 'data-horizons="[{&#34;' in html
+
+
+def test_horizon_control_updates_text_attributes_paths_and_rails(tmp_path):
+    html, out = _build(tmp_path)
+    assert 'data-horizon-value="point"' in html
+    assert 'data-horizon-value="range"' in html
+    assert 'data-horizon-value="exits"' in html
+    assert "quarterly toggle" not in html
+    assert "tier tabs" not in html
+    script_path = out / "assets" / "s4-sell.js"
+    harness = r"""
+const fs = require("fs"), vm = require("vm");
+function element(dataset) {
+  return {dataset: dataset || {}, style: {}, attrs: {}, children: [], textContent: "",
+    setAttribute(k, v) { this.attrs[k] = String(v); },
+    appendChild(child) { this.children.push(child); return child; },
+    removeChild(child) { this.children.splice(this.children.indexOf(child), 1); },
+    get firstChild() { return this.children.length ? this.children[0] : null; }};
+}
+const states = Array.from({length: 6}, (_, i) => {
+  const h = i + 1, gap = h / 1000;
+  return {horizon: h, gap, ci_lo: gap - 0.0002, ci_hi: gap + 0.0003, n_exits: h * 10};
+});
+const band = element(), point = element(), zero = element();
+const value = element(), range = element(), exits = element();
+const rail = element({horizons: JSON.stringify(states), zero: "0", lo: "0.0008",
+  point: "0.001", hi: "0.0013", nExits: "10"});
+rail.querySelector = selector => ({
+  ".interval-stat__band": band, ".interval-stat__point": point,
+  ".interval-stat__zero": zero, '[data-horizon-value="point"]': value,
+  '[data-horizon-value="range"]': range, '[data-horizon-value="exits"]': exits
+}[selector]);
+const svg = element();
+const figure = element({horizons: JSON.stringify(states)});
+figure.querySelector = selector => selector === ".s4-curve__svg" ? svg : null;
+let listener = null;
+const slider = {value: "1", addEventListener(name, fn) { if (name === "input") listener = fn; }};
+const output = element();
+global.document = {
+  readyState: "complete",
+  createElementNS() { return element(); },
+  getElementById(id) { return id === "s4-horizon" ? slider : null; },
+  querySelector(selector) { return selector === ".s4-slider__out" ? output : null; },
+  querySelectorAll(selector) {
+    if (selector === '.interval-stat[data-domain="gap"]') return [rail];
+    if (selector === ".s4-curve") return [figure];
+    return [];
+  }
+};
+vm.runInThisContext(fs.readFileSync(process.argv[1], "utf8"));
+if (!listener) throw new Error("horizon input listener was not registered");
+const domainMax = states[5].ci_hi;
+const paths = [];
+for (const state of states) {
+  slider.value = String(state.horizon); listener();
+  const expectedLeft = state.ci_lo / domainMax * 100;
+  const expectedWidth = (state.ci_hi - state.ci_lo) / domainMax * 100;
+  const expectedPoint = state.gap / domainMax * 100;
+  const polygon = svg.children.find(child => child.attrs.class === "s4-curve__band");
+  const polyline = svg.children.find(child => child.attrs.class === "s4-curve__line");
+  const checks = [
+    output.textContent === String(state.horizon),
+    rail.dataset.lo === String(state.ci_lo), rail.dataset.point === String(state.gap),
+    rail.dataset.hi === String(state.ci_hi), rail.dataset.nExits === String(state.n_exits),
+    value.textContent === "+" + (state.gap * 10000).toFixed(0) + " bp",
+    range.textContent.includes((state.ci_lo * 10000).toFixed(0)),
+    range.textContent.includes((state.ci_hi * 10000).toFixed(0)),
+    exits.textContent === state.n_exits + " exits",
+    Math.abs(parseFloat(band.style.left) - expectedLeft) < 1e-9,
+    Math.abs(parseFloat(band.style.width) - expectedWidth) < 1e-9,
+    Math.abs(parseFloat(point.style.left) - expectedPoint) < 1e-9,
+    svg.children.length === 3,
+    polygon.attrs.points.trim().split(/\s+/).length === state.horizon * 2,
+    polyline.attrs.points.trim().split(/\s+/).length === state.horizon
+  ];
+  if (checks.some(result => !result)) { console.error(state, checks); process.exit(1); }
+  paths.push(polyline.attrs.points);
+}
+if (new Set(paths).size !== 6) throw new Error("curve path did not change at every horizon");
+"""
+    result = subprocess.run(
+        ["node", "-e", harness, str(script_path)],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
 
 
 def test_quarterly_trend_refused_with_arithmetic(tmp_path):

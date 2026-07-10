@@ -27,6 +27,9 @@
   letter-spacing: 0.10em;
 }
 .s6-pilot-banner p { margin: 0; font-size: 13px; color: var(--dim); }
+.s6-pilot-result { margin: -12px 0 24px; padding: 12px 14px; border-left: 3px solid var(--warn); }
+.s6-pilot-result strong { margin-left: 8px; }
+.s6-pilot-result p { margin: 6px 0 0; color: var(--dim); font-size: 13px; }
 
 /* Panels. */
 .s6-panel { margin: 28px 0; padding-top: 16px; border-top: 1px solid var(--line); }
@@ -128,7 +131,7 @@
 .s6-row__note--reversed { color: var(--warn); }
 
 /* Dual-threshold rail: two extra marks on the shared interval-stat rail.
-   Domain 0.5 -> 1.0 mapped to 0 -> 100% by s6-signatures.js. */
+   Domain 0.0 -> 1.0 mapped to 0 -> 100% by s6-signatures.js. */
 .s6-rail__mark {
   position: absolute;
   top: -4px;
@@ -138,6 +141,7 @@
 }
 .s6-rail__floor { background: var(--warn); }   /* familywise significance floor */
 .s6-rail__bar { background: var(--accent); }   /* usability bar 0.65 */
+.s6-rail__null { background: var(--dim); }      /* no-discrimination AUC 0.5 */
 
 /* Close panel. */
 .s6-headline { font-size: 16px; line-height: 1.5; font-weight: 600; }
