@@ -1,7 +1,7 @@
 # M1 · Exposure Hygiene & Drift Monitor — Method Spec
 
 **Date:** 2026-07-07
-**Status:** Draft — pending method review
+**Status:** Reviewed — method gate passed 2026-07-07 (rulings in §8)
 **Card:** [`2026-07-05-idea-cards.md` → "M1 · Exposure hygiene & drift monitor"](../2026-07-05-idea-cards.md)
 **Demo page:** wave-2 gallery page `m1.html` (planned; monitoring batch, weeks 3–4)
 **Fulfils:** X1 atlas docket **D-11** — the exposure-drift detector deferred out

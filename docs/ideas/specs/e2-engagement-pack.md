@@ -1,6 +1,6 @@
 # E2 · Narrated Engagement-Pack Generator — Method Spec
 
-**Status:** Draft — pending method review
+**Status:** Reviewed — method gate passed 2026-07-07 (rulings in §8)
 **Date:** 2026-07-07
 **Card:** [`2026-07-05-idea-cards.md` → "E2 · Narrated engagement-pack generator"](../2026-07-05-idea-cards.md)
 **Demo page:** rendered pack (`e2.html`), authored alongside the S2 tear sheet — the print-clean composition of one manager's certified sections.

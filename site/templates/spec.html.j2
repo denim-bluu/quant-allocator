@@ -7,7 +7,7 @@
 {% block content %}
 <article class="spec-page">
   <a class="spec-page__back" href="{{ asset_base | default('') }}index.html">← Gallery</a>
-  <div class="spec-page__body">
+  <div class="spec-page__body" data-math-render-status="error">
     {{ spec_html | safe }}
   </div>
 </article>
@@ -18,12 +18,41 @@
 <script defer src="{{ asset_base | default('') }}assets/katex/contrib/auto-render.min.js"></script>
 <script>
   window.addEventListener("DOMContentLoaded", function () {
-    renderMathInElement(document.body, {
+    var specBody = document.querySelector(".spec-page__body");
+    var mathErrors = [];
+
+    function textHasRawDollar(text) {
+      return text.indexOf("$") !== -1;
+    }
+
+    function hasRawMathDelimiter(node) {
+      if (node.nodeType === 3) return textHasRawDollar(node.nodeValue || "");
+      if (node.nodeType !== 1) return false;
+      if (node.matches("pre, code, .escaped-dollar, .katex")) return false;
+      return Array.prototype.some.call(node.childNodes, hasRawMathDelimiter);
+    }
+
+    renderMathInElement(specBody, {
       delimiters: [
         { left: "$$", right: "$$", display: true },
         { left: "$", right: "$", display: false }
-      ]
+      ],
+      throwOnError: true,
+      errorCallback: function (message, error) {
+        mathErrors.push(message);
+        console.error(message, error);
+      }
     });
+    if (hasRawMathDelimiter(specBody)) {
+      var rawMessage = "Spec math rendering left an active raw delimiter";
+      mathErrors.push(rawMessage);
+      console.error(rawMessage);
+    }
+    if (mathErrors.length) {
+      specBody.setAttribute("data-math-render-status", "error");
+      throw new Error("Spec math rendering failed: " + mathErrors.join(" | "));
+    }
+    specBody.setAttribute("data-math-render-status", "ok");
   });
 </script>
 {% endblock %}

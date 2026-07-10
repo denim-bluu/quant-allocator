@@ -9,11 +9,15 @@ from __future__ import annotations
 
 import json
 import shutil
+import xml.etree.ElementTree as etree
 from pathlib import Path
 
 import markdown
 import yaml
 from jinja2 import Environment, FileSystemLoader
+from markdown.extensions import Extension
+from markdown.inlinepatterns import InlineProcessor
+from markdown.util import AtomicString
 
 REQUIRED_KEYS = {"id", "title", "lane", "one_liner", "decisions", "tiers", "status"}
 OPTIONAL_KEYS = {
@@ -44,6 +48,88 @@ LANE_HEADINGS = {
     "X": "X — Meta / infrastructure",
 }
 MARKDOWN_EXTENSIONS = ["tables", "fenced_code", "toc"]
+MATH_OPEN_PATTERN = r"(?<!\\)(?P<slash_pairs>(?:\\\\)*)(?P<delimiter>\$\$|(?<!\$)\$(?!\$))"
+
+
+def _preceding_backslashes(data: str, index: int) -> int:
+    count = 0
+    while index > count and data[index - count - 1] == "\\":
+        count += 1
+    return count
+
+
+def _closing_math_delimiter(data: str, start: int, delimiter: str) -> int | None:
+    """Find a matching delimiter whose preceding backslash run has even parity."""
+    index = start
+    while index < len(data):
+        if delimiter == "$" and data[index] == "\n":
+            return None
+        if data.startswith(delimiter, index) and _preceding_backslashes(data, index) % 2 == 0:
+            if delimiter == "$" and index + 1 < len(data) and data[index + 1] == "$":
+                index += 1
+                continue
+            return index
+        index += 1
+    return None
+
+
+class _MathInlineProcessor(InlineProcessor):
+    """Keep balanced TeX delimiters opaque to Markdown's escape/emphasis passes."""
+
+    def handleMatch(self, match, data):  # noqa: N802 - Python-Markdown public API
+        delimiter = match.group("delimiter")
+        close_start = _closing_math_delimiter(data, match.end(0), delimiter)
+        if close_start is None:
+            return None, None, None
+        close_end = close_start + len(delimiter)
+        slash_pairs = match.group("slash_pairs")
+        math_start = match.start(0) + len(slash_pairs)
+        collapsed_prefix = "\\" * (len(slash_pairs) // 2)
+        protected = collapsed_prefix + data[math_start:close_end]
+        return AtomicString(protected), match.start(0), close_end
+
+
+class _EscapedDollarInlineProcessor(InlineProcessor):
+    r"""Keep an odd-escaped ``$`` literal and collapse preceding slash pairs."""
+
+    def handleMatch(self, match, data):  # noqa: N802 - Python-Markdown public API
+        span = etree.Element("span", {"class": "escaped-dollar"})
+        slash_pairs = match.group("slash_pairs")
+        span.text = AtomicString("\\" * (len(slash_pairs) // 2) + "$")
+        return span, match.start(0), match.end(0)
+
+
+class _EscapedDisplayDollarInlineProcessor(InlineProcessor):
+    r"""Keep an odd-escaped ``$$`` token literal instead of splitting its dollars."""
+
+    def handleMatch(self, match, data):  # noqa: N802 - Python-Markdown public API
+        span = etree.Element("span", {"class": "escaped-dollar"})
+        slash_pairs = match.group("slash_pairs")
+        span.text = AtomicString("\\" * (len(slash_pairs) // 2) + "$$")
+        return span, match.start(0), match.end(0)
+
+
+class _MathProtectionExtension(Extension):
+    """Protect code first, then TeX, then Markdown escapes and emphasis."""
+
+    def extendMarkdown(self, md):  # noqa: N802 - Python-Markdown public API
+        md.inlinePatterns.register(
+            _MathInlineProcessor(MATH_OPEN_PATTERN, md), "protected_math", 186
+        )
+        md.inlinePatterns.register(
+            _EscapedDisplayDollarInlineProcessor(r"(?<!\\)(?P<slash_pairs>(?:\\\\)*)\\\$\$", md),
+            "escaped_display_dollar",
+            185,
+        )
+        md.inlinePatterns.register(
+            _EscapedDollarInlineProcessor(r"(?<!\\)(?P<slash_pairs>(?:\\\\)*)\\\$(?!\$)", md),
+            "escaped_dollar",
+            184,
+        )
+
+
+def _markdown_extensions() -> list[str | Extension]:
+    return [*MARKDOWN_EXTENSIONS, _MathProtectionExtension()]
 
 
 class BuildError(Exception):
@@ -213,7 +299,7 @@ def _render_specs(env: Environment, cards: list[dict], site_dir: Path, out_dir: 
             continue
         source = specs_dir / card["spec"]
         body_html = markdown.markdown(
-            source.read_text(encoding="utf-8"), extensions=MARKDOWN_EXTENSIONS
+            source.read_text(encoding="utf-8"), extensions=_markdown_extensions()
         )
         html = template.render(
             page_title=card["title"],
