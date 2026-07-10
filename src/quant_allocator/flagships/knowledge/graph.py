@@ -261,8 +261,14 @@ def entity_link_manager(conn: sqlite3.Connection, query: str) -> str | None:
     matches = []
     for row in conn.execute("SELECT manager_id, name FROM manager"):
         normalized_name = _normalize(row["name"])
-        if normalized_name in normalized_query:
-            matches.append((len(normalized_name), normalized_name, row["manager_id"]))
+        name_tokens = normalized_name.split()
+        # Authored manager names commonly end in a legal/industry suffix while the
+        # decision-hook query uses the distinctive two-word name ("Corvid Lane").
+        aliases = [" ".join(name_tokens[:size]) for size in range(2, len(name_tokens) + 1)]
+        aliases = [alias for alias in aliases if alias in normalized_query]
+        if aliases:
+            longest = max(aliases, key=lambda alias: (len(alias), alias))
+            matches.append((len(longest), normalized_name, row["manager_id"]))
     if not matches:
         return None
     return sorted(matches, key=lambda item: (-item[0], item[1], item[2]))[0][2]
