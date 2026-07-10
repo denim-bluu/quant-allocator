@@ -1,7 +1,10 @@
 import numpy as np
+import pandas as pd
 import pytest
 
 from quant_allocator.flagships.crowding import pipeline as crowding
+from quant_allocator.simulator.manager import ManagerConfig, simulate_manager
+from quant_allocator.simulator.market import MarketConfig, simulate_market
 
 
 def test_section_3_2_toy_overlap_and_cosine():
@@ -63,3 +66,91 @@ def test_participation_changes_dtc_but_cancels_from_normalized_overlap():
     assert crowding.liquidity_adjusted_overlap(
         a, b, adv, participation=0.20
     ) == pytest.approx(crowding.liquidity_adjusted_overlap(a, b, adv, participation=0.10))
+
+
+def test_roster_matrices_are_aligned_symmetric_and_find_hot_pair():
+    positions = pd.DataFrame(
+        [[60.0, 40.0, 0.0], [50.0, 50.0, 0.0], [0.0, 0.0, 100.0]],
+        index=["Hollowmere", "Brackenford", "Control"],
+        columns=["A", "B", "C"],
+    )
+    adv = pd.Series([10.0, 20.0, 100.0], index=positions.columns)
+    result = crowding.roster_overlap_matrix(positions, adv)
+    assert result.managers == tuple(positions.index)
+    for matrix in (result.raw, result.cosine, result.liquidity):
+        pd.testing.assert_index_equal(matrix.index, positions.index)
+        pd.testing.assert_index_equal(matrix.columns, positions.index)
+        np.testing.assert_allclose(matrix.to_numpy(), matrix.to_numpy().T)
+        np.testing.assert_allclose(np.diag(matrix), 1.0)
+    assert result.liquidity.loc["Hollowmere", "Brackenford"] > 0.8
+    assert result.liquidity.loc["Hollowmere", "Control"] == 0.0
+
+
+def test_pair_overlap_packages_the_three_measures():
+    adv = np.array([10.0, 20.0, 100.0])
+    result = crowding.pair_overlap([60.0, 40.0, 0.0], [50.0, 50.0, 0.0], adv)
+    assert result.raw == pytest.approx(0.9)
+    assert 0.0 <= result.liquidity <= 1.0
+    assert -1.0 <= result.cosine <= 1.0
+
+
+def test_unwind_separates_directions_and_requires_two_holders():
+    positions = pd.DataFrame(
+        [[20.0, -10.0, 10.0], [30.0, -15.0, 0.0], [-40.0, 5.0, 0.0]],
+        index=["A", "B", "C"],
+        columns=["X", "Y", "Solo"],
+    )
+    adv = pd.Series([10.0, 5.0, 10.0], index=positions.columns)
+    report = crowding.unwind_stress(positions, adv, stress_delta=0.5)
+    rows = {(row.asset, row.direction): row for row in report.rows}
+    assert rows[("X", "long")].holder_count == 2
+    assert rows[("X", "long")].combined_dollars == 50.0
+    assert rows[("X", "long")].days_stressed_volume == pytest.approx(10.0)
+    assert ("X", "short") not in rows
+    assert rows[("Y", "short")].combined_dollars == 25.0
+    assert ("Y", "long") not in rows
+    assert not any(row.asset == "Solo" for row in report.rows)
+
+
+def test_stress_delta_scaling_and_illustrative_impact():
+    positions = pd.DataFrame([[20.0], [30.0]], index=["A", "B"], columns=["X"])
+    adv = pd.Series([10.0], index=positions.columns)
+    vol = pd.Series([0.02], index=positions.columns)
+    base = crowding.unwind_stress(positions, adv, daily_vol=vol, stress_delta=0.5)
+    crisis = crowding.unwind_stress(positions, adv, daily_vol=vol, stress_delta=0.25)
+    assert crisis.worst.days_stressed_volume == pytest.approx(
+        2.0 * base.worst.days_stressed_volume
+    )
+    assert base.worst.illustrative_impact_rate == pytest.approx(
+        0.02 * np.sqrt(base.worst.days_stressed_volume)
+    )
+    no_overlay = crowding.unwind_stress(positions, adv, stress_delta=0.5)
+    assert no_overlay.worst.illustrative_impact_rate is None
+
+
+def test_shared_crowd_dial_recovers_monotonic_average_overlap():
+    market = simulate_market(MarketConfig(n_assets=240, n_months=120, seed=17))
+    averages = []
+    for participation in (0.0, 0.25, 0.50, 0.75, 0.90):
+        histories = [
+            simulate_manager(
+                market,
+                ManagerConfig(
+                    n_long=n_long,
+                    n_short=n_short,
+                    target_gross=1.0,
+                    target_net=0.4,
+                    information_coefficient=0.1,
+                    seed=seed,
+                    crowd_participation=participation,
+                    crowd_seed=77,
+                ),
+            )
+            for seed, n_long, n_short in ((101, 24, 12), (202, 30, 10))
+        ]
+        overlaps = [
+            crowding.common_weight_overlap(histories[0].weights.iloc[t], histories[1].weights.iloc[t])
+            for t in range(24, market.config.n_months)
+        ]
+        averages.append(float(np.mean(overlaps)))
+    assert np.all(np.diff(averages) > 0.0), averages
