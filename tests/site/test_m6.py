@@ -80,7 +80,7 @@ def test_page_furniture_and_accessible_timeline(tmp_path):
 
 
 def test_centerpiece_receipts_and_method_boundaries(tmp_path):
-    html, _ = _build(tmp_path)
+    html, out = _build(tmp_path)
     intro = html.split('<section class="m6-intro">', 1)[1].split("</section>", 1)[0]
     crossing = html.split('<p class="m6-crossing">', 1)[1].split("</p>", 1)[0]
     assert "Vesper Lane Capital" in html
@@ -100,6 +100,8 @@ def test_centerpiece_receipts_and_method_boundaries(tmp_path):
     assert "never a half-life and never entry-dated" in html
     assert "walk us through the conviction?" in html
     assert html.lower().count("conviction") == 1
+    spec_html = (out / "specs" / "m6.html").read_text(encoding="utf-8")
+    assert "conviction" not in spec_html.lower()
     assert "not a return prediction" in html
 
 

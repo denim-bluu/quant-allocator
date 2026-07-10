@@ -456,7 +456,7 @@ def effective_names(book):
 #    been reported, ending at the latest quarter. Quarterly granularity only --
 #    this is NOT an entry-dated decay curve (that is card S3, ruled out here).
 # ---------------------------------------------------------------------------
-def conviction_persistence(book_panel, top_k):
+def reported_holding_persistence(book_panel, top_k):
     """book_panel: (n_quarters, n_assets). Returns {asset_index: quarters_held}
     for the top_k names of the final quarter (held = reported share > 0)."""
     final = book_panel[-1]
@@ -534,7 +534,7 @@ if __name__ == "__main__":
               f"HHI={hhi(row):.3f}  effective_names={effective_names(row):.2f}")
 
     print("\nReported-holding persistence (quarters held, final-quarter top-3):")
-    for name, qh in conviction_persistence(book_panel, M6_PERSISTENCE_TOPK).items():
+    for name, qh in reported_holding_persistence(book_panel, M6_PERSISTENCE_TOPK).items():
         print(f"  {assets[name]}: {qh} quarters")
 
     # Peer overlap: a second filer that shares Vesper's TAIL names but avoids the
@@ -761,8 +761,8 @@ descriptor layer.**
   visible, byte-identical), so coverage can be swept for §6.4. All are additive with
   byte-identical defaults; none touches the manager/market RNG streams (tags 0/1/2).
 - **New module `src/quant_allocator/flagships/holdings13f/pipeline.py`:** pure functions
-  over a reported-shares panel — `concentration(book)`, `conviction_persistence(panel,
-  k)`, `cosine_overlap(a, b)`, `coverage_ratio(true_weights, mask)`, and
+  over a reported-shares panel — `concentration(book)`, reported-holding persistence,
+  `cosine_overlap(a, b)`, `coverage_ratio(true_weights, mask)`, and
   `holdings_view(panel, true_weights, mask, *, coverage_min) -> HoldingsVerdict`
   carrying the descriptors, the as-of/known-at dates, the four caveat badges, and the
   CoverageGate outcome. No rendering, no I/O (S2 §5 convention).
