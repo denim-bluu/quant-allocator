@@ -154,16 +154,26 @@ def test_schema_has_all_typed_node_and_edge_tables():
     assert set(NODE_TABLES) <= tables
     assert set(EDGE_TABLES) <= tables
     assert conn.execute("PRAGMA foreign_keys").fetchone()[0] == 1
+    for table in (*NODE_TABLES, *EDGE_TABLES):
+        foreign_keys = conn.execute(f'PRAGMA foreign_key_list("{table}")').fetchall()
+        assert any(row["from"] == "source_doc" and row["table"] == "document" for row in foreign_keys)
 
 
-def test_missing_view_span_and_dangling_edge_fail():
+def test_missing_or_blank_provenance_and_dangling_edge_fail():
     fixture = graph_fixture()
-    bad_view = {**fixture.tables["view"][0], "source_span": None}
-    bad_tables = {**fixture.tables, "view": [bad_view]}
+    for field, value in (("source_span", None), ("source_span", "  "), ("as_of", "")):
+        bad_view = {**fixture.tables["view"][0], field: value}
+        bad_tables = {**fixture.tables, "view": [bad_view]}
+        conn = connect_graph()
+        initialize_schema(conn)
+        with pytest.raises(sqlite3.IntegrityError):
+            ingest_fixture(conn, GraphFixture(bad_tables))
+
+    bad_strategy = {**fixture.tables["strategy"][0], "source_doc": "MISSING"}
     conn = connect_graph()
     initialize_schema(conn)
     with pytest.raises(sqlite3.IntegrityError):
-        ingest_fixture(conn, GraphFixture(bad_tables))
+        ingest_fixture(conn, GraphFixture({**fixture.tables, "strategy": [bad_strategy]}))
 
     conn = connect_graph()
     initialize_schema(conn)
@@ -206,3 +216,30 @@ def test_no_theme_based_two_hop_expansion():
     # Wexford uses the same liquidity theme in its text, but no manager/person edge
     # connects it to Corvid. Theme similarity alone must not expand the candidate set.
     assert "DDQ-WEX" not in graph_candidates(conn, "CLC")
+
+
+def test_author_employment_path_respects_current_and_historical_intervals():
+    fixture = graph_fixture()
+    tables = {name: list(rows) for name, rows in fixture.tables.items()}
+    tables["document"].append(
+        _row(
+            doc_id="L-2023Q3-EV",
+            doc_type="letter",
+            text="Elena Voss wrote this Selby Point letter before leaving the firm.",
+            date="2023-09",
+            file_path="authored/L-2023Q3-EV.txt",
+            ingest_date="2024-06",
+        )
+    )
+    tables["authored_by"].append(_row(doc_id="L-2023Q3-EV", person_id="EV"))
+    conn = connect_graph()
+    initialize_schema(conn)
+    ingest_fixture(conn, GraphFixture(tables))
+
+    assert graph_candidates(conn, "CLC") == ["L-2024Q1", "MTG-2024-05"]
+    assert graph_candidates(conn, "SPA") == ["L-2023Q3-EV"]
+    assert candidate_paths(conn, "SPA", "L-2023Q3-EV") == (
+        "authored_by:EV->employed_by:SPA",
+    )
+    assert candidate_paths(conn, "SPA", "L-2024Q1") == ()
+    assert candidate_paths(conn, "CLC", "L-2023Q3-EV") == ()

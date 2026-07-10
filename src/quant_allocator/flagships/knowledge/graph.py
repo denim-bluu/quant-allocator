@@ -23,6 +23,17 @@ NODE_TABLES = (
     "theme",
     "meeting",
 )
+# Documents are provenance roots. Insert them before every row that cites a
+# source_doc; the self-receipt on a document is a deferred self-reference.
+_INGEST_NODE_TABLES = (
+    "document",
+    "strategy",
+    "manager",
+    "person",
+    "view",
+    "theme",
+    "meeting",
+)
 EDGE_TABLES = (
     "authored_by",
     "attributed_to",
@@ -114,9 +125,9 @@ def initialize_schema(conn: sqlite3.Connection) -> None:
         CREATE TABLE strategy (
             strategy_id TEXT PRIMARY KEY,
             label TEXT NOT NULL,
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0)
         );
         CREATE TABLE manager (
             manager_id TEXT PRIMARY KEY,
@@ -124,28 +135,30 @@ def initialize_schema(conn: sqlite3.Connection) -> None:
             tier TEXT NOT NULL CHECK (tier IN ('R', 'E', 'P')),
             strategy_id TEXT NOT NULL REFERENCES strategy(strategy_id),
             tier_grant_date TEXT NOT NULL,
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0)
         );
         CREATE TABLE person (
             person_id TEXT PRIMARY KEY,
             name TEXT NOT NULL,
             role TEXT NOT NULL,
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0)
         );
         CREATE TABLE document (
             doc_id TEXT PRIMARY KEY,
-            doc_type TEXT NOT NULL CHECK (doc_type IN ('letter', 'ddq', 'meeting_note')),
+            doc_type TEXT NOT NULL CHECK (
+                doc_type IN ('letter', 'ddq', 'meeting_note', 'relationship_record')
+            ),
             text TEXT NOT NULL,
             date TEXT NOT NULL,
             file_path TEXT NOT NULL,
             ingest_date TEXT NOT NULL,
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0)
         );
         CREATE TABLE "view" (
             view_id TEXT PRIMARY KEY,
@@ -154,40 +167,40 @@ def initialize_schema(conn: sqlite3.Connection) -> None:
             ),
             horizon TEXT NOT NULL,
             conviction INTEGER NOT NULL CHECK (conviction BETWEEN 1 AND 3),
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0)
         );
         CREATE TABLE theme (
             theme_id TEXT PRIMARY KEY,
             label TEXT NOT NULL UNIQUE,
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0)
         );
         CREATE TABLE meeting (
             meeting_id TEXT PRIMARY KEY,
             date TEXT NOT NULL,
             attendees TEXT NOT NULL,
             linked_doc_id TEXT NOT NULL REFERENCES document(doc_id),
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0)
         );
         CREATE TABLE authored_by (
             doc_id TEXT NOT NULL REFERENCES document(doc_id),
             person_id TEXT NOT NULL REFERENCES person(person_id),
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL,
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0),
             PRIMARY KEY (doc_id, person_id)
         );
         CREATE TABLE attributed_to (
             doc_id TEXT NOT NULL REFERENCES document(doc_id),
             manager_id TEXT NOT NULL REFERENCES manager(manager_id),
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL,
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0),
             PRIMARY KEY (doc_id, manager_id)
         );
         CREATE TABLE employed_by (
@@ -195,33 +208,33 @@ def initialize_schema(conn: sqlite3.Connection) -> None:
             manager_id TEXT NOT NULL REFERENCES manager(manager_id),
             from_date TEXT NOT NULL,
             to_date TEXT,
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL,
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0),
             PRIMARY KEY (person_id, manager_id, from_date)
         );
         CREATE TABLE expresses (
             doc_id TEXT NOT NULL REFERENCES document(doc_id),
             view_id TEXT NOT NULL REFERENCES "view"(view_id),
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL,
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0),
             PRIMARY KEY (doc_id, view_id)
         );
         CREATE TABLE about_theme (
             view_id TEXT NOT NULL REFERENCES "view"(view_id),
             theme_id TEXT NOT NULL REFERENCES theme(theme_id),
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL,
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0),
             PRIMARY KEY (view_id, theme_id)
         );
         CREATE TABLE discussed_at (
             view_id TEXT NOT NULL REFERENCES "view"(view_id),
             meeting_id TEXT NOT NULL REFERENCES meeting(meeting_id),
-            source_doc TEXT NOT NULL,
-            source_span TEXT NOT NULL,
-            as_of TEXT NOT NULL,
+            source_doc TEXT NOT NULL REFERENCES document(doc_id) DEFERRABLE INITIALLY DEFERRED,
+            source_span TEXT NOT NULL CHECK (length(trim(source_span)) > 0),
+            as_of TEXT NOT NULL CHECK (length(trim(as_of)) > 0),
             PRIMARY KEY (view_id, meeting_id)
         );
         CREATE INDEX idx_manager_name ON manager(name);
@@ -239,7 +252,7 @@ def ingest_fixture(conn: sqlite3.Connection, fixture: GraphFixture) -> None:
 
     try:
         with conn:
-            for table in (*NODE_TABLES, *EDGE_TABLES):
+            for table in (*_INGEST_NODE_TABLES, *EDGE_TABLES):
                 columns = _TABLE_COLUMNS[table]
                 quoted_table = f'"{table}"' if table == "view" else table
                 placeholders = ", ".join("?" for _ in columns)
@@ -284,7 +297,10 @@ def graph_candidates(conn: sqlite3.Connection, manager_id: str) -> list[str]:
         SELECT authored_by.doc_id
         FROM authored_by
         JOIN employed_by USING (person_id)
+        JOIN document ON document.doc_id = authored_by.doc_id
         WHERE employed_by.manager_id = ?
+          AND document.date >= employed_by.from_date
+          AND (employed_by.to_date IS NULL OR document.date <= employed_by.to_date)
         ORDER BY doc_id
         """,
         (manager_id, manager_id),
@@ -308,7 +324,10 @@ def candidate_paths(
         SELECT authored_by.person_id
         FROM authored_by
         JOIN employed_by USING (person_id)
+        JOIN document ON document.doc_id = authored_by.doc_id
         WHERE authored_by.doc_id = ? AND employed_by.manager_id = ?
+          AND document.date >= employed_by.from_date
+          AND (employed_by.to_date IS NULL OR document.date <= employed_by.to_date)
         ORDER BY authored_by.person_id
         """,
         (doc_id, manager_id),
