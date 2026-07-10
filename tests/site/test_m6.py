@@ -112,6 +112,8 @@ def test_centerpiece_receipts_and_method_boundaries(tmp_path):
         "doubling-down",
         "tail, not the thesis",
         "tail, not thesis",
+        "thesis harden",
+        "hardened thesis",
     ):
         assert intent_claim not in spec_text
     assert "not a return prediction" in html

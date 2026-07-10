@@ -39,8 +39,8 @@ trigger.
 Free quarterly holdings for US long books have existed since 1978, and almost no
 allocator mines them **systematically, per manager, over time**. The usual failure is
 one of two extremes. The under-use extreme reads a single 13F as a curiosity — "here
-is what they own" — and never lines up the quarters to see a book concentrate or a
-thesis harden. The over-reach extreme treats 13F as an alpha feed: it back-tests
+is what they own" — and never lines up the quarters to see reported names persist while
+concentration increases. The over-reach extreme treats 13F as an alpha feed: it back-tests
 copycat portfolios, ranks managers on holdings "quality," and quietly forgets that the
 data is longs-only, 45 days late, and silent about everything the manager hedges with.
 Both waste the resource. The first leaves free, survivorship-free evidence on the
