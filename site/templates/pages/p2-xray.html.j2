@@ -13,12 +13,11 @@
 {% macro whole_pct(x) %}{{ "%.0f"|format(x * 100) }}%{% endmacro %}
 {% macro reconciliation_table(extra_class="") %}
 <table class="p2-reconciliation-table {{ extra_class }}">
-  <thead><tr><th>Manager</th><th>Tier</th><th>Observation</th>
-    <th>{{ whole_pct(card_data.constants.credible_level) }} interval</th></tr></thead>
+  <thead><tr><th>Manager</th><th>Tier</th><th>Observation</th><th>Raw source</th></tr></thead>
   <tbody>
     {% for row in card_data.reconciliation_rows %}
     <tr><td>{{ row.name }}</td><td>{{ row.tier }}</td><td>{{ signed(row.observation) }}</td>
-      <td>{{ signed(row.ci_lo) }} &hellip; {{ signed(row.ci_hi) }}</td></tr>
+      <td>{{ row.observation_source }}</td></tr>
     {% endfor %}
   </tbody>
 </table>

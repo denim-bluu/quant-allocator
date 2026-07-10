@@ -232,8 +232,7 @@ def build_payload() -> dict:
                 "name": manager["name"],
                 "tier": manager["tier"],
                 "observation": manager["observation"],
-                "ci_lo": manager["posterior"]["ci_lo"],
-                "ci_hi": manager["posterior"]["ci_hi"],
+                "observation_source": manager["observation_source"],
             }
             for manager in managers
         ],

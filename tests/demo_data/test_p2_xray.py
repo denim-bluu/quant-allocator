@@ -43,6 +43,9 @@ def test_payload_invariants_and_gate_arithmetic(tmp_path):
     )
     assert data["unfused_book"]["point"] == pytest.approx(expected_unfused, abs=2e-6)
     assert data["unfused_book"]["label"] == "un-fused — tiers not reconciled"
+    for manager, row in zip(data["managers"], data["reconciliation_rows"], strict=True):
+        assert set(row) == {"code", "name", "tier", "observation", "observation_source"}
+        assert row["observation_source"] == manager["observation_source"]
 
 
 def test_observation_sources_match_tiers_and_e_values_use_bucket_grid(tmp_path):

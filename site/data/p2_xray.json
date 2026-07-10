@@ -410,123 +410,108 @@
   ],
   "reconciliation_rows": [
     {
-      "ci_hi": 0.62252,
-      "ci_lo": -0.113081,
       "code": "P2-01",
       "name": "Westermark Strategies",
       "observation": 0.268399,
+      "observation_source": "returns_regression_proxy",
       "tier": "R"
     },
     {
-      "ci_hi": 0.469152,
-      "ci_lo": -0.266449,
       "code": "P2-02",
       "name": "Juniper Vale Partners",
       "observation": 0.07669,
+      "observation_source": "returns_regression_proxy",
       "tier": "R"
     },
     {
-      "ci_hi": 0.378688,
-      "ci_lo": 0.118816,
       "code": "P2-03",
       "name": "Sedgewick Advisors",
       "observation": 0.25,
+      "observation_source": "coarsened_exposure_emission",
       "tier": "E"
     },
     {
-      "ci_hi": 0.584367,
-      "ci_lo": -0.151234,
       "code": "P2-04",
       "name": "Ravenna Point",
       "observation": 0.220708,
+      "observation_source": "returns_regression_proxy",
       "tier": "R"
     },
     {
-      "ci_hi": 0.28057,
-      "ci_lo": 0.214828,
       "code": "P2-05",
       "name": "Oakhurst Capital",
       "observation": 0.247775,
+      "observation_source": "position_transparent_emission",
       "tier": "P"
     },
     {
-      "ci_hi": 0.58951,
-      "ci_lo": -0.14609,
       "code": "P2-06",
       "name": "Halstead Partners",
       "observation": 0.227137,
+      "observation_source": "returns_regression_proxy",
       "tier": "R"
     },
     {
-      "ci_hi": 0.281184,
-      "ci_lo": 0.021312,
       "code": "P2-07",
       "name": "Norwood Crest",
       "observation": 0.15,
+      "observation_source": "coarsened_exposure_emission",
       "tier": "E"
     },
     {
-      "ci_hi": 0.62724,
-      "ci_lo": -0.108361,
       "code": "P2-08",
       "name": "Talbot Reach",
       "observation": 0.274299,
+      "observation_source": "returns_regression_proxy",
       "tier": "R"
     },
     {
-      "ci_hi": 0.64729,
-      "ci_lo": -0.088311,
       "code": "P2-09",
       "name": "Ternhaven Capital",
       "observation": 0.299362,
+      "observation_source": "returns_regression_proxy",
       "tier": "R"
     },
     {
-      "ci_hi": 0.281184,
-      "ci_lo": 0.021312,
       "code": "P2-10",
       "name": "Greyloft Partners",
       "observation": 0.15,
+      "observation_source": "coarsened_exposure_emission",
       "tier": "E"
     },
     {
-      "ci_hi": 0.252791,
-      "ci_lo": 0.187049,
       "code": "P2-11",
       "name": "Verling Capital",
       "observation": 0.219952,
+      "observation_source": "position_transparent_emission",
       "tier": "P"
     },
     {
-      "ci_hi": 0.517243,
-      "ci_lo": -0.218358,
       "code": "P2-12",
       "name": "Vantage Row",
       "observation": 0.136803,
+      "observation_source": "returns_regression_proxy",
       "tier": "R"
     },
     {
-      "ci_hi": 0.42744,
-      "ci_lo": 0.167568,
       "code": "P2-13",
       "name": "Cormorant Capital",
       "observation": 0.3,
+      "observation_source": "coarsened_exposure_emission",
       "tier": "E"
     },
     {
-      "ci_hi": 0.652849,
-      "ci_lo": -0.082752,
       "code": "P2-14",
       "name": "Emberly Partners",
       "observation": 0.30631,
+      "observation_source": "returns_regression_proxy",
       "tier": "R"
     },
     {
-      "ci_hi": 0.637618,
-      "ci_lo": -0.097983,
       "code": "P2-15",
       "name": "Dunmore Advisors",
       "observation": 0.287272,
+      "observation_source": "returns_regression_proxy",
       "tier": "R"
     }
   ],

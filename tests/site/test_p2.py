@@ -97,6 +97,12 @@ def test_interval_provenance_counterfactual_and_fallback_render(tmp_path):
 
 def test_gate_failure_suppresses_fusion_and_makes_reconciliation_primary(tmp_path):
     html, _ = _build(tmp_path, gate_renders=False)
+    data = json.loads((REPO_ROOT / "site" / "data" / "p2_xray.json").read_text())
+    manager = data["managers"][0]
+    posterior_interval = (
+        f"{manager['posterior']['ci_lo']:+.3f} &hellip; "
+        f"{manager['posterior']['ci_hi']:+.3f}"
+    )
     assert 'data-gate-state="refuse"' in html
     assert 'data-fused-output="true"' not in html
     assert "Fused book net market beta" not in html
@@ -105,6 +111,10 @@ def test_gate_failure_suppresses_fusion_and_makes_reconciliation_primary(tmp_pat
     assert "information gain does not clear" in html
     assert "p2-reconciliation--primary" in html
     assert "un-fused — tiers not reconciled" in html
+    refusal = html.split('<section class="p2-refusal"', 1)[1].split("</section>", 1)[0]
+    assert posterior_interval not in refusal
+    assert "returns_regression_proxy" in refusal
+    assert "90% interval" not in refusal
 
 
 def test_provenance_is_capital_ordered_with_accessible_table(tmp_path):
