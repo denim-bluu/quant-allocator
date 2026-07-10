@@ -19,6 +19,12 @@ M6_OVERLAP_DEPTH = 25
 M6_COVERAGE_MIN = 0.60
 M6_OPTION_FLAG_SHARE = 0.10
 M6_FILING_LAG_DAYS = 45
+M6_CAVEATS = (
+    "45-day staleness: every filing is labelled with as-of and known-at dates.",
+    "Longs-only: shorts and net exposure are invisible to Form 13F.",
+    "Coverage holes: confidential-treatment, non-US, and non-equity positions may be missing.",
+    "Option-notional distortion: option lines are excluded from v1 share calculations.",
+)
 
 
 @dataclass(frozen=True)
@@ -28,6 +34,22 @@ class Concentration:
     top_n_weight: float
     hhi: float
     effective_names: float
+
+
+@dataclass(frozen=True)
+class HoldingsVerdict:
+    """Coverage-gated M6 read with dated receipts and structural caveats."""
+
+    coverage: float
+    coverage_pass: bool
+    concentration: Concentration | None
+    overlap: float | None
+    persistence: dict[str, int]
+    option_share: float
+    option_heavy: bool
+    as_of: pd.Timestamp
+    known_at: pd.Timestamp
+    caveats: tuple[str, ...]
 
 
 def _aligned_bool(mask: pd.Series | None, index: pd.Index, *, default: bool) -> pd.Series:
@@ -113,6 +135,48 @@ def reported_option_share(
     reportable = longs[eligible_aligned]
     total = float(reportable.sum())
     return 0.0 if total == 0.0 else float(longs[eligible_aligned & options].sum() / total)
+
+
+def holdings_view(
+    panel: pd.DataFrame,
+    true_weights: pd.Series,
+    eligible: pd.Series,
+    *,
+    peer_book: pd.Series | None = None,
+    option_mask: pd.Series | None = None,
+    coverage_min: float = M6_COVERAGE_MIN,
+    as_of: pd.Timestamp,
+    known_at: pd.Timestamp,
+) -> HoldingsVerdict:
+    """Build the exact visible-crop descriptors and suppress book verdicts on refusal."""
+    if panel.empty:
+        raise ValueError("panel must contain at least one reported quarter")
+    if not 0.0 <= coverage_min <= 1.0:
+        raise ValueError(f"coverage_min must be in [0, 1], got {coverage_min}")
+    as_of_ts = pd.Timestamp(as_of)
+    known_at_ts = pd.Timestamp(known_at)
+    if known_at_ts < as_of_ts:
+        raise ValueError(f"known_at {known_at_ts} must not precede as_of {as_of_ts}")
+
+    coverage = coverage_ratio(true_weights, eligible, option_mask=option_mask)
+    passes = coverage >= coverage_min
+    latest = panel.iloc[-1]
+    descriptor = concentration(latest) if passes else None
+    overlap = cosine_overlap(latest, peer_book) if passes and peer_book is not None else None
+    options = _aligned_bool(option_mask, true_weights.index, default=False)
+    option_share = reported_option_share(true_weights, eligible, options)
+    return HoldingsVerdict(
+        coverage=coverage,
+        coverage_pass=passes,
+        concentration=descriptor,
+        overlap=overlap,
+        persistence=conviction_persistence(panel),
+        option_share=option_share,
+        option_heavy=option_share > M6_OPTION_FLAG_SHARE,
+        as_of=as_of_ts,
+        known_at=known_at_ts,
+        caveats=M6_CAVEATS,
+    )
 
 
 def emit_13f_long_book(

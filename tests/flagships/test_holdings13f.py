@@ -3,12 +3,14 @@ import pandas as pd
 import pytest
 
 from quant_allocator.flagships.holdings13f.pipeline import (
+    M6_CAVEATS,
     M6_OPTION_FLAG_SHARE,
     concentration,
     conviction_persistence,
     cosine_overlap,
     coverage_ratio,
     emit_13f_long_book,
+    holdings_view,
     reported_option_share,
 )
 
@@ -147,3 +149,77 @@ def test_coverage_denominator_is_positive_long_book_only():
     weights = pd.Series({"visible": 0.3, "hidden": 0.2, "short": -0.9})
     eligible = pd.Series({"visible": True, "hidden": False, "short": True})
     assert coverage_ratio(weights, eligible) == pytest.approx(0.6)
+
+
+def _view_at_coverage(visible: float):
+    columns = ["visible", "hidden"]
+    panel = pd.DataFrame([[1.0, 0.0], [1.0, 0.0]], columns=columns)
+    true_weights = pd.Series([visible, 1.0 - visible], index=columns)
+    eligible = pd.Series([True, False], index=columns)
+    peer = pd.Series([0.8, 0.2], index=columns)
+    return holdings_view(
+        panel,
+        true_weights,
+        eligible,
+        peer_book=peer,
+        as_of=pd.Timestamp("2025-03-31"),
+        known_at=pd.Timestamp("2025-05-15"),
+    )
+
+
+def test_coverage_gate_passes_at_threshold_and_refuses_below():
+    passing = _view_at_coverage(0.600)
+    refused = _view_at_coverage(0.599)
+    assert passing.coverage_pass
+    assert passing.concentration is not None
+    assert passing.overlap is not None
+    assert not refused.coverage_pass
+    assert refused.concentration is None
+    assert refused.overlap is None
+    assert refused.persistence == {"visible": 2}
+
+
+def test_holdings_view_carries_receipts_caveats_and_independent_option_flag():
+    panel = pd.DataFrame([[1.0, 0.0], [1.0, 0.0]], columns=["stock", "option"])
+    true_weights = pd.Series({"stock": 0.08, "option": 0.12})
+    eligible = pd.Series(True, index=true_weights.index)
+    option_mask = pd.Series({"stock": False, "option": True})
+    verdict = holdings_view(
+        panel,
+        true_weights,
+        eligible,
+        option_mask=option_mask,
+        as_of=pd.Timestamp("2025-03-31"),
+        known_at=pd.Timestamp("2025-05-15"),
+    )
+    assert verdict.coverage == pytest.approx(0.4)
+    assert not verdict.coverage_pass
+    assert verdict.option_heavy
+    assert verdict.option_share == pytest.approx(0.6)
+    assert verdict.as_of == pd.Timestamp("2025-03-31")
+    assert verdict.known_at == pd.Timestamp("2025-05-15")
+    assert verdict.caveats == M6_CAVEATS
+    assert len(verdict.caveats) == 4
+
+
+def test_low_coverage_crop_can_distort_true_book_concentration():
+    true_weights = pd.DataFrame(
+        [[0.20, 0.20, 0.20, 0.20, 0.20]], columns=["A", "B", "C", "D", "hidden"]
+    )
+    eligible = pd.Series([True, True, True, True, False], index=true_weights.columns)
+    true_weights.index = pd.period_range("2025-03", periods=1, freq="M")
+    crop = emit_13f_long_book(true_weights, true_weights.index, eligible)
+    true_book = true_weights.iloc[0] / true_weights.iloc[0].sum()
+    assert coverage_ratio(true_weights.iloc[0], eligible) == pytest.approx(0.8)
+    assert concentration(crop.iloc[0]).hhi > concentration(true_book).hhi
+
+
+def test_holdings_view_rejects_known_at_before_as_of():
+    with pytest.raises(ValueError, match="known_at"):
+        holdings_view(
+            pd.DataFrame([[1.0]], columns=["A"]),
+            pd.Series({"A": 1.0}),
+            pd.Series({"A": True}),
+            as_of=pd.Timestamp("2025-03-31"),
+            known_at=pd.Timestamp("2025-03-30"),
+        )
