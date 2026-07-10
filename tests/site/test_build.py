@@ -54,6 +54,11 @@ def test_index_lists_all_cards(tmp_path):
         "persistence prompts."
     ) in index
     assert "Hybrid search is active; graph expansion remains a gated candidate." in index
+    assert (
+        "Posterior alpha across the roster — shrink noisy records before ranking."
+        in index
+    )
+    assert "Choose the dials and watch honest claims dissolve into grey." in index
     for title in EXPECTED_TITLES:
         # Titles are rendered through Jinja2 with autoescape=True, so "&" in a
         # title (e.g. "Sizing & alpha-decay lab") becomes "&amp;" in the output.

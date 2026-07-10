@@ -1,7 +1,7 @@
 - id: s1
   title: Hierarchical Bayesian alpha engine
   lane: S
-  one_liner: Posterior alpha across the roster — rank on skill, not luck.
+  one_liner: Posterior alpha across the roster — shrink noisy records before ranking.
   decisions: [select, size]
   tiers: [R, E, P]
   status: live
@@ -277,7 +277,7 @@
 - id: x2
   title: Transparency playground
   lane: X
-  one_liner: Drag the dials and watch honest claims dissolve into grey.
+  one_liner: Choose the dials and watch honest claims dissolve into grey.
   decisions: [engage]
   tiers: [R, E, P]
   status: live
