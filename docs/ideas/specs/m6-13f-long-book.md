@@ -577,12 +577,13 @@ fictional names, §6). The page has four parts.
 Lane's reported top book: a row per top position, a column per quarter, each cell a
 reported share, and each name's bar shaded by its **quarters-held** run (§3.5). Two
 things are meant to jump out. First, the book *concentrates*: the effective breadth
-annotation falls from **5.0 names to 2.0** across six quarters, and the panel marks
-**Q4 as the quarter the top name (N0) crossed 50% of the reported book** — "the quarter
+annotation falls from **6.92 names to 2.78** across six quarters, while the Herfindahl
+more than doubles from **0.144 to 0.360**. The panel marks **Q6 as the quarter the top
+name (A0001) first crossed 50% of the reported book, reaching 56.1%** — "the quarter
 the concentration doubled," entirely from free data. Second, the concentration is a
-*hardening of old convictions*: the top-3 names each carry a full **6-quarter** held
-bar, so this is doubling-down, not rotation. That is the engagement hook, stated as a
-question, never an accusation.
+*hardening of old convictions*: the latest top-3 names (A0001, A0065, and A0038) each
+carry a full **6-quarter** held bar, so this is doubling-down, not rotation. That is the
+engagement hook, stated as a question, never an accusation.
 
 How each visual element maps to the method:
 
@@ -592,7 +593,7 @@ How each visual element maps to the method:
 - **The quarters-held shading** = the §3.5 persistence count; a long bar is an old
   conviction, a short bar a fresh trade.
 - **The peer-overlap chip** = the §3.6 cosine against the pooled peer book — Vesper's
-  **0.23** reads "shares the tail, not the thesis." The chip explicitly says *this is a
+  **0.244** reads "shares the tail, not the thesis." The chip explicitly says *this is a
   descriptive overlap; crowding caps are card M4*, so no reader mistakes it for a sizing
   rule.
 - **The short-interest slot** = a top-longs list with a **"requires FINRA adapter"
@@ -602,7 +603,7 @@ How each visual element maps to the method:
 **The CoverageGate contrast.** A second card shows a *fragment* filer (Hensley Park Advisors)
 whose real book is mostly non-13(f): coverage **0.20**, below the `M6_COVERAGE_MIN`
 line, so the concentration and overlap verdicts **refuse to render** and the panel shows
-a coverage warning instead. Placed beside Vesper's **0.905 (renders, with a staleness
+a coverage warning instead. Placed beside Vesper's **0.822 (renders, with a staleness
 badge)**, this is the whole honesty of the card in one comparison: 13F is a usable
 position tier for one filer and a mirage for the other, and M6 tells them apart on the
 face of the page.
@@ -611,6 +612,13 @@ face of the page.
 as first-class TierBadges — staleness (45-day lag), longs-only, coverage holes
 (CTR/non-US), option-notional — so the reader confronts what the free data omits before
 reading any number.
+
+**§5 numbers reconciled to the real-pipeline generator output on 2026-07-10.** Relative
+to the self-contained teaching example, the committed exhibit moves the breadth endpoints
+from 5.0/2.0 to 6.92/2.78, the majority crossing from Q4/N0 to Q6/A0001, pooled overlap
+from 0.233 to 0.244, and Vesper coverage from 0.905 to 0.822; Hensley's 0.200 refusal is
+unchanged. These deltas remain held for the numerics gate; the generator was not forced
+to reproduce the teaching-code figures.
 
 What an allocator should conclude: 13F, mined systematically, turns a manager's own
 public filings into concrete monitoring and engagement material — Vesper Lane's book
