@@ -253,7 +253,7 @@ RED fires at 1% familywise, a roster of $N_{\text{mgr}} = 40$ healthy managers e
 $0.4$ false REDs *per review*, and
 
 $$
-\Pr(\text{≥1 false RED on a healthy roster of } 40) = 1 - 0.99^{40} \approx 0.33 .
+\Pr(\geq\!1\ \text{false RED on a healthy roster of } 40) = 1 - 0.99^{40} \approx 0.33 .
 $$
 
 A third of clean reviews would surface a red flag. M3's honest move is to **state the

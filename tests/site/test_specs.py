@@ -166,7 +166,7 @@ const rows = JSON.parse(fs.readFileSync(0, "utf8"));
 const failures = [];
 for (const row of rows) {
   try {
-    katex.renderToString(row.expression, {throwOnError: true, strict: "ignore"});
+    katex.renderToString(row.expression, {throwOnError: true, strict: "error"});
   } catch (error) {
     failures.push(`${row.spec} expression ${row.index}: ${error.message}`);
   }
