@@ -82,15 +82,20 @@ class _MathInlineProcessor(InlineProcessor):
         if close_start is None:
             return None, None, None
         close_end = close_start + len(delimiter)
-        return AtomicString(data[match.start(0) : close_end]), match.start(0), close_end
+        slash_pairs = match.group("slash_pairs")
+        math_start = match.start(0) + len(slash_pairs)
+        collapsed_prefix = "\\" * (len(slash_pairs) // 2)
+        protected = collapsed_prefix + data[math_start:close_end]
+        return AtomicString(protected), match.start(0), close_end
 
 
 class _EscapedDollarInlineProcessor(InlineProcessor):
-    r"""Render ``\$`` as visible currency without offering it to KaTeX as a delimiter."""
+    r"""Keep an odd-escaped ``$`` literal and collapse preceding slash pairs."""
 
     def handleMatch(self, match, data):  # noqa: N802 - Python-Markdown public API
         span = etree.Element("span", {"class": "escaped-dollar"})
-        span.text = AtomicString("$")
+        slash_pairs = match.group("slash_pairs")
+        span.text = AtomicString("\\" * (len(slash_pairs) // 2) + "$")
         return span, match.start(0), match.end(0)
 
 
@@ -112,14 +117,14 @@ class _MathProtectionExtension(Extension):
             _MathInlineProcessor(MATH_OPEN_PATTERN, md), "protected_math", 186
         )
         md.inlinePatterns.register(
-            _EscapedDisplayDollarInlineProcessor(
-                r"(?<!\\)(?P<slash_pairs>(?:\\\\)*)\\\$\$", md
-            ),
+            _EscapedDisplayDollarInlineProcessor(r"(?<!\\)(?P<slash_pairs>(?:\\\\)*)\\\$\$", md),
             "escaped_display_dollar",
             185,
         )
         md.inlinePatterns.register(
-            _EscapedDollarInlineProcessor(r"\\\$", md), "escaped_dollar", 184
+            _EscapedDollarInlineProcessor(r"(?<!\\)(?P<slash_pairs>(?:\\\\)*)\\\$(?!\$)", md),
+            "escaped_dollar",
+            184,
         )
 
 

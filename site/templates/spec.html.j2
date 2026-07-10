@@ -21,20 +21,12 @@
     var specBody = document.querySelector(".spec-page__body");
     var mathErrors = [];
 
-    function textHasActiveDollar(text) {
-      for (var index = 0; index < text.length; index += 1) {
-        if (text[index] !== "$") continue;
-        var precedingBackslashes = 0;
-        for (var cursor = index - 1; cursor >= 0 && text[cursor] === "\\"; cursor -= 1) {
-          precedingBackslashes += 1;
-        }
-        if (precedingBackslashes % 2 === 0) return true;
-      }
-      return false;
+    function textHasRawDollar(text) {
+      return text.indexOf("$") !== -1;
     }
 
     function hasRawMathDelimiter(node) {
-      if (node.nodeType === 3) return textHasActiveDollar(node.nodeValue || "");
+      if (node.nodeType === 3) return textHasRawDollar(node.nodeValue || "");
       if (node.nodeType !== 1) return false;
       if (node.matches("pre, code, .escaped-dollar, .katex")) return false;
       return Array.prototype.some.call(node.childNodes, hasRawMathDelimiter);

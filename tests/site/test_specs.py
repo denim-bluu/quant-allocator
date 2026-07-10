@@ -22,14 +22,19 @@ class _MathTextCollector(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.excluded_depth = 0
+        self.exclusion_stack: list[str] = []
         self.text_nodes: list[str] = []
 
     def handle_starttag(self, tag, attrs):
-        if tag in {"pre", "code"}:
+        classes = dict(attrs).get("class", "").split()
+        starts_exclusion = tag in {"pre", "code"} or "escaped-dollar" in classes
+        if starts_exclusion:
+            self.exclusion_stack.append(tag)
             self.excluded_depth += 1
 
     def handle_endtag(self, tag):
-        if tag in {"pre", "code"}:
+        if self.exclusion_stack and self.exclusion_stack[-1] == tag:
+            self.exclusion_stack.pop()
             self.excluded_depth -= 1
 
     def handle_data(self, data):
@@ -44,12 +49,13 @@ def _test_preceding_backslashes(text: str, index: int) -> int:
     return count
 
 
-def _expressions_in_text(text: str) -> list[str]:
+def _expressions_in_text(text: str, *, opening_uses_parity: bool = True) -> list[str]:
     """Independent delimiter scanner; intentionally does not reuse the production regex."""
     expressions = []
     index = 0
     while index < len(text):
-        if text[index] != "$" or _test_preceding_backslashes(text, index) % 2:
+        escaped_opening = opening_uses_parity and _test_preceding_backslashes(text, index) % 2
+        if text[index] != "$" or escaped_opening:
             index += 1
             continue
         delimiter = "$$" if text.startswith("$$", index) else "$"
@@ -62,7 +68,10 @@ def _expressions_in_text(text: str) -> list[str]:
             if delimiter == "$" and text[close] == "\n":
                 close = -1
                 break
-            if text.startswith(delimiter, close) and _test_preceding_backslashes(text, close) % 2 == 0:
+            if (
+                text.startswith(delimiter, close)
+                and _test_preceding_backslashes(text, close) % 2 == 0
+            ):
                 if delimiter == "$" and close + 1 < len(text) and text[close + 1] == "$":
                     close += 1
                     continue
@@ -80,7 +89,9 @@ def _math_expressions(rendered_body: str) -> list[str]:
     collector = _MathTextCollector()
     collector.feed(rendered_body)
     return [
-        expression for text in collector.text_nodes for expression in _expressions_in_text(text)
+        expression
+        for text in collector.text_nodes
+        for expression in _expressions_in_text(text, opening_uses_parity=False)
     ]
 
 
@@ -229,6 +240,8 @@ def test_math_delimiters_use_even_odd_backslash_parity(tmp_path):
     active = ["x_i", r"y_i\\", r"z_i\\"]
     assert _source_math_expressions(source) == active
     assert _math_expressions(body) == active
+    assert r"Even opening \$x_i$" in body
+    assert r"Even display opening \$$z_i\\$$" in body
     result = _katex_result(
         [
             {"spec": "t1", "index": index, "expression": expression}
@@ -242,14 +255,38 @@ def test_math_delimiters_use_even_odd_backslash_parity(tmp_path):
         r"Odd inline opening and close: \$not_math\$."
         "\n\n"
         r"Odd display-token opening and close: \$$not_display\$$."
+        "\n\n"
+        r"Three-slash inline tokens: \\\$not_math_three\\\$."
+        "\n\n"
+        r"Three-slash display tokens: \\\$$not_display_three\\\$$."
     )
     spec.write_text(escaped_source, encoding="utf-8")
     build(site, tmp_path / "escaped-out")
     escaped_body = _rendered_spec_bodies(tmp_path / "escaped-out")["t1"]
     assert _source_math_expressions(escaped_source) == []
     assert _math_expressions(escaped_body) == []
-    assert escaped_body.count('class="escaped-dollar"') == 4
+    assert escaped_body.count('class="escaped-dollar"') == 8
     assert escaped_body.count('<span class="escaped-dollar">$$</span>') == 2
+    assert escaped_body.count('<span class="escaped-dollar">\\$</span>') == 2
+    assert escaped_body.count('<span class="escaped-dollar">\\$$</span>') == 2
+
+
+def test_unmatched_even_run_openers_survive_as_raw_and_keep_error_default(tmp_path):
+    site = _fixture_site(tmp_path)
+    spec = tmp_path / "docs" / "ideas" / "specs" / "t1.md"
+    spec.write_text(
+        "# Unmatched\n\n" + r"Even inline \\$unclosed." + "\n\n" + r"Even display \\$$unclosed.",
+        encoding="utf-8",
+    )
+
+    build(site, tmp_path / "out")
+
+    rendered = (tmp_path / "out" / "specs" / "t1.html").read_text(encoding="utf-8")
+    body = _rendered_spec_bodies(tmp_path / "out")["t1"]
+    assert 'data-math-render-status="error"' in rendered
+    assert r"Even inline \$unclosed" in body
+    assert r"Even display \$$unclosed" in body
+    assert 'class="escaped-dollar"' not in body
 
 
 def test_all_live_specs_have_contiguous_balanced_katex_parseable_math(tmp_path):
@@ -323,8 +360,10 @@ function run(mode) {
       renderedTarget = target;
       if (mode === "invalid") {
         options.errorCallback("deliberate parse failure", new Error("bad TeX"));
-      } else if (mode === "raw") {
-        target.childNodes = [text("$$unclosed")];
+      } else if (mode === "rawInline") {
+        target.childNodes = [text("\\$unclosed")];
+      } else if (mode === "rawDisplay") {
+        target.childNodes = [text("\\$$unclosed")];
       } else if (mode === "escaped") {
         target.childNodes = [element("span", ["escaped-dollar"], [text("$$")])];
       } else {
@@ -337,7 +376,7 @@ function run(mode) {
   return {body, outside, thrown, renderedTarget, consoleErrors};
 }
 const valid = run("valid"), invalid = run("invalid");
-const raw = run("raw"), escaped = run("escaped");
+const rawInline = run("rawInline"), rawDisplay = run("rawDisplay"), escaped = run("escaped");
 const checks = [
   valid.renderedTarget === valid.body,
   valid.body.attrs["data-math-render-status"] === "ok",
@@ -348,11 +387,16 @@ const checks = [
   invalid.consoleErrors.length >= 1,
   invalid.thrown && invalid.thrown.message.includes("Spec math rendering failed"),
   invalid.outside.attrs["data-math-render-status"] === "untouched",
-  raw.renderedTarget === raw.body,
-  raw.body.attrs["data-math-render-status"] === "error",
-  raw.consoleErrors.length === 1,
-  raw.thrown && raw.thrown.message.includes("active raw delimiter"),
-  raw.outside.attrs["data-math-render-status"] === "untouched",
+  rawInline.renderedTarget === rawInline.body,
+  rawInline.body.attrs["data-math-render-status"] === "error",
+  rawInline.consoleErrors.length === 1,
+  rawInline.thrown && rawInline.thrown.message.includes("active raw delimiter"),
+  rawInline.outside.attrs["data-math-render-status"] === "untouched",
+  rawDisplay.renderedTarget === rawDisplay.body,
+  rawDisplay.body.attrs["data-math-render-status"] === "error",
+  rawDisplay.consoleErrors.length === 1,
+  rawDisplay.thrown && rawDisplay.thrown.message.includes("active raw delimiter"),
+  rawDisplay.outside.attrs["data-math-render-status"] === "untouched",
   escaped.body.attrs["data-math-render-status"] === "ok",
   escaped.consoleErrors.length === 0,
   escaped.thrown === null
