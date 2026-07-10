@@ -527,7 +527,7 @@ diversification illusory?" question answered at a glance.
 sees: P (the demo's robust rung), E (factor crowding only), and R (a descriptive
 return-clustering chip labelled "not a holdings measurement"). The public-filings view
 is withheld entirely until gate 3 measures its 45-day lag, longs-only coverage,
-confidentiality-treatment holes, and non-US blindness. The **PowerGate** is the honest
+CTR coverage holes, and non-US blindness. The **PowerGate** is the honest
 refusal on the *predictive* claim: the panel measures overlap robustly, but "high overlap
 ⇒ this crowd will co-drawdown" is a **gated hypothesis** (§6.4), so the page renders the
 unwind as a **scenario** and refuses predicted loss and a size-cap recommendation until

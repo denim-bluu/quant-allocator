@@ -62,7 +62,9 @@ def _display_names(value, parent_key=None):
     names = []
     if isinstance(value, dict):
         for key, item in value.items():
-            if key in {"name", "manager_name"} and isinstance(item, str):
+            if key in {"name", "manager", "manager_name", "manager_a", "manager_b"} and isinstance(
+                item, str
+            ):
                 names.append(item)
             elif key == "names" and isinstance(item, dict):
                 names.extend(v for v in item.values() if isinstance(v, str))
@@ -76,6 +78,21 @@ def _display_names(value, parent_key=None):
 def _collision_key(name):
     first = re.sub(r"[^a-z]", "", name.lower().split()[0])
     return first[:7]
+
+
+def test_display_name_inventory_covers_pair_and_single_manager_fields():
+    fixture = {
+        "manager": "Alder House",
+        "manager_a": "Birch Capital",
+        "manager_b": "Cedar Partners",
+        "manager_name": "Dogwood Advisors",
+    }
+    assert _display_names(fixture) == [
+        "Alder House",
+        "Birch Capital",
+        "Cedar Partners",
+        "Dogwood Advisors",
+    ]
 
 
 def test_m4_names_do_not_collide_with_full_committed_inventory():

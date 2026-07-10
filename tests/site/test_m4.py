@@ -91,7 +91,21 @@ def test_exact_snapshot_measurements_and_centerpiece(tmp_path):
     assert html.count("exact for this snapshot; no sampling interval") == 3
     assert "Signed holdings-vector cosine" in html
     assert "not a return-correlation estimate" in html
-    assert html.count('data-domain="overlap"') == 3
+    assert html.count('data-domain="overlap"') == 2
+    assert 'data-domain="cosine"' in html
+    assert '<span class="interval-stat__value" id="m4-cosine-value">0.327</span>' in html
+
+
+def test_pair_selector_updates_values_data_and_rail_geometry():
+    script = (REPO_ROOT / "site" / "assets" / "m4-crowding.js").read_text(encoding="utf-8")
+    assert "function updateStat" in script
+    assert 'stat.dataset.lo = String(value)' in script
+    assert 'stat.dataset.point = String(value)' in script
+    assert 'stat.dataset.hi = String(value)' in script
+    assert 'querySelector(".interval-stat__band")' in script
+    assert 'querySelector(".interval-stat__point")' in script
+    assert 'updateStat("m4-raw", data.heatmap.raw[i][j], "overlap")' in script
+    assert 'updateStat("m4-cosine", data.heatmap.cosine[i][j], "cosine")' in script
 
 
 def test_heatmap_and_stress_controls_are_accessible_and_precomputed(tmp_path):
@@ -124,7 +138,7 @@ def test_tier_limits_and_public_view_withheld(tmp_path):
     assert "13F view withheld pending degradation gate" in html
     assert "45-day lag" in html
     assert "longs-only" in html
-    assert "confidentiality-treatment holes" in html
+    assert "CTR coverage holes" in html
     assert "non-US blindness" in html
 
 

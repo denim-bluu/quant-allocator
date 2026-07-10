@@ -9,14 +9,29 @@
 
   function percent(value) { return (value * 100).toFixed(1) + "%"; }
 
+  function railPosition(value, domain) {
+    return domain === "cosine" ? (value + 1) * 50 : value * 100;
+  }
+
+  function updateStat(statId, value, domain) {
+    var stat = document.getElementById(statId + "-stat");
+    var valueNode = document.getElementById(statId + "-value");
+    if (!stat || !valueNode) { return; }
+    stat.dataset.lo = String(value);
+    stat.dataset.point = String(value);
+    stat.dataset.hi = String(value);
+    valueNode.textContent = domain === "cosine" ? value.toFixed(3) : percent(value);
+    var position = railPosition(value, domain) + "%";
+    stat.querySelector(".interval-stat__band").style.left = position;
+    stat.querySelector(".interval-stat__point").style.left = position;
+  }
+
   function updatePair(data, i, j) {
     var names = data.heatmap.managers;
     document.getElementById("m4-selected-pair").textContent = names[i] + " × " + names[j];
-    document.getElementById("m4-raw-value").textContent = percent(data.heatmap.raw[i][j]);
-    document.getElementById("m4-liquidity-value").textContent =
-      percent(data.heatmap.liquidity[i][j]);
-    document.getElementById("m4-cosine-value").textContent =
-      data.heatmap.cosine[i][j].toFixed(3);
+    updateStat("m4-raw", data.heatmap.raw[i][j], "overlap");
+    updateStat("m4-liquidity", data.heatmap.liquidity[i][j], "overlap");
+    updateStat("m4-cosine", data.heatmap.cosine[i][j], "cosine");
   }
 
   function initHeatmap(data) {
