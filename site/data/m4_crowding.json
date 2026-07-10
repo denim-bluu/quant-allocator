@@ -1,0 +1,957 @@
+{
+  "heatmap": {
+    "alert_threshold": 0.3,
+    "cosine": [
+      [
+        1.0,
+        0.327054,
+        0.039332,
+        0.043708,
+        0.072304,
+        -0.029175
+      ],
+      [
+        0.327054,
+        1.0,
+        -0.000272,
+        0.061105,
+        0.09027,
+        -0.092724
+      ],
+      [
+        0.039332,
+        -0.000272,
+        1.0,
+        0.020624,
+        0.031405,
+        -0.014666
+      ],
+      [
+        0.043708,
+        0.061105,
+        0.020624,
+        1.0,
+        -0.001289,
+        0.022503
+      ],
+      [
+        0.072304,
+        0.09027,
+        0.031405,
+        -0.001289,
+        1.0,
+        -0.114157
+      ],
+      [
+        -0.029175,
+        -0.092724,
+        -0.014666,
+        0.022503,
+        -0.114157,
+        1.0
+      ]
+    ],
+    "liquidity": [
+      [
+        1.0,
+        0.402391,
+        0.001448,
+        0.038649,
+        0.186054,
+        0.00269
+      ],
+      [
+        0.402391,
+        1.0,
+        0.000853,
+        0.018566,
+        0.210909,
+        0.04931
+      ],
+      [
+        0.001448,
+        0.000853,
+        1.0,
+        0.049913,
+        0.008501,
+        0.002117
+      ],
+      [
+        0.038649,
+        0.018566,
+        0.049913,
+        1.0,
+        0.000854,
+        0.042816
+      ],
+      [
+        0.186054,
+        0.210909,
+        0.008501,
+        0.000854,
+        1.0,
+        0.0
+      ],
+      [
+        0.00269,
+        0.04931,
+        0.002117,
+        0.042816,
+        0.0,
+        1.0
+      ]
+    ],
+    "managers": [
+      "Hollowmere Capital",
+      "Brackenford Partners",
+      "Copperleigh Advisors",
+      "Northmarsh Point",
+      "Ternwick Capital",
+      "Redwillow Partners"
+    ],
+    "raw": [
+      [
+        1.0,
+        0.263798,
+        0.039988,
+        0.064466,
+        0.074383,
+        0.003591
+      ],
+      [
+        0.263798,
+        1.0,
+        0.025358,
+        0.098439,
+        0.116374,
+        0.046934
+      ],
+      [
+        0.039988,
+        0.025358,
+        1.0,
+        0.066711,
+        0.027353,
+        0.005875
+      ],
+      [
+        0.064466,
+        0.098439,
+        0.066711,
+        1.0,
+        0.009428,
+        0.056325
+      ],
+      [
+        0.074383,
+        0.116374,
+        0.027353,
+        0.009428,
+        1.0,
+        0.0
+      ],
+      [
+        0.003591,
+        0.046934,
+        0.005875,
+        0.056325,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "managers": [
+    {
+      "aum_millions": 500.0,
+      "code": "HM",
+      "name": "Hollowmere Capital",
+      "strategy": "concentrated long/short"
+    },
+    {
+      "aum_millions": 500.0,
+      "code": "BP",
+      "name": "Brackenford Partners",
+      "strategy": "event-driven equity"
+    },
+    {
+      "aum_millions": 350.0,
+      "code": "CA",
+      "name": "Copperleigh Advisors",
+      "strategy": "quality equity"
+    },
+    {
+      "aum_millions": 425.0,
+      "code": "NP",
+      "name": "Northmarsh Point",
+      "strategy": "market-neutral equity"
+    },
+    {
+      "aum_millions": 300.0,
+      "code": "TC",
+      "name": "Ternwick Capital",
+      "strategy": "systematic equity"
+    },
+    {
+      "aum_millions": 375.0,
+      "code": "RP",
+      "name": "Redwillow Partners",
+      "strategy": "fundamental equity"
+    }
+  ],
+  "meta": {
+    "as_of": "2027-12",
+    "generator": "m4_crowding",
+    "market_seed": 17,
+    "n_assets": 240,
+    "n_managers": 6,
+    "n_months": 96,
+    "participation_limit": 0.2,
+    "source": "emit_tiers().transparency",
+    "tier": "P"
+  },
+  "pair_centerpiece": {
+    "alert_threshold": 0.3,
+    "cosine": 0.327054,
+    "crowded": true,
+    "liquidity": 0.402391,
+    "manager_a": "Hollowmere Capital",
+    "manager_b": "Brackenford Partners",
+    "raw": 0.263798,
+    "worst_asset": "A0106",
+    "worst_days_stressed_volume": 39.413316,
+    "worst_direction": "long"
+  },
+  "power_gate": {
+    "gate_2_status": "missing",
+    "gate_3_status": "missing",
+    "predictive_supported": false,
+    "public_filings_view": false
+  },
+  "stress_scenarios": [
+    {
+      "rows": [
+        {
+          "asset": "A0106",
+          "combined_dollars": 39987671.463499,
+          "days_stressed_volume": 19.706658,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.13834
+          }
+        },
+        {
+          "asset": "A0092",
+          "combined_dollars": 65289456.259519,
+          "days_stressed_volume": 19.399556,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.122923
+          }
+        },
+        {
+          "asset": "A0055",
+          "combined_dollars": 44644834.155438,
+          "days_stressed_volume": 16.804127,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.075197
+          }
+        },
+        {
+          "asset": "A0045",
+          "combined_dollars": 43123309.49313,
+          "days_stressed_volume": 2.166733,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.040223
+          }
+        },
+        {
+          "asset": "A0232",
+          "combined_dollars": 21089708.947762,
+          "days_stressed_volume": 1.171206,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.021211
+          }
+        },
+        {
+          "asset": "A0095",
+          "combined_dollars": 29992307.698811,
+          "days_stressed_volume": 0.786612,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.017576
+          }
+        },
+        {
+          "asset": "A0197",
+          "combined_dollars": 21143565.012403,
+          "days_stressed_volume": 0.563666,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.015901
+          }
+        },
+        {
+          "asset": "A0174",
+          "combined_dollars": 32747588.867639,
+          "days_stressed_volume": 0.250022,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.011419
+          }
+        },
+        {
+          "asset": "A0117",
+          "combined_dollars": 4098450.930085,
+          "days_stressed_volume": 0.223112,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.013798
+          }
+        },
+        {
+          "asset": "A0023",
+          "combined_dollars": 17007615.98739,
+          "days_stressed_volume": 0.075564,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.007478
+          }
+        },
+        {
+          "asset": "A0080",
+          "combined_dollars": 1245181.098155,
+          "days_stressed_volume": 0.064002,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.005781
+          }
+        },
+        {
+          "asset": "A0030",
+          "combined_dollars": 12382625.310886,
+          "days_stressed_volume": 0.056311,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.005054
+          }
+        },
+        {
+          "asset": "A0209",
+          "combined_dollars": 5787558.243286,
+          "days_stressed_volume": 0.012468,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.002422
+          }
+        }
+      ],
+      "stress_delta": 1.0,
+      "worst": {
+        "asset": "A0106",
+        "combined_dollars": 39987671.463499,
+        "days_stressed_volume": 19.706658,
+        "direction": "long",
+        "holder_count": 2,
+        "illustrative": {
+          "impact_rate": 0.13834
+        }
+      }
+    },
+    {
+      "rows": [
+        {
+          "asset": "A0106",
+          "combined_dollars": 39987671.463499,
+          "days_stressed_volume": 26.275544,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.159741
+          }
+        },
+        {
+          "asset": "A0092",
+          "combined_dollars": 65289456.259519,
+          "days_stressed_volume": 25.866075,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.141939
+          }
+        },
+        {
+          "asset": "A0055",
+          "combined_dollars": 44644834.155438,
+          "days_stressed_volume": 22.405502,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.08683
+          }
+        },
+        {
+          "asset": "A0045",
+          "combined_dollars": 43123309.49313,
+          "days_stressed_volume": 2.888978,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.046446
+          }
+        },
+        {
+          "asset": "A0232",
+          "combined_dollars": 21089708.947762,
+          "days_stressed_volume": 1.561609,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.024492
+          }
+        },
+        {
+          "asset": "A0095",
+          "combined_dollars": 29992307.698811,
+          "days_stressed_volume": 1.048817,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.020295
+          }
+        },
+        {
+          "asset": "A0197",
+          "combined_dollars": 21143565.012403,
+          "days_stressed_volume": 0.751555,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.018361
+          }
+        },
+        {
+          "asset": "A0174",
+          "combined_dollars": 32747588.867639,
+          "days_stressed_volume": 0.333363,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.013185
+          }
+        },
+        {
+          "asset": "A0117",
+          "combined_dollars": 4098450.930085,
+          "days_stressed_volume": 0.297482,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.015932
+          }
+        },
+        {
+          "asset": "A0023",
+          "combined_dollars": 17007615.98739,
+          "days_stressed_volume": 0.100753,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.008635
+          }
+        },
+        {
+          "asset": "A0080",
+          "combined_dollars": 1245181.098155,
+          "days_stressed_volume": 0.085336,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.006676
+          }
+        },
+        {
+          "asset": "A0030",
+          "combined_dollars": 12382625.310886,
+          "days_stressed_volume": 0.075081,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.005836
+          }
+        },
+        {
+          "asset": "A0209",
+          "combined_dollars": 5787558.243286,
+          "days_stressed_volume": 0.016623,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.002797
+          }
+        }
+      ],
+      "stress_delta": 0.75,
+      "worst": {
+        "asset": "A0106",
+        "combined_dollars": 39987671.463499,
+        "days_stressed_volume": 26.275544,
+        "direction": "long",
+        "holder_count": 2,
+        "illustrative": {
+          "impact_rate": 0.159741
+        }
+      }
+    },
+    {
+      "rows": [
+        {
+          "asset": "A0106",
+          "combined_dollars": 39987671.463499,
+          "days_stressed_volume": 39.413316,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.195642
+          }
+        },
+        {
+          "asset": "A0092",
+          "combined_dollars": 65289456.259519,
+          "days_stressed_volume": 38.799112,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.173839
+          }
+        },
+        {
+          "asset": "A0055",
+          "combined_dollars": 44644834.155438,
+          "days_stressed_volume": 33.608254,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.106345
+          }
+        },
+        {
+          "asset": "A0045",
+          "combined_dollars": 43123309.49313,
+          "days_stressed_volume": 4.333467,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.056884
+          }
+        },
+        {
+          "asset": "A0232",
+          "combined_dollars": 21089708.947762,
+          "days_stressed_volume": 2.342413,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.029996
+          }
+        },
+        {
+          "asset": "A0095",
+          "combined_dollars": 29992307.698811,
+          "days_stressed_volume": 1.573225,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.024856
+          }
+        },
+        {
+          "asset": "A0197",
+          "combined_dollars": 21143565.012403,
+          "days_stressed_volume": 1.127333,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.022488
+          }
+        },
+        {
+          "asset": "A0174",
+          "combined_dollars": 32747588.867639,
+          "days_stressed_volume": 0.500045,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.016149
+          }
+        },
+        {
+          "asset": "A0117",
+          "combined_dollars": 4098450.930085,
+          "days_stressed_volume": 0.446223,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.019513
+          }
+        },
+        {
+          "asset": "A0023",
+          "combined_dollars": 17007615.98739,
+          "days_stressed_volume": 0.151129,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.010576
+          }
+        },
+        {
+          "asset": "A0080",
+          "combined_dollars": 1245181.098155,
+          "days_stressed_volume": 0.128004,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.008176
+          }
+        },
+        {
+          "asset": "A0030",
+          "combined_dollars": 12382625.310886,
+          "days_stressed_volume": 0.112621,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.007147
+          }
+        },
+        {
+          "asset": "A0209",
+          "combined_dollars": 5787558.243286,
+          "days_stressed_volume": 0.024935,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.003426
+          }
+        }
+      ],
+      "stress_delta": 0.5,
+      "worst": {
+        "asset": "A0106",
+        "combined_dollars": 39987671.463499,
+        "days_stressed_volume": 39.413316,
+        "direction": "long",
+        "holder_count": 2,
+        "illustrative": {
+          "impact_rate": 0.195642
+        }
+      }
+    },
+    {
+      "rows": [
+        {
+          "asset": "A0106",
+          "combined_dollars": 39987671.463499,
+          "days_stressed_volume": 56.304736,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.233837
+          }
+        },
+        {
+          "asset": "A0092",
+          "combined_dollars": 65289456.259519,
+          "days_stressed_volume": 55.427303,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.207778
+          }
+        },
+        {
+          "asset": "A0055",
+          "combined_dollars": 44644834.155438,
+          "days_stressed_volume": 48.011791,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.127106
+          }
+        },
+        {
+          "asset": "A0045",
+          "combined_dollars": 43123309.49313,
+          "days_stressed_volume": 6.190667,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.067989
+          }
+        },
+        {
+          "asset": "A0232",
+          "combined_dollars": 21089708.947762,
+          "days_stressed_volume": 3.346304,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.035852
+          }
+        },
+        {
+          "asset": "A0095",
+          "combined_dollars": 29992307.698811,
+          "days_stressed_volume": 2.247464,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.029709
+          }
+        },
+        {
+          "asset": "A0197",
+          "combined_dollars": 21143565.012403,
+          "days_stressed_volume": 1.610475,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.026878
+          }
+        },
+        {
+          "asset": "A0174",
+          "combined_dollars": 32747588.867639,
+          "days_stressed_volume": 0.71435,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.019301
+          }
+        },
+        {
+          "asset": "A0117",
+          "combined_dollars": 4098450.930085,
+          "days_stressed_volume": 0.637462,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.023322
+          }
+        },
+        {
+          "asset": "A0023",
+          "combined_dollars": 17007615.98739,
+          "days_stressed_volume": 0.215898,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.012641
+          }
+        },
+        {
+          "asset": "A0080",
+          "combined_dollars": 1245181.098155,
+          "days_stressed_volume": 0.182862,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.009772
+          }
+        },
+        {
+          "asset": "A0030",
+          "combined_dollars": 12382625.310886,
+          "days_stressed_volume": 0.160887,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.008543
+          }
+        },
+        {
+          "asset": "A0209",
+          "combined_dollars": 5787558.243286,
+          "days_stressed_volume": 0.035622,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.004094
+          }
+        }
+      ],
+      "stress_delta": 0.35,
+      "worst": {
+        "asset": "A0106",
+        "combined_dollars": 39987671.463499,
+        "days_stressed_volume": 56.304736,
+        "direction": "long",
+        "holder_count": 2,
+        "illustrative": {
+          "impact_rate": 0.233837
+        }
+      }
+    },
+    {
+      "rows": [
+        {
+          "asset": "A0106",
+          "combined_dollars": 39987671.463499,
+          "days_stressed_volume": 78.826631,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.276679
+          }
+        },
+        {
+          "asset": "A0092",
+          "combined_dollars": 65289456.259519,
+          "days_stressed_volume": 77.598224,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.245846
+          }
+        },
+        {
+          "asset": "A0055",
+          "combined_dollars": 44644834.155438,
+          "days_stressed_volume": 67.216507,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.150394
+          }
+        },
+        {
+          "asset": "A0045",
+          "combined_dollars": 43123309.49313,
+          "days_stressed_volume": 8.666933,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.080446
+          }
+        },
+        {
+          "asset": "A0232",
+          "combined_dollars": 21089708.947762,
+          "days_stressed_volume": 4.684826,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.042421
+          }
+        },
+        {
+          "asset": "A0095",
+          "combined_dollars": 29992307.698811,
+          "days_stressed_volume": 3.14645,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.035152
+          }
+        },
+        {
+          "asset": "A0197",
+          "combined_dollars": 21143565.012403,
+          "days_stressed_volume": 2.254666,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.031803
+          }
+        },
+        {
+          "asset": "A0174",
+          "combined_dollars": 32747588.867639,
+          "days_stressed_volume": 1.00009,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.022838
+          }
+        },
+        {
+          "asset": "A0117",
+          "combined_dollars": 4098450.930085,
+          "days_stressed_volume": 0.892447,
+          "direction": "short",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.027595
+          }
+        },
+        {
+          "asset": "A0023",
+          "combined_dollars": 17007615.98739,
+          "days_stressed_volume": 0.302258,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.014957
+          }
+        },
+        {
+          "asset": "A0080",
+          "combined_dollars": 1245181.098155,
+          "days_stressed_volume": 0.256007,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.011563
+          }
+        },
+        {
+          "asset": "A0030",
+          "combined_dollars": 12382625.310886,
+          "days_stressed_volume": 0.225242,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.010108
+          }
+        },
+        {
+          "asset": "A0209",
+          "combined_dollars": 5787558.243286,
+          "days_stressed_volume": 0.04987,
+          "direction": "long",
+          "holder_count": 2,
+          "illustrative": {
+            "impact_rate": 0.004845
+          }
+        }
+      ],
+      "stress_delta": 0.25,
+      "worst": {
+        "asset": "A0106",
+        "combined_dollars": 39987671.463499,
+        "days_stressed_volume": 78.826631,
+        "direction": "long",
+        "holder_count": 2,
+        "illustrative": {
+          "impact_rate": 0.276679
+        }
+      }
+    }
+  ]
+}
