@@ -130,12 +130,12 @@ the Herfindahl more than doubled, the effective breadth more than halved.
 
 Now the persistence read. Of quarter 6's top three names (N0, N1, N2), **each has been
 reported in all 6 quarters** — this is concentration in *existing reported holdings*, not a
-rotation into new ones. That distinction is the engagement hook: the book did not
-change its mind, it doubled down.
+rotation into new ones. That distinction is the engagement hook: the same reported
+names persisted while concentration increased.
 
-The overlap read. A second filer holds Vesper's *tail* names (N1–N4) but avoids the N0
-thesis entirely. The cosine between the two reported books is **0.233** — a modest
-overlap: they share the periphery, not the core. (M6 reports this number; it does
+The overlap read. A second filer holds Vesper's smaller reported names (N1–N4) but not
+its leader N0. The cosine between the two reported books is **0.233** — a modest
+overlap concentrated outside the leader. (M6 reports this number; it does
 **not** turn it into a crowding cap — that is card M4, §3.6.)
 
 The coverage read, and the gate. Vesper's Q6 real long book is N0–N4 plus the non-13(f)
@@ -538,7 +538,7 @@ if __name__ == "__main__":
         print(f"  {assets[name]}: {qh} quarters")
 
     # Peer overlap: a second filer that shares Vesper's TAIL names but avoids the
-    # N0 thesis -- "same tail, different thesis", a moderate descriptive overlap.
+    # N0 leader -- the overlap is concentrated outside the leader.
     peer_signed = np.array([0.00, 0.30, 0.20, 0.30, 0.20, -0.20, 0.00])
     peer_book = emit_13f_long_book(peer_signed.reshape(1, -1), [0], eligible)[0]
     print(f"\nPeer cosine overlap (Vesper Q6 vs peer): "
@@ -582,10 +582,10 @@ more than doubles from **0.144 to 0.360**. The panel marks **Q6 as the quarter t
 name (A0001) first crossed 50% of the reported book, reaching 56.1%** — "the quarter
 the concentration doubled." The fully synthetic exhibit illustrates what a live adapter
 could derive from free filing data; the displayed values do not come from a public feed.
-Second, the concentration is a *hardening of existing reported holdings*: the latest top-3 names
+Second, the concentration increased among *existing reported holdings*: the latest top-3 names
 (A0001, A0065, and A0038) each
-carry a full **6-quarter** held bar, so this is doubling-down, not rotation. That is the
-engagement hook, stated as a question, never an accusation.
+carry a full **6-quarter** held bar. The same names remained visible while their reported
+weights concentrated. That is the engagement hook, stated as a question, never an accusation.
 
 How each visual element maps to the method:
 
@@ -595,7 +595,7 @@ How each visual element maps to the method:
 - **The quarters-held shading** = the §3.5 persistence count; a long bar is an old
   position reported across many quarters, a short bar a recent addition.
 - **The peer-overlap chip** = the §3.6 cosine against the pooled peer book — Vesper's
-  **0.244** reads "shares the tail, not the thesis." The chip explicitly says *this is a
+  **0.244** reads "overlap concentrated outside the leader." The chip explicitly says *this is a
   descriptive overlap; crowding caps are card M4*, so no reader mistakes it for a sizing
   rule.
 - **The short-interest slot** = a top-longs list with a **"requires FINRA adapter"
@@ -864,7 +864,8 @@ descriptor layer.**
 - **Explain the wow-demo to a non-quant.** "From this manager's own free public filings,
   their reported book concentrated from five roughly-equal positions into one dominant
   name over six quarters — and the same three names have been there the whole time, so
-  it is doubling-down, not churn. And when a filer hides most of their book from 13F, the
+  the observed change is increased concentration among persistent reported names, not
+  name turnover. And when a filer hides most of their book from 13F, the
   tool refuses to guess — it tells you it cannot see enough."
 
 ## 8. Method-review gate rulings (2026-07-07)

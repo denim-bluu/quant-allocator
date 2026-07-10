@@ -102,6 +102,18 @@ def test_centerpiece_receipts_and_method_boundaries(tmp_path):
     assert html.lower().count("conviction") == 1
     spec_html = (out / "specs" / "m6.html").read_text(encoding="utf-8")
     assert "conviction" not in spec_html.lower()
+    spec_text = " ".join(spec_html.lower().split())
+    assert "same reported names persisted while concentration increased" in spec_text
+    assert "overlap concentrated outside the leader" in spec_text
+    assert "increased concentration among persistent reported names" in spec_text
+    for intent_claim in (
+        "did not change its mind",
+        "doubled down",
+        "doubling-down",
+        "tail, not the thesis",
+        "tail, not thesis",
+    ):
+        assert intent_claim not in spec_text
     assert "not a return prediction" in html
 
 
