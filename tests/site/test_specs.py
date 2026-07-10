@@ -11,8 +11,8 @@ from pathlib import Path
 from quant_allocator.site.build import build
 
 MATH_PAIR_RE = re.compile(
-    r"(?<!\\)\$\$(?P<display>.+?)(?<!\\)\$\$"
-    r"|(?<![\\$])\$(?!\$)(?P<inline>[^\n]+?)(?<![\\$])\$(?!\$)",
+    r"(?<!\\)\$\$(?P<display>(?:\\.|[^\\$]|\$(?!\$))+?)(?<!\\)\$\$"
+    r"|(?<![\\$])\$(?!\$)(?P<inline>(?:\\.|[^\\$\n])+?)(?<!\\)\$(?!\$)",
     re.DOTALL,
 )
 FENCED_CODE_RE = re.compile(r"^```.*?^```[ \t]*$", re.MULTILINE | re.DOTALL)
@@ -72,6 +72,34 @@ def _rendered_spec_bodies(out_dir: Path) -> dict[str, str]:
     return bodies
 
 
+def _katex_result(expression_rows: list[dict]) -> subprocess.CompletedProcess:
+    katex_path = REPO_ROOT / "site" / "assets" / "katex" / "katex.min.js"
+    script = r"""
+const fs = require("fs");
+const katex = require(process.argv[1]);
+const rows = JSON.parse(fs.readFileSync(0, "utf8"));
+const failures = [];
+for (const row of rows) {
+  try {
+    katex.renderToString(row.expression, {throwOnError: true, strict: "ignore"});
+  } catch (error) {
+    failures.push(`${row.spec} expression ${row.index}: ${error.message}`);
+  }
+}
+if (failures.length) {
+  process.stderr.write(failures.join("\n"));
+  process.exit(1);
+}
+"""
+    return subprocess.run(
+        ["node", "-e", script, str(katex_path)],
+        input=json.dumps(expression_rows),
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -127,7 +155,7 @@ def test_spec_markdown_protects_tex_before_inline_formatting(tmp_path):
     spec = tmp_path / "docs" / "ideas" / "specs" / "t1.md"
     spec.write_text(
         "# Spec\n\n"
-        r"Inline $x_i + \texttt{min_tier} + \# + \{a\} + escaped\_name$ and "
+        r"Inline $x_i + \texttt{min\_tier} + \# + \{a\} + escaped\_name + \$$ and "
         "*outside emphasis*.\n\n"
         "$$\n"
         r"w_i = \frac{\alpha_i}{\sigma_i^2}"
@@ -141,15 +169,20 @@ def test_spec_markdown_protects_tex_before_inline_formatting(tmp_path):
 
     rendered = (tmp_path / "out" / "specs" / "t1.html").read_text(encoding="utf-8")
     body = _rendered_spec_bodies(tmp_path / "out")["t1"]
-    assert r"$x_i + \texttt{min_tier} + \# + \{a\} + escaped\_name$" in rendered
+    inline_expression = r"x_i + \texttt{min\_tier} + \# + \{a\} + escaped\_name + \$"
+    assert f"${inline_expression}$" in rendered
     assert "<em>outside emphasis</em>" in rendered
     assert "<code>$not_math$</code>" in rendered
     assert "$fenced_not_math$" in rendered
     assert 'escaped currency: <span class="escaped-dollar">$</span>25' in rendered
     assert _math_expressions(body) == [
-        r"x_i + \texttt{min_tier} + \# + \{a\} + escaped\_name",
+        inline_expression,
         "\n" + r"w_i = \frac{\alpha_i}{\sigma_i^2}" + "\n",
     ]
+    result = _katex_result(
+        [{"spec": "t1", "index": 1, "expression": inline_expression}]
+    )
+    assert result.returncode == 0, result.stderr
 
 
 def test_all_live_specs_have_contiguous_balanced_katex_parseable_math(tmp_path):
@@ -173,31 +206,7 @@ def test_all_live_specs_have_contiguous_balanced_katex_parseable_math(tmp_path):
             "a Markdown tag may have split a math range"
         )
 
-    katex_path = REPO_ROOT / "site" / "assets" / "katex" / "katex.min.js"
-    script = r"""
-const fs = require("fs");
-const katex = require(process.argv[1]);
-const rows = JSON.parse(fs.readFileSync(0, "utf8"));
-const failures = [];
-for (const row of rows) {
-  try {
-    katex.renderToString(row.expression, {throwOnError: true, strict: "ignore"});
-  } catch (error) {
-    failures.push(`${row.spec} expression ${row.index}: ${error.message}`);
-  }
-}
-if (failures.length) {
-  process.stderr.write(failures.join("\n"));
-  process.exit(1);
-}
-"""
-    result = subprocess.run(
-        ["node", "-e", script, str(katex_path)],
-        input=json.dumps(expression_rows),
-        text=True,
-        capture_output=True,
-        check=False,
-    )
+    result = _katex_result(expression_rows)
     assert result.returncode == 0, result.stderr
 
 
@@ -208,10 +217,56 @@ def test_reviewed_live_specs_do_not_claim_pending_method_review(tmp_path):
         assert "pending method review" not in rendered.lower()
 
 
-def test_spec_template_marks_math_render_status_and_scopes_renderer():
+def test_spec_template_math_status_behaves_for_success_and_failure():
     template = (REPO_ROOT / "site" / "templates" / "spec.html.j2").read_text(encoding="utf-8")
-    assert 'data-math-render-status="error"' in template
-    assert 'querySelector(".spec-page__body")' in template
-    assert 'setAttribute("data-math-render-status", "ok")' in template
-    assert 'setAttribute("data-math-render-status", "error")' in template
-    assert "mathErrors.push" in template
+    inline_script = re.findall(r"<script>\s*(.*?)\s*</script>", template, re.DOTALL)
+    assert len(inline_script) == 1
+    harness = r"""
+const fs = require("fs"), vm = require("vm");
+const source = JSON.parse(fs.readFileSync(0, "utf8"));
+function run(invalid) {
+  let callback, thrown = null, renderedTarget = null;
+  const consoleErrors = [];
+  const body = {textContent: "$x_i$", attrs: {"data-math-render-status": "error"},
+    setAttribute(k, v) { this.attrs[k] = v; }};
+  const outside = {attrs: {"data-math-render-status": "untouched"}};
+  const context = {
+    window: {addEventListener(name, fn) { if (name === "DOMContentLoaded") callback = fn; }},
+    document: {querySelector(selector) {
+      if (selector !== ".spec-page__body") throw new Error("renderer escaped spec body");
+      return body;
+    }},
+    console: {error(message) { consoleErrors.push(String(message)); }},
+    renderMathInElement(target, options) {
+      renderedTarget = target;
+      if (invalid) options.errorCallback("deliberate parse failure", new Error("bad TeX"));
+      else target.textContent = "rendered x_i";
+    }
+  };
+  vm.runInNewContext(source, context);
+  try { callback(); } catch (error) { thrown = error; }
+  return {body, outside, thrown, renderedTarget, consoleErrors};
+}
+const valid = run(false), invalid = run(true);
+const checks = [
+  valid.renderedTarget === valid.body,
+  valid.body.attrs["data-math-render-status"] === "ok",
+  !valid.body.textContent.includes("$"),
+  valid.consoleErrors.length === 0,
+  valid.thrown === null,
+  invalid.renderedTarget === invalid.body,
+  invalid.body.attrs["data-math-render-status"] === "error",
+  invalid.consoleErrors.length === 1,
+  invalid.thrown && invalid.thrown.message.includes("Spec math rendering failed"),
+  invalid.outside.attrs["data-math-render-status"] === "untouched"
+];
+if (checks.some(value => !value)) { console.error(checks); process.exit(1); }
+"""
+    result = subprocess.run(
+        ["node", "-e", harness],
+        input=json.dumps(inline_script[0]),
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr

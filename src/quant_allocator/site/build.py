@@ -49,8 +49,8 @@ LANE_HEADINGS = {
 }
 MARKDOWN_EXTENSIONS = ["tables", "fenced_code", "toc"]
 MATH_PATTERN = (
-    r"(?<!\\)\$\$(?:.+?)(?<!\\)\$\$"
-    r"|(?<![\\$])\$(?!\$)(?:[^\n]+?)(?<![\\$])\$(?!\$)"
+    r"(?<!\\)\$\$(?:\\.|[^\\$]|\$(?!\$))+?(?<!\\)\$\$"
+    r"|(?<![\\$])\$(?!\$)(?:\\.|[^\\$\n])+?(?<!\\)\$(?!\$)"
 )
 
 
@@ -74,10 +74,10 @@ class _MathProtectionExtension(Extension):
     """Protect code first, then TeX, then Markdown escapes and emphasis."""
 
     def extendMarkdown(self, md):  # noqa: N802 - Python-Markdown public API
+        md.inlinePatterns.register(_MathInlineProcessor(MATH_PATTERN, md), "protected_math", 186)
         md.inlinePatterns.register(
-            _EscapedDollarInlineProcessor(r"\\\$", md), "escaped_dollar", 186
+            _EscapedDollarInlineProcessor(r"\\\$", md), "escaped_dollar", 185
         )
-        md.inlinePatterns.register(_MathInlineProcessor(MATH_PATTERN, md), "protected_math", 185)
 
 
 def _markdown_extensions() -> list[str | Extension]:
@@ -123,7 +123,9 @@ def _validate_entry(entry: object, index: int, path: Path, site_dir: Path) -> No
 
     missing = REQUIRED_KEYS - entry.keys()
     if missing:
-        raise BuildError(f"{path}: card '{card_id}' is missing required keys: {sorted(missing)}")
+        raise BuildError(
+            f"{path}: card '{card_id}' is missing required keys: {sorted(missing)}"
+        )
 
     unknown = entry.keys() - ALLOWED_KEYS
     if unknown:
@@ -261,7 +263,9 @@ def _render_specs(env: Environment, cards: list[dict], site_dir: Path, out_dir: 
         (out_specs / f"{card['id']}.html").write_text(html, encoding="utf-8")
 
 
-def _render_demo_pages(env: Environment, cards: list[dict], site_dir: Path, out_dir: Path) -> None:
+def _render_demo_pages(
+    env: Environment, cards: list[dict], site_dir: Path, out_dir: Path
+) -> None:
     for card in cards:
         if card["status"] != "live":
             continue
@@ -296,7 +300,9 @@ def _lint_outputs(cards: list[dict], out_dir: Path) -> None:
                 )
         else:
             if "synthetic-badge" not in html:
-                raise BuildError(f"{page_path}: card '{card['id']}' output missing synthetic-badge")
+                raise BuildError(
+                    f"{page_path}: card '{card['id']}' output missing synthetic-badge"
+                )
             if "golive-box" not in html and "golive-replaced" not in html:
                 raise BuildError(
                     f"{page_path}: card '{card['id']}' output missing golive-box "
