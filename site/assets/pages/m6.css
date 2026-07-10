@@ -1,0 +1,57 @@
+/* M6 page layout only; shared badges, verdicts, gates, and go-live furniture come from
+   interval.css. */
+
+.m6-intro, .m6-timeline, .m6-gate, .m6-finra, .m6-caveats { margin: 20px 0; }
+.m6-headline { font-size: 15px; line-height: 1.55; }
+
+.m6-exhibit, .m6-boundary {
+  margin: 20px 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+}
+.m6-exhibit h2, .m6-timeline h2, .m6-gate h2, .m6-finra h2, .m6-caveats h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+.m6-exhibit h3 { margin: 12px 0 5px; font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--dim); }
+.m6-exhibit p, .m6-exhibit li, .m6-boundary { font-size: 13px; line-height: 1.5; }
+
+.m6-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.m6-table { width: 100%; min-width: 780px; border-collapse: collapse; font-size: 12px; }
+.m6-table caption { padding: 10px; text-align: left; font-weight: 600; }
+.m6-table th, .m6-table td { padding: 8px; border-top: 1px solid var(--line);
+  text-align: right; font-variant-numeric: tabular-nums; }
+.m6-table th:first-child { text-align: left; }
+.m6-table thead th { vertical-align: bottom; color: var(--dim); }
+.m6-table thead small { display: block; margin-top: 3px; font-size: 9px; font-weight: 400; }
+.m6-table tbody td { background: linear-gradient(to right, color-mix(in srgb, var(--warn)
+  calc(var(--m6-share) * 100%), transparent), transparent); }
+.m6-held { display: inline-block; padding: 3px 6px; border-radius: 10px;
+  background: color-mix(in srgb, var(--ink) calc(var(--m6-held) * 5%), transparent); }
+
+.m6-rail { list-style: none; margin: 12px 0; padding: 0; display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.m6-rail__item { padding: 9px; border: 1px solid var(--line); border-radius: 6px;
+  display: grid; gap: 2px; font-size: 12px; }
+.m6-rail__item small, .m6-receipt { color: var(--dim); font-size: 10px; }
+.m6-crossing { font-size: 13px; }
+
+.m6-gate__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.m6-filer { padding: 14px; border: 1px solid var(--line); border-radius: 8px; }
+.m6-filer--refuse { border-style: dashed; }
+.m6-filer header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.m6-filer h3 { margin: 0; font-size: 14px; }
+.m6-filer p, .m6-finra p, .m6-caveats li { font-size: 12px; line-height: 1.5; }
+.m6-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.m6-stats div { padding: 8px; background: var(--paper); border-radius: 6px; }
+.m6-stats dt { font-size: 10px; color: var(--dim); }
+.m6-stats dd { margin: 3px 0 0; font-size: 20px; font-variant-numeric: tabular-nums; }
+.m6-caveats ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+
+@media (max-width: 700px) {
+  .m6-gate__grid { grid-template-columns: 1fr; }
+  .m6-rail { grid-template-columns: 1fr; }
+}

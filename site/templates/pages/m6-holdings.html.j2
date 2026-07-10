@@ -1,0 +1,165 @@
+{% extends "demo.html.j2" %}
+
+{% set v = card_data.vesper %}
+{% set h = card_data.hensley %}
+{% set quarters = v.timeline.quarters %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/m6.css">
+{% endblock %}
+
+{% block demo_content %}
+<section class="m6-intro">
+  <p class="m6-headline">
+    A free public filing shows <strong>{{ v.name }}</strong>&rsquo;s visible long book compressing
+    from {{ "%.1f"|format(quarters[0].effective_names) }} effective names to
+    {{ "%.1f"|format(quarters[-1].effective_names) }}. The latest leader reaches
+    {{ "%.1f"|format(quarters[-1].leader_share * 100) }}%, while the latest top three have
+    remained visible for all six quarters. This is an engagement prompt, not a return prediction:
+    <strong>Your reported book concentrated into one name &mdash; walk us through the conviction?</strong>
+  </p>
+</section>
+
+<aside class="m6-exhibit" aria-label="What this exhibit shows">
+  <h2>What this exhibit shows</h2>
+  <div class="m6-exhibit__block">
+    <h3>What you are looking at</h3>
+    <p>A six-quarter, fully synthetic 13F crop from a simulated signed book. Shorts and
+      ineligible names disappear before the surviving public longs are renormalized. The table
+      therefore describes the visible crop, not the manager&rsquo;s full portfolio.</p>
+  </div>
+  <div class="m6-exhibit__block">
+    <h3>How to read it</h3>
+    <ul>
+      <li><strong>Cell shares</strong> are reported long-book weights at each quarter end.</li>
+      <li><strong>Quarters held</strong> counts the latest unbroken reported run.</li>
+      <li><strong>Effective names</strong> is inverse Herfindahl: lower means more concentrated.</li>
+      <li><strong>CoverageGate</strong> suppresses book-level concentration and overlap when the
+        public crop covers less than 60% of true gross long weight.</li>
+    </ul>
+    <p>The full derivation and limits are in the
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.</p>
+  </div>
+</aside>
+
+<section class="m6-timeline" aria-labelledby="m6-timeline-title">
+  <h2 id="m6-timeline-title">Conviction timeline</h2>
+  <div class="m6-table-wrap">
+    <table class="m6-table">
+      <caption>Reported shares and current quarters-held count for {{ v.name }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">Visible name</th>
+          {% for q in quarters %}
+          <th scope="col">
+            <span>{{ q.label }}</span>
+            <small>as of {{ q.as_of }}<br>known at {{ q.known_at }}<br>45-day lag</small>
+          </th>
+          {% endfor %}
+          <th scope="col">Quarters held</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for position in v.timeline.positions %}
+        <tr>
+          <th scope="row">{{ position.name }}</th>
+          {% for share in position.shares %}
+          <td style="--m6-share: {{ share }}">{{ "%.1f"|format(share * 100) }}%</td>
+          {% endfor %}
+          <td><span class="m6-held" style="--m6-held: {{ position.quarters_held }}">
+            {{ position.quarters_held }} quarters</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <ol class="m6-rail" aria-label="Concentration receipts by quarter">
+    {% for q in quarters %}
+    <li class="m6-rail__item">
+      <strong>{{ q.label }}</strong>
+      <span>effective names {{ "%.2f"|format(q.effective_names) }}</span>
+      <span>top-5 {{ "%.1f"|format(q.top5_weight * 100) }}%</span>
+      <small>as of {{ q.as_of }} &middot; known at {{ q.known_at }} &middot; 45-day lag</small>
+    </li>
+    {% endfor %}
+  </ol>
+  {% if v.timeline.first_majority_crossing %}
+  <p class="m6-crossing"><strong>{{ v.timeline.first_majority_crossing.label }}</strong> is the
+    first reported quarter in which {{ v.timeline.first_majority_crossing.name }} exceeds 50%
+    ({{ "%.1f"|format(v.timeline.first_majority_crossing.share * 100) }}%).</p>
+  {% endif %}
+</section>
+
+<section class="m6-gate" aria-labelledby="m6-gate-title">
+  <h2 id="m6-gate-title">The CoverageGate contrast</h2>
+  <div class="m6-gate__grid">
+    <article class="m6-filer m6-filer--pass" data-filer="vesper">
+      <header><h3>{{ v.name }}</h3>
+        <span class="verdict-chip" data-verdict="pos">CoverageGate pass</span></header>
+      <p><strong>{{ "%.1f"|format(v.coverage * 100) }}%</strong> of true gross long weight is
+        usable in the public crop (threshold {{ "%.0f"|format(v.gate.threshold * 100) }}%).</p>
+      <dl class="m6-stats">
+        <div data-stat="concentration"><dt>Latest effective names</dt>
+          <dd>{{ "%.2f"|format(v.concentration.effective_names) }}</dd></div>
+        <div data-stat="overlap"><dt>Pooled-peer cosine</dt>
+          <dd>{{ "%.2f"|format(v.overlap) }}</dd></div>
+      </dl>
+      <p class="m6-receipt">as of {{ v.as_of }} &middot; known at {{ v.known_at }} &middot; 45-day lag</p>
+      <p>The overlap is descriptive: it says the public books share some names;
+        <strong>crowding caps belong to M4</strong>.</p>
+    </article>
+
+    <article class="m6-filer m6-filer--refuse" data-filer="hensley">
+      <header><h3>{{ h.name }}</h3>
+        <span class="verdict-chip" data-verdict="neutral">CoverageGate refusal</span></header>
+      <p>Only <strong>{{ "%.1f"|format(h.coverage * 100) }}%</strong> of true gross long weight is
+        visible, below {{ "%.0f"|format(h.gate.threshold * 100) }}%. Concentration and overlap
+        are refused rather than shown for a fragment.</p>
+      <div class="power-gate"><span class="power-gate__title">coverage gate</span>
+        <p class="power-gate__reason">Visible {{ "%.1f"|format(h.coverage * 100) }}% &lt;
+          required {{ "%.0f"|format(h.gate.threshold * 100) }}%: book-level verdicts suppressed.</p>
+      </div>
+      <p class="m6-receipt">as of {{ h.as_of }} &middot; known at {{ h.known_at }} &middot; 45-day lag</p>
+      <p>Persistence survives only as a hedged fact: these <strong>visible names</strong> have
+        persisted in the reported crop; the hidden book may differ.</p>
+    </article>
+  </div>
+</section>
+
+<section class="m6-finra" aria-labelledby="m6-finra-title">
+  <h2 id="m6-finra-title">Short-interest stress on top longs</h2>
+  <span class="tier-badge" data-tier="P">requires FINRA adapter</span>
+  <p>No public short-interest series is fabricated. The slot lists the visible top longs
+    {% for name in card_data.short_interest.top_longs %}{{ name }}{% if not loop.last %}, {% endif %}{% endfor %}
+    and remains value-free until the adapter lands.</p>
+</section>
+
+<section class="m6-caveats" aria-labelledby="m6-caveats-title">
+  <h2 id="m6-caveats-title">Caveat ledger</h2>
+  <ul>
+    <li><span class="tier-badge">Staleness</span> {{ card_data.caveats[0] }}</li>
+    <li><span class="tier-badge">Longs-only</span> {{ card_data.caveats[1] }}</li>
+    <li><span class="tier-badge">Coverage holes</span> {{ card_data.caveats[2] }}</li>
+    <li><span class="tier-badge">Option-notional</span> {{ card_data.caveats[3] }} The binding
+      v1 rule is explicit: option lines are excluded and a filer is flagged only above 10%.</li>
+  </ul>
+</section>
+
+<aside class="m6-boundary" role="note">
+  <strong>Method boundary.</strong> Quarters-held is quarterly survival at filing granularity,
+  never a half-life and never entry-dated. It is not an alpha-decay curve, allocation rule,
+  redemption trigger, or automatic action.
+</aside>
+{% endblock %}
+
+{% block methodology %}
+<p>The emitter takes the existing signed monthly weights at quarter ends, clips shorts to zero,
+removes ineligible and option lines, and renormalizes the remaining visible longs. Top-5 share,
+Herfindahl, inverse-Herfindahl effective names, quarters-held, and cosine overlap are exact
+functions of that crop. No estimator or return model is fitted.</p>
+<p>Coverage divides usable visible long weight by the simulator&rsquo;s true positive long weight.
+The denominator is known only because this exhibit is synthetic. Live coverage must be inferred
+from disclosed gross, confidential-treatment evidence, and option share; the exact 45-calendar-day
+staleness distortion audit remains deferred because the simulator has monthly, not daily, holdings.</p>
+{% endblock %}
