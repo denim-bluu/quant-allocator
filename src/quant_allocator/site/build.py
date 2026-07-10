@@ -48,7 +48,7 @@ LANE_HEADINGS = {
     "X": "X — Meta / infrastructure",
 }
 MARKDOWN_EXTENSIONS = ["tables", "fenced_code", "toc"]
-MATH_OPEN_PATTERN = r"(?<!\\)(?P<slash_pairs>(?:\\\\)*)(?P<delimiter>\$\$|\$(?!\$))"
+MATH_OPEN_PATTERN = r"(?<!\\)(?P<slash_pairs>(?:\\\\)*)(?P<delimiter>\$\$|(?<!\$)\$(?!\$))"
 
 
 def _preceding_backslashes(data: str, index: int) -> int:
@@ -94,6 +94,16 @@ class _EscapedDollarInlineProcessor(InlineProcessor):
         return span, match.start(0), match.end(0)
 
 
+class _EscapedDisplayDollarInlineProcessor(InlineProcessor):
+    r"""Keep an odd-escaped ``$$`` token literal instead of splitting its dollars."""
+
+    def handleMatch(self, match, data):  # noqa: N802 - Python-Markdown public API
+        span = etree.Element("span", {"class": "escaped-dollar"})
+        slash_pairs = match.group("slash_pairs")
+        span.text = AtomicString("\\" * (len(slash_pairs) // 2) + "$$")
+        return span, match.start(0), match.end(0)
+
+
 class _MathProtectionExtension(Extension):
     """Protect code first, then TeX, then Markdown escapes and emphasis."""
 
@@ -102,7 +112,14 @@ class _MathProtectionExtension(Extension):
             _MathInlineProcessor(MATH_OPEN_PATTERN, md), "protected_math", 186
         )
         md.inlinePatterns.register(
-            _EscapedDollarInlineProcessor(r"\\\$", md), "escaped_dollar", 185
+            _EscapedDisplayDollarInlineProcessor(
+                r"(?<!\\)(?P<slash_pairs>(?:\\\\)*)\\\$\$", md
+            ),
+            "escaped_display_dollar",
+            185,
+        )
+        md.inlinePatterns.register(
+            _EscapedDollarInlineProcessor(r"\\\$", md), "escaped_dollar", 184
         )
 
 

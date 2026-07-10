@@ -241,14 +241,15 @@ def test_math_delimiters_use_even_odd_backslash_parity(tmp_path):
         "# Escaped parity\n\n"
         r"Odd inline opening and close: \$not_math\$."
         "\n\n"
-        r"Odd display opening and close: \$\$not_display\$\$."
+        r"Odd display-token opening and close: \$$not_display\$$."
     )
     spec.write_text(escaped_source, encoding="utf-8")
     build(site, tmp_path / "escaped-out")
     escaped_body = _rendered_spec_bodies(tmp_path / "escaped-out")["t1"]
     assert _source_math_expressions(escaped_source) == []
     assert _math_expressions(escaped_body) == []
-    assert escaped_body.count('class="escaped-dollar"') == 6
+    assert escaped_body.count('class="escaped-dollar"') == 4
+    assert escaped_body.count('<span class="escaped-dollar">$$</span>') == 2
 
 
 def test_all_live_specs_have_contiguous_balanced_katex_parseable_math(tmp_path):
@@ -290,11 +291,26 @@ def test_spec_template_math_status_behaves_for_success_and_failure():
     harness = r"""
 const fs = require("fs"), vm = require("vm");
 const source = JSON.parse(fs.readFileSync(0, "utf8"));
-function run(invalid) {
+function text(value) {
+  return {nodeType: 3, nodeValue: value, childNodes: []};
+}
+function element(tag, classes, children) {
+  return {
+    nodeType: 1, tag, classes, childNodes: children || [], attrs: {},
+    matches(selector) {
+      return selector.split(",").some(part => {
+        part = part.trim();
+        return part[0] === "." ? this.classes.includes(part.slice(1)) : this.tag === part;
+      });
+    },
+    setAttribute(k, v) { this.attrs[k] = v; }
+  };
+}
+function run(mode) {
   let callback, thrown = null, renderedTarget = null;
   const consoleErrors = [];
-  const body = {textContent: "$x_i$", attrs: {"data-math-render-status": "error"},
-    setAttribute(k, v) { this.attrs[k] = v; }};
+  const body = element("div", [], [text("$x_i$")]);
+  body.attrs["data-math-render-status"] = "error";
   const outside = {attrs: {"data-math-render-status": "untouched"}};
   const context = {
     window: {addEventListener(name, fn) { if (name === "DOMContentLoaded") callback = fn; }},
@@ -305,26 +321,41 @@ function run(invalid) {
     console: {error(message) { consoleErrors.push(String(message)); }},
     renderMathInElement(target, options) {
       renderedTarget = target;
-      if (invalid) options.errorCallback("deliberate parse failure", new Error("bad TeX"));
-      else target.textContent = "rendered x_i";
+      if (mode === "invalid") {
+        options.errorCallback("deliberate parse failure", new Error("bad TeX"));
+      } else if (mode === "raw") {
+        target.childNodes = [text("$$unclosed")];
+      } else if (mode === "escaped") {
+        target.childNodes = [element("span", ["escaped-dollar"], [text("$$")])];
+      } else {
+        target.childNodes = [element("span", ["katex"], [text("rendered x_i")])];
+      }
     }
   };
   vm.runInNewContext(source, context);
   try { callback(); } catch (error) { thrown = error; }
   return {body, outside, thrown, renderedTarget, consoleErrors};
 }
-const valid = run(false), invalid = run(true);
+const valid = run("valid"), invalid = run("invalid");
+const raw = run("raw"), escaped = run("escaped");
 const checks = [
   valid.renderedTarget === valid.body,
   valid.body.attrs["data-math-render-status"] === "ok",
-  !valid.body.textContent.includes("$"),
   valid.consoleErrors.length === 0,
   valid.thrown === null,
   invalid.renderedTarget === invalid.body,
   invalid.body.attrs["data-math-render-status"] === "error",
-  invalid.consoleErrors.length === 1,
+  invalid.consoleErrors.length >= 1,
   invalid.thrown && invalid.thrown.message.includes("Spec math rendering failed"),
-  invalid.outside.attrs["data-math-render-status"] === "untouched"
+  invalid.outside.attrs["data-math-render-status"] === "untouched",
+  raw.renderedTarget === raw.body,
+  raw.body.attrs["data-math-render-status"] === "error",
+  raw.consoleErrors.length === 1,
+  raw.thrown && raw.thrown.message.includes("active raw delimiter"),
+  raw.outside.attrs["data-math-render-status"] === "untouched",
+  escaped.body.attrs["data-math-render-status"] === "ok",
+  escaped.consoleErrors.length === 0,
+  escaped.thrown === null
 ];
 if (checks.some(value => !value)) { console.error(checks); process.exit(1); }
 """

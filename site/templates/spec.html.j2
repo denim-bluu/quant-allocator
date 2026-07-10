@@ -20,6 +20,26 @@
   window.addEventListener("DOMContentLoaded", function () {
     var specBody = document.querySelector(".spec-page__body");
     var mathErrors = [];
+
+    function textHasActiveDollar(text) {
+      for (var index = 0; index < text.length; index += 1) {
+        if (text[index] !== "$") continue;
+        var precedingBackslashes = 0;
+        for (var cursor = index - 1; cursor >= 0 && text[cursor] === "\\"; cursor -= 1) {
+          precedingBackslashes += 1;
+        }
+        if (precedingBackslashes % 2 === 0) return true;
+      }
+      return false;
+    }
+
+    function hasRawMathDelimiter(node) {
+      if (node.nodeType === 3) return textHasActiveDollar(node.nodeValue || "");
+      if (node.nodeType !== 1) return false;
+      if (node.matches("pre, code, .escaped-dollar, .katex")) return false;
+      return Array.prototype.some.call(node.childNodes, hasRawMathDelimiter);
+    }
+
     renderMathInElement(specBody, {
       delimiters: [
         { left: "$$", right: "$$", display: true },
@@ -31,6 +51,11 @@
         console.error(message, error);
       }
     });
+    if (hasRawMathDelimiter(specBody)) {
+      var rawMessage = "Spec math rendering left an active raw delimiter";
+      mathErrors.push(rawMessage);
+      console.error(rawMessage);
+    }
     if (mathErrors.length) {
       specBody.setAttribute("data-math-render-status", "error");
       throw new Error("Spec math rendering failed: " + mathErrors.join(" | "));
