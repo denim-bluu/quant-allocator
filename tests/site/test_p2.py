@@ -29,12 +29,18 @@ _CARD = {
 }
 
 
-def _build(tmp_path):
+def _build(tmp_path, *, gate_renders=True):
     site = tmp_path / "site"
     shutil.copytree(REPO_ROOT / "site" / "templates", site / "templates")
     shutil.copytree(REPO_ROOT / "site" / "assets", site / "assets")
     (site / "data").mkdir()
-    shutil.copy(REPO_ROOT / "site" / "data" / "p2_xray.json", site / "data")
+    data_path = site / "data" / "p2_xray.json"
+    shutil.copy(REPO_ROOT / "site" / "data" / "p2_xray.json", data_path)
+    if not gate_renders:
+        data = json.loads(data_path.read_text(encoding="utf-8"))
+        data["information_gate"]["gain"] = 0.10
+        data["information_gate"]["renders"] = False
+        data_path.write_text(json.dumps(data, sort_keys=True, indent=2) + "\n", encoding="utf-8")
     specs = tmp_path / "docs" / "ideas" / "specs"
     specs.mkdir(parents=True)
     shutil.copy(
@@ -89,12 +95,44 @@ def test_interval_provenance_counterfactual_and_fallback_render(tmp_path):
     assert "p2-reconciliation" in html
 
 
+def test_gate_failure_suppresses_fusion_and_makes_reconciliation_primary(tmp_path):
+    html, _ = _build(tmp_path, gate_renders=False)
+    assert 'data-gate-state="refuse"' in html
+    assert 'data-fused-output="true"' not in html
+    assert "Fused book net market beta" not in html
+    assert "p2-provenance__bar" not in html
+    assert "p2-counterfactual" not in html
+    assert "information gain does not clear" in html
+    assert "p2-reconciliation--primary" in html
+    assert "un-fused — tiers not reconciled" in html
+
+
+def test_provenance_is_capital_ordered_with_accessible_table(tmp_path):
+    html, _ = _build(tmp_path)
+    provenance = html.split('<section class="p2-provenance"', 1)[1].split("</section>", 1)[0]
+    first = provenance.index("Oakhurst Capital")
+    second = provenance.index("Verling Capital")
+    third = provenance.index("Ternhaven Capital")
+    assert first < second < third
+    assert "Provenance table alternative" in html
+    assert 'class="p2-provenance-table"' in html
+    for heading in ("Manager", "Tier", "Capital", "90% interval", "Variance share"):
+        assert heading in html
+
+
 def test_skepticism_dial_uses_precomputed_states(tmp_path):
     html, _ = _build(tmp_path)
     data = json.loads((REPO_ROOT / "site" / "data" / "p2_xray.json").read_text())
     assert html.count("p2-dial__button") == len(data["r_noise_dial"])
     assert "data-r-sd" in html
     assert "precomputed" in html
+    script = (REPO_ROOT / "site" / "assets" / "p2-xray.js").read_text(encoding="utf-8")
+    assert "style.left" in script
+    assert "style.width" in script
+    assert 'setAttribute("data-lo"' in script
+    assert 'setAttribute("data-point"' in script
+    assert 'setAttribute("data-hi"' in script
+    assert "90%" not in script
 
 
 def test_page_has_no_sentinel_leakage_or_hardcoded_headline():
@@ -107,6 +145,8 @@ def test_page_has_no_sentinel_leakage_or_hardcoded_headline():
     assert "Infinity" not in template
     assert ">None<" not in template
     assert ">null<" not in template
+    assert "15-manager" not in template
+    assert "90%" not in template
 
 
 def test_rendered_html_has_no_publication_canary_terms(tmp_path):

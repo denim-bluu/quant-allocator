@@ -206,6 +206,10 @@ def build_payload() -> dict:
             "op_bucket_width": OP_BUCKET_WIDTH,
         },
         "book": _book_payload(actual.book),
+        "unfused_book": {
+            "label": "un-fused — tiers not reconciled",
+            "point": float(weights @ observations),
+        },
         "managers": managers,
         "tier_provenance": _tier_provenance(actual, P2_TIERS),
         "counterfactuals": counterfactuals,

@@ -36,6 +36,29 @@ def test_payload_invariants_and_gate_arithmetic(tmp_path):
     )
     assert gate["renders"] == (gate["gain"] >= gate["floor"])
     assert data["tier_monotonicity"]
+    assert data["tier_provenance"]["R"] > data["tier_provenance"]["E"]
+    assert data["tier_provenance"]["R"] > data["tier_provenance"]["P"]
+    expected_unfused = sum(
+        manager["capital_weight"] * manager["observation"] for manager in data["managers"]
+    )
+    assert data["unfused_book"]["point"] == pytest.approx(expected_unfused, abs=2e-6)
+    assert data["unfused_book"]["label"] == "un-fused — tiers not reconciled"
+
+
+def test_observation_sources_match_tiers_and_e_values_use_bucket_grid(tmp_path):
+    data = _load(p2_xray.build(tmp_path))
+    expected_sources = {
+        "R": "returns_regression_proxy",
+        "E": "coarsened_exposure_emission",
+        "P": "position_transparent_emission",
+    }
+    width = data["constants"]["op_bucket_width"]
+    for manager in data["managers"]:
+        assert manager["observation_source"] == expected_sources[manager["tier"]]
+        if manager["tier"] == "E":
+            assert manager["observation"] / width == pytest.approx(
+                round(manager["observation"] / width), abs=1e-9
+            )
 
 
 def test_dial_states_reuse_observations(tmp_path):

@@ -535,5 +535,9 @@
     "E": 0.072142,
     "P": 0.005691,
     "R": 0.922168
+  },
+  "unfused_book": {
+    "label": "un-fused \u2014 tiers not reconciled",
+    "point": 0.23314
   }
 }

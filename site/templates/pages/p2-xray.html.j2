@@ -2,6 +2,7 @@
 
 {% set book = card_data.book %}
 {% set gate = card_data.information_gate %}
+{% set display_managers = card_data.managers | sort(attribute="capital_weight", reverse=true) %}
 
 {% block head_extra %}
 <link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/p2.css">
@@ -9,15 +10,31 @@
 
 {% macro signed(x) %}{{ "%+.3f"|format(x) }}{% endmacro %}
 {% macro pct(x) %}{{ "%.1f"|format(x * 100) }}%{% endmacro %}
+{% macro whole_pct(x) %}{{ "%.0f"|format(x * 100) }}%{% endmacro %}
+{% macro reconciliation_table(extra_class="") %}
+<table class="p2-reconciliation-table {{ extra_class }}">
+  <thead><tr><th>Manager</th><th>Tier</th><th>Observation</th>
+    <th>{{ whole_pct(card_data.constants.credible_level) }} interval</th></tr></thead>
+  <tbody>
+    {% for row in card_data.reconciliation_rows %}
+    <tr><td>{{ row.name }}</td><td>{{ row.tier }}</td><td>{{ signed(row.observation) }}</td>
+      <td>{{ signed(row.ci_lo) }} &hellip; {{ signed(row.ci_hi) }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endmacro %}
 
 {% block demo_content %}
+{% if gate.renders %}
+<div data-fused-output="true" data-gate-state="pass">
 <section class="p2-lead">
-  <div class="interval-stat p2-book" data-domain="book-beta"
+  <div class="interval-stat p2-book" data-domain="book-beta" data-p2-dial-book
        data-lo="{{ book.ci_lo }}" data-point="{{ book.point }}" data-hi="{{ book.ci_hi }}">
     <span class="interval-stat__label">Fused book net market beta</span>
     <span class="interval-stat__value">{{ signed(book.point) }}</span>
     <div class="interval-stat__rail"><div class="interval-stat__band"></div><div class="interval-stat__point"></div></div>
-    <span class="interval-stat__range">90% credible interval {{ signed(book.ci_lo) }} &hellip; {{ signed(book.ci_hi) }}</span>
+    <span class="interval-stat__range">{{ whole_pct(card_data.constants.credible_level) }} credible interval
+      {{ signed(book.ci_lo) }} &hellip; {{ signed(book.ci_hi) }}</span>
   </div>
   <p>
     One number is easy. The useful answer carries its fog: returns-only sleeves own
@@ -30,19 +47,32 @@
     the live contract consumes the S1 beta posterior.
   </p>
 </section>
+{% endif %}
 
 <aside class="p2-explainer" aria-label="What this exhibit shows">
   <h2>What this exhibit shows</h2>
   <h3>What you are looking at</h3>
-  <p>A 15-manager book fused at the precision each transparency tier earns. The headline is
-    the capital-weighted posterior; the bars below source every share of its variance.</p>
+  {% if gate.renders %}
+  <p>A {{ card_data.meta.n_managers }}-manager book fused at the precision each transparency
+    tier earns. The headline is the capital-weighted posterior; the bars below source every
+    share of its variance.</p>
+  {% else %}
+  <p>A {{ card_data.meta.n_managers }}-manager book whose transparency gain does not clear the
+    required floor. The fused posterior is withheld and the reconciliation becomes primary.</p>
+  {% endif %}
   <h3>How to read it</h3>
+  {% if gate.renders %}
   <p>A large provenance bar means that sleeve, through capital and measurement noise, owns more
     of the remaining uncertainty. Compare the same book at all-R, its actual mix, and every
     sleeve at least E to see what transparency buys.</p>
+  {% else %}
+  <p>Read the manager rows individually by tier. The capital-weighted observation sum is shown
+    only as un-fused reconciliation, not as an earned posterior.</p>
+  {% endif %}
   <p><a href="{{ asset_base | default('') }}specs/p2.html">Read the full method spec</a>.</p>
 </aside>
 
+{% if gate.renders %}
 <section class="p2-provenance" aria-labelledby="p2-provenance-title">
   <h2 id="p2-provenance-title">Who owns the book's fog?</h2>
   <div class="p2-tier-summary">
@@ -51,18 +81,35 @@
     {% endfor %}
   </div>
   <div class="p2-provenance__rows">
-    {% for m in card_data.managers %}
+    {% for m in display_managers %}
     <article class="p2-provenance__row">
       <header><strong>{{ m.name }}</strong> <span class="tier-badge" data-tier="{{ m.tier }}">{{ m.tier }}</span>
         <span>{{ pct(m.capital_weight) }} capital</span></header>
       <div class="p2-provenance__track" aria-label="{{ m.name }} owns {{ pct(m.variance_share) }} of book exposure variance">
         <div class="p2-provenance__bar" style="--p2-share: {{ m.variance_share * 100 }}%"></div>
       </div>
-      <footer>{{ pct(m.variance_share) }} of variance &middot; 90% manager interval
+      <footer>{{ pct(m.variance_share) }} of variance &middot;
+        {{ whole_pct(card_data.constants.credible_level) }} manager interval
         {{ signed(m.posterior.ci_lo) }} &hellip; {{ signed(m.posterior.ci_hi) }}</footer>
     </article>
     {% endfor %}
   </div>
+  <details class="p2-provenance-table-wrap">
+    <summary>Provenance table alternative</summary>
+    <table class="p2-provenance-table">
+      <caption>Capital and exposure-variance provenance by manager</caption>
+      <thead><tr><th>Manager</th><th>Tier</th><th>Capital</th>
+        <th>{{ whole_pct(card_data.constants.credible_level) }} interval</th>
+        <th>Variance share</th></tr></thead>
+      <tbody>
+        {% for m in display_managers %}
+        <tr><td>{{ m.name }}</td><td>{{ m.tier }}</td><td>{{ pct(m.capital_weight) }}</td>
+          <td>{{ signed(m.posterior.ci_lo) }} &hellip; {{ signed(m.posterior.ci_hi) }}</td>
+          <td>{{ pct(m.variance_share) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
 </section>
 
 <section class="p2-gain" aria-labelledby="p2-gain-title">
@@ -74,7 +121,8 @@
       <span class="interval-stat__label">{{ state.label }}</span>
       <span class="interval-stat__value">sd {{ "%.4f"|format(state.sd) }}</span>
       <div class="interval-stat__rail"><div class="interval-stat__band"></div><div class="interval-stat__point"></div></div>
-      <span class="interval-stat__range">90% {{ signed(state.ci_lo) }} &hellip; {{ signed(state.ci_hi) }}</span>
+      <span class="interval-stat__range">{{ whole_pct(card_data.constants.credible_level) }}
+        {{ signed(state.ci_lo) }} &hellip; {{ signed(state.ci_hi) }}</span>
     </article>
     {% endfor %}
   </div>
@@ -103,9 +151,24 @@
   </div>
   <p class="p2-dial__readout" data-p2-dial-readout>
     R sd {{ "%.2f"|format(card_data.constants.exposure_meas_sd.R) }}:
-    book {{ signed(book.point) }}, 90% {{ signed(book.ci_lo) }} &hellip; {{ signed(book.ci_hi) }}
+    book {{ signed(book.point) }}, {{ whole_pct(card_data.constants.credible_level) }}
+    {{ signed(book.ci_lo) }} &hellip; {{ signed(book.ci_hi) }}
   </p>
 </section>
+</div>
+{% else %}
+<section class="p2-refusal" data-gate-state="refuse">
+  <div class="power-gate">
+    <span class="power-gate__title">power gate &middot; information gain does not clear</span>
+    <p class="power-gate__reason">Measured tightening {{ pct(gate.gain) }} is below the
+      {{ pct(gate.floor) }} floor. P2 refuses the fused posterior and makes the
+      manager-by-manager reconciliation the primary output.</p>
+  </div>
+  <p class="p2-unfused"><strong>{{ card_data.unfused_book.label }}</strong>:
+    {{ signed(card_data.unfused_book.point) }}</p>
+  {{ reconciliation_table("p2-reconciliation--primary") }}
+</section>
+{% endif %}
 
 <section class="p2-boundary">
   <h2>What this model deliberately leaves out</h2>
@@ -116,18 +179,14 @@
     this exhibit is the static fusion special case.</p>
 </section>
 
+{% if gate.renders %}
 <details class="p2-reconciliation">
   <summary>Manager-by-manager reconciliation fallback</summary>
-  <table>
-    <thead><tr><th>Manager</th><th>Tier</th><th>Observation</th><th>90% interval</th></tr></thead>
-    <tbody>
-      {% for row in card_data.reconciliation_rows %}
-      <tr><td>{{ row.name }}</td><td>{{ row.tier }}</td><td>{{ signed(row.observation) }}</td>
-        <td>{{ signed(row.ci_lo) }} &hellip; {{ signed(row.ci_hi) }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <p><strong>{{ card_data.unfused_book.label }}</strong>:
+    {{ signed(card_data.unfused_book.point) }}</p>
+  {{ reconciliation_table() }}
 </details>
+{% endif %}
 {% endblock %}
 
 {% block methodology %}

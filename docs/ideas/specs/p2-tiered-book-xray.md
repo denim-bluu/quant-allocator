@@ -603,8 +603,8 @@ to a reconciliation table.
   equation used).
 - **The three information-gain bands** = the §6.4 gate quantity — book band sd at
   all-R, actual, all-≥E.
-- **The skepticism dial** = the `BOOK_PRIOR_SD` and per-tier `EXPOSURE_MEAS_SD`
-  controls; dragging returns-tier noise up widens the R sleeves and the book band —
+- **The skepticism dial** = the R-tier `EXPOSURE_MEAS_SD` control; selecting a larger
+  returns-tier noise state widens the R sleeves and the book band —
   the Dietvorst move (S1 §6.3 pattern), showing how far the book view leans on the
   atlas's tier-noise numbers.
 

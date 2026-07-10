@@ -33,9 +33,19 @@
 .p2-dial__button.is-active { background: var(--track); }
 .p2-dial__button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .p2-dial__readout { color: var(--dim); font-variant-numeric: tabular-nums; }
-.p2-reconciliation table { border-collapse: collapse; margin-top: 1rem; width: 100%; }
+.p2-reconciliation-table,
+.p2-provenance-table { border-collapse: collapse; margin-top: 1rem; width: 100%; }
+.p2-reconciliation--primary { margin-bottom: 1.5rem; }
 .p2-reconciliation th,
-.p2-reconciliation td { border-bottom: 1px solid var(--line); padding: .4rem; text-align: left; }
+.p2-reconciliation td,
+.p2-reconciliation-table th,
+.p2-reconciliation-table td,
+.p2-provenance-table th,
+.p2-provenance-table td {
+  border-bottom: 1px solid var(--line);
+  padding: .4rem;
+  text-align: left;
+}
 
 @media (max-width: 640px) {
   .p2-provenance__row header span:last-child { margin-left: 0; width: 100%; }
