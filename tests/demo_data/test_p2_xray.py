@@ -31,6 +31,9 @@ def test_payload_invariants_and_gate_arithmetic(tmp_path):
     assert book["ci_lo"] <= book["point"] <= book["ci_hi"]
     assert sum(data["tier_provenance"].values()) == pytest.approx(1.0, abs=2e-6)
     gate = data["information_gate"]
+    assert gate["actual_gain"] == pytest.approx(
+        1.0 - gate["actual_sd"] / gate["all_r_sd"], abs=1e-5
+    )
     assert gate["gain"] == pytest.approx(
         1.0 - gate["all_e_sd"] / gate["all_r_sd"], abs=5e-6
     )

@@ -49,6 +49,11 @@ def test_index_lists_all_cards(tmp_path):
     assert 'href="p3.html"' in index
     assert 'href="e2.html"' in index
     assert 'href="e3.html"' in index
+    assert (
+        "Free quarterly 13F filings turned into reported-long concentration and "
+        "persistence prompts."
+    ) in index
+    assert "Hybrid search is active; graph expansion remains a gated candidate." in index
     for title in EXPECTED_TITLES:
         # Titles are rendered through Jinja2 with autoescape=True, so "&" in a
         # title (e.g. "Sizing & alpha-decay lab") becomes "&amp;" in the output.

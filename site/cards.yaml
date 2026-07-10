@@ -159,7 +159,7 @@
 - id: m6
   title: 13F long-book intelligence
   lane: M
-  one_liner: Mining free quarterly 13F filings for per-manager conviction signals.
+  one_liner: Free quarterly 13F filings turned into reported-long concentration and persistence prompts.
   decisions: [monitor, engage]
   tiers: [P]
   status: live
@@ -249,7 +249,7 @@
 - id: e3
   title: Manager knowledge graph & retrieval
   lane: E
-  one_liner: Structured memory over letters and notes, anchored to decision hooks.
+  one_liner: Hybrid search is active; graph expansion remains a gated candidate.
   decisions: [engage, select]
   tiers: [R, E, P]
   status: live

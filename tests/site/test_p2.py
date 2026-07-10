@@ -90,6 +90,8 @@ def test_interval_provenance_counterfactual_and_fallback_render(tmp_path):
     assert "Ternhaven Capital" in html
     assert html.count("p2-counterfactual") == 3
     assert "power-gate" in html
+    assert "demo threshold clears under provisional tier-noise assumptions" in html
+    assert "32.8%" in html
     assert "70.5%" in html
     assert "20.0%" in html
     assert "p2-reconciliation" in html

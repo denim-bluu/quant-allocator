@@ -217,6 +217,7 @@ def build_payload() -> dict:
             "all_r_sd": gain.all_r_sd,
             "actual_sd": gain.actual_sd,
             "all_e_sd": gain.all_e_sd,
+            "actual_gain": 1.0 - gain.actual_sd / gain.all_r_sd,
             "gain": gain.gain_all_r_to_all_e,
             "floor": gain.floor,
             "renders": gain.renders,

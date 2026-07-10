@@ -130,11 +130,13 @@
     {% endfor %}
   </div>
   <div class="power-gate">
-    <span class="power-gate__title">power gate &middot; information gain clears</span>
+    <span class="power-gate__title">power gate &middot; demo threshold clears under provisional tier-noise assumptions</span>
     <p class="power-gate__reason">
-      All-R sd {{ "%.4f"|format(gate.all_r_sd) }} to every-sleeve-at-least-E sd
+      All-R sd {{ "%.4f"|format(gate.all_r_sd) }} to actual-mix sd
+      {{ "%.4f"|format(gate.actual_sd) }} gives <strong>{{ pct(gate.actual_gain) }}</strong>
+      tightening. The every-sleeve-at-least-E counterfactual sd
       {{ "%.4f"|format(gate.all_e_sd) }} gives <strong>{{ pct(gate.gain) }}</strong>
-      tightening, above the <strong>{{ pct(gate.floor) }}</strong> floor.
+      tightening, above the <strong>{{ pct(gate.floor) }}</strong> demo floor.
       Below the information-gain floor, P2 <strong>refuses the fused posterior</strong>
       and shows the manager-by-manager reconciliation table.
     </p>

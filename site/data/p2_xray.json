@@ -48,6 +48,7 @@
     }
   ],
   "information_gate": {
+    "actual_gain": 0.327732,
     "actual_sd": 0.041071,
     "all_e_sd": 0.01804,
     "all_r_sd": 0.061094,
