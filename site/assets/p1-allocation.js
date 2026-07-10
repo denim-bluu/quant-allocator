@@ -1,21 +1,34 @@
 (function () {
   "use strict";
 
-  // Position the median anchor tick and the naive-optimizer marker along each band rail.
-  // The rail spans [floor, ceil]; anchor and naive are mapped to a percentage across it.
-  function placeMarkers(row) {
+  function pct(value) {
+    return (value * 100).toFixed(1) + "%";
+  }
+
+  // Use one domain per manager across every committed skepticism state and the naive marker.
+  // State changes therefore alter geometry without silently rescaling the axis.
+  function positionState(row) {
     var floor = parseFloat(row.dataset.floor);
+    var anchor = parseFloat(row.dataset.anchor);
     var ceil = parseFloat(row.dataset.ceil);
-    var span = ceil - floor;
+    var domainMin = parseFloat(row.dataset.domainMin);
+    var domainMax = parseFloat(row.dataset.domainMax);
+    var span = domainMax - domainMin;
     var rail = row.querySelector(".p1-band__rail");
     if (!rail || !(span > 0)) { return; }
+    var band = rail.querySelector(".interval-stat__band");
     var point = rail.querySelector(".interval-stat__point");
     var naive = rail.querySelector(".p1-naive");
+    if (band) {
+      band.style.left = clampPct((floor - domainMin) / span);
+      band.style.width = clampPct((ceil - floor) / span);
+    }
     if (point) {
-      point.style.left = clampPct((parseFloat(row.dataset.anchor) - floor) / span);
+      point.style.left = clampPct((anchor - domainMin) / span);
+      point.title = "median anchor " + pct(anchor);
     }
     if (naive) {
-      naive.style.left = clampPct((parseFloat(row.dataset.naive) - floor) / span);
+      naive.style.left = clampPct((parseFloat(row.dataset.naive) - domainMin) / span);
     }
   }
 
@@ -38,17 +51,33 @@
         btn.classList.add("p1-dial__btn--active");
         btn.setAttribute("aria-pressed", "true");
         var floor = parseFloat(btn.dataset.floor);
+        var anchor = parseFloat(btn.dataset.anchor);
         var ceil = parseFloat(btn.dataset.ceil);
+        row.dataset.floor = btn.dataset.floor;
+        row.dataset.anchor = btn.dataset.anchor;
+        row.dataset.ceil = btn.dataset.ceil;
+        var stat = row.querySelector(".interval-stat");
+        stat.dataset.lo = btn.dataset.floor;
+        stat.dataset.point = btn.dataset.anchor;
+        stat.dataset.hi = btn.dataset.ceil;
+        stat.querySelector(".interval-stat__value").textContent = pct(floor) + "–" + pct(ceil);
+        stat.querySelector(".interval-stat__range").textContent =
+          "10th–90th percentile of posterior-draw weights · anchor " + pct(anchor) +
+          " · point optimizer " + pct(parseFloat(row.dataset.naive));
+        stat.setAttribute(
+          "aria-label",
+          "Advisory band " + pct(floor) + " to " + pct(ceil) + ", anchor " + pct(anchor)
+        );
         readout.textContent =
-          "×" + parseFloat(btn.dataset.scale).toFixed(1) + " τ: band " +
-          (floor * 100).toFixed(1) + "–" + (ceil * 100).toFixed(1) + "%";
+          "×" + parseFloat(btn.dataset.scale).toFixed(1) + " τ: band " + pct(floor) + "–" + pct(ceil);
+        positionState(row);
       });
     });
   }
 
   function init() {
     Array.prototype.slice.call(document.querySelectorAll(".p1-row")).forEach(function (row) {
-      placeMarkers(row);
+      positionState(row);
       wireDial(row);
     });
   }

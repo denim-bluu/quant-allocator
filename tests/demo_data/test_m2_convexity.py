@@ -3,6 +3,7 @@ import json
 from quant_allocator.demo_data import m2_convexity
 from quant_allocator.demo_data._emit import SITE_DATA_DIR
 from quant_allocator.flagships.convexity.screen import M2_COMPOSITE_K
+from quant_allocator.flagships.convexity.diagnostics import M2_COSKEW_BAND
 
 
 def _load(path):
@@ -11,6 +12,7 @@ def _load(path):
 
 def test_schema_is_valid(tmp_path):
     data = _load(m2_convexity.build(out_dir=tmp_path))
+    assert data["meta"]["coskew_band"] == M2_COSKEW_BAND == 0.35
     assert data["meta"]["months"] == 48
     assert data["meta"]["tier"] == "R"
     assert set(data["managers"]) == {"honest", "overlaid"}

@@ -28,6 +28,7 @@ import numpy as np
 from quant_allocator.demo_data._emit import SITE_DATA_DIR, write_json
 from quant_allocator.demo_data.roster import MANAGER_NAMES
 from quant_allocator.flagships.convexity.render import pack_screen
+from quant_allocator.flagships.convexity.diagnostics import M2_COSKEW_BAND
 from quant_allocator.flagships.convexity.screen import run_screen
 from quant_allocator.flagships.tearsheet.pipeline import MONTHS_PER_YEAR
 from quant_allocator.simulator.manager import ManagerConfig, simulate_manager
@@ -141,6 +142,7 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
             "months": MANAGER_MONTHS,
             "tier": "R",
             "rf_annual": RF_ANNUAL,
+            "coskew_band": M2_COSKEW_BAND,
         },
         "overlay": {
             "kappa": overlay.overlay_notional,

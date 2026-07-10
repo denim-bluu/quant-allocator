@@ -85,3 +85,12 @@ def test_m1_gallery_explainer_present(tmp_path):
     # Editorial explainer block near the top of the exhibit.
     html, _ = _build_with_m1_live(tmp_path)
     assert "What this exhibit shows" in html
+
+
+def test_m1_decision_adjacent_synthetic_boundary(tmp_path):
+    html, _ = _build_with_m1_live(tmp_path)
+    bridge = html.split('href="specs/m1.html"', 1)[0].rsplit('<p class="m1-note">', 1)[1]
+    assert "calibrated synthetic path" in bridge
+    assert "mechanism" in bridge
+    assert "does not establish" in bridge
+    assert "live manager" in bridge

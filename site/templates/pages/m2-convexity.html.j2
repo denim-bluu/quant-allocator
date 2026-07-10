@@ -75,8 +75,9 @@
         prompt, never an accusation.</li>
       <li><strong>Diagnostic interval-stats</strong> &mdash; the four playable windows
         onto {{ overlaid.name }}'s payoff shape, each a 90% interval. An interval
-        sitting fully in the short-vol (negative) direction counts toward the tally;
-        an interval that still straddles its band reads <em>inconclusive</em>.</li>
+        sitting fully beyond its calibrated short-vol boundary counts toward the tally.
+        Market coskewness can clear zero and still read <em>inconclusive</em>: its entire
+        interval must clear &minus;{{ "%.2f"|format(card_data.meta.coskew_band) }}, not merely zero.</li>
       <li><strong>Power gate</strong> &mdash; the Fung&ndash;Hsieh straddle rung
         renders as an unplayed gate, not a fabricated number, because the external
         PTFS series has no adapter yet.</li>
@@ -115,10 +116,19 @@
   {% if d.played %}
   <div class="interval-stat" data-domain="{{ name }}"
        data-lo="{{ d.ci_lo }}" data-point="{{ d.point }}" data-hi="{{ d.ci_hi }}"
+       {% if name == "market_coskew" %}data-decision-low="{{ -card_data.meta.coskew_band }}"
+       data-decision-high="{{ card_data.meta.coskew_band }}"{% endif %}
        data-verdict="{{ verdict_token(d.verdict) }}">
     <span class="interval-stat__label">{{ diag_label(name) }}</span>
     <span class="interval-stat__value">{{ "%+.3f"|format(d.point) }}</span>
-    <div class="interval-stat__rail"><div class="interval-stat__band"></div><div class="interval-stat__point"></div></div>
+    <div class="interval-stat__rail">
+      {% if name == "market_coskew" %}
+      <div class="m2-decision-band" aria-hidden="true"></div>
+      <div class="m2-decision-boundary m2-decision-boundary--low" aria-hidden="true"></div>
+      <div class="m2-decision-boundary m2-decision-boundary--high" aria-hidden="true"></div>
+      {% endif %}
+      <div class="interval-stat__band"></div><div class="interval-stat__point"></div>
+    </div>
     <span class="interval-stat__range">90% interval {{ "%+.3f"|format(d.ci_lo) }} &hellip; {{ "%+.3f"|format(d.ci_hi) }} &mdash; {{ d.verdict }}</span>
   </div>
   {% else %}
@@ -128,6 +138,11 @@
   </div>
   {% endif %}
   {% endfor %}
+  <p class="m2-coskew-note">The coskew rail shades the calibrated decision band
+    &minus;{{ "%.2f"|format(card_data.meta.coskew_band) }} to
+    +{{ "%.2f"|format(card_data.meta.coskew_band) }}. Its 90% interval clears zero but its
+    upper endpoint does not clear the &minus;{{ "%.2f"|format(card_data.meta.coskew_band) }}
+    boundary, so the diagnostic remains inconclusive and the composite remains 3 of 4.</p>
   <p class="m2-downleg-note">The up/down β gap is a <strong>static payoff-shape descriptor</strong>, never a conditional-alpha table. Its down-leg is identified off ~19 down-months at T = 48, so its interval is honestly wide.</p>
 </section>
 

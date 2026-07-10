@@ -21,6 +21,10 @@
       var members = groups[key];
       var los = members.map(function (s) { return parseFloat(s.dataset.lo); });
       var his = members.map(function (s) { return parseFloat(s.dataset.hi); });
+      members.forEach(function (s) {
+        if (s.dataset.decisionLow) { los.push(parseFloat(s.dataset.decisionLow)); }
+        if (s.dataset.decisionHigh) { his.push(parseFloat(s.dataset.decisionHigh)); }
+      });
       var min = Math.min.apply(null, los);
       var max = Math.max.apply(null, his);
       var span = max - min;
@@ -30,6 +34,17 @@
         s.querySelector(".interval-stat__band").style.left = ((lo - min) / span) * 100 + "%";
         s.querySelector(".interval-stat__band").style.width = ((hi - lo) / span) * 100 + "%";
         s.querySelector(".interval-stat__point").style.left = ((point - min) / span) * 100 + "%";
+        if (s.dataset.decisionLow && s.dataset.decisionHigh) {
+          var decisionLow = parseFloat(s.dataset.decisionLow);
+          var decisionHigh = parseFloat(s.dataset.decisionHigh);
+          var decisionBand = s.querySelector(".m2-decision-band");
+          var lowBoundary = s.querySelector(".m2-decision-boundary--low");
+          var highBoundary = s.querySelector(".m2-decision-boundary--high");
+          decisionBand.style.left = ((decisionLow - min) / span) * 100 + "%";
+          decisionBand.style.width = ((decisionHigh - decisionLow) / span) * 100 + "%";
+          lowBoundary.style.left = ((decisionLow - min) / span) * 100 + "%";
+          highBoundary.style.left = ((decisionHigh - min) / span) * 100 + "%";
+        }
       });
     });
   }

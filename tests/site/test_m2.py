@@ -113,3 +113,18 @@ def test_m2_css_and_js_wired(tmp_path):
     assert "assets/m2-convexity.js" in html
     assert (out / "assets" / "pages" / "m2.css").exists()
     assert (out / "assets" / "m2-convexity.js").exists()
+
+
+def test_m2_coskew_band_is_visible_and_verdict_unchanged(tmp_path):
+    html, _ = _build_m2(tmp_path)
+    coskew = html.split('data-domain="market_coskew"', 1)[1][:1800]
+    assert 'data-decision-low="-0.35"' in coskew
+    assert 'data-decision-high="0.35"' in coskew
+    assert "m2-decision-band" in coskew
+    assert "m2-decision-boundary" in coskew
+    assert "clears zero" in html
+    assert "must clear &minus;0.35" in html
+    assert "3 of 4" in html
+    script = (REPO_ROOT / "site" / "assets" / "m2-convexity.js").read_text(encoding="utf-8")
+    assert 'dataset.decisionLow' in script
+    assert 'querySelector(".m2-decision-band")' in script

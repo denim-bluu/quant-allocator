@@ -3,7 +3,7 @@
 **Status: Reviewed — method gate passed 2026-07-07 (rulings in §8)**
 **Date:** 2026-07-07
 **Card:** [`docs/ideas/2026-07-05-idea-cards.md`](../2026-07-05-idea-cards.md) § M6
-**Demo:** gallery page `m6.html` (one filer's conviction timeline + concentration rail + peer-overlap chip + CoverageGate refusal; fully synthetic, §5)
+**Demo:** gallery page `m6.html` (one filer's reported-long timeline + concentration rail + peer-overlap chip + CoverageGate refusal; fully synthetic, §5)
 
 ---
 
@@ -14,7 +14,7 @@ manager who files a quarterly Form 13F, it reads the one thing that filing actua
 exposes — a longs-only list of US-listed positions, 45 days stale — and turns it into
 a small set of honest descriptors: how concentrated the reported book is (top-N weight
 and an inverse-Herfindahl effective-breadth count), how long the top positions have
-survived (conviction persistence, in **quarters**), how much the book overlaps the
+survived (reported-holding persistence, in **quarters**), how much the book overlaps the
 other filers in the same universe, and — where a public short-interest feed is wired
 in — how crowded the shorts are on the manager's largest longs. Every number is a
 **measurement of the reported book**, delivered with the filing's staleness, its
@@ -31,7 +31,7 @@ and **engagement prep** (concrete, sourced talking points drawn entirely from pu
 records). The decisions it feeds are **monitor** — a concentration or persistence shift
 worth noticing between manager updates — and **engage** — a specific question grounded
 in a public filing ("your top position doubled to 68% of your reported book over six
-quarters; walk us through the conviction"), never an accusation and never a redemption
+quarters; walk us through that change"), never an accusation and never a redemption
 trigger.
 
 ## 2. Why we use it
@@ -91,8 +91,8 @@ spread across many names or piling into a few? A single sum — the top-N weight
 single inverse-Herfindahl number — the effective breadth — answer that, and watching
 them across quarters shows a book *concentrating* or *diversifying*. **Persistence**:
 which of today's top names have been there quarter after quarter, and which are new?
-Counting consecutive quarters held turns the timeline into a conviction map — long bars
-for old convictions, short bars for fresh trades. **Overlap**: how much does this
+Counting consecutive quarters held turns the timeline into a reported-holding map — long bars
+for positions visible across many filings, short bars for recent additions. **Overlap**: how much does this
 filer's reported book resemble the other filers' books in the same universe? A cosine
 between two holdings vectors answers that as a descriptive number.
 
@@ -129,7 +129,7 @@ demo's punchline — "the quarter the concentration doubled" — and it is liter
 the Herfindahl more than doubled, the effective breadth more than halved.
 
 Now the persistence read. Of quarter 6's top three names (N0, N1, N2), **each has been
-reported in all 6 quarters** — this is a hardening of *existing* convictions, not a
+reported in all 6 quarters** — this is concentration in *existing reported holdings*, not a
 rotation into new ones. That distinction is the engagement hook: the book did not
 change its mind, it doubled down.
 
@@ -232,7 +232,7 @@ count. Lined up across quarters (§3.5's timeline), the *trajectory* of $N_{\tex
 is the monitor signal — a book whose effective breadth falls from 5 to 2 is
 concentrating, whatever the absolute level.
 
-### 3.5 Conviction persistence — quarterly, and deliberately not a decay curve
+### 3.5 Reported-holding persistence — quarterly, and deliberately not a decay curve
 
 Line the reported books up as a panel $v^{(1)}, \dots, v^{(Q)}$. For each name in the
 **latest** quarter's top-$K$, count how many **consecutive quarters, counting back from
@@ -249,8 +249,8 @@ where:
 - $K$ — the number of top names tracked, provisional **`M6_PERSISTENCE_TOPK`
   (NUMERICS-GATE, default 10)**; the toy uses $K = 3$.
 
-In words: a long bar means an old conviction the manager has kept through many filings;
-a short bar means a fresh position. This turns the timeline into a **conviction map**,
+In words: a long bar means a position visible through many filings; a short bar means a
+recently reported position. This turns the timeline into a **reported-holding map**,
 and the map is the demo's centerpiece (§5).
 
 This descriptor is **quarterly by construction, and that boundary is load-bearing.**
@@ -396,7 +396,7 @@ provisional **`M6_DTC_FLAG` (NUMERICS-GATE)**.
 The reference implementation below is **self-contained teaching code** — paste it into
 a fresh file, it runs on `numpy` alone, with no project imports and no repo paths. It
 implements the same operations as §3: the 13F emitter (§3.3), the concentration
-descriptors (§3.4), conviction persistence (§3.5), cosine peer overlap (§3.6), and the
+descriptors (§3.4), reported-holding persistence (§3.5), cosine peer overlap (§3.6), and the
 coverage ratio the CoverageGate reads (§3.7). Short-interest stress (§3.8) is
 deliberately absent — it is the deferred FINRA adapter, not faked here. Running the
 file reproduces every number in the §3.2 worked example.
@@ -406,7 +406,7 @@ file reproduces every number in the §3.2 worked example.
 
 Turns a manager's dated signed-weight panel into the quarterly, 45-day-lagged,
 longs-only view a 13F filing exposes, then computes the M6 descriptors:
-top-N concentration, HHI / effective breadth, conviction persistence, peer
+top-N concentration, HHI / effective breadth, reported-holding persistence, peer
 overlap, and the coverage ratio the CoverageGate reads. No project imports.
 """
 
@@ -452,7 +452,7 @@ def effective_names(book):
 
 
 # ---------------------------------------------------------------------------
-# 3. Conviction persistence: consecutive quarters each current top-K name has
+# 3. Reported-holding persistence: consecutive quarters each current top-K name has
 #    been reported, ending at the latest quarter. Quarterly granularity only --
 #    this is NOT an entry-dated decay curve (that is card S3, ruled out here).
 # ---------------------------------------------------------------------------
@@ -533,7 +533,7 @@ if __name__ == "__main__":
         print(f"  Q{q}: top-{M6_TOP_N} weight={top_n_weight(row, M6_TOP_N):.3f}  "
               f"HHI={hhi(row):.3f}  effective_names={effective_names(row):.2f}")
 
-    print("\nConviction persistence (quarters held, final-quarter top-3):")
+    print("\nReported-holding persistence (quarters held, final-quarter top-3):")
     for name, qh in conviction_persistence(book_panel, M6_PERSISTENCE_TOPK).items():
         print(f"  {assets[name]}: {qh} quarters")
 
@@ -573,7 +573,7 @@ filer is **Vesper Lane Capital**; the peer set is **Corbin Vale Capital, Bexley 
 Capital, Tanager Hill Capital, Kettering Partners, and Hensley Park Advisors** (authored
 fictional names, §6). The page has four parts.
 
-**The conviction timeline — the centerpiece.** A quarter-by-quarter view of Vesper
+**The reported-long timeline — the centerpiece.** A quarter-by-quarter view of Vesper
 Lane's reported top book: a row per top position, a column per quarter, each cell a
 reported share, and each name's bar shaded by its **quarters-held** run (§3.5). Two
 things are meant to jump out. First, the book *concentrates*: the effective breadth
@@ -582,7 +582,7 @@ more than doubles from **0.144 to 0.360**. The panel marks **Q6 as the quarter t
 name (A0001) first crossed 50% of the reported book, reaching 56.1%** — "the quarter
 the concentration doubled." The fully synthetic exhibit illustrates what a live adapter
 could derive from free filing data; the displayed values do not come from a public feed.
-Second, the concentration is a *hardening of old convictions*: the latest top-3 names
+Second, the concentration is a *hardening of existing reported holdings*: the latest top-3 names
 (A0001, A0065, and A0038) each
 carry a full **6-quarter** held bar, so this is doubling-down, not rotation. That is the
 engagement hook, stated as a question, never an accusation.
@@ -593,7 +593,7 @@ How each visual element maps to the method:
   per quarter; the "top-5 weight" figure beside it is $C_N$. Both carry the as-of /
   known-at date pair and a **45-day-lag TierBadge** — the point is never bare.
 - **The quarters-held shading** = the §3.5 persistence count; a long bar is an old
-  conviction, a short bar a fresh trade.
+  position reported across many quarters, a short bar a recent addition.
 - **The peer-overlap chip** = the §3.6 cosine against the pooled peer book — Vesper's
   **0.244** reads "shares the tail, not the thesis." The chip explicitly says *this is a
   descriptive overlap; crowding caps are card M4*, so no reader mistakes it for a sizing
@@ -624,7 +624,7 @@ to reproduce the teaching-code figures.
 
 What an allocator should conclude: 13F, mined systematically, turns a manager's own
 public filings into concrete monitoring and engagement material — Vesper Lane's book
-visibly concentrated into a single conviction over six quarters — **and** the same
+visibly concentrated into a single reported holding over six quarters — **and** the same
 system refuses to speak when the filing hides too much of the book. The value is the
 discipline as much as the descriptor.
 
@@ -636,7 +636,7 @@ discipline as much as the descriptor.
   persistent, or crowded book predicts returns; it runs no regression and fits no
   parameter (card §"Power verdict": Robust as measurement, predictive use out of scope
   v1). This keeps it clear of the do-not-build list's **persistence rankings** and
-  **style-drift inference** — conviction persistence (§3.5) is a within-filer survival
+  **style-drift inference** — reported-holding persistence (§3.5) is a within-filer survival
   *count*, not a cross-manager persistence ranking or a return-persistence claim.
 - **No alpha-decay curve.** M6 respects [S3](s3-sizing-decay-lab.md) §6.2 verbatim: 13F
   is too coarse to date entries to the month, so M6 never fits a decay half-life. It
@@ -658,7 +658,7 @@ describes **how good the holdings picture is**.
 
 | Tier | Inputs the live version needs | What the card produces |
 | --- | --- | --- |
-| **Public-P (13F, native)** | SEC EDGAR **Form 13F** quarterly filings per filer: as-of date, reported name (CUSIP/issuer), and reported market value; plus a 13(f)-eligibility reference and a shares-outstanding/price source to convert value to share weight. | **The whole card on public data:** the emitter (§3.3), concentration (§3.4), conviction persistence (§3.5), and peer overlap (§3.6), each behind the CoverageGate (§3.7), with all four structural caveats (§3.3) rendered. |
+| **Public-P (13F, native)** | SEC EDGAR **Form 13F** quarterly filings per filer: as-of date, reported name (CUSIP/issuer), and reported market value; plus a 13(f)-eligibility reference and a shares-outstanding/price source to convert value to share weight. | **The whole card on public data:** the emitter (§3.3), concentration (§3.4), reported-holding persistence (§3.5), and peer overlap (§3.6), each behind the CoverageGate (§3.7), with all four structural caveats (§3.3) rendered. |
 | **P (transparent manager)** | The manager's own dated position snapshots (via the [E1](e1-transparency-ladder.md) ladder) — the *full* book, shorts and non-US included. | **Coverage becomes exact and the crop disappears:** the same descriptors on the true book, and — this is the point — a *measured* coverage ratio showing exactly how much the manager's public 13F was missing all along. |
 | **+ FINRA** | FINRA bi-monthly short-interest + an ADV source. | The **short-interest stress lens** on top longs (§3.8) — days-to-cover context, no squeeze prediction. Named deferred adapter. |
 
@@ -785,14 +785,14 @@ descriptor layer.**
 ### 6.7 Adoption & packaging
 
 - **A per-filer holdings panel, not a standing screen.** M6 surfaces where it is read:
-  a per-filer conviction-timeline panel at monitoring cadence and in engagement prep —
+  a per-filer reported-long-timeline panel at monitoring cadence and in engagement prep —
   not a separate always-on holdings dashboard to go stale (Sweep E).
 - **Caveats are the pitch, not the footnote.** The four structural distortions (§3.3)
   ride as first-class TierBadges on every view, and the CoverageGate refusal is shown as
   a feature. The honesty is the differentiator against a vendor feed that renders a
   confident concentration number with the caveats buried.
 - **Engagement framing, always a question.** "Your reported book concentrated into one
-  name over six quarters — walk us through the conviction," never "you are dangerously
+  name over six quarters — walk us through that change," never "you are dangerously
   concentrated." Public, sourced, and undisputable (it is the manager's own filing) —
   which is exactly what makes it good engagement material and bad accusation material.
 - **Receipts, dated.** Every number shows its as-of and known-at dates and its caveat
