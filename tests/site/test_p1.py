@@ -1,4 +1,5 @@
 import shutil
+import subprocess
 from pathlib import Path
 
 import yaml
@@ -93,3 +94,54 @@ def test_tau_dial_is_precomputed(tmp_path):
     # The skepticism dial snaps among precomputed τ-scale states (x2/M3 idiom); no client compute.
     assert "data-dial" in html or "p1-dial" in html
     assert "skepticism" in html
+
+
+def test_tau_states_carry_fixed_domain_and_complete_state_payload(tmp_path):
+    html, _ = _build(tmp_path)
+    assert html.count("data-domain-min=") == 20
+    assert html.count("data-domain-max=") == 20
+    assert html.count("data-floor=") >= 80
+    assert html.count("data-anchor=") >= 80
+    assert html.count("data-ceil=") >= 80
+    assert 'aria-live="polite"' in html
+
+
+def test_tau_click_updates_attributes_copy_geometry_and_aria(tmp_path):
+    _html, _ = _build(tmp_path)
+    script_path = REPO_ROOT / "site" / "assets" / "p1-allocation.js"
+    harness = r"""
+const fs = require("fs"), vm = require("vm");
+function node(dataset) { return {dataset: dataset || {}, style: {}, textContent: "", title: "",
+  attrs: {}, setAttribute(k,v){this.attrs[k]=String(v);}, getAttribute(k){return this.attrs[k];},
+  classList:{add(){},remove(){}}}; }
+const band=node(), point=node(), naive=node(), value=node(), range=node(), readout=node();
+const stat=node({lo:"0.1",point:"0.15",hi:"0.2"}); stat.querySelector=(s)=>({
+  ".interval-stat__band":band,".interval-stat__point":point,
+  ".interval-stat__value":value,".interval-stat__range":range}[s]);
+const rail=node(); rail.querySelector=(s)=>({".interval-stat__band":band,
+  ".interval-stat__point":point,".p1-naive":naive}[s]);
+function button(scale,floor,anchor,ceil){ const b=node({scale,floor,anchor,ceil});
+  b.listeners={}; b.addEventListener=(k,fn)=>b.listeners[k]=fn; return b; }
+const buttons=[button("1","0.1","0.15","0.2"),button("2","0.02","0.12","0.26")];
+const dial=node(); dial.querySelector=(s)=>s==="[data-dial-readout]"?readout:null;
+dial.querySelectorAll=()=>buttons;
+const row=node({floor:"0.1",anchor:"0.15",ceil:"0.2",naive:"0.24",domainMin:"0.02",domainMax:"0.26"});
+row.querySelector=(s)=>({".p1-band__rail":rail,".p1-dial":dial,".interval-stat":stat}[s]);
+global.document={readyState:"complete",querySelectorAll:()=>[row]};
+vm.runInThisContext(fs.readFileSync(process.argv[1],"utf8")); buttons[1].listeners.click();
+const checks=[row.dataset.floor==="0.02",stat.dataset.lo==="0.02",stat.dataset.point==="0.12",
+  stat.dataset.hi==="0.26",value.textContent==="2.0%–26.0%",range.textContent.includes("anchor 12.0%"),
+  readout.textContent.includes("×2.0"),buttons[1].attrs["aria-pressed"]==="true",
+  buttons[0].attrs["aria-pressed"]==="false",band.style.left==="0.00%",band.style.width==="100.00%",
+  point.style.left==="41.67%",naive.style.left==="91.67%",stat.attrs["aria-label"].includes("2.0% to 26.0%")];
+if (checks.some(x=>!x)) { console.error(checks); process.exit(1); }
+"""
+    subprocess.run(["node", "-e", harness, str(script_path)], check=True)
+
+
+def test_tau_active_and_focus_contrast_tokens_are_explicit():
+    css = (REPO_ROOT / "site" / "assets" / "pages" / "p1.css").read_text(encoding="utf-8")
+    assert ".p1-dial__btn--active" in css and "background: var(--accent)" in css
+    assert "color: var(--paper)" in css
+    assert ".p1-dial__btn:focus-visible" in css
+    assert "outline: 3px solid var(--accent)" in css

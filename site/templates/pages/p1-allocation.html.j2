@@ -11,10 +11,12 @@
 {% macro pct(x) %}{{ "%.1f"|format(x * 100) }}%{% endmacro %}
 
 {% macro band_row(m) %}
+{% set domain_min = ([m.naive_ols] + (m.fan | map(attribute="floor") | list)) | min %}
+{% set domain_max = ([m.naive_ols] + (m.fan | map(attribute="ceil") | list)) | max %}
 <article class="p1-row{% if m.action == 'review' %} p1-row--review{% endif %}"
-         data-floor="{{ m.floor }}" data-q25="{{ m.q25 }}" data-anchor="{{ m.anchor }}"
-         data-q75="{{ m.q75 }}" data-ceil="{{ m.ceil }}" data-naive="{{ m.naive_ols }}"
-         data-fan="{{ m.fan | tojson }}">
+         data-floor="{{ m.floor }}" data-anchor="{{ m.anchor }}" data-ceil="{{ m.ceil }}"
+         data-naive="{{ m.naive_ols }}" data-domain-min="{{ domain_min }}"
+         data-domain-max="{{ domain_max }}">
   <header class="p1-row__head">
     <span class="p1-row__name">{{ m.name }} <span class="p1-row__id">{{ m.code }}</span></span>
     <span class="p1-row__meta">group {{ m.group }} &middot; {{ m.months }} months</span>
@@ -22,7 +24,8 @@
     {% if m.fund_or_not %}<span class="p1-chip p1-chip--fund" title="band floor at 0%">fund-or-not</span>{% endif %}
   </header>
   <div class="interval-stat" data-domain="weight"
-       data-lo="{{ m.floor }}" data-point="{{ m.anchor }}" data-hi="{{ m.ceil }}">
+       data-lo="{{ m.floor }}" data-point="{{ m.anchor }}" data-hi="{{ m.ceil }}"
+       aria-label="Advisory band {{ pct(m.floor) }} to {{ pct(m.ceil) }}, anchor {{ pct(m.anchor) }}">
     <span class="interval-stat__label">Advisory band (share of book)</span>
     <span class="interval-stat__value">{{ pct(m.floor) }}&ndash;{{ pct(m.ceil) }}</span>
     <div class="interval-stat__rail p1-band__rail">
@@ -30,7 +33,7 @@
       <div class="interval-stat__point" title="median anchor {{ pct(m.anchor) }}"></div>
       <div class="p1-naive" title="point optimizer (raw OLS) {{ pct(m.naive_ols) }}"></div>
     </div>
-    <span class="interval-stat__range">
+    <span class="interval-stat__range" data-state-range>
       10th&ndash;90th percentile of posterior-draw weights &middot;
       anchor {{ pct(m.anchor) }} &middot;
       <span class="p1-naive-note">point optimizer {{ pct(m.naive_ols) }}</span>
@@ -46,7 +49,7 @@
         &times;{{ "%.1f"|format(f.scale) }}</button>
       {% endfor %}
     </div>
-    <p class="p1-dial__readout" data-dial-readout>
+    <p class="p1-dial__readout" data-dial-readout aria-live="polite">
       &times;1 &tau;: band {{ pct(m.floor) }}&ndash;{{ pct(m.ceil) }}</p>
   </div>
 </article>

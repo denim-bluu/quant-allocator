@@ -112,3 +112,12 @@ def test_p3_script_loaded(tmp_path):
     html, out = _build_with_p3_live(tmp_path)
     assert "assets/p3-hirefire.js" in html
     assert (out / "assets" / "p3-hirefire.js").exists()
+
+
+def test_p3_planted_pattern_contract_is_decision_adjacent(tmp_path):
+    html, _ = _build_with_p3_live(tmp_path)
+    explainer = html.split('<section class="p3-explainer"', 1)[1].split("</section>", 1)[0]
+    assert "deliberately built to reproduce the published stylized fact" in explainer
+    assert "ledger, counterfactual, shrinkage, and refusal mechanics" in explainer
+    assert "does not independently validate" in explainer
+    assert "real committee" in explainer

@@ -25,7 +25,7 @@ _CARD = {
     "id": "m6",
     "title": "13F long-book intelligence",
     "lane": "M",
-    "one_liner": "Mining free quarterly 13F filings for per-manager conviction signals.",
+    "one_liner": "Reported-long concentration and persistence prompts from quarterly 13F filings.",
     "decisions": ["monitor", "engage"],
     "tiers": ["P"],
     "status": "live",
@@ -73,14 +73,14 @@ def test_page_furniture_and_accessible_timeline(tmp_path):
     assert "What this exhibit shows" in html
     assert "What you are looking at" in html
     assert "How to read it" in html
-    assert "Conviction timeline" in html
+    assert "Reported-long timeline" in html
     assert "<caption>" in html
     assert html.count('scope="col"') >= 6
     assert "m6-holdings.js" not in html
 
 
 def test_centerpiece_receipts_and_method_boundaries(tmp_path):
-    html, _ = _build(tmp_path)
+    html, out = _build(tmp_path)
     intro = html.split('<section class="m6-intro">', 1)[1].split("</section>", 1)[0]
     crossing = html.split('<p class="m6-crossing">', 1)[1].split("</p>", 1)[0]
     assert "Vesper Lane Capital" in html
@@ -99,6 +99,23 @@ def test_centerpiece_receipts_and_method_boundaries(tmp_path):
     assert "quarterly survival at filing granularity" in html
     assert "never a half-life and never entry-dated" in html
     assert "walk us through the conviction?" in html
+    assert html.lower().count("conviction") == 1
+    spec_html = (out / "specs" / "m6.html").read_text(encoding="utf-8")
+    assert "conviction" not in spec_html.lower()
+    spec_text = " ".join(spec_html.lower().split())
+    assert "same reported names persisted while concentration increased" in spec_text
+    assert "overlap concentrated outside the leader" in spec_text
+    assert "increased concentration among persistent reported names" in spec_text
+    for intent_claim in (
+        "did not change its mind",
+        "doubled down",
+        "doubling-down",
+        "tail, not the thesis",
+        "tail, not thesis",
+        "thesis harden",
+        "hardened thesis",
+    ):
+        assert intent_claim not in spec_text
     assert "not a return prediction" in html
 
 

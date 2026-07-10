@@ -50,5 +50,6 @@
   cursor: pointer;
   font-variant-numeric: tabular-nums;
 }
-.p1-dial__btn--active { background: var(--track); }
+.p1-dial__btn--active { background: var(--accent); color: var(--paper); }
+.p1-dial__btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .p1-dial__readout { color: var(--dim); margin-top: 4px; }

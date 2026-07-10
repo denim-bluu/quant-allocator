@@ -246,6 +246,7 @@
     }
   },
   "meta": {
+    "coskew_band": 0.35,
     "generator": "m2_convexity",
     "months": 48,
     "rf_annual": 0.02,
