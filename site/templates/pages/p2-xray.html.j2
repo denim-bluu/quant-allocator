@@ -4,6 +4,10 @@
 {% set gate = card_data.information_gate %}
 {% set display_managers = card_data.managers | sort(attribute="capital_weight", reverse=true) %}
 
+{% block card_data %}
+{% if gate.renders %}{{ super() }}{% endif %}
+{% endblock %}
+
 {% block head_extra %}
 <link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/p2.css">
 {% endblock %}

@@ -134,7 +134,14 @@
   one_liner: Is our diversification illusory — are the managers the same trade?
   decisions: [size, monitor, redeem]
   tiers: [P, E, R]
-  status: planned
+  status: live
+  demo: pages/m4-crowding.html.j2
+  data: m4_crowding.json
+  spec: m4-crowding-overlap-radar.md
+  golive:
+    data_ask: Position-level holdings aligned to a shared name universe, plus per-name dollar ADV and daily volatility; the public rung later consumes public filings through the shared adapter
+    sample: None for the point-in-time measurement; predictive loss and any size-cap recommendation remain refused until atlas gate 2 clears
+    effort: M–L
 - id: m5
   title: Say–do gap monitor
   lane: M
@@ -155,7 +162,14 @@
   one_liner: Mining free quarterly 13F filings for per-manager conviction signals.
   decisions: [monitor, engage]
   tiers: [P]
-  status: planned
+  status: live
+  demo: pages/m6-holdings.html.j2
+  data: m6_holdings.json
+  spec: m6-13f-long-book.md
+  golive:
+    data_ask: Public SEC EDGAR Form 13F quarterly filings, a 13(f)-eligibility reference, and a value-to-shares source; FINRA short interest plus ADV is required only for the deferred short-interest lens
+    sample: Any history supports a snapshot, but concentration and overlap require coverage of at least 0.60; several quarters are required for persistence and trajectory
+    effort: M
 - id: p1
   title: Allocation under alpha uncertainty
   lane: P
@@ -180,7 +194,14 @@
   one_liner: One book-level factor view fusing managers across transparency tiers.
   decisions: [monitor, size]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/p2-xray.html.j2
+  data: p2_xray.json
+  spec: p2-tiered-book-xray.md
+  golive:
+    data_ask: Returns and a factor set for the full book (R), risk buckets where disclosed (E), and dated holdings where position-transparent (P)
+    sample: Any tier mix renders an honest band; the information-gain claim requires calibrated exposure-error rows and must clear the 20% floor
+    effort: L — static demo now; temporal filter and calibrated atlas rows in wave 3
 - id: p3
   title: Hire/fire decision audit & journal
   lane: P
@@ -231,7 +252,14 @@
   one_liner: Structured memory over letters and notes, anchored to decision hooks.
   decisions: [engage, select]
   tiers: [R, E, P]
-  status: planned
+  status: live
+  demo: pages/e3-knowledge.html.j2
+  data: e3_knowledge.json
+  spec: e3-manager-knowledge-graph.md
+  golive:
+    data_ask: Manager documents at tier R — dated letters, DDQs, and meeting notes; public documents only in the repository. Tier E adds exposure summaries and tier P adds holdings
+    sample: No sample-size threshold; real facts require extraction precision and recall at least 0.8 per core slot, and graph expansion requires at least +0.10 absolute recall@10 with the paired interval excluding zero
+    effort: M–L
 - id: x1
   title: Tier & Power Atlas
   lane: X

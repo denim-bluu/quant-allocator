@@ -9,9 +9,11 @@
   <h1 class="demo-page__title">{{ card.title }}</h1>
   <p class="demo-page__oneliner">{{ card.one_liner }}</p>
 
+  {% block card_data %}
   {% if not card.doctrine %}
   <script type="application/json" id="card-data">{{ card_data_json | safe }}</script>
   {% endif %}
+  {% endblock %}
 
   {% block demo_content %}{% endblock %}
 

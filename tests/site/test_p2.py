@@ -115,6 +115,11 @@ def test_gate_failure_suppresses_fusion_and_makes_reconciliation_primary(tmp_pat
     assert posterior_interval not in refusal
     assert "returns_regression_proxy" in refusal
     assert "90% interval" not in refusal
+    for manager in data["managers"]:
+        assert str(manager["posterior"]["ci_lo"]) not in html
+        assert str(manager["posterior"]["ci_hi"]) not in html
+    for fused_key in ("book", "counterfactuals", "r_noise_dial", "tier_provenance"):
+        assert f'"{fused_key}":' not in html
 
 
 def test_provenance_is_capital_ordered_with_accessible_table(tmp_path):
