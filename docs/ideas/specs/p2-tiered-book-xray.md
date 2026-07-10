@@ -562,8 +562,12 @@ number comes from the committed `site/data/p2_xray.json`; the demo generator
 imports the *same* fusion code a live build would run, only the input data is
 synthetic (simulator tier emissions vs real disclosures).
 
+*Section 5 numbers were reconciled to the deterministic generator on 2026-07-10;
+deltas from the teaching example remain held for the batch numerics gate.*
+
 **The book-exposure headline — the centrepiece.** One IntervalStat: the book's net
-market beta, **+0.182**, with its 90% band **±0.068**. The point is the
+market beta, **+0.229**, with its 90% band **+0.161 to +0.296** (half-width
+approximately **0.068**). The point is the
 capital-weighted posterior mean; the band is the fused book uncertainty. This is the
 "one coherent factor view of a mixed-tier book" the card promises — and it is an
 *interval*, never a bare number.
@@ -575,9 +579,9 @@ sleeves own **92.2%** of the book's fog, the four E sleeves **7.2%**, and the tw
 position-transparent sleeves **0.6%** — even though the P sleeves carry real
 capital. The message the page makes unavoidable: *the book's exposure uncertainty
 lives almost entirely in the managers you can only see through returns.* Each bar
-names the manager (synthetic: Hollowmere Capital, Brackenfell Partners, Sedgewick
+names the manager (synthetic: Westermark Strategies, Juniper Vale Partners, Sedgewick
 Advisors, Ravenna Point, Oakhurst Capital, Halstead Partners, Norwood Crest, Talbot
-Reach, Wexford Capital, Greyloft Partners, Verling Capital, Vantage Row, Cormorant
+Reach, Ternhaven Capital, Greyloft Partners, Verling Capital, Vantage Row, Cormorant
 Capital, Emberly Partners, Dunmore Advisors), so provenance is *sourced*, not
 aggregate.
 
@@ -611,7 +615,7 @@ instead (each manager's exposure listed by tier, un-fused) — the kill fallback
 visible, not hidden.
 
 What an allocator should conclude from these numbers: the book is modestly net-long
-the market (+0.18), but nearly all of the uncertainty in that figure is
+the market (+0.23), but nearly all of the uncertainty in that figure is
 concentrated in returns-only sleeves; the two managers who give holdings contribute
 almost nothing to the book's fog despite real capital; and moving the returns-only
 sleeves up even one tier would cut the book's exposure band by more than half — a
