@@ -1,0 +1,776 @@
+{
+  "brief": {
+    "footer": {
+      "omitted": [
+        {
+          "reason": "requires tier E and a same-manager M5 source",
+          "section": "say_do"
+        },
+        {
+          "reason": "same-manager S2 source unavailable",
+          "section": "tear_sheet"
+        }
+      ]
+    },
+    "meta": {
+      "manager_id": "CLC",
+      "manager_name": "Corvid Lane Capital",
+      "scope": "document_native_partial_brief",
+      "tier": "R"
+    },
+    "sections": [
+      {
+        "display_numbers": [],
+        "min_tier": "R",
+        "narration": null,
+        "provenance": {
+          "as_of": "2024-03",
+          "card": "e3",
+          "metric": "stated_views"
+        },
+        "section_id": "stated_views",
+        "source_card": "e3",
+        "state": "rendered",
+        "stats": [],
+        "title": "Last stated views",
+        "views": [
+          {
+            "as_of": "2024-03",
+            "direction": "neutral-explicit",
+            "quote": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes.",
+            "source_doc": "L-2024Q1",
+            "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes.",
+            "theme": "liquidity"
+          }
+        ]
+      },
+      {
+        "display_numbers": [],
+        "min_tier": "R",
+        "narration": null,
+        "provenance": {
+          "as_of": "2024-05",
+          "card": "e3",
+          "metric": "open_questions"
+        },
+        "section_id": "open_questions",
+        "source_card": "e3",
+        "state": "rendered",
+        "stats": [],
+        "title": "Open questions carried over",
+        "views": [
+          {
+            "as_of": "2024-05",
+            "question": "How would redemption gates and cash buffers behave under stress?",
+            "source_doc": "MTG-2024-05",
+            "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals."
+          }
+        ]
+      },
+      {
+        "display_numbers": [],
+        "min_tier": "E",
+        "narration": null,
+        "omitted": {
+          "needs_tier": "E",
+          "reason": "requires tier E and a same-manager M5 source"
+        },
+        "provenance": {
+          "as_of": "",
+          "card": "m5",
+          "metric": "unavailable"
+        },
+        "section_id": "say_do",
+        "source_card": "m5",
+        "state": "omitted",
+        "title": "Say-do flags"
+      },
+      {
+        "display_numbers": [],
+        "min_tier": "R",
+        "narration": null,
+        "omitted": {
+          "needs_tier": "R",
+          "reason": "same-manager S2 source unavailable"
+        },
+        "provenance": {
+          "as_of": "",
+          "card": "s2",
+          "metric": "unavailable"
+        },
+        "section_id": "tear_sheet",
+        "source_card": "s2",
+        "state": "omitted",
+        "title": "Honest tear sheet"
+      }
+    ],
+    "summary": "Document-native preparation; unavailable same-manager sources are named."
+  },
+  "graph_candidate": {
+    "candidate_doc_ids": [
+      "DDQ-2024",
+      "L-2024Q1",
+      "MTG-2024-05"
+    ],
+    "candidate_paths": {
+      "DDQ-2024": [
+        "attributed_to:CLC"
+      ],
+      "L-2024Q1": [
+        "attributed_to:CLC",
+        "authored_by:EV->employed_by:CLC"
+      ],
+      "MTG-2024-05": [
+        "authored_by:EV->employed_by:CLC"
+      ]
+    },
+    "edges": [
+      {
+        "edge_id": "about_theme:V-LIQ-LETTER:LIQ",
+        "edge_type": "about_theme",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "View V-LIQ-LETTER is about theme LIQ."
+        },
+        "source": "V-LIQ-LETTER",
+        "target": "LIQ",
+        "to_date": null
+      },
+      {
+        "edge_id": "about_theme:V-LIQ-MEETING:LIQ",
+        "edge_type": "about_theme",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "View V-LIQ-MEETING is about theme LIQ."
+        },
+        "source": "V-LIQ-MEETING",
+        "target": "LIQ",
+        "to_date": null
+      },
+      {
+        "edge_id": "attributed_to:DDQ-2024:CLC",
+        "edge_type": "attributed_to",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document DDQ-2024 is attributed to Corvid Lane Capital."
+        },
+        "source": "DDQ-2024",
+        "target": "CLC",
+        "to_date": null
+      },
+      {
+        "edge_id": "attributed_to:DDQ-WEX:WGC",
+        "edge_type": "attributed_to",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document DDQ-WEX is attributed to Wexford Green Capital."
+        },
+        "source": "DDQ-WEX",
+        "target": "WGC",
+        "to_date": null
+      },
+      {
+        "edge_id": "attributed_to:L-2023Q4:SPA",
+        "edge_type": "attributed_to",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document L-2023Q4 is attributed to Selby Point Advisors."
+        },
+        "source": "L-2023Q4",
+        "target": "SPA",
+        "to_date": null
+      },
+      {
+        "edge_id": "attributed_to:L-2024Q1:CLC",
+        "edge_type": "attributed_to",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document L-2024Q1 is attributed to Corvid Lane Capital."
+        },
+        "source": "L-2024Q1",
+        "target": "CLC",
+        "to_date": null
+      },
+      {
+        "edge_id": "authored_by:L-2023Q4:PA",
+        "edge_type": "authored_by",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Priya Anand authored document L-2023Q4."
+        },
+        "source": "L-2023Q4",
+        "target": "PA",
+        "to_date": null
+      },
+      {
+        "edge_id": "authored_by:L-2024Q1:EV",
+        "edge_type": "authored_by",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Elena Voss authored document L-2024Q1."
+        },
+        "source": "L-2024Q1",
+        "target": "EV",
+        "to_date": null
+      },
+      {
+        "edge_id": "authored_by:MTG-2024-05:EV",
+        "edge_type": "authored_by",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Elena Voss authored document MTG-2024-05."
+        },
+        "source": "MTG-2024-05",
+        "target": "EV",
+        "to_date": null
+      },
+      {
+        "edge_id": "discussed_at:V-LIQ-MEETING:M-2024-05",
+        "edge_type": "discussed_at",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "View V-LIQ-MEETING was discussed at meeting M-2024-05."
+        },
+        "source": "V-LIQ-MEETING",
+        "target": "M-2024-05",
+        "to_date": null
+      },
+      {
+        "edge_id": "employed_by:EV:CLC",
+        "edge_type": "employed_by",
+        "from_date": "2024-01",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Elena Voss was employed by Corvid Lane Capital from 2024-01 with no recorded end date."
+        },
+        "source": "EV",
+        "target": "CLC",
+        "to_date": null
+      },
+      {
+        "edge_id": "employed_by:EV:SPA",
+        "edge_type": "employed_by",
+        "from_date": "2020-01",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Elena Voss was employed by Selby Point Advisors from 2020-01 through 2023-12."
+        },
+        "source": "EV",
+        "target": "SPA",
+        "to_date": "2023-12"
+      },
+      {
+        "edge_id": "employed_by:PA:SPA",
+        "edge_type": "employed_by",
+        "from_date": "2020-01",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Priya Anand was employed by Selby Point Advisors from 2020-01 with no recorded end date."
+        },
+        "source": "PA",
+        "target": "SPA",
+        "to_date": null
+      },
+      {
+        "edge_id": "expresses:L-2024Q1:V-LIQ-LETTER",
+        "edge_type": "expresses",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document L-2024Q1 expresses view V-LIQ-LETTER."
+        },
+        "source": "L-2024Q1",
+        "target": "V-LIQ-LETTER",
+        "to_date": null
+      },
+      {
+        "edge_id": "expresses:MTG-2024-05:V-LIQ-MEETING",
+        "edge_type": "expresses",
+        "from_date": null,
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Document MTG-2024-05 expresses view V-LIQ-MEETING."
+        },
+        "source": "MTG-2024-05",
+        "target": "V-LIQ-MEETING",
+        "to_date": null
+      }
+    ],
+    "expansion_hops": 1,
+    "nodes": [
+      {
+        "label": "DDQ-2024",
+        "node_id": "DDQ-2024",
+        "node_type": "document",
+        "provenance": {
+          "as_of": "2024-02",
+          "source_doc": "DDQ-2024",
+          "source_span": "Liquidity terms: the fund offers quarterly redemption with ninety day notice. Corvid Lane maintains a documented liquidity policy reviewed by the risk committee."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "DDQ-WEX",
+        "node_id": "DDQ-WEX",
+        "node_type": "document",
+        "provenance": {
+          "as_of": "2024-02",
+          "source_doc": "DDQ-WEX",
+          "source_span": "Liquidity and notice terms: investors may redeem semi-annually subject to standard notice. Wexford Green publishes its liquidity framework annually."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "E3-RELATIONSHIPS",
+        "node_id": "E3-RELATIONSHIPS",
+        "node_type": "document",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "E3-RELATIONSHIPS is an authored relationship record dated 2024-06."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "L-2023Q4",
+        "node_id": "L-2023Q4",
+        "node_type": "document",
+        "provenance": {
+          "as_of": "2023-12",
+          "source_doc": "L-2023Q4",
+          "source_span": "Selby Point closed the year with a modest net long and a value tilt. We trimmed several positions into strength and added to higher-quality names."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "L-2024Q1",
+        "node_id": "L-2024Q1",
+        "node_type": "document",
+        "provenance": {
+          "as_of": "2024-03",
+          "source_doc": "L-2024Q1",
+          "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes. Corvid Lane continues to favour durable cash generators over crowded momentum names."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "MTG-2024-05",
+        "node_id": "MTG-2024-05",
+        "node_type": "document",
+        "provenance": {
+          "as_of": "2024-05",
+          "source_doc": "MTG-2024-05",
+          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals. She described the order in which sleeves would be raised."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "Corvid Lane Capital",
+        "node_id": "CLC",
+        "node_type": "manager",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Corvid Lane Capital is an Equity long/short manager at tier R, granted 2024-01."
+        },
+        "tier": "R",
+        "tier_grant_date": "2024-01"
+      },
+      {
+        "label": "Selby Point Advisors",
+        "node_id": "SPA",
+        "node_type": "manager",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Selby Point Advisors is an Equity long/short manager at tier R, granted 2023-01."
+        },
+        "tier": "R",
+        "tier_grant_date": "2023-01"
+      },
+      {
+        "label": "Wexford Green Capital",
+        "node_id": "WGC",
+        "node_type": "manager",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Wexford Green Capital is an Equity long/short manager at tier R, granted 2024-01."
+        },
+        "tier": "R",
+        "tier_grant_date": "2024-01"
+      },
+      {
+        "label": "M-2024-05",
+        "node_id": "M-2024-05",
+        "node_type": "meeting",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Meeting M-2024-05 occurred in 2024-05 with attendee Elena Voss and linked document MTG-2024-05."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "Elena Voss",
+        "node_id": "EV",
+        "node_type": "person",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Elena Voss is a Portfolio manager."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "Priya Anand",
+        "node_id": "PA",
+        "node_type": "person",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Priya Anand is a Portfolio manager."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "Equity long/short",
+        "node_id": "ELS",
+        "node_type": "strategy",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Corvid Lane Capital is an Equity long/short manager at tier R, granted 2024-01."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "Liquidity",
+        "node_id": "LIQ",
+        "node_type": "theme",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "Theme LIQ is labelled Liquidity."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "neutral-explicit",
+        "node_id": "V-LIQ-LETTER",
+        "node_type": "view",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "View V-LIQ-LETTER is a neutral-explicit quarterly view with conviction 2."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      },
+      {
+        "label": "neutral-explicit",
+        "node_id": "V-LIQ-MEETING",
+        "node_type": "view",
+        "provenance": {
+          "as_of": "2024-06",
+          "source_doc": "E3-RELATIONSHIPS",
+          "source_span": "View V-LIQ-MEETING is a neutral-explicit stress view with conviction 2."
+        },
+        "tier": null,
+        "tier_grant_date": null
+      }
+    ],
+    "status": "candidate_gate_not_cleared"
+  },
+  "meta": {
+    "active_retrieval": "hybrid_search",
+    "approved_names": [
+      "Corvid Lane Capital",
+      "Elena Voss",
+      "Priya Anand",
+      "Selby Point Advisors",
+      "Wexford Green Capital"
+    ],
+    "corpus_count": 5,
+    "corpus_doc_ids": [
+      "DDQ-2024",
+      "DDQ-WEX",
+      "L-2023Q4",
+      "L-2024Q1",
+      "MTG-2024-05"
+    ],
+    "dense_backend": "authored_concept_table_demo_only",
+    "extraction": "authored_demo_only",
+    "generator": "e3_knowledge",
+    "graph_receipt_doc_ids": [
+      "E3-RELATIONSHIPS"
+    ],
+    "graph_status": "candidate_gate_not_cleared",
+    "manager_id": "CLC",
+    "manager_name": "Corvid Lane Capital",
+    "tier": "R"
+  },
+  "retrieval": {
+    "dense_distractor_rank": 2,
+    "graph_candidate": [
+      {
+        "doc_id": "DDQ-2024",
+        "provenance": {
+          "as_of": "2024-02",
+          "source_doc": "DDQ-2024",
+          "source_span": "Liquidity terms: the fund offers quarterly redemption with ninety day notice. Corvid Lane maintains a documented liquidity policy reviewed by the risk committee."
+        },
+        "rank": 1,
+        "score": 0.032787,
+        "text": "Liquidity terms: the fund offers quarterly redemption with ninety day notice. Corvid Lane maintains a documented liquidity policy reviewed by the risk committee."
+      },
+      {
+        "doc_id": "L-2024Q1",
+        "provenance": {
+          "as_of": "2024-03",
+          "source_doc": "L-2024Q1",
+          "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes. Corvid Lane continues to favour durable cash generators over crowded momentum names."
+        },
+        "rank": 2,
+        "score": 0.032002,
+        "text": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes. Corvid Lane continues to favour durable cash generators over crowded momentum names."
+      },
+      {
+        "doc_id": "MTG-2024-05",
+        "provenance": {
+          "as_of": "2024-05",
+          "source_doc": "MTG-2024-05",
+          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals. She described the order in which sleeves would be raised."
+        },
+        "rank": 3,
+        "score": 0.032002,
+        "text": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals. She described the order in which sleeves would be raised."
+      }
+    ],
+    "illustrative_k3": {
+      "baseline": {
+        "hits": 2,
+        "mrr": 1.0,
+        "ndcg": 0.703918,
+        "precision": 0.666667,
+        "recall": 0.666667,
+        "recall_wilson": [
+          0.20766,
+          0.938508
+        ],
+        "relevant": 3
+      },
+      "graph_candidate": {
+        "hits": 3,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "recall_wilson": [
+          0.438503,
+          1.0
+        ],
+        "relevant": 3
+      },
+      "k": 3,
+      "relevance": "binary"
+    },
+    "lexical": [
+      {
+        "doc_id": "DDQ-2024",
+        "provenance": {
+          "as_of": "2024-02",
+          "source_doc": "DDQ-2024",
+          "source_span": "Liquidity terms: the fund offers quarterly redemption with ninety day notice. Corvid Lane maintains a documented liquidity policy reviewed by the risk committee."
+        },
+        "rank": 1,
+        "score": 2.677036,
+        "text": "Liquidity terms: the fund offers quarterly redemption with ninety day notice. Corvid Lane maintains a documented liquidity policy reviewed by the risk committee."
+      },
+      {
+        "doc_id": "L-2024Q1",
+        "provenance": {
+          "as_of": "2024-03",
+          "source_doc": "L-2024Q1",
+          "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes. Corvid Lane continues to favour durable cash generators over crowded momentum names."
+        },
+        "rank": 2,
+        "score": 2.106048,
+        "text": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes. Corvid Lane continues to favour durable cash generators over crowded momentum names."
+      },
+      {
+        "doc_id": "DDQ-WEX",
+        "provenance": {
+          "as_of": "2024-02",
+          "source_doc": "DDQ-WEX",
+          "source_span": "Liquidity and notice terms: investors may redeem semi-annually subject to standard notice. Wexford Green publishes its liquidity framework annually."
+        },
+        "rank": 3,
+        "score": 0.838369,
+        "text": "Liquidity and notice terms: investors may redeem semi-annually subject to standard notice. Wexford Green publishes its liquidity framework annually."
+      },
+      {
+        "doc_id": "L-2023Q4",
+        "provenance": {
+          "as_of": "2023-12",
+          "source_doc": "L-2023Q4",
+          "source_span": "Selby Point closed the year with a modest net long and a value tilt. We trimmed several positions into strength and added to higher-quality names."
+        },
+        "rank": 4,
+        "score": 0.0,
+        "text": "Selby Point closed the year with a modest net long and a value tilt. We trimmed several positions into strength and added to higher-quality names."
+      },
+      {
+        "doc_id": "MTG-2024-05",
+        "provenance": {
+          "as_of": "2024-05",
+          "source_doc": "MTG-2024-05",
+          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals. She described the order in which sleeves would be raised."
+        },
+        "rank": 5,
+        "score": 0.0,
+        "text": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals. She described the order in which sleeves would be raised."
+      }
+    ],
+    "lexical_note_rank": 5,
+    "plain_hybrid": [
+      {
+        "doc_id": "DDQ-2024",
+        "provenance": {
+          "as_of": "2024-02",
+          "source_doc": "DDQ-2024",
+          "source_span": "Liquidity terms: the fund offers quarterly redemption with ninety day notice. Corvid Lane maintains a documented liquidity policy reviewed by the risk committee."
+        },
+        "rank": 1,
+        "score": 0.032787,
+        "text": "Liquidity terms: the fund offers quarterly redemption with ninety day notice. Corvid Lane maintains a documented liquidity policy reviewed by the risk committee."
+      },
+      {
+        "doc_id": "DDQ-WEX",
+        "provenance": {
+          "as_of": "2024-02",
+          "source_doc": "DDQ-WEX",
+          "source_span": "Liquidity and notice terms: investors may redeem semi-annually subject to standard notice. Wexford Green publishes its liquidity framework annually."
+        },
+        "rank": 2,
+        "score": 0.032002,
+        "text": "Liquidity and notice terms: investors may redeem semi-annually subject to standard notice. Wexford Green publishes its liquidity framework annually."
+      },
+      {
+        "doc_id": "L-2024Q1",
+        "provenance": {
+          "as_of": "2024-03",
+          "source_doc": "L-2024Q1",
+          "source_span": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes. Corvid Lane continues to favour durable cash generators over crowded momentum names."
+        },
+        "rank": 3,
+        "score": 0.031754,
+        "text": "In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes. Corvid Lane continues to favour durable cash generators over crowded momentum names."
+      },
+      {
+        "doc_id": "MTG-2024-05",
+        "provenance": {
+          "as_of": "2024-05",
+          "source_doc": "MTG-2024-05",
+          "source_span": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals. She described the order in which sleeves would be raised."
+        },
+        "rank": 4,
+        "score": 0.031258,
+        "text": "The portfolio manager walked through how redemption gates would apply under stress and how she sizes cash buffers against a wave of withdrawals. She described the order in which sleeves would be raised."
+      },
+      {
+        "doc_id": "L-2023Q4",
+        "provenance": {
+          "as_of": "2023-12",
+          "source_doc": "L-2023Q4",
+          "source_span": "Selby Point closed the year with a modest net long and a value tilt. We trimmed several positions into strength and added to higher-quality names."
+        },
+        "rank": 5,
+        "score": 0.03101,
+        "text": "Selby Point closed the year with a modest net long and a value tilt. We trimmed several positions into strength and added to higher-quality names."
+      }
+    ],
+    "query": "corvid lane liquidity 2024",
+    "query_id": "Q1",
+    "relevant_doc_ids": [
+      "DDQ-2024",
+      "L-2024Q1",
+      "MTG-2024-05"
+    ]
+  },
+  "retrieval_gate": {
+    "active_retrieval": "hybrid_search",
+    "formal_metrics": {
+      "baseline": {
+        "hits": 3,
+        "mrr": 1.0,
+        "ndcg": 0.906025,
+        "precision": 0.3,
+        "recall": 1.0,
+        "recall_wilson": [
+          0.438503,
+          1.0
+        ],
+        "relevant": 3
+      },
+      "graph_candidate": {
+        "hits": 3,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "precision": 0.3,
+        "recall": 1.0,
+        "recall_wilson": [
+          0.438503,
+          1.0
+        ],
+        "relevant": 3
+      },
+      "k": 10,
+      "relevance": "binary"
+    },
+    "graph_status": "candidate_gate_not_cleared",
+    "interval_rule": "lower_bound_above_zero",
+    "paired_interval": null,
+    "query_count": 1,
+    "reason": "One planted query is below the paired-evidence minimum; at recall@10 the five-document corpus is saturated.",
+    "required_uplift": 0.1,
+    "state": "insufficient",
+    "uplift": 0.0
+  }
+}

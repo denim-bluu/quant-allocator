@@ -581,56 +581,59 @@ swapping it for one does not change the retrieval or graph logic, only the vecto
 
 ## 5. Reading the demo
 
-The gallery page `e3.html` runs on an **authored synthetic corpus** — hand-written letters,
-a DDQ, and meeting notes for a fictional manager relationship — because the graph and the
-extraction are the exhibit, not a simulator draw (the M5 precedent, §6.4). It has four
-parts, and the SYNTHETIC badge and "what this needs to go live" box are always present.
+The gallery page `e3.html` runs on the **five-document authored synthetic corpus** shipped by
+the shared say–do substrate: one Corvid Lane letter, one Selby Point letter, a Corvid Lane
+DDQ, a wrong-firm Wexford DDQ, and one Corvid Lane meeting note. Authored facts, rather than
+real-document extraction, are the exhibit. The SYNTHETIC badge and "what this needs to go
+live" box are always present. The candidate graph also carries one E3-owned authored
+relationship-record document, excluded from retrieval rankings, whose exact sentences support
+the displayed identities, tiers, roles, and effective-dated employment edges.
 
-**The graph exhibit — the centerpiece.** A rendered entity–relation graph for one manager,
-**Corvid Lane Capital**, showing the typed nodes of §3.3: the **manager**, its **strategy**,
-its lead **person** *Elena Voss* (with an `employed_by` edge back to her prior firm **Selby
-Point Advisors**, the edge that lets a query follow her across shops), the **documents**
-(two letters, a DDQ, two meeting notes), the **views** they express, and the **themes**
-those views touch (liquidity, duration, momentum, energy). How each element maps to the
-method:
+**The active product — the fallback is the result.** E3 ships deterministic hybrid search,
+typed extraction tables, and a document-native meeting brief. The graph is visible only as a
+**candidate — gate not cleared** evaluation. It is not the active retrieval layer, because the
+binding recall@10 gate does not pass on the current planted set.
 
-- **Every node and edge is clickable to its provenance** — the source document, the exact
-  sentence (`source_span`), and the date (§3.3). A fact with no sentence behind it is not on
-  the graph; provenance is the design-system contract, the way an interval band is elsewhere.
-- **The `employed_by` edge to Selby Point** is the graph's signature move made visible: it is
-  why a question about Corvid Lane can reach a note written by Elena Voss before the firm's
-  name ever appears.
-- **The manager node's TierBadge** shows the recorded R/E/P tier and the date it was granted —
-  the graph as the home of the E1 ladder's state (§3.3).
+**The candidate graph exhibit.** The page renders all seven typed nodes from §3.3 for the
+authored relationship: **manager, strategy, person, document, view, theme, and meeting**. It
+also renders the six typed edge tables, including Elena Voss's `employed_by` edge to **Selby
+Point Advisors** and the one-hop author/employment path that admits the firm-unnamed meeting
+note to the Corvid candidate set. Every node and edge is clickable to its source document,
+exact `source_span`, and date. The Corvid manager node shows tier R and its authored grant
+date. Theme-based two-hop expansion is absent.
 
-**The meeting-prep brief — the wow-demo.** One command
-(`python -m quant_allocator.knowledge brief --manager "Corvid Lane Capital"`) composes a
-print-clean brief via the **E2 pack layer**: last quarter's **stated views** (from the M5
-extraction schema), **open questions carried over** from prior meeting notes, the **say–do
-flags** (M5's aligned/partial/contradicted verdicts), and the **S2 tear sheet**. This is the
-"30-minute prep in 30 seconds" claim, rendered — and it is explicitly a *composition* of
-existing cards' outputs over the graph, not a new estimator.
+**The document-native meeting brief.** The brief renders Corvid's stated liquidity view and
+the open question carried from the authored meeting note. It explicitly marks the say–do and
+tear-sheet panels unavailable: the committed M5 and S2 payloads belong to a different
+fictional manager, and E3 has no identity crosswalk. The page does not relabel those payloads
+or imply that a complete cross-card brief exists.
 
-**The retrieval panel.** The §3.2 query, "what did Corvid Lane say about liquidity in 2024?",
-run three ways side by side: **lexical only** (misses the paraphrased meeting note — it ranks
-6th), **plain hybrid RAG** (surfaces the wrong-firm Wexford distractor at rank 2), and
-**graph-augmented** (drops the distractor, recovers the note; top-3 = DDQ, Q1 letter, meeting
-note). Each returned passage shows its **provenance chip** (document + sentence + date). The
-reader sees *why* the graph answer is the right one, not just that it is.
+**The retrieval comparison.** The query "what did Corvid Lane say about liquidity in 2024?"
+runs three ways side by side. Lexical retrieval ranks the paraphrased meeting note **5th**.
+Plain hybrid retrieval puts the wrong-firm Wexford distractor **2nd** and returns
+`[DDQ-2024, DDQ-WEX, L-2024Q1]` at the top three. The one-hop graph candidate drops Wexford
+and returns `[DDQ-2024, L-2024Q1, MTG-2024-05]`. On this illustrative top-three comparison,
+recall and precision move from **0.67 to 1.00**. Every returned passage carries its document,
+source span, and date.
 
-**The eval gate — the honest refusal made visible.** A working PowerGate-style panel showing
-the retrieval eval of §3.5: **graph-augmented recall@10 vs the plain-RAG baseline**, with its
-seeded-replication interval. The panel states the rule in plain sight: *if the graph does not
-clear the baseline by the stated margin, E3 ships as extraction tables + search, no graph.*
-On the demo corpus the graph clears it (recall 0.67 → 1.00 on the worked query); the panel
-shows the gate **passing**, and states that on real documents the same gate governs whether
-the graph layer renders at all.
+**The formal eval gate — insufficient, not passing.** The binding rule is graph-candidate
+uplift of **+0.10 absolute recall@10** with the paired-difference interval lower bound above
+zero. With five documents, recall@10 is saturated: plain hybrid and graph candidate both
+retrieve all three relevant documents, so formal recall is **1.00 versus 1.00** and uplift is
+**0.00**. The planted set has one query, below the minimum for a paired interval. The
+PowerGate therefore reports **insufficient** and selects `hybrid_search`; a larger planted
+query/document set is required before graph expansion can activate.
 
-What an allocator should conclude: the value is not "we built RAG" — RAG is the baseline the
-page shows being beaten. The value is the **schema** (entities, provenance, the person-across-
-firms edge), the **decision hooks** (the brief, the sourced query), and the **measured
-warrant** that the graph earns its complexity, with an honest switch to the simpler system if
-it ever does not.
+**Generator reconciliation — 2026-07-10.** The generated pipeline changed four teaching-copy
+claims: six documents became five; lexical rank 6 became rank 5; the top-three improvement
+remains illustrative rather than proving the recall@10 gate; and the complete M5/S2 brief
+became a document-native partial brief with explicit unavailable-source panels. These deltas
+remain in the numerics-and-copy docket rather than being tuned away in the generator.
+
+What an allocator should conclude: the decision hooks and sourced memory are useful now, but
+the graph expansion has not earned production status. The card applies its kill rule and ships
+the simpler hybrid system while preserving the candidate comparison as evidence for a later,
+larger evaluation.
 
 ## 6. Honest limits & go-live
 
