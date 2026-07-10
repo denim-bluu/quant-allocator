@@ -261,8 +261,8 @@ $$
 
 where:
 
-- $\mathcal A_m$ — every position-month whose holding age is exactly $m$; $|\mathcal
-  A_m|$ its count, which shrinks as $m$ grows (fewer positions survive to old age)
+- $\mathcal A_m$ — every position-month whose holding age is exactly $m$; $|\mathcal A_m|$
+  its count, which shrinks as $m$ grows (fewer positions survive to old age)
   and drives the curve's precision.
 - $\sigma_{\tilde r}$ — the idiosyncratic-return scale, used to standardize so the
   curve reads in signal units rather than percent.
@@ -353,8 +353,8 @@ are load-bearing:
   month-clustered SE is the reason a pooled regression's t-statistic is not to be
   trusted.
 - **Clarke, de Silva & Thorley (2002), "Portfolio Constraints and the Fundamental
-  Law of Active Management," *FAJ*.** Generalized Grinold–Kahn to $\text{IR} =
-  \text{IC}\cdot\sqrt{\text{BR}}\cdot\text{TC}$, where the **transfer coefficient**
+  Law of Active Management," *FAJ*.** Generalized Grinold–Kahn to $\text{IR} = \text{IC}\cdot\sqrt{\text{BR}}\cdot\text{TC}$,
+  where the **transfer coefficient**
   TC measures how faithfully a book's actual weights express its signals. The sizing
   curve is an empirical read on TC: a flat slope is a low transfer coefficient — good
   picks, poorly transmitted into position sizes — which is precisely the "coach, do
@@ -887,8 +887,8 @@ exercises a half-life.
    backbone of the sizing-slope inference and the reason a pooled regression's
    t-statistic overstates the evidence.
 2. **Clarke, de Silva & Thorley (2002), "Portfolio Constraints and the Fundamental
-   Law," *FAJ*.** The transfer coefficient TC in $\text{IR}=\text{IC}\sqrt{\text{BR}}
-   \,\text{TC}$: the sizing curve is an empirical read on TC, and a flat slope is a
+   Law," *FAJ*.** The transfer coefficient TC in $\text{IR}=\text{IC}\sqrt{\text{BR}}\,\text{TC}$:
+   the sizing curve is an empirical read on TC, and a flat slope is a
    low TC — good picks poorly transmitted into sizes.
 3. **Grinold & Kahn, *Active Portfolio Management*.** The fundamental law and the
    breadth axis — why discriminating power scales with independent bets and a

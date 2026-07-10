@@ -169,8 +169,8 @@ where:
 - $q$ — a calendar quarter index; $m(q)$ — the **quarter-end month** the snapshot is
   taken from (13F reports positions as of the last business day of the quarter).
 - $\mathcal{E}$ — the set of **13(f)-eligible** securities: US-listed equities and a
-  defined list of options/convertibles above the reporting threshold. $\mathbb{1}[n \in
-  \mathcal{E}]$ is 1 for a reportable name, 0 otherwise.
+  defined list of options/convertibles above the reporting threshold. $\mathbb{1}[n \in \mathcal{E}]$
+  is 1 for a reportable name, 0 otherwise.
 - $\max(w_{n},0)$ — the **longs-only** crop: short positions contribute nothing to a
   13F (they are simply invisible).
 - $v_n^{(q)}$ — the **reported market-value share** of name $n$ in quarter $q$: the

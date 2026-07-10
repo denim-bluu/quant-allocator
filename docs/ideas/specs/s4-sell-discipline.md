@@ -56,7 +56,7 @@ left is pure *selection* skill at the exit — did you pick the right name to
 kill?
 
 The empirical warrant is unusually strong. Akepanidtaworn et al. studied
-institutional PMs (portfolios averaging ~$570m) and found genuine skill in
+institutional PMs (portfolios averaging ~\$570m) and found genuine skill in
 buying alongside selling that **underperforms the random-sell benchmark** —
 buys are slow, researched decisions; sells are fast, heuristic reactions to
 extreme past returns. The deficit concentrates exactly where behavioral theory
@@ -946,8 +946,8 @@ Sweep E doctrine, applied to the touchiest card in the portfolio:
    is revisited only if a third consumer appears.
 5. **The two-dial simulator extension is approved, with one amendment.**
    `MarketConfig.idio_ar1` must be implemented as a filter on the *existing*
-   innovation draws ($a_{i,t} = \rho\,a_{i,t-1} + \sqrt{1-\rho^2}\,
-   \sigma_i\,\varepsilon_{i,t}$), so ρ = 0 is byte-identical and no new RNG
+   innovation draws ($a_{i,t} = \rho\,a_{i,t-1} + \sqrt{1-\rho^2}\,\sigma_i\,\varepsilon_{i,t}$),
+   so ρ = 0 is byte-identical and no new RNG
    stream is consumed. `ManagerConfig.exit_style` gains a **fourth value
    `"random"`** — validation-only, required by acceptance gate 1's specificity
    control, which the three-value enum of §3.8 could not express; `"random"`

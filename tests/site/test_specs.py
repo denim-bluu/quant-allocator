@@ -5,6 +5,7 @@ import subprocess
 from html.parser import HTMLParser
 
 import yaml
+import pytest
 
 from pathlib import Path
 
@@ -49,9 +50,12 @@ def _test_preceding_backslashes(text: str, index: int) -> int:
     return count
 
 
-def _expressions_in_text(text: str, *, opening_uses_parity: bool = True) -> list[str]:
-    """Independent delimiter scanner; intentionally does not reuse the production regex."""
+def _scan_math_text(
+    text: str, *, opening_uses_parity: bool = True
+) -> tuple[list[str], list[int]]:
+    """Return recognized expressions and active dollar signs outside any valid range."""
     expressions = []
+    covered_dollars: set[int] = set()
     index = 0
     while index < len(text):
         escaped_opening = opening_uses_parity and _test_preceding_backslashes(text, index) % 2
@@ -81,8 +85,51 @@ def _expressions_in_text(text: str, *, opening_uses_parity: bool = True) -> list
             index = content_start
             continue
         expressions.append(text[content_start:close])
+        covered_dollars.update(
+            offset
+            for offset in range(index, close + len(delimiter))
+            if text[offset] == "$"
+        )
         index = close + len(delimiter)
-    return expressions
+    active_dollars = {
+        offset
+        for offset, character in enumerate(text)
+        if character == "$"
+        and (
+            not opening_uses_parity
+            or _test_preceding_backslashes(text, offset) % 2 == 0
+        )
+    }
+    return expressions, sorted(active_dollars - covered_dollars)
+
+
+def _expressions_in_text(text: str, *, opening_uses_parity: bool = True) -> list[str]:
+    """Independent delimiter scanner; intentionally does not reuse the production regex."""
+    return _scan_math_text(text, opening_uses_parity=opening_uses_parity)[0]
+
+
+def _assert_balanced_math_text(
+    text: str,
+    *,
+    spec_id: str,
+    location: str,
+    opening_uses_parity: bool = True,
+) -> None:
+    _, unmatched = _scan_math_text(text, opening_uses_parity=opening_uses_parity)
+    if not unmatched:
+        return
+    offset = unmatched[0]
+    line = text.count("\n", 0, offset) + 1
+    line_start = text.rfind("\n", 0, offset) + 1
+    line_end = text.find("\n", offset)
+    if line_end < 0:
+        line_end = len(text)
+    column = offset - line_start + 1
+    excerpt = text[line_start:line_end].strip()
+    raise AssertionError(
+        f"{spec_id}: unmatched math delimiter at {location}, line {line}, "
+        f"column {column}: {excerpt!r}"
+    )
 
 
 def _math_expressions(rendered_body: str) -> list[str]:
@@ -287,6 +334,56 @@ def test_unmatched_even_run_openers_survive_as_raw_and_keep_error_default(tmp_pa
     assert r"Even inline \$unclosed" in body
     assert r"Even display \$$unclosed" in body
     assert 'class="escaped-dollar"' not in body
+
+
+def test_balanced_math_audit_handles_currency_and_multiline_fixtures(tmp_path):
+    site = _fixture_site(tmp_path)
+    spec = tmp_path / "docs" / "ideas" / "specs" / "t1.md"
+    spec.write_text(
+        "# Currency and display math\n\n"
+        r"Coverage exceeds \$1trn; the comparison portfolio is ~\$570m."
+        "\n\n$$\n"
+        r"x_i = \alpha_i + \varepsilon_i"
+        "\n$$\n",
+        encoding="utf-8",
+    )
+    build(site, tmp_path / "out")
+
+    body = _rendered_spec_bodies(tmp_path / "out")["t1"]
+    collector = _MathTextCollector()
+    collector.feed(body)
+    assert body.count('class="escaped-dollar"') == 2
+    for node_index, text in enumerate(collector.text_nodes, start=1):
+        _assert_balanced_math_text(
+            text,
+            spec_id="t1",
+            location=f"rendered text node {node_index}",
+            opening_uses_parity=False,
+        )
+
+    with pytest.raises(
+        AssertionError,
+        match=r"t1: unmatched math delimiter at source fixture, line 1, column 8",
+    ):
+        _assert_balanced_math_text(
+            "broken $x_i\n+ y_i$",
+            spec_id="t1",
+            location="source fixture",
+        )
+
+
+def test_all_live_specs_have_no_unmatched_math_dollars_before_javascript(tmp_path):
+    build(REPO_ROOT / "site", tmp_path / "out")
+    for spec_id, body in _rendered_spec_bodies(tmp_path / "out").items():
+        collector = _MathTextCollector()
+        collector.feed(body)
+        for node_index, text in enumerate(collector.text_nodes, start=1):
+            _assert_balanced_math_text(
+                text,
+                spec_id=spec_id,
+                location=f"rendered text node {node_index}",
+                opening_uses_parity=False,
+            )
 
 
 def test_all_live_specs_have_contiguous_balanced_katex_parseable_math(tmp_path):

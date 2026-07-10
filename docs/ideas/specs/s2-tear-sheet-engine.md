@@ -261,8 +261,8 @@ $T=48$). where:
 - **circular** means the series is wrapped end-to-start before blocking, so
   every observation has equal chance of appearing — no edge months are
   under-weighted.
-- **studentized** means we bootstrap the *t-statistic* $(\widehat{SR}^* -
-  \widehat{SR})/SE^*$ rather than the raw Sharpe, which buys second-order
+- **studentized** means we bootstrap the *t-statistic* $(\widehat{SR}^* - \widehat{SR})/SE^*$
+  rather than the raw Sharpe, which buys second-order
   accuracy under fat tails.
 
 This is the CI the sheet shows once it clears coverage validation (§6). **What

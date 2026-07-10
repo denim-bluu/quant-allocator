@@ -233,8 +233,8 @@ where:
 
 In words: the liquidity-adjusted overlap is the same common-area measure as §3.3, but
 computed after re-scaling each book so that a name counts in proportion to how long it
-takes to get out of, not how many dollars are in it. When $O^{\text{liq}}_{ab} \gg
-O_{ab}$, the diversification is illusory precisely in the exit.
+takes to get out of, not how many dollars are in it. When $O^{\text{liq}}_{ab} \gg O_{ab}$,
+the diversification is illusory precisely in the exit.
 
 **Common-holder unwind stress.** Crowding's cost is a joint liquidation. For each name,
 sum the **combined footprint** across all managers who hold it the same direction, and

@@ -499,8 +499,8 @@ How each visual element maps to the method:
   reads `SHORT-VOL POSTURE — INVESTIGATE` (a `shrink` chip: 3 of 4 fire, at the flag
   threshold $k=3$).
 - **The four diagnostic interval-stats** for Gullwing — each a 90% interval with its
-  short-vol verdict. Treynor–Mazuy $\gamma$ is strongly negative (point $\approx
-  -6.9$, interval entirely below zero), the up/down $\beta$ gap is negative (point
+  short-vol verdict. Treynor–Mazuy $\gamma$ is strongly negative (point $\approx -6.9$,
+  interval entirely below zero), the up/down $\beta$ gap is negative (point
   $\approx -1.05$), and the drawdown-vs-vol signature is elevated — three
   short-vol-consistent windows. Market coskewness is negative (point $\approx -0.55$)
   but its interval still touches its band, so it reads *inconclusive*: an honest
@@ -588,8 +588,8 @@ the diagnostics on the de-smoothed series (§6.1) is the first defense; the cali
 proves it works.
 
 **Atlas grid (M2 rows).** $\kappa \in \{0,\ \text{low},\ \text{med},\ \text{high}\}$
-× $T \in \{36, 48, 60, 120\}$ × smoothing $\theta_1 \in \{0,\ \text{mild},\
-\text{heavy}\}$ × strategy family {equity L/S, crude credit}, ≥1,000 seeded paths per
+× $T \in \{36, 48, 60, 120\}$ × smoothing $\theta_1 \in \{0,\ \text{mild},\ \text{heavy}\}$
+× strategy family {equity L/S, crude credit}, ≥1,000 seeded paths per
 cell (per-module RNG streams, X1 §3.3 convention). Estimands per cell: **detection** =
 P(composite flags | $\kappa>0$); **size** = P(composite flags | $\kappa=0$), reported
 *separately* for honest-smooth vs honest-liquid; and per-diagnostic power curves so the
