@@ -401,8 +401,8 @@ managers per cell (atlas volume 1 raises that to ≥1,000).
   is the posterior's *size*: the cost of the extra power it buys. These curves
   are the returns-only (R-tier) slice: even the shrinkage posterior, the
   fastest climber, has a point estimate just below the 80% bar at the middle
-  effect (0.788 at `T` = 120). Its Wilson half-width is 0.035757, so the visible
-  point-plus/minus-half-width envelope spans the bar; 0.788 is a point-gate
+  effect (0.788 at `T` = 120). Its Wilson interval is `[0.750047, 0.821561]`, so
+  the visible score interval spans the bar; 0.788 is a point-gate
   decision, not evidence that the underlying power is precisely below 0.80.
   Pinning betas at tier E pushes the posterior point estimate to 0.820 at
   `T` = 120, which is the atlas headline.
@@ -558,8 +558,8 @@ generator; nothing downstream hand-copies a threshold.
 The sampler JSON makes that same rule testable. Its named `headline` block
 contains the R-tier and E-tier reference points; every power-curve series has an
 aligned `*_wilson` array; and every degradation row carries its own `wilson`
-object. Each object stores the emitted replication count, half-width, and clipped
-point-plus/minus-half-width envelope. The generator re-derives those fields from
+object. Each object stores the emitted replication count, half-width, and Wilson
+score bounds. The generator re-derives those fields from
 the emitted power and replication count; the page binds them without estimating
 anything in JavaScript.
 

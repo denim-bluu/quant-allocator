@@ -3,6 +3,9 @@
 {% set deg = card_data.degradation_table %}
 {% set reg = card_data.registry_snippet %}
 {% set headline = card_data.headline %}
+{% set alpha_r = deg.alpha_estimation.R %}
+{% set alpha_e = deg.alpha_estimation.E %}
+{% set false_attribution = headline.r_tier_false_attribution %}
 
 {% block head_extra %}
 <link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/x1.css">
@@ -28,14 +31,14 @@
   cohort-informed shrinkage posterior climbs fastest but still tops out just below
   the {{ "%.0f"|format(headline.reference.target_power * 100) }}% point gate at the middle effect
   ({{ "%.1f"|format(headline.r_tier.power * 100) }}%, or {{ "%.3f"|format(headline.r_tier.power) }}, at T={{ headline.reference.max_months }}).
-  Its point &plusmn; Wilson half-width envelope is
+  Its Wilson 95% interval is
   {{ "%.1f"|format(headline.r_tier.wilson.lo * 100) }}%&ndash;{{ "%.1f"|format(headline.r_tier.wilson.hi * 100) }}%,
-  which spans the 80% bar; the gate decision remains based on the {{ "%.3f"|format(headline.r_tier.power) }} point estimate.
-  It fires {{ "%.1f"|format(headline.r_tier_false_attribution.power * 100) }}% of the
-  time when there is no skill at all (its IC=0 false-alarm rate at T={{ headline.r_tier_false_attribution.months }}). Pinning betas at
-  tier E is what pushes the posterior over the bar within a 10-year record &mdash;
-  which is the atlas headline. The degradation table below reads the same effect at a fixed cell (T=48,
-  IC=0.04): alpha estimation lifts from 25.2% power at returns-tier to 31.8% at
+  which spans the {{ "%.0f"|format(headline.reference.target_power * 100) }}% bar; the gate decision remains based on the {{ "%.3f"|format(headline.r_tier.power) }} point estimate.
+  It fires {{ "%.1f"|format(false_attribution.power * 100) }}% of the
+  time when there is no skill at all (its IC={{ "%g"|format(false_attribution.ic) }} false-alarm rate at T={{ false_attribution.months }}). Pinning betas at
+  tier E is what pushes the posterior over the bar within a {{ headline.reference.max_months // 12 }}-year record &mdash;
+  which is the atlas headline. The degradation table below reads the same effect at a fixed cell (T={{ deg.T }},
+  IC={{ "%.2f"|format(deg.ic) }}): alpha estimation lifts from {{ "%.1f"|format(alpha_r.power * 100) }}% power at returns-tier to {{ "%.1f"|format(alpha_e.power * 100) }}% at
   exposure-tier, and every number is {{ card_data.meta.n_reps }}-manager simulator output, illustrative
   and uncalibrated.</p>
   <p class="tearsheet-note"><strong>How to read it.</strong></p>
@@ -43,14 +46,14 @@
     <li><strong>Two lines per panel</strong> &mdash; the OLS <em>t</em>-test and the
     shrinkage posterior, plotted as detection rate (power) against sample length
     <em>T</em> in months.</li>
-    <li><strong>Dashed horizontal line</strong> &mdash; the 80% power bar; where a
+    <li><strong>Dashed horizontal line</strong> &mdash; the {{ "%.0f"|format(headline.reference.target_power * 100) }}% power bar; where a
     curve crosses it is the tenure at which that metric becomes reliable.</li>
     <li><strong>Amber poster label</strong> &mdash; the posterior's false-alarm price
-    (~10% false-attribution at IC=0), the cost of borrowing strength across a cohort.</li>
+    ({{ "%.1f"|format(false_attribution.power * 100) }}% false-attribution at IC={{ "%g"|format(false_attribution.ic) }}), the cost of borrowing strength across a cohort.</li>
     <li><strong>Degradation table</strong> &mdash; power (and RMSE where it applies)
     for each analytic by transparency tier; the tier gap is what visibility buys.</li>
     <li><strong>Registry rows</strong> &mdash; each metric's gate; a null threshold
-    prints as "no tenure in the measured range suffices," meaning it never clears 80%
+    prints as "no tenure in the measured range suffices," meaning it never clears {{ "%.0f"|format(headline.reference.target_power * 100) }}%
     power here.</li>
   </ul>
   <p class="tearsheet-note">The full methodology &mdash; with the math and a reference
@@ -61,7 +64,7 @@
 <section class="tearsheet-panel">
   <h2 class="tearsheet-panel__title">Exhibit 1 &mdash; power curves: OLS t-test vs shrinkage posterior</h2>
   <p class="atlas-poster-label">
-    cohort-informed; ~10% false-attribution at IC=0 &mdash; the price of borrowing strength
+    cohort-informed; {{ "%.1f"|format(false_attribution.power * 100) }}% false-attribution at IC={{ "%g"|format(false_attribution.ic) }} &mdash; the price of borrowing strength
   </p>
   <div class="atlas-curves">
     {% for curve in card_data.power_curves %}
@@ -85,8 +88,8 @@
     </figure>
     {% endfor %}
   </div>
-  <p class="tearsheet-note">Dashed line marks the 80% power threshold; x-axis is T (months),
-  24 to 120. Shaded envelopes show each point &plusmn; its Wilson half-width.</p>
+  <p class="tearsheet-note">Dashed line marks the {{ "%.0f"|format(headline.reference.target_power * 100) }}% power threshold; x-axis is T (months),
+  {{ card_data.power_curves[0].T[0] }} to {{ card_data.power_curves[0].T[-1] }}. Shaded envelopes show Wilson 95% intervals.</p>
 </section>
 
 <section class="tearsheet-panel">
@@ -108,7 +111,7 @@
 <section class="tearsheet-panel">
   <h2 class="tearsheet-panel__title">Exhibit 3 &mdash; PowerGate registry (sampler)</h2>
   <p class="tearsheet-note">The machine-readable thresholds file every gated card consumes.
-  A null threshold means the metric never reaches 80% power in the measured range.</p>
+  A null threshold means the metric never reaches {{ "%.0f"|format(headline.reference.target_power * 100) }}% power in the measured range.</p>
   <dl class="x1-registry">
     {% for name, m in reg.metrics.items() %}
     <div class="x1-registry__row">
@@ -136,7 +139,7 @@ false-alarm rate, not filler. Each power number carries its own Wilson 95%
 half-width (this sampler runs 500 managers per cell; atlas vol.&nbsp;1 raises
 that to &ge;1,000).</p>
 <p>The shrinkage posterior borrows strength across a strategy cohort, buying power at
-short tenures &mdash; at the cost of ~10% false-attribution at IC=0. That is the price
+short tenures &mdash; at the cost of {{ "%.1f"|format(false_attribution.power * 100) }}% false-attribution at IC={{ "%g"|format(false_attribution.ic) }}. That is the price
 of borrowing strength, stated plainly rather than hidden.</p>
 {% endblock %}
 

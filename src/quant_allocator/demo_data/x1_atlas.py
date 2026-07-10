@@ -21,16 +21,17 @@ DEGRADATION_T = 48
 
 
 def _wilson_summary(power: float, n: int) -> dict:
-    """Display-ready point +/- Wilson half-width from an emitted MC proportion."""
+    """Display-ready Wilson score interval from an emitted MC proportion."""
     z = x_grid.WILSON_Z
     denominator = 1.0 + z * z / n
+    center = (power + z * z / (2.0 * n)) / denominator
     radicand = power * (1.0 - power) / n + z * z / (4.0 * n * n)
     half_width = (z / denominator) * math.sqrt(radicand)
     return {
         "n": n,
         "half_width": round(half_width, 6),
-        "lo": round(max(0.0, power - half_width), 6),
-        "hi": round(min(1.0, power + half_width), 6),
+        "lo": round(max(0.0, center - half_width), 6),
+        "hi": round(min(1.0, center + half_width), 6),
     }
 
 

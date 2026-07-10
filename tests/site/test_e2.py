@@ -81,11 +81,12 @@ def test_e2_certified_numbers_render_verbatim(tmp_path):
 def test_e2_headline_values_follow_named_section_payloads(tmp_path):
     def mutate(data):
         tear = next(s for s in data["sections"] if s["section_id"] == "tear_sheet")
-        intervals = [s for s in tear["stats"] if s["kind"] == "interval"]
-        intervals[0]["value"] = "0.83"
-        intervals[1]["value"] = "0.52"
-        intervals[2]["value"] = "+4.6%"
-        intervals[2]["level"] = "88%"
+        by_label = {stat["label"]: stat for stat in tear["stats"]}
+        by_label["Reported Sharpe"]["value"] = "0.83"
+        by_label["De-smoothed Sharpe"]["value"] = "0.52"
+        by_label["Annualized alpha"]["value"] = "+4.6%"
+        by_label["Annualized alpha"]["level"] = "88%"
+        tear["stats"] = list(reversed(tear["stats"]))
         standing = next(s for s in data["sections"] if s["section_id"] == "posterior_standing")
         standing["gate"]["measured"] = 54
 

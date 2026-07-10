@@ -50,16 +50,21 @@ def _wilson_half_width(power, n, z=1.96):
     return (z / denominator) * math.sqrt(radicand)
 
 
+def _wilson_center(power, n, z=1.96):
+    return (power + z * z / (2.0 * n)) / (1.0 + z * z / n)
+
+
 def test_every_emitted_wilson_value_rederives_from_power_and_n(tmp_path):
     data = _load(x1_atlas.build(out_dir=tmp_path))
     n = data["meta"]["n_reps"]
 
     def check(power, wilson):
         expected = _wilson_half_width(power, n)
+        center = _wilson_center(power, n)
         assert wilson["n"] == n
         assert wilson["half_width"] == round(expected, 6)
-        assert wilson["lo"] == round(max(0.0, power - expected), 6)
-        assert wilson["hi"] == round(min(1.0, power + expected), 6)
+        assert wilson["lo"] == round(max(0.0, center - expected), 6)
+        assert wilson["hi"] == round(min(1.0, center + expected), 6)
 
     for curve in data["power_curves"]:
         for name in ("ols_ttest", "posterior"):
