@@ -1,4 +1,6 @@
+import html as html_lib
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -27,6 +29,10 @@ _CARD = {
         "effort": "L — static demo now; temporal filter and calibrated atlas rows in wave 3",
     },
 }
+
+
+def _normalized_rendered_text(rendered_html):
+    return " ".join(html_lib.unescape(re.sub(r"<[^>]+>", " ", rendered_html)).split())
 
 
 def _build(tmp_path, *, gate_renders=True):
@@ -91,8 +97,12 @@ def test_interval_provenance_counterfactual_and_fallback_render(tmp_path):
     assert html.count("p2-counterfactual") == 3
     assert "power-gate" in html
     assert "demo threshold clears under provisional tier-noise assumptions" in html
-    assert "32.8%" in html
-    assert "70.5%" in html
+    normalized = _normalized_rendered_text(html)
+    assert (
+        "All-R sd 0.0611 to actual-mix sd 0.0411 gives 32.8% tightening. "
+        "The every-sleeve-at-least-E counterfactual sd 0.0180 gives 70.5% "
+        "tightening, above the 20.0% demo floor."
+    ) in normalized
     assert "20.0%" in html
     assert "p2-reconciliation" in html
 
