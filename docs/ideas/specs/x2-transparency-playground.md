@@ -9,11 +9,11 @@
 
 ## 1. What this is
 
-This page is a set of dials and a few live-updating readouts. You drag a dial —
+This page is a set of dials and a few live-updating readouts. You choose a dial setting —
 the length of a manager's track record, say, or which transparency tier you are
 standing in — and a set of statistics on screen redraw themselves: an estimated
 alpha with a band around it, a one-word verdict (*robust*, *shrink*, or *noise*),
-and a gate that is either open or shut. Nothing is computed while you drag. Every
+and a gate that is either open or shut. Nothing is computed while you switch settings. Every
 number you can land on was calculated in advance and shipped inside the page as a
 frozen table; the dials only *choose which precomputed answer to show*. It is a
 teaching instrument, not an analytic — its output is understanding, not an
@@ -23,11 +23,11 @@ The audience is a decision-maker, not a statistician: a leader deciding whether
 the team's habit of *reporting a range instead of a single number* is worth the
 apparent loss of confidence, or an outside reader judging whether the program
 knows what it is doing. The decision moment is a conversation — the page is meant
-to be projected and dragged live while a room watches a confident-looking claim
+to be projected and operated live while a room watches a confident-looking claim
 dissolve into an honest grey band the moment the track record gets short enough.
 It exists to answer one question physically: *why does this team report intervals
 at all?* Read as a table of power curves, that argument convinces statisticians
-and moves no one. Made draggable, it lands in a single gesture.
+and moves no one. Made selectable, it lands in a single gesture.
 
 ## 2. Why we use it
 
@@ -42,7 +42,7 @@ told fact is a fact one argues with. The claim that a two-year record cannot
 separate a skilled manager from a lucky one sounds like caution, even like
 excuse-making, until you watch the band do it.
 
-This page wins by making the thesis **physically manipulable**. Drag one dial and
+This page wins by making the thesis **physically manipulable**. Select one rung and
 watch an interval widen, a verdict flip from *robust* to *noise*, a power gate
 slam shut with the exact threshold it failed printed on its face. The reader is no
 longer being asked to trust an assertion; they are watching a measured surface
@@ -88,7 +88,7 @@ to plus 12.5%. Because that band straddles zero, an honest analyst cannot rule o
 "no skill at all," so the verdict chip reads **noise**. The manager may well be
 good; forty-eight months of returns simply cannot prove it.
 
-Now drag track length T to 120 months and switch the tier dial to E (exposures
+Now select track length T = 120 months and switch the tier dial to E (exposures
 pinned). A different drawer opens. Its alpha card reads **0.0482** with a band of
 **+0.0018 to +0.0921** — the lower edge has just cleared zero. The verdict flips to
 **shrink**: there is now enough evidence to say the alpha is probably positive,
@@ -152,7 +152,7 @@ suspicion — halving your uncertainty demands four times the history, so a 24-m
 manager is genuinely, structurally harder to certify than a 120-month one. Lo (2002)
 derived the sampling distribution of the Sharpe ratio and showed exactly this scaling
 (and how it worsens when returns are autocorrelated); the T dial is that result made
-draggable.
+selectable.
 
 **The verdict carries its own uncertainty — the Wilson half-width.**
 
@@ -335,7 +335,7 @@ T = 48, tier R). Here is how each visual element maps to the method:
   addresses a cell.
 - **The IntervalStat** (one per analytic) is the drawer's card made visible: a point
   marker on a rail with a shaded **band** = the 95% credible interval `[lo, hi]`. When
-  you drag T, watch the band *animate* wider or narrower — that motion is the `√T` law.
+  you switch T, watch the band *animate* wider or narrower — that motion is the `√T` law.
 - **The VerdictChip** is the one-word conclusion. It reads **noise** when the band
   straddles zero (skill indistinguishable from luck), **shrink** when there is evidence
   of a smaller-than-headline effect, **robust** when the effect is clearly supported.
@@ -446,10 +446,10 @@ atlas (under an hour), since the grid is a subset of X1's.
   the developer machine; continuous integration never computes statistics nor touches the
   network. **Effort:** S–M (~3 sessions for v1); v2 is a regeneration, not a rebuild.
 - **How to run it in a live conversation.** This page is deliberately **kill-the-dashboard**
-  (Sweep E): it is used *in* a conversation — projected, dragged live while the room watches
+  (Sweep E): it is used *in* a conversation — projected, operated live while the room watches
   a claim dissolve — not left as a standing browser tab that decays to 25% adoption. The
   interaction *is* the teaching moment; a static screenshot cannot make the point. The move
-  that carries the whole thesis in one gesture: *"Drag T from 120 down to 36 and watch every
+  that carries the whole thesis in one gesture: *"Switch T from 120 down to 36 and watch every
   claim you thought you could make dissolve into honest grey."* Publicly, the same gesture is
   the single best portfolio artifact the program ships.
 

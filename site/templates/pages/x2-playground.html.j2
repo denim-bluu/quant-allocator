@@ -4,6 +4,9 @@
 <link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/x2.css">
 {% endblock %}
 
+{% set opening = card_data.cells["0.04|12|0.8|48|R"] %}
+{% set comparison = card_data.cells["0.04|12|0.8|120|E"] %}
+
 {% macro dial(name, label, values, active, numeric=True) %}
 <div class="x2-dial" data-dial="{{ name }}">
   <span class="x2-dial__label">{{ label }}</span>
@@ -45,7 +48,7 @@
 {% block demo_content %}
 <section class="x2-intro">
   <p class="x2-headline">
-    Drag the dials. Every claim is a precomputed cell of the X1 atlas &mdash; the page
+    Choose the dials. Every claim is a precomputed cell of the X1 atlas &mdash; the page
     computes nothing, it snaps to measured rungs and never interpolates. Watch an interval
     widen, a verdict flip, a gate stay shut.
   </p>
@@ -57,10 +60,15 @@
   <p class="x2-exhibit__lede">
     The page opens on one simulated manager at middling skill (IC 0.04), a 12-month alpha
     half-life, disciplined sizing, a 48-month track record, viewed at the returns-only tier
-    (R). Its annualized alpha reads 0.053, but the 95% band runs from &minus;0.02951 to 0.1249
+    (R). Its annualized alpha reads {{ "%.3f"|format(opening.alpha[0]) }}, but the 95% band runs from
+    {% if opening.alpha[1] < 0 %}&minus;{% else %}+{% endif %}{{ "%.5f"|format(opening.alpha[1] | abs) }} to
+    {% if opening.alpha[2] >= 0 %}+{% else %}&minus;{% endif %}{{ "%.4f"|format(opening.alpha[2] | abs) }}
     &mdash; it straddles zero, so the verdict is <em>noise</em>: forty-eight months cannot tell
-    this manager from a lucky one. Drag the track length to 120 and pin exposures (tier E) and
-    the band tightens until it clears zero and the verdict flips to <em>shrink</em>. Nothing is
+    this manager from a lucky one. Select track length 120 and pin exposures (tier E): alpha is
+    {{ "%.3f"|format(comparison.alpha[0]) }}, with a band from
+    {% if comparison.alpha[1] >= 0 %}+{% else %}&minus;{% endif %}{{ "%.6f"|format(comparison.alpha[1] | abs) }} to
+    {% if comparison.alpha[2] >= 0 %}+{% else %}&minus;{% endif %}{{ "%.5f"|format(comparison.alpha[2] | abs) }},
+    and the verdict is <em>{{ comparison.alpha[3] }}</em>. Nothing is
     computed in your browser &mdash; each dial just opens a precomputed cell of the X1 atlas.
   </p>
   <p class="x2-exhibit__subhead">How to read it</p>
@@ -68,7 +76,7 @@
     <li><b>Dials</b> are buttons, not sliders: they <em>snap</em> to computed cells, because the
       grid is measured, not modelled, and there is nothing honest to show between rungs.</li>
     <li><b>Interval band</b> &mdash; the shaded rail is the 95% credible band and the marker is the
-      point estimate; wider means less certain. Watch it animate as you drag T.</li>
+      point estimate; wider means less certain. Watch it animate as you switch T.</li>
     <li><b>Verdict chip</b> &mdash; <em>noise</em> when the band covers zero, <em>shrink</em> for a
       smaller-than-headline effect, <em>robust</em> when the effect is clearly supported.</li>
     <li><b>Power gate</b> &mdash; open or shut; a shut gate (the tier-P trade analytics) names the

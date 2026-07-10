@@ -4,6 +4,12 @@
 <link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/e2-pack.css">
 {% endblock %}
 
+{% set tear = card_data.sections | selectattr("section_id", "equalto", "tear_sheet") | first %}
+{% set standing = card_data.sections | selectattr("section_id", "equalto", "posterior_standing") | first %}
+{% set reported = tear.stats | selectattr("label", "equalto", "Reported Sharpe") | first %}
+{% set desmoothed = tear.stats | selectattr("label", "equalto", "De-smoothed Sharpe") | first %}
+{% set alpha = tear.stats | selectattr("label", "equalto", "Annualized alpha") | first %}
+
 {% block demo_content %}
 <section class="exhibit-intro" aria-label="What this exhibit shows">
   <h2 class="exhibit-intro__title">What this exhibit shows</h2>
@@ -13,9 +19,9 @@
       a returns-only (tier&nbsp;{{ card_data.meta.tier }}) manager, for
       {{ card_data.meta.quarter }}. E2 computes nothing itself: it stitches
       already-certified fragments from other cards into one print-clean document.
-      The tear sheet is honest &mdash; a reported Sharpe of 0.71 that de-smooths to
-      0.60, with a +3.2% alpha whose 90% interval still spans zero &mdash; while the
-      skill-standing section stays gated at 48 months and the exposure-drift panel is
+      The tear sheet is honest &mdash; a reported Sharpe of {{ reported.value }} that de-smooths to
+      {{ desmoothed.value }}, with a {{ alpha.value }} alpha whose {{ alpha.level }} interval still spans zero &mdash; while the
+      skill-standing section stays gated at {{ standing.gate.measured }} months and the exposure-drift panel is
       withheld until tier&nbsp;E. Nothing here is asserted beyond what its source card
       certified.</p>
   </div>

@@ -1,4 +1,5 @@
 import shutil
+import json
 
 import yaml
 
@@ -9,7 +10,7 @@ from quant_allocator.site.build import build
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
-def _build_with_e2_live(tmp_path):
+def _build_with_e2_live(tmp_path, mutate_data=None):
     # E2 is `planned` in the committed manifest and cards.yaml is a prohibited
     # shared seam, so the page is built from a tmp copy of the site with e2
     # flipped live (the S2/X1 build-test idiom, adapted to a planned card).
@@ -31,6 +32,12 @@ def _build_with_e2_live(tmp_path):
                 "effort": "S",
             }
     cards_path.write_text(yaml.safe_dump(cards, sort_keys=False), encoding="utf-8")
+
+    if mutate_data is not None:
+        data_path = site / "data" / "e2_pack.json"
+        data = json.loads(data_path.read_text(encoding="utf-8"))
+        mutate_data(data)
+        data_path.write_text(json.dumps(data), encoding="utf-8")
 
     out = tmp_path / "out"
     build(site, out)
@@ -64,17 +71,38 @@ def test_e2_renders_the_three_section_states(tmp_path):
 
 def test_e2_certified_numbers_render_verbatim(tmp_path):
     html, _ = _build_with_e2_live(tmp_path)
-    assert "0.71" in html       # reported Sharpe
-    assert "0.60" in html       # de-smoothed Sharpe
-    assert "+3.2%" in html      # alpha point
+    assert "0.71" in html  # reported Sharpe
+    assert "0.60" in html  # de-smoothed Sharpe
+    assert "+3.2%" in html  # alpha point
     assert "95% interval" in html
     assert "90% interval" in html
 
 
+def test_e2_headline_values_follow_named_section_payloads(tmp_path):
+    def mutate(data):
+        tear = next(s for s in data["sections"] if s["section_id"] == "tear_sheet")
+        intervals = [s for s in tear["stats"] if s["kind"] == "interval"]
+        intervals[0]["value"] = "0.83"
+        intervals[1]["value"] = "0.52"
+        intervals[2]["value"] = "+4.6%"
+        intervals[2]["level"] = "88%"
+        standing = next(s for s in data["sections"] if s["section_id"] == "posterior_standing")
+        standing["gate"]["measured"] = 54
+
+    html, _ = _build_with_e2_live(tmp_path, mutate)
+    intro = html.split('<section class="exhibit-intro"', 1)[1].split('<div class="pack-page">', 1)[
+        0
+    ]
+    for expected in ("0.83", "0.52", "+4.6%", "88% interval", "54 months"):
+        assert expected in intro
+    for stale in ("reported Sharpe of 0.71", "de-smooths to 0.60", "+3.2% alpha", "at 48 months"):
+        assert stale not in intro
+
+
 def test_e2_print_furniture_and_script(tmp_path):
     html, out = _build_with_e2_live(tmp_path)
-    assert 'class="pack-page"' in html           # print @page container (interval.css)
-    assert "pack-section__prov" in html          # per-section provenance survives paper (INV-4)
+    assert 'class="pack-page"' in html  # print @page container (interval.css)
+    assert "pack-section__prov" in html  # per-section provenance survives paper (INV-4)
     assert "assets/e2-pack.js" in html
     assert (out / "assets" / "e2-pack.js").exists()
     assert (out / "assets" / "pages" / "e2-pack.css").exists()

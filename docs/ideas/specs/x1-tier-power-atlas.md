@@ -400,9 +400,12 @@ managers per cell (atlas volume 1 raises that to ≥1,000).
   them — "~10% false-attribution at IC=0 — the price of borrowing strength" —
   is the posterior's *size*: the cost of the extra power it buys. These curves
   are the returns-only (R-tier) slice: even the shrinkage posterior, the
-  fastest climber, tops out just below the 80% bar at the middle effect (0.788
-  at `T` = 120). Pinning betas at tier E is what pushes the posterior over the
-  bar within a ten-year record — which is the atlas headline.
+  fastest climber, has a point estimate just below the 80% bar at the middle
+  effect (0.788 at `T` = 120). Its Wilson half-width is 0.035757, so the visible
+  point-plus/minus-half-width envelope spans the bar; 0.788 is a point-gate
+  decision, not evidence that the underlying power is precisely below 0.80.
+  Pinning betas at tier E pushes the posterior point estimate to 0.820 at
+  `T` = 120, which is the atlas headline.
 - **Exhibit 2 — tier degradation table.** At a fixed cell (`T` = 48, IC = 0.04)
   it shows each analytic's power and RMSE by tier: alpha estimation at
   returns-tier (25.2% power) versus exposure-tier (31.8%), hit rate at
@@ -551,6 +554,14 @@ engagement material ("here is what your transparency tier buys — in statistica
 power, not adjectives") and feeds rung justifications in the E1 ladder. The
 registry is consumed mechanically by the gallery's PowerGates and the pack
 generator; nothing downstream hand-copies a threshold.
+
+The sampler JSON makes that same rule testable. Its named `headline` block
+contains the R-tier and E-tier reference points; every power-curve series has an
+aligned `*_wilson` array; and every degradation row carries its own `wilson`
+object. Each object stores the emitted replication count, half-width, and clipped
+point-plus/minus-half-width envelope. The generator re-derives those fields from
+the emitted power and replication count; the page binds them without estimating
+anything in JavaScript.
 
 ## 7. Deeper reading
 
