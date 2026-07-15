@@ -114,7 +114,7 @@ Nothing retrieved here establishes manager skill, confirms an operational fact w
 
 Use the hybrid system for decision-hook queries and meeting preparation. For every returned item, inspect the manager scope, exact source span, document date, and as-of date before carrying it into an underwriting claim.
 
-Keep the meeting brief narrow: prior stated views, document-native open questions, and only those cross-card panels whose manager identity has a valid crosswalk. When a tear sheet or say–do payload belongs to a different fictional manager, mark it unavailable rather than relabelling it.
+Keep the meeting brief narrow: prior stated views, document-native open questions, and only those supporting exhibits whose manager identity has a valid crosswalk. When a tear sheet or say–do analysis belongs to a different fictional manager, mark it unavailable rather than relabelling it.
 
 To revisit graph activation, build a larger planted query-to-relevant-document set, rerun hybrid and graph retrieval on identical queries, and report recall@10 uplift with its paired interval. Promote the graph only if the $+0.10$ gate clears.
 

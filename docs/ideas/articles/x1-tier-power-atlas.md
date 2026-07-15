@@ -18,7 +18,7 @@ Finally, power measured by simulation is itself an estimate. Printing $0.80$ wit
 
 ## The intuition
 
-For one atlas cell, fix the true effect, transparency tier, sample length, and all simulator conditions. Generate many independent synthetic records. Run the pre-registered metric on each record and record whether it fires.
+For one simulated setting, fix the true effect, evidence level, sample length, and all simulator conditions. Generate many independent synthetic records. Run the pre-registered metric on each record and record whether it fires.
 
 When the effect is present, the fraction of detections estimates **power**. When the effect is zero, the same fraction estimates **size**, the false-alarm rate. Sweep the relevant sample quantity from small to large. The first quantity whose measured power reaches $0.80$, while size remains controlled, is the candidate threshold.
 

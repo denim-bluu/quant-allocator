@@ -52,6 +52,20 @@ def test_public_text_scan_catches_workflow_governance_and_raw_identifiers():
     } <= rules
 
 
+def test_public_text_scan_catches_reader_internal_data_terms_case_insensitively():
+    html = """
+    <main>
+      An Atlas cell uses a render Payload and receipt time.
+      Cross-card panels select a committed estimate from committed data.
+    </main>
+    """
+
+    violations = _violations(html)
+
+    assert {violation.rule for violation in violations} == {"workflow-language"}
+    assert len(violations) == 6
+
+
 def test_public_text_scan_checks_accessible_hidden_and_collapsed_copy():
     html = """
     <main>

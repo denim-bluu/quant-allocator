@@ -112,7 +112,8 @@ def public_text_violations(
             re.compile(
                 r"\b(?:wave-\d+|repository history|ship rule|PILOT|committed JSON|"
                 r"fixture|harness|source card|render payload|registry row|"
-                r"PowerGate registry)\b",
+                r"PowerGate registry|(?i:atlas cell|payload|receipt time|cross-card|"
+                r"committed (?:estimate|data|comparison)))\b",
             ),
         ),
         (

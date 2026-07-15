@@ -60,7 +60,7 @@ t-\max_{i\in I_f}\operatorname{freshness\_at}_i
 \right).
 $$
 
-$I_f$ is the set of evidence available by $t$, and $\operatorname{freshness\_at}_i$ is the source’s explicit as-of, test, or refresh date. Receipt time does not make old evidence fresh.
+$I_f$ is the set of evidence available by $t$, and $\operatorname{freshness\_at}_i$ is the source’s explicit as-of, test, or refresh date. Source arrival time does not make old evidence fresh.
 
 Stale begins strictly after $180$ days for organization and process facts, $365$ days for controls and providers, and $90$ days for incidents.
 

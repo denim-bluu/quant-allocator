@@ -97,7 +97,8 @@ $d_{i,t}$ is a measured drift term when the exposure-drift method supports one;
 $w_{i,t}$ is ordinary exposure wander; and $q_i$ controls how quickly an old reading
 loses precision.
 
-At transparency tier $\tau\in\{R,E,P\}$, observe
+At evidence level $\tau\in\{R,E,P\}$&mdash;returns only ($R$), exposure summaries
+($E$), or positions and trades ($P$)&mdash;observe
 
 $$
 y_{i,t}^{\tau}=x_{i,t}+v_{i,t}^{\tau},
@@ -105,7 +106,7 @@ y_{i,t}^{\tau}=x_{i,t}+v_{i,t}^{\tau},
 $$
 
 $y_{i,t}^{\tau}$ is the returns-inferred, exposure-disclosed, or holdings-derived
-reading. $r_\tau$ is that tier's calibrated measurement error. The model requires
+reading. $r_\tau$ is that evidence level's calibrated measurement error. The model requires
 $r_P<r_E<r_R$, but the ordering alone is insufficient; the magnitudes determine the
 claimed interval.
 

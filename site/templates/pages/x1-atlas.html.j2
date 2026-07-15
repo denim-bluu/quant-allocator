@@ -157,8 +157,9 @@
 {% endblock %}
 
 {% block methodology %}
-<p>The simulator emits all three transparency tiers of the same known ground truth, so
-every metric is scored against the truth at every tier and sample size. Power =
+<p>The simulator emits returns, exposure summaries, and positions and trades from the
+same known ground truth, so every metric is scored against the truth at every evidence
+level and sample size. Power =
 P(detect | effect present); size = P(detect | IC = 0); the IC=0 column is the
 false-alarm rate, not filler. Each power number carries its own Wilson 95%
 half-width (this demonstration runs 500 managers per cell; the publication threshold

@@ -1,6 +1,6 @@
 ## The decision
 
-A quarterly review should use one narrated, print-clean pack assembled from analyses that have already cleared their own evidence gates. The pack should compute nothing, soften nothing, and disclose every section as rendered, refused, or unavailable at the manager’s transparency tier.
+A quarterly review should use one narrated, print-clean pack assembled from analyses that have already cleared their own evidence requirements. The pack should compute nothing, soften nothing, and disclose every section as rendered, not calculated because evidence is missing, or unavailable with the manager’s current evidence.
 
 This is a composition decision, not a new manager verdict. The pack exists because separate dashboards and analytic tabs are easy to ignore, while an engagement document sits inside the meeting where the decision is discussed. Its safety comes from binding every number and conclusion to an already-reviewed source result and rejecting narration that departs from that evidence.
 

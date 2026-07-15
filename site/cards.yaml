@@ -513,7 +513,7 @@
 - id: p2
   title: Tiered book X-ray
   lane: P
-  one_liner: One book-level factor view fusing managers across transparency tiers.
+  one_liner: One book-level factor view combining managers with different evidence levels.
   decisions: [monitor, size]
   tiers: [R, E, P]
   status: live
@@ -683,7 +683,7 @@
   minimum_data_modalities: [documents]
   decision_readiness: prototype
   evidence_roles: [operational-analysis, governance-workflow]
-  minimum_data: Versioned documents with entity identity, receipt time, and citation spans.
+  minimum_data: Versioned documents with entity identity, source arrival time, and citation spans.
   validation_status: live-calibration-required
   claims:
     - id: retrieved-evidence
