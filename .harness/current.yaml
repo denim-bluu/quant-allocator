@@ -10,11 +10,12 @@ objective:
     Build a public static editorial research publication and project-idea bank with
     Aligrithm-style composition and Interval quantitative semantics.
 scheduler:
-  current_task: WEBSITE-EDITORIAL-PUBLISH-R1-COMPLETE
+  current_task: REPOSITORY-HYGIENE-R1
   active_plan: null
   next_action: >-
-    Reader-first publication and main integration are complete. No outward action is
-    authorized; parked work remains parked pending explicit approval.
+    Remove completed and superseded editorial and campaign branches and worktrees,
+    including the stale remote editorial publication branch. Preserve the two parked
+    P4 branches and worktrees exactly as recorded below.
 parked_work:
   p4:
     status: parked
@@ -26,7 +27,7 @@ parked_work:
     card_tip: 7c2964f
 authority:
   merge: false
-  push: false
+  push: true
   publish: false
 verification:
   current_level: reader-first-site-live-and-main-integrated

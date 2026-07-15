@@ -75,9 +75,12 @@ def test_current_context_selects_editorial_website_and_no_platform_plan():
     assert current["objective"]["outcome"].strip()
     assert current["scheduler"]["active_plan"] is None
     assert current["scheduler"]["current_task"] == (
-        "WEBSITE-EDITORIAL-PUBLISH-R1-COMPLETE"
+        "REPOSITORY-HYGIENE-R1"
     )
-    assert "no outward action is authorized" in current["scheduler"][
+    assert "stale remote editorial publication branch" in current[
+        "scheduler"
+    ]["next_action"].lower()
+    assert "preserve the two parked" in current["scheduler"][
         "next_action"
     ].lower()
     _assert_active_plan_is_eligible(current)
@@ -85,7 +88,7 @@ def test_current_context_selects_editorial_website_and_no_platform_plan():
     assert all(type(value) is bool for value in current["authority"].values())
     assert current["authority"] == {
         "merge": False,
-        "push": False,
+        "push": True,
         "publish": False,
     }
     assert current["verification"]["current_level"] == (
