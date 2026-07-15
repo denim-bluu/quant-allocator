@@ -64,7 +64,7 @@ def test_product_charter_is_the_canonical_editorial_objective():
     assert "A charter amendment is required only when changing" in text
 
 
-def test_current_context_selects_public_exhibit_remediation():
+def test_current_context_closes_public_exhibit_remediation():
     current = _current()
     assert current["version"] == 1
     assert current["product_charter"] == "docs/PRODUCT.md"
@@ -76,35 +76,34 @@ def test_current_context_selects_public_exhibit_remediation():
     assert current["objective"]["id"] == "editorial-site"
     assert current["objective"]["mode"] == "website-first"
     assert current["objective"]["outcome"].strip()
-    assert current["scheduler"]["active_plan"] == (
-        "docs/superpowers/plans/2026-07-15-public-exhibit-remediation.md"
-    )
+    assert current["scheduler"]["active_plan"] is None
     assert current["scheduler"]["current_task"] == (
-        "WEBSITE-EXHIBIT-REMEDIATION-R3-PUBLISH"
+        "WEBSITE-EXHIBIT-REMEDIATION-R4-COMPLETE"
     )
-    assert "d97fd37" in current["scheduler"][
+    assert "e24fea043b49d62410c7f1bf179f0dbac3c73921" in current["scheduler"][
         "next_action"
     ].lower()
-    assert "/private/tmp/quant-allocator-reader-remediation-qa-2026-07-15" in current[
-        "scheduler"
-    ]["next_action"]
-    assert "explicitly approved merge, push, and publication" in current["scheduler"][
+    assert "github pages run 29442420749 passed" in current["scheduler"][
+        "next_action"
+    ].lower()
+    assert "no outward action is authorized" in current["scheduler"][
         "next_action"
     ].lower()
     _assert_active_plan_is_eligible(current)
     assert set(current["authority"]) == {"merge", "push", "publish"}
     assert all(type(value) is bool for value in current["authority"].values())
     assert current["authority"] == {
-        "merge": True,
-        "push": True,
-        "publish": True,
+        "merge": False,
+        "push": False,
+        "publish": False,
     }
     assert current["verification"]["current_level"] == (
-        "public-exhibit-remediation-verified"
+        "public-exhibit-remediation-live-and-main-integrated"
     )
-    assert "targeted-site-tests" in current["verification"]["required"]
+    assert "full-site-suite" in current["verification"]["required"]
     assert "output-integrity" in current["verification"]["required"]
     assert "scoped-publication-canary" in current["verification"]["required"]
+    assert "github-pages-deployment" in current["verification"]["required"]
 
 
 def test_reader_first_context_links_binding_documents():
@@ -116,9 +115,7 @@ def test_reader_first_context_links_binding_documents():
     assert audit_path == READER_AUDIT
     assert editorial_path.is_file()
     assert audit_path.is_file()
-    assert current["scheduler"]["active_plan"] == REMEDIATION_PLAN.relative_to(
-        ROOT
-    ).as_posix()
+    assert current["scheduler"]["active_plan"] is None
     assert READER_PLAN.is_file()
     assert REMEDIATION_PLAN.is_file()
 

@@ -10,16 +10,15 @@ objective:
     Build a public static editorial research publication and project-idea bank with
     Aligrithm-style composition and Interval quantitative semantics.
 scheduler:
-  current_task: WEBSITE-EXHIBIT-REMEDIATION-R3-PUBLISH
-  active_plan: docs/superpowers/plans/2026-07-15-public-exhibit-remediation.md
+  current_task: WEBSITE-EXHIBIT-REMEDIATION-R4-COMPLETE
+  active_plan: null
   next_action: >-
-    The user explicitly approved merge, push, and publication on 2026-07-15. Merge
-    the verified codex/reader-remediation branch at d97fd37 into main, push the
-    reviewed main tip, verify the GitHub Pages deployment, and inspect the live
-    homepage plus representative changed exhibits at desktop and mobile sizes.
-    Pre-publication rendered evidence remains under
-    /private/tmp/quant-allocator-reader-remediation-qa-2026-07-15. Parked work
-    remains parked.
+    Exhibit remediation release e24fea043b49d62410c7f1bf179f0dbac3c73921 is
+    merged into main and live. GitHub Pages run 29442420749 passed. Live browser QA
+    covered the homepage, representative redesigned exhibits and controls, mobile
+    rendering, and the paired E3 technical article with no browser warnings, errors,
+    or horizontal overflow. Await explicit user instruction; parked work remains
+    parked and no outward action is authorized.
 parked_work:
   p4:
     status: parked
@@ -30,15 +29,15 @@ parked_work:
     card_branch: codex/roadmap-p4-impl
     card_tip: 7c2964f
 authority:
-  merge: true
-  push: true
-  publish: true
+  merge: false
+  push: false
+  publish: false
 verification:
-  current_level: public-exhibit-remediation-verified
+  current_level: public-exhibit-remediation-live-and-main-integrated
   required:
-    - targeted-site-tests
+    - full-site-suite
     - fresh-static-build
     - output-integrity
-    - rendered-desktop-mobile-qa
+    - rendered-live-desktop-mobile-qa
     - scoped-publication-canary
-    - consolidated-final-review
+    - github-pages-deployment
