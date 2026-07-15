@@ -3,10 +3,16 @@
 {% set book = card_data.book %}
 {% set gate = card_data.information_gate %}
 {% set display_managers = card_data.managers | sort(attribute="capital_weight", reverse=true) %}
-
-{% block card_data %}
-{% if gate.renders %}{{ super() }}{% endif %}
-{% endblock %}
+{% set tier_labels = {
+  "R": "Returns only",
+  "E": "Exposure summaries",
+  "P": "Positions and trades"
+} %}
+{% set source_labels = {
+  "returns_regression_proxy": "Returns regression estimate",
+  "coarsened_exposure_emission": "Exposure summary",
+  "position_transparent_emission": "Position-derived exposure"
+} %}
 
 {% block head_extra %}
 <link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/p2.css">
@@ -15,192 +21,140 @@
 {% macro signed(x) %}{{ "%+.3f"|format(x) }}{% endmacro %}
 {% macro pct(x) %}{{ "%.1f"|format(x * 100) }}%{% endmacro %}
 {% macro whole_pct(x) %}{{ "%.0f"|format(x * 100) }}%{% endmacro %}
-{% macro reconciliation_table(extra_class="") %}
-<table class="p2-reconciliation-table {{ extra_class }}">
-  <thead><tr><th>Manager</th><th>Tier</th><th>Observation</th><th>Raw source</th></tr></thead>
-  <tbody>
-    {% for row in card_data.reconciliation_rows %}
-    <tr><td>{{ row.name }}</td><td>{{ row.tier }}</td><td>{{ signed(row.observation) }}</td>
-      <td>{{ row.observation_source }}</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% endmacro %}
 
 {% block demo_content %}
-{% if gate.renders %}
-<div data-fused-output="true" data-gate-state="pass">
-<section class="p2-lead">
-  <div class="interval-stat p2-book" data-domain="book-beta" data-p2-dial-book
-       data-lo="{{ book.ci_lo }}" data-point="{{ book.point }}" data-hi="{{ book.ci_hi }}">
-    <span class="interval-stat__label">Fused book net market beta</span>
-    <span class="interval-stat__value">{{ signed(book.point) }}</span>
-    <div class="interval-stat__rail"><div class="interval-stat__band"></div><div class="interval-stat__point"></div></div>
-    <span class="interval-stat__range">{{ whole_pct(card_data.constants.credible_level) }} credible interval
-      {{ signed(book.ci_lo) }} &hellip; {{ signed(book.ci_hi) }}</span>
+<section class="p2-current" data-current-output="reconciliation" aria-labelledby="p2-current-title">
+  <header class="p2-current__header">
+    <p class="p2-current__kicker">Current output: reconciliation only</p>
+    <h2 id="p2-current-title">Compare each manager on the evidence it actually provides</h2>
+    <p>
+      The three evidence types do not yet have calibrated, comparable error rates. The
+      honest current view therefore keeps every manager interval separate and withholds
+      a single fused book estimate.
+    </p>
+  </header>
+
+  <div class="p2-tier-key" aria-label="Evidence types">
+    {% for tier in ["R", "E", "P"] %}
+    <span class="tier-badge">{{ tier_labels[tier] }}</span>
+    {% endfor %}
   </div>
-  <p>
-    One number is easy. The useful answer carries its fog: returns-only sleeves own
-    <strong>{{ pct(card_data.tier_provenance.R) }}</strong> of this book's exposure variance,
-    while the two position-transparent sleeves own {{ pct(card_data.tier_provenance.P) }}.
-  </p>
-  <p class="p2-disclosure">
-    The tier-noise values are <strong>provisional pending the atlas exposure rows</strong>.
-    This static demo uses a <strong>synthetic returns-regression proxy at R tier</strong>;
-    the live contract consumes the S1 beta posterior.
-  </p>
+
+  <div class="p2-manager-rows">
+    {% for manager in display_managers %}
+    <article class="p2-manager-row">
+      <header>
+        <div>
+          <strong>{{ manager.name }}</strong>
+          <span>{{ pct(manager.capital_weight) }} of book capital</span>
+        </div>
+        <span class="tier-badge">{{ tier_labels[manager.tier] }}</span>
+      </header>
+      <div class="interval-stat" data-domain="manager-beta"
+           data-lo="{{ manager.posterior.ci_lo }}"
+           data-point="{{ manager.posterior.point }}"
+           data-hi="{{ manager.posterior.ci_hi }}"
+           aria-label="{{ manager.name }} provisional interval {{ signed(manager.posterior.ci_lo) }} to {{ signed(manager.posterior.ci_hi) }}">
+        <span class="interval-stat__label">Provisional manager market-beta interval</span>
+        <span class="interval-stat__value">{{ signed(manager.posterior.point) }}</span>
+        <div class="interval-stat__rail">
+          <div class="interval-stat__band"></div>
+          <div class="interval-stat__point"></div>
+        </div>
+        <span class="interval-stat__range">
+          {{ whole_pct(manager.posterior.level) }} interval
+          {{ signed(manager.posterior.ci_lo) }} &hellip; {{ signed(manager.posterior.ci_hi) }}
+        </span>
+      </div>
+      <p class="p2-manager-row__source">
+        Evidence source: {{ source_labels[manager.observation_source] }}
+      </p>
+    </article>
+    {% endfor %}
+  </div>
 </section>
-{% endif %}
 
 <aside class="p2-explainer" aria-label="What this exhibit shows">
   <h2>What this exhibit shows</h2>
   <h3>What you are looking at</h3>
-  {% if gate.renders %}
-  <p>A {{ card_data.meta.n_managers }}-manager book fused at the precision each transparency
-    tier earns. The headline is the capital-weighted posterior; the bars below source every
-    share of its variance.</p>
-  {% else %}
-  <p>A {{ card_data.meta.n_managers }}-manager book whose transparency gain does not clear the
-    required floor. The fused posterior is withheld and the reconciliation becomes primary.</p>
-  {% endif %}
+  <p>
+    Fifteen manager-level estimates, each labelled by capital weight, evidence source,
+    and uncertainty. They are intentionally not collapsed into one number.
+  </p>
   <h3>How to read it</h3>
-  {% if gate.renders %}
-  <p>A large provenance bar means that sleeve, through capital and measurement noise, owns more
-    of the remaining uncertainty. Compare the same book at all-R, its actual mix, and every
-    sleeve at least E to see what transparency buys.</p>
-  {% else %}
-  <p>Read the manager rows individually by tier. The capital-weighted observation sum is shown
-    only as un-fused reconciliation, not as an earned posterior.</p>
-  {% endif %}
-  <p><a href="{{ asset_base | default('') }}specs/p2.html">Read the full method spec</a>.</p>
+  <p>
+    Compare interval width before comparing point estimates. Returns-only estimates are
+    least direct; disclosed exposure summaries are more informative; position-derived
+    exposures are most direct. Those qualitative differences do not yet license one
+    common precision scale.
+  </p>
+  <p><a href="{{ asset_base | default('') }}specs/p2.html">Read the full article</a>.</p>
 </aside>
 
-{% if gate.renders %}
-<section class="p2-provenance" aria-labelledby="p2-provenance-title">
-  <h2 id="p2-provenance-title">Who owns the book's fog?</h2>
-  <div class="p2-tier-summary">
-    {% for tier in ["R", "E", "P"] %}
-    <span class="tier-badge" data-tier="{{ tier }}">{{ tier }} {{ pct(card_data.tier_provenance[tier]) }}</span>
-    {% endfor %}
-  </div>
-  <div class="p2-provenance__rows">
-    {% for m in display_managers %}
-    <article class="p2-provenance__row">
-      <header><strong>{{ m.name }}</strong> <span class="tier-badge" data-tier="{{ m.tier }}">{{ m.tier }}</span>
-        <span>{{ pct(m.capital_weight) }} capital</span></header>
-      <div class="p2-provenance__track" aria-label="{{ m.name }} owns {{ pct(m.variance_share) }} of book exposure variance">
-        <div class="p2-provenance__bar" style="--p2-share: {{ m.variance_share * 100 }}%"></div>
+<details class="p2-teaching-scenario">
+  <summary>Provisional teaching calculation — not an operational result</summary>
+  <div class="p2-teaching-scenario__body">
+    <p>
+      This synthetic scenario assumes provisional measurement errors to demonstrate how
+      a future calibrated fusion could work. The assumptions are the lesson; the fused
+      number is not a current allocator output.
+    </p>
+    <div class="interval-stat p2-book" data-domain="book-beta"
+         data-lo="{{ book.ci_lo }}" data-point="{{ book.point }}" data-hi="{{ book.ci_hi }}">
+      <span class="interval-stat__label">Fused book net market beta</span>
+      <span class="interval-stat__value">{{ signed(book.point) }}</span>
+      <div class="interval-stat__rail">
+        <div class="interval-stat__band"></div>
+        <div class="interval-stat__point"></div>
       </div>
-      <footer>{{ pct(m.variance_share) }} of variance &middot;
-        {{ whole_pct(card_data.constants.credible_level) }} manager interval
-        {{ signed(m.posterior.ci_lo) }} &hellip; {{ signed(m.posterior.ci_hi) }}</footer>
-    </article>
-    {% endfor %}
-  </div>
-  <details class="p2-provenance-table-wrap">
-    <summary>Provenance table alternative</summary>
-    <table class="p2-provenance-table">
-      <caption>Capital and exposure-variance provenance by manager</caption>
-      <thead><tr><th>Manager</th><th>Tier</th><th>Capital</th>
-        <th>{{ whole_pct(card_data.constants.credible_level) }} interval</th>
-        <th>Variance share</th></tr></thead>
-      <tbody>
-        {% for m in display_managers %}
-        <tr><td>{{ m.name }}</td><td>{{ m.tier }}</td><td>{{ pct(m.capital_weight) }}</td>
-          <td>{{ signed(m.posterior.ci_lo) }} &hellip; {{ signed(m.posterior.ci_hi) }}</td>
-          <td>{{ pct(m.variance_share) }}</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </details>
-</section>
-
-<section class="p2-gain" aria-labelledby="p2-gain-title">
-  <h2 id="p2-gain-title">What transparency buys the same book</h2>
-  <div class="p2-gain-grid">
-    {% for state in card_data.counterfactuals %}
-    <article class="p2-counterfactual interval-stat" data-domain="book-beta"
-             data-lo="{{ state.ci_lo }}" data-point="{{ state.point }}" data-hi="{{ state.ci_hi }}">
-      <span class="interval-stat__label">{{ state.label }}</span>
-      <span class="interval-stat__value">sd {{ "%.4f"|format(state.sd) }}</span>
-      <div class="interval-stat__rail"><div class="interval-stat__band"></div><div class="interval-stat__point"></div></div>
-      <span class="interval-stat__range">{{ whole_pct(card_data.constants.credible_level) }}
-        {{ signed(state.ci_lo) }} &hellip; {{ signed(state.ci_hi) }}</span>
-    </article>
-    {% endfor %}
-  </div>
-  <div class="power-gate">
-    <span class="power-gate__title">power gate &middot; demo threshold clears under provisional tier-noise assumptions</span>
-    <p class="power-gate__reason">
-      All-R sd {{ "%.4f"|format(gate.all_r_sd) }} to actual-mix sd
-      {{ "%.4f"|format(gate.actual_sd) }} gives <strong>{{ pct(gate.actual_gain) }}</strong>
-      tightening. The every-sleeve-at-least-E counterfactual sd
-      {{ "%.4f"|format(gate.all_e_sd) }} gives <strong>{{ pct(gate.gain) }}</strong>
-      tightening, above the <strong>{{ pct(gate.floor) }}</strong> demo floor.
-      Below the information-gain floor, P2 <strong>refuses the fused posterior</strong>
-      and shows the manager-by-manager reconciliation table.
+      <span class="interval-stat__range">
+        {{ whole_pct(card_data.constants.credible_level) }} credible interval
+        {{ signed(book.ci_lo) }} &hellip; {{ signed(book.ci_hi) }}
+      </span>
+    </div>
+    <div class="p2-gain-grid">
+      {% for state in card_data.counterfactuals %}
+      <article class="p2-counterfactual interval-stat" data-domain="book-beta"
+               data-lo="{{ state.ci_lo }}" data-point="{{ state.point }}"
+               data-hi="{{ state.ci_hi }}">
+        <span class="interval-stat__label">{{ state.label | replace("All R tier", "All managers measured from returns") | replace("Every sleeve at least E", "Every manager has an exposure summary") }}</span>
+        <span class="interval-stat__value">sd {{ "%.4f"|format(state.sd) }}</span>
+        <div class="interval-stat__rail">
+          <div class="interval-stat__band"></div>
+          <div class="interval-stat__point"></div>
+        </div>
+        <span class="interval-stat__range">
+          {{ whole_pct(state.level) }} interval {{ signed(state.ci_lo) }} &hellip;
+          {{ signed(state.ci_hi) }}
+        </span>
+      </article>
+      {% endfor %}
+    </div>
+    <p>
+      Under these provisional assumptions, the richer-evidence scenario narrows the
+      standard deviation by {{ pct(gate.gain) }}, above the illustrative {{ pct(gate.floor) }}
+      threshold. That arithmetic demonstrates the method but does not calibrate the
+      evidence types.
     </p>
   </div>
-</section>
-
-<section class="p2-skepticism" aria-labelledby="p2-skepticism-title">
-  <h2 id="p2-skepticism-title">Skepticism dial &middot; R-tier noise</h2>
-  <p>The buttons select <strong>precomputed</strong> states; the browser performs no fusion math.</p>
-  <div class="p2-dial" role="group" aria-label="R-tier measurement standard deviation">
-    {% for state in card_data.r_noise_dial %}
-    <button type="button" class="p2-dial__button{% if state.r_sd == card_data.constants.exposure_meas_sd.R %} is-active{% endif %}"
-            data-r-sd="{{ state.r_sd }}" aria-pressed="{{ 'true' if state.r_sd == card_data.constants.exposure_meas_sd.R else 'false' }}">
-      R sd {{ "%.2f"|format(state.r_sd) }}
-    </button>
-    {% endfor %}
-  </div>
-  <p class="p2-dial__readout" data-p2-dial-readout>
-    R sd {{ "%.2f"|format(card_data.constants.exposure_meas_sd.R) }}:
-    book {{ signed(book.point) }}, {{ whole_pct(card_data.constants.credible_level) }}
-    {{ signed(book.ci_lo) }} &hellip; {{ signed(book.ci_hi) }}
-  </p>
-</section>
-</div>
-{% else %}
-<section class="p2-refusal" data-gate-state="refuse">
-  <div class="power-gate">
-    <span class="power-gate__title">power gate &middot; information gain does not clear</span>
-    <p class="power-gate__reason">Measured tightening {{ pct(gate.gain) }} is below the
-      {{ pct(gate.floor) }} floor. P2 refuses the fused posterior and makes the
-      manager-by-manager reconciliation the primary output.</p>
-  </div>
-  <p class="p2-unfused"><strong>{{ card_data.unfused_book.label }}</strong>:
-    {{ signed(card_data.unfused_book.point) }}</p>
-  {{ reconciliation_table("p2-reconciliation--primary") }}
-</section>
-{% endif %}
+</details>
 
 <section class="p2-boundary">
-  <h2>What this model deliberately leaves out</h2>
-  <p><strong>Cross-manager exposure independence is assumed:</strong> the
-    <strong>book variance omits covariance cross-terms by design; overlap and crowding belong to M4</strong>.
-    P2 measures the book; it does not allocate capital or recommend a trade.</p>
-  <p>The <strong>temporal filter and live information-gain atlas are wave-3 work</strong>;
-    this exhibit is the static fusion special case.</p>
+  <h2>What remains unresolved</h2>
+  <p>
+    <strong>The book variance omits covariance cross-terms by design;</strong> overlap and
+    crowding require a separate method. Time-varying evidence quality and live error
+    calibration are also unresolved. This exhibit measures exposure; it does not
+    allocate capital or recommend a trade.
+  </p>
 </section>
-
-{% if gate.renders %}
-<details class="p2-reconciliation">
-  <summary>Manager-by-manager reconciliation fallback</summary>
-  <p><strong>{{ card_data.unfused_book.label }}</strong>:
-    {{ signed(card_data.unfused_book.point) }}</p>
-  {{ reconciliation_table() }}
-</details>
-{% endif %}
 {% endblock %}
 
 {% block methodology %}
-<p>Each manager's exposure observation is updated against the same weak prior using the
-precision earned by its tier. The book mean is the capital-weighted sum of manager posterior
-means; under the stated independence boundary its variance is the sum of squared capital
-weights times manager posterior variances. That quadratic sum is also the provenance ledger.</p>
-{% endblock %}
-
-{% block body_scripts %}
-<script src="{{ asset_base | default('') }}assets/p2-xray.js"></script>
+<p>
+  A future fused view would update each manager's exposure estimate against the same
+  weak prior using an evidence-specific error scale, then aggregate the manager
+  posteriors by capital weight. Until those error scales are calibrated on comparable
+  evidence, the public result remains the manager-by-manager reconciliation above.
+</p>
 {% endblock %}

@@ -65,7 +65,7 @@ def test_page_assets_furniture_and_spec_bridge(tmp_path):
     assert "golive-box" in html
     assert 'id="card-data"' in html
     assert "assets/pages/p2.css" in html
-    assert "assets/p2-xray.js" in html
+    assert "assets/p2-xray.js" not in html
     assert (out / "assets" / "pages" / "p2.css").exists()
     assert (out / "assets" / "p2-xray.js").exists()
     assert "specs/p2.html" in html
@@ -73,93 +73,68 @@ def test_page_assets_furniture_and_spec_bridge(tmp_path):
 
 def test_explainer_and_binding_copy(tmp_path):
     html, _ = _build(tmp_path)
+    normalized = _normalized_rendered_text(html)
     for text in (
         "What this exhibit shows",
         "What you are looking at",
         "How to read it",
-        "provisional pending the atlas exposure rows",
-        "synthetic returns-regression proxy at R tier",
+        "Current output: reconciliation only",
+        "Returns regression estimate",
+        "Exposure summary",
+        "Position-derived exposure",
         "book variance omits covariance cross-terms by design",
-        "overlap and crowding belong to M4",
-        "refuses the fused posterior",
-        "temporal filter and live information-gain atlas are wave-3 work",
+        "overlap and crowding require a separate method",
+        "not an operational result",
     ):
-        assert text in html
+        assert text in normalized
 
 
-def test_interval_provenance_counterfactual_and_fallback_render(tmp_path):
-    html, _ = _build(tmp_path)
-    assert 'data-domain="book-beta"' in html
-    assert html.count("p2-provenance__bar") == 15
-    assert "Westermark Strategies" in html
-    assert "Juniper Vale Partners" in html
-    assert "Ternhaven Capital" in html
-    assert html.count("p2-counterfactual") == 3
-    assert "power-gate" in html
-    assert "demo threshold clears under provisional tier-noise assumptions" in html
-    normalized = _normalized_rendered_text(html)
-    assert (
-        "All-R sd 0.0611 to actual-mix sd 0.0411 gives 32.8% tightening. "
-        "The every-sleeve-at-least-E counterfactual sd 0.0180 gives 70.5% "
-        "tightening, above the 20.0% demo floor."
-    ) in normalized
-    assert "20.0%" in html
-    assert "p2-reconciliation" in html
-
-
-def test_gate_failure_suppresses_fusion_and_makes_reconciliation_primary(tmp_path):
-    html, _ = _build(tmp_path, gate_renders=False)
+def test_current_projection_is_reconciliation_for_both_teaching_gate_states(tmp_path):
     data = json.loads((REPO_ROOT / "site" / "data" / "p2_xray.json").read_text())
-    manager = data["managers"][0]
-    posterior_interval = (
-        f"{manager['posterior']['ci_lo']:+.3f} &hellip; "
-        f"{manager['posterior']['ci_hi']:+.3f}"
-    )
-    assert 'data-gate-state="refuse"' in html
-    assert 'data-fused-output="true"' not in html
-    assert "Fused book net market beta" not in html
-    assert "p2-provenance__bar" not in html
-    assert "p2-counterfactual" not in html
-    assert "information gain does not clear" in html
-    assert "p2-reconciliation--primary" in html
-    assert "un-fused — tiers not reconciled" in html
-    refusal = html.split('<section class="p2-refusal"', 1)[1].split("</section>", 1)[0]
-    assert posterior_interval not in refusal
-    assert "returns_regression_proxy" in refusal
-    assert "90% interval" not in refusal
-    for manager in data["managers"]:
-        assert str(manager["posterior"]["ci_lo"]) not in html
-        assert str(manager["posterior"]["ci_hi"]) not in html
-    for fused_key in ("book", "counterfactuals", "r_noise_dial", "tier_provenance"):
-        assert f'"{fused_key}":' not in html
+    for gate_renders in (True, False):
+        html, _ = _build(tmp_path / str(gate_renders), gate_renders=gate_renders)
+        assert "Current output: reconciliation only" in html
+        assert 'data-current-output="reconciliation"' in html
+        assert 'data-fused-output="true"' not in html
+        current = html.split('data-current-output="reconciliation"', 1)[1].split(
+            'class="p2-teaching-scenario"', 1
+        )[0]
+        assert "Fused book net market beta" not in current
+        assert current.count('class="p2-manager-row"') == len(data["managers"])
+        for manager in data["managers"]:
+            assert manager["name"] in current
+            assert f"{manager['posterior']['ci_lo']:+.3f}" in current
+            assert f"{manager['posterior']['ci_hi']:+.3f}" in current
+        for label in ("Returns only", "Exposure summaries", "Positions and trades"):
+            assert label in current
+        for internal in (
+            "returns_regression_proxy",
+            "exposure_summary",
+            "position_derived",
+            "wave-3",
+            "M4",
+        ):
+            assert internal not in current
 
 
-def test_provenance_is_capital_ordered_with_accessible_table(tmp_path):
+def test_provisional_fused_calculation_is_secondary_teaching_evidence(tmp_path):
     html, _ = _build(tmp_path)
-    provenance = html.split('<section class="p2-provenance"', 1)[1].split("</section>", 1)[0]
-    first = provenance.index("Oakhurst Capital")
-    second = provenance.index("Verling Capital")
-    third = provenance.index("Ternhaven Capital")
-    assert first < second < third
-    assert "Provenance table alternative" in html
-    assert 'class="p2-provenance-table"' in html
-    for heading in ("Manager", "Tier", "Capital", "90% interval", "Variance share"):
-        assert heading in html
+    current_index = html.index("Current output: reconciliation only")
+    teaching_index = html.index('class="p2-teaching-scenario"')
+
+    assert current_index < teaching_index
+    teaching = html[teaching_index:]
+    assert "Provisional teaching calculation — not an operational result" in teaching
+    assert "Fused book net market beta" in teaching
+    assert teaching.count("p2-counterfactual") == 3
+    assert "20.0%" in teaching
 
 
-def test_skepticism_dial_uses_precomputed_states(tmp_path):
+def test_public_page_omits_skepticism_dial_and_browser_recalculation(tmp_path):
     html, _ = _build(tmp_path)
-    data = json.loads((REPO_ROOT / "site" / "data" / "p2_xray.json").read_text())
-    assert html.count("p2-dial__button") == len(data["r_noise_dial"])
-    assert "data-r-sd" in html
-    assert "precomputed" in html
-    script = (REPO_ROOT / "site" / "assets" / "p2-xray.js").read_text(encoding="utf-8")
-    assert "style.left" in script
-    assert "style.width" in script
-    assert 'setAttribute("data-lo"' in script
-    assert 'setAttribute("data-point"' in script
-    assert 'setAttribute("data-hi"' in script
-    assert "90%" not in script
+    assert "p2-dial__button" not in html
+    assert "data-r-sd" not in html
+    assert "assets/p2-xray.js" not in html
 
 
 def test_page_has_no_sentinel_leakage_or_hardcoded_headline():

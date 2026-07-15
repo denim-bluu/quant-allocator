@@ -183,7 +183,7 @@ floor.
 
 If information gain fails, the filter is unstable at roster scale, or joint covariance
 remains unsupported, the fallback is mandatory: tier-specific manager rows and an
-un-fused capital-weighted sum labelled as such. P2 measures exposure; it does not produce
+un-fused capital-weighted sum labelled as such. This method measures exposure; it does not produce
 weights, trades, crowding estimates, or automatic actions.
 
 ## Key takeaways
