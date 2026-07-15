@@ -71,6 +71,25 @@ def test_m2_paired_managers_and_components(tmp_path):
     assert "90% interval" in html
 
 
+def test_m2_leads_with_common_scale_payoff_shapes(tmp_path):
+    html, out = _build_m2(tmp_path)
+    payoff = html.split('<section class="m2-payoff"', 1)[1].split("</section>", 1)[0]
+
+    assert payoff.count('class="m2-payoff-chart"') == 2
+    assert payoff.count('data-common-domain="paired-payoff"') == 2
+    assert payoff.count("Market return (%)") == 2
+    assert payoff.count("Manager return (%)") == 2
+    assert "Honest return process" in payoff
+    assert "Written-put overlay" in payoff
+    assert html.index('<section class="m2-payoff"') < html.index('<section class="m2-pair">')
+
+    script = (out / "assets" / "m2-convexity.js").read_text(encoding="utf-8")
+    assert "data.market_returns" in script
+    assert "drawPayoffCharts" in script
+    assert "regression" not in script.lower()
+    assert ".fit(" not in script
+
+
 def test_m2_composite_and_copy_obligations(tmp_path):
     html, _ = _build_m2(tmp_path)
     # numerics gate binding copy.
@@ -96,13 +115,14 @@ def test_m2_straddle_rung_unplayed_refusal(tmp_path):
     html, _ = _build_m2(tmp_path)
     # The external-data rung renders as an honest unplayed power-gate, not a fake stat.
     assert "power-gate" in html
-    assert "adapter not yet built" in html
+    assert "Not calculated" in html
+    assert "factor series has not been connected" in html
     assert "PTFS" in html
 
 
-def test_m2_stress_month_receipts_render(tmp_path):
+def test_m2_tail_loss_months_render(tmp_path):
     html, _ = _build_m2(tmp_path)
-    assert "Stress-month receipts" in html
+    assert "Tail-loss months" in html
     assert "m2-stress-table" in html
     assert "Put payout" in html
 

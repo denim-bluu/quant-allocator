@@ -133,8 +133,7 @@ screen does not turn weak diagnostics into a confident label.
 1. Confirm return dates, net-of-fee status, missing months, and the de-smoothing result.
 2. Review the curvature, up/down participation, coskewness, and drawdown diagnostics
    together rather than ranking one coefficient.
-3. Ask for reported gamma, vega, premium, or option-notional summaries at the exposure
-   tier.
+3. Ask for reported gamma, vega, premium, or option-notional exposure summaries.
 4. Use instrument-level holdings, where available, to confirm or contradict the
    returns-based inference.
 5. Revisit tail sizing and fees only through the normal human review process.
@@ -143,8 +142,8 @@ screen does not turn weak diagnostics into a confident label.
 
 The public example is synthetic. The core live screen needs monthly net returns and a
 market-factor series. The optional straddle rung additionally needs the public
-Fung–Hsieh primitive trend-following-strategy factor series; without that adapter it
-must remain visibly unplayed rather than fabricated.
+Fung–Hsieh primitive trend-following-strategy factor series. Until that public series
+is connected, the diagnostic must remain visibly not calculated rather than fabricated.
 
 The standard data contract admits a manager at 24 months and gives full standing at 36,
 but the **composite** has a stricter provisional minimum of $T=48$. It renders only where

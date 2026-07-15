@@ -55,6 +55,86 @@
     return el;
   }
 
+  function symmetricExtent(series) {
+    return series.reduce(function (largest, value) {
+      return Math.max(largest, Math.abs(value));
+    }, 0) || 1;
+  }
+
+  function addLine(svg, cls, x1, y1, x2, y2) {
+    var line = makeEl("line", cls);
+    line.setAttribute("x1", String(x1));
+    line.setAttribute("y1", String(y1));
+    line.setAttribute("x2", String(x2));
+    line.setAttribute("y2", String(y2));
+    svg.appendChild(line);
+  }
+
+  function addText(svg, cls, x, y, value, anchor) {
+    var label = makeEl("text", cls);
+    label.setAttribute("x", String(x));
+    label.setAttribute("y", String(y));
+    label.setAttribute("text-anchor", anchor || "middle");
+    label.textContent = value;
+    svg.appendChild(label);
+  }
+
+  function drawPayoffChart(svg, market, manager, domain) {
+    var width = 320, height = 220;
+    var left = 46, right = 12, top = 12, bottom = 32;
+    var plotWidth = width - left - right;
+    var plotHeight = height - top - bottom;
+    var xExtent = domain.x;
+    var yExtent = domain.y;
+
+    function x(value) {
+      return left + ((value + xExtent) / (2 * xExtent)) * plotWidth;
+    }
+    function y(value) {
+      return top + plotHeight - ((value + yExtent) / (2 * yExtent)) * plotHeight;
+    }
+
+    while (svg.firstChild) { svg.removeChild(svg.firstChild); }
+    addLine(svg, "m2-payoff-grid", left, y(0), width - right, y(0));
+    addLine(svg, "m2-payoff-grid", x(0), top, x(0), height - bottom);
+
+    [-xExtent, 0, xExtent].forEach(function (value) {
+      addText(svg, "m2-payoff-tick", x(value), height - 10, (value * 100).toFixed(0) + "%");
+    });
+    [-yExtent, 0, yExtent].forEach(function (value) {
+      addText(svg, "m2-payoff-tick", left - 7, y(value) + 3, (value * 100).toFixed(0) + "%", "end");
+    });
+
+    market.forEach(function (marketReturn, index) {
+      var point = makeEl("circle", "m2-payoff-point");
+      point.setAttribute("cx", String(x(marketReturn)));
+      point.setAttribute("cy", String(y(manager[index])));
+      point.setAttribute("r", "2.5");
+      svg.appendChild(point);
+    });
+  }
+
+  // Both charts receive one shared x/y domain. This maps committed paired
+  // observations to pixels; it does not estimate a payoff curve.
+  function drawPayoffCharts(data) {
+    var charts = Array.prototype.slice.call(document.querySelectorAll(".m2-payoff-chart"));
+    var market = data.market_returns;
+    if (!charts.length || !market || !market.length) { return; }
+
+    var honest = data.managers.honest.monthly_returns;
+    var overlaid = data.managers.overlaid.monthly_returns;
+    if (market.length !== honest.length || market.length !== overlaid.length) { return; }
+
+    var domain = {
+      x: symmetricExtent(market),
+      y: symmetricExtent(honest.concat(overlaid))
+    };
+    charts.forEach(function (svg) {
+      var series = data.managers[svg.dataset.series].monthly_returns;
+      drawPayoffChart(svg, market, series, domain);
+    });
+  }
+
   // Paired monthly-return strip: honest vs overlaid, bars from a midline. Draws
   // both managers' full monthly series so the stress months stand out visually.
   function drawStressStrip(honest, overlaid) {
@@ -83,6 +163,7 @@
     positionBands();
     var data = readCardData();
     if (data) {
+      drawPayoffCharts(data);
       drawStressStrip(data.managers.honest.monthly_returns, data.managers.overlaid.monthly_returns);
     }
   }

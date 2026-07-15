@@ -151,6 +151,7 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
             "premium_annual": overlay.premium_annual,
             "fair_value_annual": _fair_value_annual(mkt, overlay),
         },
+        "market_returns": [float(x) for x in mkt.to_numpy()],
         "managers": {
             "honest": _manager_block(HONEST_CODE, honest.to_numpy(), mkt.to_numpy()),
             "overlaid": _manager_block(OVERLAID_CODE, overlaid.to_numpy(), mkt.to_numpy()),

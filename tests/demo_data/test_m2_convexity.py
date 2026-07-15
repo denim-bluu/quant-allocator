@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from quant_allocator.demo_data import m2_convexity
 from quant_allocator.demo_data._emit import SITE_DATA_DIR
 from quant_allocator.flagships.convexity.screen import M2_COMPOSITE_K
@@ -16,7 +18,9 @@ def test_schema_is_valid(tmp_path):
     assert data["meta"]["months"] == 48
     assert data["meta"]["tier"] == "R"
     assert set(data["managers"]) == {"honest", "overlaid"}
+    assert len(data["market_returns"]) == data["meta"]["months"] == 48
     for m in data["managers"].values():
+        assert len(m["monthly_returns"]) == len(data["market_returns"])
         assert set(m["sharpe"]) >= {"point", "ci_lo", "ci_hi"}
         diags = m["screen"]["diagnostics"]
         assert set(diags) == {
@@ -30,6 +34,19 @@ def test_schema_is_valid(tmp_path):
     assert data["overlay"]["fair_premium"] is False
     assert data["overlay"]["premium_annual"] > data["overlay"]["fair_value_annual"] > 0.0
     assert len(data["stress_months"]) >= 1
+
+
+def test_payoff_observations_keep_market_and_manager_months_aligned(tmp_path):
+    data = _load(m2_convexity.build(out_dir=tmp_path))
+    honest, overlaid, market, _ = m2_convexity._simulate_pair()
+
+    assert data["market_returns"] == pytest.approx(market.to_numpy(), abs=1e-6)
+    assert data["managers"]["honest"]["monthly_returns"] == pytest.approx(
+        honest.to_numpy(), abs=1e-6
+    )
+    assert data["managers"]["overlaid"]["monthly_returns"] == pytest.approx(
+        overlaid.to_numpy(), abs=1e-6
+    )
 
 
 def test_paired_sharpe_is_matched_to_two_decimals(tmp_path):

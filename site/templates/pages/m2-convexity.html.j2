@@ -22,12 +22,12 @@
 {% block demo_content %}
 <section class="m2-intro">
   <p class="m2-headline">
-    Two synthetic managers, one market, {{ card_data.meta.months }} months, tier
-    {{ card_data.meta.tier }}. <strong>{{ honest.name }}</strong> and
+    Two synthetic managers, one market, {{ card_data.meta.months }} months.
+    <strong>{{ honest.name }}</strong> and
     <strong>{{ overlaid.name }}</strong> report the <em>same</em> Sharpe to two
     decimals ({{ "%.2f"|format(honest.sharpe.point) }}) &mdash; but one is quietly
-    short volatility. The convexity screen reads payoff <em>shape</em>, not the
-    average, so it separates them where every linear statistic cannot.
+    short volatility. Their payoff shapes reveal the difference before the
+    supporting diagnostics do.
   </p>
   <aside class="m2-disclosure" role="note">
     The overlaid book's written-put premium is calibrated in-sample and set
@@ -36,10 +36,40 @@
     carry seduction, where selling insurance above cost flatters every
     average-based statistic. That calibration is a deliberate look-ahead for a
     controlled demonstration and <strong>not a claim about live methodology</strong>
-    &mdash; a real short-vol book's premium is set ex-ante. The atlas detection
-    rows are measured at <strong>fair premium</strong> (zero in-sample carry),
-    the conservative case. Fully synthetic; manager names are fictional.
+    &mdash; a real short-vol book's premium is set ex-ante. Separate calibration
+    tests use <strong>fair premium</strong> (zero in-sample carry), the conservative
+    case. Fully synthetic; manager names are fictional.
   </aside>
+</section>
+
+<section class="m2-payoff" aria-labelledby="m2-payoff-title">
+  <div class="m2-payoff__heading">
+    <div>
+      <p class="m2-payoff__eyebrow">Paired payoff shapes</p>
+      <h2 id="m2-payoff-title">The same reported Sharpe can hide opposite tail behavior</h2>
+    </div>
+    <p>Each dot is one aligned month. Both charts use the same horizontal and vertical scales.</p>
+  </div>
+  <div class="m2-payoff__grid">
+    {% for key, m, label in [
+      ("honest", honest, "Honest return process"),
+      ("overlaid", overlaid, "Written-put overlay")
+    ] %}
+    <figure class="m2-payoff-figure">
+      <figcaption><strong>{{ label }}</strong><span>{{ m.name }}</span></figcaption>
+      <div class="m2-payoff-frame">
+        <span class="m2-payoff-axis m2-payoff-axis--y">Manager return (%)</span>
+        <svg class="m2-payoff-chart" data-series="{{ key }}"
+             data-common-domain="paired-payoff" viewBox="0 0 320 220" role="img"
+             aria-label="{{ m.name }} monthly manager returns against the same monthly market returns"></svg>
+        <span class="m2-payoff-axis m2-payoff-axis--x">Market return (%)</span>
+      </div>
+    </figure>
+    {% endfor %}
+  </div>
+  <p class="m2-payoff__takeaway"><strong>What changes:</strong> the overlaid manager bends down in
+    the market&rsquo;s worst months. <strong>What does not:</strong> the reported Sharpe rounds to
+    {{ "%.2f"|format(honest.sharpe.point) }} for both managers.</p>
 </section>
 
 <section class="m2-exhibit" aria-label="What this exhibit shows">
@@ -58,13 +88,15 @@
       ({{ overlaid.screen.composite.short_vol_count }} of
       {{ overlaid.screen.composite.playable_count }} fire, at the threshold of
       {{ overlaid.screen.composite.k }}). The stress-month table below shows the
-      months the hidden written put paid out &mdash; the two books are identical
+        months the hidden written put paid out &mdash; the two books are similar
       until the tail arrives.
     </p>
   </div>
   <div class="m2-exhibit__block">
     <h3 class="m2-exhibit__subtitle">How to read it</h3>
     <ul class="m2-exhibit__map">
+      <li><strong>Payoff shapes</strong> &mdash; the two charts share both axes. The overlaid
+        manager bends downward in the worst market months while the honest process does not.</li>
       <li><strong>Reported-Sharpe interval bands</strong> &mdash; each manager's
         Sharpe point marker sits inside its 95% interval; the two bands overlap, which
         is the whole point: the average-based statistic separates nothing.</li>
@@ -78,16 +110,15 @@
         sitting fully beyond its calibrated short-vol boundary counts toward the tally.
         Market coskewness can clear zero and still read <em>inconclusive</em>: its entire
         interval must clear &minus;{{ "%.2f"|format(card_data.meta.coskew_band) }}, not merely zero.</li>
-      <li><strong>Power gate</strong> &mdash; the Fung&ndash;Hsieh straddle rung
-        renders as an unplayed gate, not a fabricated number, because the external
-        PTFS series has no adapter yet.</li>
-      <li><strong>Stress-month receipts</strong> &mdash; the table of months the put
+      <li><strong>Missing diagnostic</strong> &mdash; the Fung&ndash;Hsieh straddle test is
+        not calculated because its public PTFS factor series has not been connected.</li>
+      <li><strong>Tail-loss months</strong> &mdash; the table of months the put
         paid out, with the market move and both books' returns side by side.</li>
     </ul>
     <p class="m2-note">
       The full methodology &mdash; with the math and a reference implementation
       &mdash; is in the
-      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">technical method</a>.
     </p>
   </div>
 </section>
@@ -134,7 +165,8 @@
   {% else %}
   <div class="power-gate m2-rung-unplayed">
     <span class="power-gate__title">{{ diag_label(name) }}</span>
-    <p class="power-gate__reason">Rung unplayed: requires the external Fung&ndash;Hsieh PTFS straddle series (public; adapter not yet built). The demo never fabricates it.</p>
+    <p class="power-gate__reason"><strong>Not calculated:</strong> the public Fung&ndash;Hsieh PTFS
+      factor series has not been connected. No substitute value is fabricated.</p>
   </div>
   {% endif %}
   {% endfor %}
@@ -156,8 +188,8 @@
 {% endif %}
 
 <section class="m2-stress">
-  <h2 class="m2-section__title">Stress-month receipts</h2>
-  <p class="m2-note">The months the written put paid out &mdash; identical books until the tail arrives.</p>
+  <h2 class="m2-section__title">Tail-loss months</h2>
+  <p class="m2-note">The months the written put paid out show where the apparently similar books diverged.</p>
   <svg class="m2-stress-strip" viewBox="0 0 100 30" preserveAspectRatio="none" role="img" aria-label="Honest vs overlaid monthly returns"></svg>
   <table class="m2-stress-table">
     <thead><tr><th>Month</th><th>Market</th><th>{{ honest.name }}</th><th>{{ overlaid.name }}</th><th>Put payout</th></tr></thead>
@@ -180,7 +212,7 @@
 <p>Five returns-based convexity diagnostics over a de-smoothed return series: a
 Treynor&ndash;Mazuy quadratic term, a Henriksson&ndash;Merton up/down β gap,
 Harvey&ndash;Siddique market coskewness, a drawdown-vs-vol signature (reusing the
-S2 drawdown band read for asymmetry), and &mdash; where the external Fung&ndash;Hsieh
+companion drawdown band read for asymmetry), and &mdash; where the external Fung&ndash;Hsieh
 straddle series is loaded &mdash; a PTFS loading. Each is a single static shape
 coefficient over the whole window, interval-reported by a circular block
 bootstrap; none is a regime split or a time-varying beta.</p>
