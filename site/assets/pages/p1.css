@@ -16,7 +16,6 @@
   flex-wrap: wrap;
   margin-bottom: 8px;
 }
-.p1-row__id { color: var(--dim); font-variant-numeric: tabular-nums; }
 .p1-row__meta { color: var(--dim); margin-right: auto; }
 
 /* The naive point-optimizer marker: a distinct diamond on the band rail (a contrast, not a point). */
@@ -31,6 +30,13 @@
   border: 1.5px solid var(--ink);
 }
 .p1-naive-note { color: var(--dim); }
+.p1-shared-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  color: var(--dim);
+  font-size: 0.75rem;
+}
 
 .p1-chip {
   font-size: 0.8em;

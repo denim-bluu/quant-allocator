@@ -5,8 +5,7 @@
     return (value * 100).toFixed(1) + "%";
   }
 
-  // Use one domain per manager across every committed skepticism state and the naive marker.
-  // State changes therefore alter geometry without silently rescaling the axis.
+  // Use the same zero-to-policy-cap domain for every manager and precomputed state.
   function positionState(row) {
     var floor = parseFloat(row.dataset.floor);
     var anchor = parseFloat(row.dataset.anchor);
@@ -36,7 +35,7 @@
     return (Math.max(0, Math.min(1, frac)) * 100).toFixed(2) + "%";
   }
 
-  // Skepticism dial: snap the readout to a PRECOMPUTED τ-scale state (x2/M3 idiom). No computation.
+  // Skepticism dial: snap the readout to a precomputed tau-scale state. No estimation.
   function wireDial(row) {
     var dial = row.querySelector(".p1-dial");
     if (!dial) { return; }

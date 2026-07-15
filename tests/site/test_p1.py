@@ -98,12 +98,16 @@ def test_tau_dial_is_precomputed(tmp_path):
 
 def test_tau_states_carry_fixed_domain_and_complete_state_payload(tmp_path):
     html, _ = _build(tmp_path)
-    assert html.count("data-domain-min=") == 20
-    assert html.count("data-domain-max=") == 20
+    assert html.count('data-domain-min="0"') == 20
+    assert html.count('data-domain-max="0.2"') == 20
     assert html.count("data-floor=") >= 80
     assert html.count("data-anchor=") >= 80
     assert html.count("data-ceil=") >= 80
     assert 'aria-live="polite"' in html
+    assert html.count('class="p1-shared-axis"') == 20
+    assert "20% manager cap" in html
+    assert 'class="p1-row__id"' not in html
+    assert "S1 ledger" not in html
 
 
 def test_tau_click_updates_attributes_copy_geometry_and_aria(tmp_path):
@@ -122,18 +126,18 @@ const rail=node(); rail.querySelector=(s)=>({".interval-stat__band":band,
   ".interval-stat__point":point,".p1-naive":naive}[s]);
 function button(scale,floor,anchor,ceil){ const b=node({scale,floor,anchor,ceil});
   b.listeners={}; b.addEventListener=(k,fn)=>b.listeners[k]=fn; return b; }
-const buttons=[button("1","0.1","0.15","0.2"),button("2","0.02","0.12","0.26")];
+const buttons=[button("1","0.1","0.15","0.18"),button("2","0.02","0.12","0.18")];
 const dial=node(); dial.querySelector=(s)=>s==="[data-dial-readout]"?readout:null;
 dial.querySelectorAll=()=>buttons;
-const row=node({floor:"0.1",anchor:"0.15",ceil:"0.2",naive:"0.24",domainMin:"0.02",domainMax:"0.26"});
+const row=node({floor:"0.1",anchor:"0.15",ceil:"0.18",naive:"0.19",domainMin:"0",domainMax:"0.2"});
 row.querySelector=(s)=>({".p1-band__rail":rail,".p1-dial":dial,".interval-stat":stat}[s]);
 global.document={readyState:"complete",querySelectorAll:()=>[row]};
 vm.runInThisContext(fs.readFileSync(process.argv[1],"utf8")); buttons[1].listeners.click();
 const checks=[row.dataset.floor==="0.02",stat.dataset.lo==="0.02",stat.dataset.point==="0.12",
-  stat.dataset.hi==="0.26",value.textContent==="2.0%–26.0%",range.textContent.includes("anchor 12.0%"),
+  stat.dataset.hi==="0.18",value.textContent==="2.0%–18.0%",range.textContent.includes("anchor 12.0%"),
   readout.textContent.includes("×2.0"),buttons[1].attrs["aria-pressed"]==="true",
-  buttons[0].attrs["aria-pressed"]==="false",band.style.left==="0.00%",band.style.width==="100.00%",
-  point.style.left==="41.67%",naive.style.left==="91.67%",stat.attrs["aria-label"].includes("2.0% to 26.0%")];
+  buttons[0].attrs["aria-pressed"]==="false",band.style.left==="10.00%",band.style.width==="80.00%",
+  point.style.left==="60.00%",naive.style.left==="95.00%",stat.attrs["aria-label"].includes("2.0% to 18.0%")];
 if (checks.some(x=>!x)) { console.error(checks); process.exit(1); }
 """
     subprocess.run(["node", "-e", harness, str(script_path)], check=True)

@@ -11,14 +11,12 @@
 {% macro pct(x) %}{{ "%.1f"|format(x * 100) }}%{% endmacro %}
 
 {% macro band_row(m) %}
-{% set domain_min = ([m.naive_ols] + (m.fan | map(attribute="floor") | list)) | min %}
-{% set domain_max = ([m.naive_ols] + (m.fan | map(attribute="ceil") | list)) | max %}
 <article class="p1-row{% if m.action == 'review' %} p1-row--review{% endif %}"
          data-floor="{{ m.floor }}" data-anchor="{{ m.anchor }}" data-ceil="{{ m.ceil }}"
-         data-naive="{{ m.naive_ols }}" data-domain-min="{{ domain_min }}"
-         data-domain-max="{{ domain_max }}">
+         data-naive="{{ m.naive_ols }}" data-domain-min="0"
+         data-domain-max="{{ card_data.meta.alloc_cap }}">
   <header class="p1-row__head">
-    <span class="p1-row__name">{{ m.name }} <span class="p1-row__id">{{ m.code }}</span></span>
+    <span class="p1-row__name">{{ m.name }}</span>
     <span class="p1-row__meta">group {{ m.group }} &middot; {{ m.months }} months</span>
     <span class="advisory-band" data-band="{{ m.advisory_band }}">{{ m.advisory_band }}</span>
     {% if m.fund_or_not %}<span class="p1-chip p1-chip--fund" title="band floor at 0%">fund-or-not</span>{% endif %}
@@ -33,6 +31,7 @@
       <div class="interval-stat__point" title="median anchor {{ pct(m.anchor) }}"></div>
       <div class="p1-naive" title="point optimizer (raw OLS) {{ pct(m.naive_ols) }}"></div>
     </div>
+    <div class="p1-shared-axis" aria-hidden="true"><span>0%</span><span>{{ "%.0f"|format(card_data.meta.alloc_cap * 100) }}% manager cap</span></div>
     <span class="interval-stat__range" data-state-range>
       10th&ndash;90th percentile of posterior-draw weights &middot;
       anchor {{ pct(m.anchor) }} &middot;
@@ -58,18 +57,18 @@
 {% block demo_content %}
 <section class="p1-intro">
   <p class="p1-headline">
-    {{ headline.name }} ({{ headline.code }}) gets
+    {{ headline.name }} gets
     <strong>{{ pct(headline.naive_ols) }}</strong> of the book from the point optimizer on its raw
     OLS alpha &mdash; but its honest band is
     <strong>{{ pct(headline.floor) }}&ndash;{{ pct(headline.ceil) }}</strong>: the naive weight sits
     <strong>above the entire range</strong> the posterior evidence supports. The width of a band is
-    the honesty; this page decides <em>how much</em>, where the S1 ledger decided <em>how good</em>.
+    the honesty; this page decides <em>how much</em>, after the skill model asked <em>how good</em>.
   </p>
   <p class="p1-disclose">
-    SYNTHETIC: every input is the certified S1 ledger posterior on the simulator roster. The demo
+    SYNTHETIC: every input is a reviewed skill posterior on the simulator roster. The demo
     holds <strong>residual volatility constant at 8%/yr</strong> for every manager, so band
     differences are driven purely by the posteriors; the live build substitutes each manager's
-    de-smoothed residual volatility from the S2 pipeline. The demo draws also
+    de-smoothed residual volatility from the uncertainty-honest tear-sheet method. The demo draws also
     <strong>treat manager posteriors as independent</strong>; the live joint-posterior draws carry
     group-level dependence and widen the bands slightly.
   </p>
@@ -98,8 +97,8 @@
         the tick inside is the median anchor, never shown alone (no bare points).</li>
       <li><strong>The point-optimizer marker</strong> &mdash; the cautionary contrast; a weight
         outside the band is a sizing-review trigger. It is never exported as an actionable number.</li>
-      <li><strong>The band pill</strong> (review / minimum / standard / conviction) &mdash; the S1
-        advisory label, carried over so the page reads as the ledger's sequel.</li>
+      <li><strong>The band pill</strong> (review / minimum / standard / conviction) &mdash; the
+        advisory label carried from the skill assessment.</li>
       <li><strong>The fund-or-not chip</strong> &mdash; on names whose band floor is 0%: the
         evidence is consistent both with a small allocation and with none.</li>
       <li><strong>The skepticism dial</strong> &mdash; turn the house &tau;-prior scale up and the
@@ -120,8 +119,8 @@
   <h2 class="p1-marginal__title">Fund-or-not names</h2>
   <p class="p1-marginal__body">
     {{ marginal | length }} funded managers carry a band floor of exactly 0%
-    ({{ marginal | join(", ") }}): in a nontrivial fraction of posterior draws the rule allocates
-    them nothing. The chart says so, rather than hiding it behind a confident 1.5%. This is a
+    in this book. In a nontrivial fraction of posterior draws the rule allocates them
+    nothing. The chart says so, rather than hiding it behind a confident 1.5%. This is a
     judgement call routed to the redeem/re-up review &mdash; <strong>never</strong> a mechanical
     redemption.
   </p>
@@ -135,21 +134,21 @@
     realistically <strong>T &ge; 48</strong> and true skill dispersion <strong>&ge; 2%/yr</strong>.
     At 1% dispersion and T = 36 the posterior barely separates managers, so this page shows wide
     bands, not decisive ones. The <strong>policy-regret study</strong> that will license decisive
-    language across the grid is <strong>pending</strong> (wave 3); until it lands,
+    language across the grid is <strong>pending</strong>; until it lands,
     <strong>every band on this page is advisory</strong>.
   </p>
 </div>
 {% endblock %}
 
 {% block methodology %}
-<p>The band is the image of the S1 posterior under the allocation rule: draw an alpha vector from
+<p>The band is the image of the skill posterior under the allocation rule: draw an alpha vector from
 each manager's posterior, size it with a long-only edge-over-variance rule (weight proportional to
 the positive part of alpha over residual variance, fully invested, capped at
 {{ pct(card_data.meta.alloc_cap) }} per manager), and repeat
 {{ "{:,}".format(card_data.meta.n_draws) }} times. The 10th&ndash;90th percentile of the resulting
 weight distribution is the advisory band; the median is the anchor. Nothing tunes the band to look
 honest &mdash; it inherits honesty from the posterior and narrows mechanically as the evidence
-tightens (see the B09/B07 matched pair).</p>
+tightens (see the matched-record comparison in the article).</p>
 <p>A point-estimate optimizer fed noisy alphas is an estimation-error maximizer: it allocates most
 aggressively exactly where the inputs are least reliable. The naive marker is that method,
 displayed as a cautionary contrast &mdash; not a product. Where a band is wide, that width is the

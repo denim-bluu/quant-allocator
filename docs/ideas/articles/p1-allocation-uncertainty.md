@@ -166,7 +166,7 @@ weight anchor.
 
 ## Limits and go-live
 
-The public roster and allocation draws are synthetic. Live tier-R input requires at
+The public roster and allocation draws are synthetic. Live returns-only input requires at
 least 36 monthly observations for at least 10 managers, strategy labels, aligned factor
 sets, a risk-free series, and per-manager de-smoothed residual volatility. Managers
 excluded by the skill model receive no band.
