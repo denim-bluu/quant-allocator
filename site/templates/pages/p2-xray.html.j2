@@ -15,7 +15,7 @@
 } %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/p2.css">
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/p2.css?v={{ asset_version }}">
 {% endblock %}
 
 {% macro signed(x) %}{{ "%+.3f"|format(x) }}{% endmacro %}

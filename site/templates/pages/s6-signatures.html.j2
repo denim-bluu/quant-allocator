@@ -8,7 +8,7 @@
 {% set naive_pct = (protocol.forking_paths_naive_rate * 100) | round | int %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/s6.css">
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/s6.css?v={{ asset_version }}">
 {% endblock %}
 
 {% macro dir_cell(d) %}{% if d == "+" %}+{% elif d == "-" %}&minus;{% else %}&mdash;{% endif %}{% endmacro %}

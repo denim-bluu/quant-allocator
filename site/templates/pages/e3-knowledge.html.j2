@@ -1,7 +1,7 @@
 {% extends "demo.html.j2" %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/e3.css">
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/e3.css?v={{ asset_version }}">
 {% endblock %}
 
 {% macro result_row(rank, label, standing, excerpt) %}
@@ -217,5 +217,5 @@
 {% endblock %}
 
 {% block body_scripts %}
-<script src="{{ asset_base | default('') }}assets/e3-knowledge.js"></script>
+<script src="{{ asset_base | default('') }}assets/e3-knowledge.js?v={{ asset_version }}"></script>
 {% endblock %}

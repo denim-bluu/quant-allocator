@@ -16,7 +16,7 @@
 {% macro verdict_token(v) %}{{ "shrink" if v == "short-vol-consistent" else ("noise" if v in ["inconclusive", "not-played"] else "robust") }}{% endmacro %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/m2.css">
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/m2.css?v={{ asset_version }}">
 {% endblock %}
 
 {% block demo_content %}
@@ -226,5 +226,5 @@ curves that pin it land with the atlas build.</p>
 {% endblock %}
 
 {% block body_scripts %}
-<script src="{{ asset_base | default('') }}assets/m2-convexity.js"></script>
+<script src="{{ asset_base | default('') }}assets/m2-convexity.js?v={{ asset_version }}"></script>
 {% endblock %}

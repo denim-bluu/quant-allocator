@@ -168,7 +168,7 @@ CLAIM_KEYS = {
 # Placeholder repo URL; set the real one at Pages enablement (see docs/PUBLISHING.md).
 REPO_URL = "https://github.com/denim-bluu/quant-allocator"
 SITE_TITLE = "Quant Allocator"
-ASSET_VERSION = "editorial-v8"
+ASSET_VERSION = "editorial-v9"
 LANE_ORDER = ["S", "M", "P", "E", "X"]
 LANE_HEADINGS = {
     "S": "S — Skill & inference",

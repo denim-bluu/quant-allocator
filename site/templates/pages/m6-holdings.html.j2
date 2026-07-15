@@ -5,7 +5,7 @@
 {% set quarters = v.timeline.quarters %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/m6.css">
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/m6.css?v={{ asset_version }}">
 {% endblock %}
 
 {% block demo_content %}

@@ -1,7 +1,7 @@
 {% extends "demo.html.j2" %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/x2.css">
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/x2.css?v={{ asset_version }}">
 {% endblock %}
 
 {% set opening = card_data.cells["0.04|12|0.8|48|R"] %}
@@ -175,5 +175,5 @@ that carries its own Wilson 95% half-width &mdash; the verdict is itself an esti
 {% endblock %}
 
 {% block body_scripts %}
-<script src="{{ asset_base | default('') }}assets/x2-playground.js"></script>
+<script src="{{ asset_base | default('') }}assets/x2-playground.js?v={{ asset_version }}"></script>
 {% endblock %}

@@ -157,7 +157,8 @@ def test_x2_uses_full_public_tier_labels_and_hides_internal_publication_terms(tm
 
 def test_x2_script_loaded(tmp_path):
     html, out = _build(tmp_path)
-    assert "assets/x2-playground.js" in html
+    assert "assets/x2-playground.js?v=editorial-v9" in html
+    assert "assets/pages/x2.css?v=editorial-v9" in html
     assert (out / "assets" / "x2-playground.js").exists()
 
 

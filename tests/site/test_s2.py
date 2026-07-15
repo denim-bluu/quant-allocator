@@ -114,7 +114,7 @@ def test_s2_focal_and_time_series_visuals_are_labeled_and_interpreted(tmp_path):
     assert "What it changes" in html
     assert "What remains uncertain" in html
 
-    assert "assets/pages/s2.css?v=editorial-v8" in html
+    assert "assets/pages/s2.css?v=editorial-v9" in html
     assert (out / "assets" / "pages" / "s2.css").is_file()
 
 

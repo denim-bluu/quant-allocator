@@ -5,7 +5,7 @@
 {% set marginal = card_data.marginal_codes %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/p1.css">
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/p1.css?v={{ asset_version }}">
 {% endblock %}
 
 {% macro pct(x) %}{{ "%.1f"|format(x * 100) }}%{% endmacro %}
@@ -156,5 +156,5 @@ finding, not a failure to conclude.</p>
 {% endblock %}
 
 {% block body_scripts %}
-<script src="{{ asset_base | default('') }}assets/p1-allocation.js"></script>
+<script src="{{ asset_base | default('') }}assets/p1-allocation.js?v={{ asset_version }}"></script>
 {% endblock %}

@@ -98,7 +98,7 @@ def test_publication_assets_are_cache_busted(tmp_path):
         "interval.js",
         "gallery.js",
     ):
-        assert f"assets/{asset}?v=editorial-v8" in index
+        assert f"assets/{asset}?v=editorial-v9" in index
 
 
 def test_demo_page_exposes_decision_and_evidence_context(tmp_path):

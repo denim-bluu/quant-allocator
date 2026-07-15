@@ -6,7 +6,7 @@
 {% set names = card_data.meta.names %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/p3.css">
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/p3.css?v={{ asset_version }}">
 {% endblock %}
 
 {% block demo_content %}

@@ -4,7 +4,7 @@
 {% set roster = card_data.roster %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/m3.css">
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/m3.css?v={{ asset_version }}">
 {% endblock %}
 
 {% macro manager_panel(m) %}

@@ -2,7 +2,7 @@
 {% set default_state = card_data.states[card_data.meta.default_state] %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/x3.css">
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/x3.css?v={{ asset_version }}">
 {% endblock %}
 
 {% block demo_content %}
@@ -160,4 +160,4 @@
   strategies to cells, form cohorts, calculate coverage, or rank managers.</p>
 {% endblock %}
 
-{% block body_scripts %}<script src="{{ asset_base | default('') }}assets/x3-universe.js"></script>{% endblock %}
+{% block body_scripts %}<script src="{{ asset_base | default('') }}assets/x3-universe.js?v={{ asset_version }}"></script>{% endblock %}

@@ -1,7 +1,7 @@
 {% extends "demo.html.j2" %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/e4-operational-evidence-change.css">
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/e4-operational-evidence-change.css?v={{ asset_version }}">
 {% endblock %}
 
 {% set default_key = card_data.meta.default_state %}
@@ -248,5 +248,5 @@
 {% endblock %}
 
 {% block body_scripts %}
-<script src="{{ asset_base | default('') }}assets/e4-operational-evidence-change.js"></script>
+<script src="{{ asset_base | default('') }}assets/e4-operational-evidence-change.js?v={{ asset_version }}"></script>
 {% endblock %}
