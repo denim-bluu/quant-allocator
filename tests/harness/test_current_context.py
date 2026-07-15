@@ -21,6 +21,10 @@ P4_FIXTURE = ROOT / "docs" / "superpowers" / "plans" / (
 RESET_PLAN = ROOT / "docs" / "superpowers" / "plans" / (
     "2026-07-15-editorial-site-harness-reset.md"
 )
+PUBLICATION_CHECK = ROOT / "tools" / "publication_check.sh"
+PUBLICATION_GRANDFATHER = ROOT / "tools" / (
+    "publication_history_grandfather.yaml"
+)
 
 
 def _current() -> dict:
@@ -68,6 +72,12 @@ def test_current_context_selects_editorial_website_and_no_platform_plan():
     assert set(current["authority"]) == {"merge", "push", "publish"}
     assert all(type(value) is bool for value in current["authority"].values())
     assert "scoped-publication-canary" in current["verification"]["required"]
+    if current["scheduler"]["current_task"].endswith("-COMPLETE"):
+        assert current["authority"] == {
+            "merge": False,
+            "push": False,
+            "publish": False,
+        }
 
 
 @pytest.mark.parametrize("plan", [ROADMAP, P4_CARD, P4_FIXTURE])
@@ -104,6 +114,43 @@ def test_agent_guide_routes_through_product_and_current_context():
     assert "historical evidence" in text
     assert "A false authority flag is a prohibition" in text
     assert "Merge, push, and publication each require" in text
+
+
+def test_publication_history_grandfather_is_exact_and_frozen():
+    policy = yaml.safe_load(PUBLICATION_GRANDFATHER.read_text(encoding="utf-8"))
+    assert policy["version"] == 1
+    assert policy["baseline_commit"] == (
+        "11d8c7fba0444356d2d1d4575ec74885866baf59"
+    )
+
+    pairs: set[tuple[str, str]] = set()
+    commits: set[str] = set()
+    paths: set[str] = set()
+    for group in policy["groups"]:
+        for commit in group["commits"]:
+            assert len(commit) == 40
+            assert set(commit) <= set("0123456789abcdef")
+            commits.add(commit)
+            for path in group["paths"]:
+                assert path.startswith("docs/superpowers/plans/")
+                assert not set(path) & set("*?[]")
+                assert (commit, path) not in pairs
+                pairs.add((commit, path))
+                paths.add(path)
+
+    assert len(pairs) == 101
+    assert len(commits) == 20
+    assert len(paths) == 6
+
+    guide = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+    assert "`tools/publication_history_grandfather.yaml`" in guide
+    assert "does not authorize current-tree or new-history matches" in guide
+
+
+def test_publication_scan_uses_only_reachable_head_history():
+    text = PUBLICATION_CHECK.read_text(encoding="utf-8")
+    assert "git rev-list HEAD" in text
+    assert "git rev-list --all" not in text
 
 
 def test_platform_roadmap_and_p4_plans_are_not_active_instructions():

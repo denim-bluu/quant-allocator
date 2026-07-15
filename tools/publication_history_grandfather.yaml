@@ -1,0 +1,36 @@
+version: 1
+approved_at: "2026-07-15"
+baseline_commit: 11d8c7fba0444356d2d1d4575ec74885866baf59
+scope: history-only
+groups:
+  - commits:
+      - 1c2da47307cf5b04d58ca5ae099ca8518c1057fb
+      - 31bdfb228e4447ffa5ac09111cfb867d621d8ffb
+      - 3447002479d3830757d1066ea4a2469205db63be
+      - 3ed3bb16e78967fbae6fcb32e3aa04c799fb52a2
+      - 511da47c87df36188b84e43b0d7d20c1d1a1c399
+      - 6c9338d04117b0f6b06553e2911f62e671f25803
+      - 75d6637ef135cac962e71373c9a2c3a983642369
+      - 95cd44cb98078410c0d0552b85bd706a62498ce3
+      - 9e500cdf7cc375b75d58270f0b7d29ed83ec625e
+      - 9e9b82dd8da2831c7ce21913b4717f6e682f9065
+      - b53fc7bc7938968d2e618d8626c71f0aac11f7cb
+      - be0a8222242f5e99d209e0067980a4f9982b0ed6
+      - c40c9952886fe26c9ab3e332c0aab01dc7aa7139
+      - d09adddf0fd68a15182bed2633d0f635f3dbe43f
+      - d661058c0faf57a2da552bc7d624b15b8a5beb4c
+      - d8459174b00065128fb27a7c135cd7db3933ade9
+      - e54ae40ce4246d8d21cd9fa6507f8368690e64af
+      - ea1f05810e5bf41f4297958302b4ceadfa6392d0
+      - f9dfc7232738a5781000a7b3818d21a577da6733
+      - fa5bd15c6595b5d98fcf563425361cf76b12e0f3
+    paths:
+      - docs/superpowers/plans/2026-07-07-wave2-b2-p1.md
+      - docs/superpowers/plans/2026-07-07-wave2-b2-s3.md
+      - docs/superpowers/plans/2026-07-07-wave2-b2-s4.md
+      - docs/superpowers/plans/2026-07-07-wave2-b2-s5.md
+      - docs/superpowers/plans/2026-07-07-wave2-b2-s6.md
+  - commits:
+      - fa5bd15c6595b5d98fcf563425361cf76b12e0f3
+    paths:
+      - docs/superpowers/plans/2026-07-08-wave2-b3-substrate.md

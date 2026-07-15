@@ -36,8 +36,11 @@ boundary, or publication prerequisites change.
 - Before every push, run a case-insensitive, word-boundary scan of the working tree and
   reachable Git history from a checkout where `tools/.publication_terms` is present.
   `tools/publication_check.sh` is report-only: read and act on its output.
-- The only accepted tracked canary match is the agent-worktree ignore entry already in
-  `.gitignore`. Treat every other match as a release blocker.
+- The only accepted current-tree canary match is the agent-worktree ignore entry already
+  in `.gitignore`. For already-public history only, the exact commit/path pairs in
+  `tools/publication_history_grandfather.yaml` are grandfathered. That ledger contains
+  no term text or wildcards and does not authorize current-tree or new-history matches.
+  Treat every unmatched history hit as a release blocker.
 - Do not add automated co-author or assistant-attribution trailers to commits.
 
 ## Multi-agent execution

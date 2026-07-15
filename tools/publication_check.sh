@@ -35,13 +35,15 @@ for term in "${TERMS[@]}"; do
     --exclude-dir=__pycache__ --exclude-dir=_build -- "$term" . \
     || echo "  (no working-tree hits)"
   echo "[git history]"
-  # git grep -i over every commit: case-INsensitive like the working-tree scan
+  # git grep -i over history reachable from the checked-out release tip:
+  # case-INsensitive like the working-tree scan
   # (git log -S pickaxe is case-sensitive and would miss case variants) and
   # scans whole blobs, not just diffs where the term count changed.
-  git grep -iI -- "$term" $(git rev-list --all) 2>/dev/null \
+  git grep -iI -- "$term" $(git rev-list HEAD) 2>/dev/null \
     || echo "  (no history hits)"
   echo
 done
 
 echo "Scan complete. A human must review every hit above before publishing."
+echo "Compare historical local-canary hits only against exact pairs in tools/publication_history_grandfather.yaml."
 exit 0
