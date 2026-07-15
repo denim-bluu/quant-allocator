@@ -1,12 +1,12 @@
 # Quant Allocator
 
-A research portfolio of allocator-side analytics for hedge-fund manager
-selection, monitoring, and engagement — built on a synthetic-manager simulator
-and public data only. The gallery presents each idea as an honest mockup: what
-the analytic claims, what data tier it needs, and the statistical reason the
-ask exists.
+A public editorial research publication and project-idea bank about quantitative
+methods for allocator decisions under partial transparency. Its publication contract
+pairs each idea with a long-form technical article and an honest synthetic or public
+exhibit: what the method claims, why the decision is hard, what the data can support,
+and what would be needed to use it live.
 
-**Thesis:** Every analytic here is an exercise in inference under partial transparency.
+**Thesis:** Every allocator analytic is an exercise in inference under partial transparency.
 
 ## Gallery
 
@@ -14,6 +14,7 @@ Live gallery: **<https://denim-bluu.github.io/quant-allocator/>**
 
 ## Repository map
 
+- `docs/PRODUCT.md` — the canonical product charter and scope boundary.
 - `site/` — the static gallery: card manifest (`cards.yaml`), Jinja2 templates,
   Interval design-system assets, vendored KaTeX, and committed demo data.
 - `src/quant_allocator/site/` — the render-only builder (`build.py`, CLI).

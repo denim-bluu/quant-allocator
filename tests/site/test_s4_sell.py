@@ -80,7 +80,7 @@ def _build(tmp_path):
         specs / "s4-sell-discipline.md",
     )
     (site / "cards.yaml").write_text(yaml.safe_dump([_CARD]), encoding="utf-8")
-    build(site, tmp_path / "out")
+    build(site, tmp_path / "out", allow_legacy=True)
     return (tmp_path / "out" / "s4.html").read_text(encoding="utf-8"), tmp_path / "out"
 
 

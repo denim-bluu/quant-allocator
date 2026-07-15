@@ -1,0 +1,36 @@
+version: 1
+updated_at: "2026-07-15"
+product_charter: docs/PRODUCT.md
+objective:
+  id: editorial-site
+  mode: website-first
+  outcome: >-
+    Build a public static editorial research publication and project-idea bank with
+    Aligrithm-style composition and Interval quantitative semantics.
+scheduler:
+  current_task: WEBSITE-PUBLISH-T1
+  active_plan: null
+  next_action: >-
+    Run the required pre-push publication gate, then merge, push, and publish the
+    completed editorial website under the user's explicit 2026-07-15 approval.
+parked_work:
+  p4:
+    status: parked
+    website_prerequisite: false
+    resume_requires: explicit-user-approval-and-product-fit-review
+    fixture_branch: codex/roadmap-p4-terms-fixture-impl
+    fixture_tip: b0596db
+    card_branch: codex/roadmap-p4-impl
+    card_tip: 7c2964f
+authority:
+  merge: true
+  push: true
+  publish: true
+verification:
+  current_level: website-complete-local
+  required:
+    - full-site-suite
+    - fresh-static-build
+    - rendered-desktop-mobile-qa
+    - scoped-publication-canary
+    - consolidated-final-review

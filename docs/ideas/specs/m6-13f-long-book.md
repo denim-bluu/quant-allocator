@@ -289,7 +289,7 @@ crowding read, "how much do these two public long books look alike."
 
 **This is a measurement, not an allocation rule, and the boundary is explicit.** The
 program assigns crowding *caps* — the decision to size a book down because it is crowded
-— to card [M4](2026-07-05-idea-cards.md) (crowding & overlap radar), which
+— to card [M4](../2026-07-05-idea-cards.md) (crowding & overlap radar), which
 [P1](p1-allocation-uncertainty.md) §6.1 routes there. M6 supplies the per-filer
 overlap *number* from public 13F data (M4's own "13F rung" consumes exactly this); it
 does **not** build a correlation-matrix optimizer, an unwind-stress scenario, or a
@@ -643,7 +643,7 @@ discipline as much as the descriptor.
   makes only the coarser quarterly-survival claim S3 leaves available (§3.5).
 - **No crowding cap, no optimizer.** M6 measures peer overlap; it builds no correlation-
   matrix optimizer and sets no sizing cap. Crowding caps belong to card
-  [M4](2026-07-05-idea-cards.md) ([P1](p1-allocation-uncertainty.md) §6.1 routes them
+  [M4](../2026-07-05-idea-cards.md) ([P1](p1-allocation-uncertainty.md) §6.1 routes them
   there). M6 is the measurement M4's 13F rung consumes, nothing more (§3.6).
 - **No faked public feed.** Following [S5](s5-short-book-quality.md) §6.4, the demo
   fabricates no FINRA short-interest series; the short-interest lens is a named deferred

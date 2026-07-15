@@ -40,7 +40,7 @@ def _build_m2(tmp_path):
     )
     (site / "cards.yaml").write_text(yaml.safe_dump([M2_CARD]), encoding="utf-8")
     out = tmp_path / "out"
-    build(site, out)
+    build(site, out, allow_legacy=True)
     return (out / "m2.html").read_text(encoding="utf-8"), out
 
 

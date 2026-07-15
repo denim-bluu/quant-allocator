@@ -12,6 +12,7 @@ def test_build_unknown_card_errors():
 def test_build_all_builds_registered_cards(tmp_path, monkeypatch):
     import quant_allocator.demo_data.e2_pack as e2_pack
     import quant_allocator.demo_data.e3_knowledge as e3_knowledge
+    import quant_allocator.demo_data.e4_operational_change as e4_operational_change
     import quant_allocator.demo_data.m1_drift as m1_drift
     import quant_allocator.demo_data.m2_convexity as m2_convexity
     import quant_allocator.demo_data.m3_alarms as m3_alarms
@@ -28,12 +29,19 @@ def test_build_all_builds_registered_cards(tmp_path, monkeypatch):
     import quant_allocator.demo_data.s4_sell as s4_sell
     import quant_allocator.demo_data.s5_shortbook as s5_shortbook
     import quant_allocator.demo_data.s6_signatures as s6_signatures
+    import quant_allocator.demo_data.s7_provenance as s7_provenance
     import quant_allocator.demo_data.x1_atlas as x1_atlas
     import quant_allocator.demo_data.x2_playground as x2_playground
+    import quant_allocator.demo_data.x3_universe as x3_universe
 
     calls = []
     monkeypatch.setattr(e2_pack, "build", lambda: calls.append("e2_pack") or tmp_path)
     monkeypatch.setattr(e3_knowledge, "build", lambda: calls.append("e3_knowledge") or tmp_path)
+    monkeypatch.setattr(
+        e4_operational_change,
+        "build",
+        lambda: calls.append("e4_operational_change") or tmp_path,
+    )
     monkeypatch.setattr(m1_drift, "build", lambda: calls.append("m1_drift") or tmp_path)
     monkeypatch.setattr(m2_convexity, "build", lambda: calls.append("m2_convexity") or tmp_path)
     monkeypatch.setattr(m3_alarms, "build", lambda: calls.append("m3_alarms") or tmp_path)
@@ -54,12 +62,15 @@ def test_build_all_builds_registered_cards(tmp_path, monkeypatch):
     monkeypatch.setattr(s4_sell, "build", lambda: calls.append("s4_sell") or tmp_path)
     monkeypatch.setattr(s5_shortbook, "build", lambda: calls.append("s5_shortbook") or tmp_path)
     monkeypatch.setattr(s6_signatures, "build", lambda: calls.append("s6_signatures") or tmp_path)
+    monkeypatch.setattr(s7_provenance, "build", lambda: calls.append("s7_provenance") or tmp_path)
     monkeypatch.setattr(x1_atlas, "build", lambda: calls.append("x1_atlas") or tmp_path)
     monkeypatch.setattr(x2_playground, "build", lambda: calls.append("x2_playground") or tmp_path)
+    monkeypatch.setattr(x3_universe, "build", lambda: calls.append("x3_universe") or tmp_path)
     assert main(["build", "all"]) == 0
     assert sorted(calls) == [
         "e2_pack",
         "e3_knowledge",
+        "e4_operational_change",
         "m1_drift",
         "m2_convexity",
         "m3_alarms",
@@ -76,9 +87,35 @@ def test_build_all_builds_registered_cards(tmp_path, monkeypatch):
         "s4_sell",
         "s5_shortbook",
         "s6_signatures",
+        "s7_provenance",
         "x1_atlas",
         "x2_playground",
+        "x3_universe",
     ]
+
+
+@pytest.mark.parametrize(
+    "builder_name", ("x3_universe", "e4_operational_change", "s7_provenance")
+)
+def test_wave_a_single_card_builders_are_registered(builder_name, tmp_path, monkeypatch):
+    import quant_allocator.demo_data.e4_operational_change as e4_operational_change
+    import quant_allocator.demo_data.s7_provenance as s7_provenance
+    import quant_allocator.demo_data.x3_universe as x3_universe
+
+    modules = {
+        "x3_universe": x3_universe,
+        "e4_operational_change": e4_operational_change,
+        "s7_provenance": s7_provenance,
+    }
+    calls = []
+    monkeypatch.setattr(
+        modules[builder_name],
+        "build",
+        lambda: calls.append(builder_name) or tmp_path,
+    )
+
+    assert main(["build", builder_name]) == 0
+    assert calls == [builder_name]
 
 
 def test_batch_three_names_are_unique_across_committed_cards():

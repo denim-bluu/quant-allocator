@@ -106,6 +106,22 @@
     ],
     "summary": "Document-native preparation; unavailable same-manager sources are named."
   },
+  "evidence": {
+    "access_context": "shortlisted-synthetic-demo",
+    "bundle_digest": "bundle:sha256:83260440544eb2982ec40901880f4fdca177ab4e40094d0c9c9becb9a419a2b4",
+    "decision_at": "2024-06-30T23:59:59.999999Z",
+    "evidence_right_id": "right:sha256:d5ea402cf4dcfb55e305f3ff3bd4307eccdab1d4be339878f567e6129b567f08",
+    "join_receipt_id": "receipt:sha256:f06126ca3781136ef26c45a764dd7e2b0b6a3e3a35d94b8ea08cf5b372e481d2",
+    "licence_purpose": "research-demo",
+    "receipt_ids": [
+      "receipt:sha256:4afc9ad48af43c7ee969a7e88be03060b7118ebbe89cb97d5f310dfd9e771f3d",
+      "receipt:sha256:f06126ca3781136ef26c45a764dd7e2b0b6a3e3a35d94b8ea08cf5b372e481d2"
+    ],
+    "record_count": 6,
+    "schema_digest": "43a0f22036e3e6b55fc15a05071e58d7771ff5546cedce7c4ee45155f38b0818",
+    "schema_version": "evidence-v1",
+    "slice_digest": "snapshot:sha256:3f8060ab412ecb9e5c1c0016f822c8bfce17cb14ba80724b0ad2f2dab0ef77d3"
+  },
   "graph_candidate": {
     "candidate_doc_ids": [
       "DDQ-2024",
@@ -128,6 +144,8 @@
       {
         "edge_id": "about_theme:V-LIQ-LETTER:LIQ",
         "edge_type": "about_theme",
+        "entity_relationship_id": "entity-relation:sha256:35a85a6d74d96e89a4b323494cda9edb6458fe4916b8459d3008451ed4e0a28b",
+        "evidence_span_id": "span:sha256:19bcc3672621401b06c9a8c8445223b7e0c078cb8ffde44b5dbfa1440df808e5",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -141,6 +159,8 @@
       {
         "edge_id": "about_theme:V-LIQ-MEETING:LIQ",
         "edge_type": "about_theme",
+        "entity_relationship_id": "entity-relation:sha256:b0de2188ef4e04c5be652b22c7a736463a71f226aca89423b16f6f45b0fa3441",
+        "evidence_span_id": "span:sha256:d6506b99f74e42132b643886eb5e06d72d1e66cbfd7a0c9873d95147d78c62a9",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -154,6 +174,8 @@
       {
         "edge_id": "attributed_to:DDQ-2024:CLC",
         "edge_type": "attributed_to",
+        "entity_relationship_id": "entity-relation:sha256:d88144dde6c33865480f9b545aedc001b53016291e268f6d60b8721f3b59bce0",
+        "evidence_span_id": "span:sha256:90e9d6ddce97f5a56a8315d37b4a0f7c8a667cae3141df7ea22ea5c5f9baeb57",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -167,6 +189,8 @@
       {
         "edge_id": "attributed_to:DDQ-WEX:WGC",
         "edge_type": "attributed_to",
+        "entity_relationship_id": "entity-relation:sha256:a5dfbf984327441556987d34eea83e5f82e0274f186eaffdc21703710c89f5b3",
+        "evidence_span_id": "span:sha256:b4ecec49feef7f9e16a87910642330c4772dc60a43762a54a3bf72a609f7f7f7",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -180,6 +204,8 @@
       {
         "edge_id": "attributed_to:L-2023Q4:SPA",
         "edge_type": "attributed_to",
+        "entity_relationship_id": "entity-relation:sha256:883946cebd8e41178cb4d7ad9792920aa0ae57045b514a1e2d3637765cd36e97",
+        "evidence_span_id": "span:sha256:36e6e52183fb192843f5b824fc2a9e8e487ca5ec896da808def708d8335b2f4f",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -193,6 +219,8 @@
       {
         "edge_id": "attributed_to:L-2024Q1:CLC",
         "edge_type": "attributed_to",
+        "entity_relationship_id": "entity-relation:sha256:86ecb89179da991e63e6df8257f43f7f0962a245fc34aa67493e8f58f7858b06",
+        "evidence_span_id": "span:sha256:a068674e690ef8dd306805a189bfeed664224bf305af40b4408247242105ff85",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -206,6 +234,8 @@
       {
         "edge_id": "authored_by:L-2023Q4:PA",
         "edge_type": "authored_by",
+        "entity_relationship_id": "entity-relation:sha256:5a08be40b85da7b98669a9376db8275f782fb659b1b8f7855e1bb471b0136164",
+        "evidence_span_id": "span:sha256:be8981b989ca7ccf94c436ead06035abb67aefa12324c22a20d18c4ffed307ff",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -219,6 +249,8 @@
       {
         "edge_id": "authored_by:L-2024Q1:EV",
         "edge_type": "authored_by",
+        "entity_relationship_id": "entity-relation:sha256:3e7d934ee2f2c6860629acdde78ba5767425123eccfe7701ca1d53edd74f1d29",
+        "evidence_span_id": "span:sha256:fc9b9bee3c6b878b77ada40b9d9f048da1345317459b25b26fb38a39e0cd79c7",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -232,6 +264,8 @@
       {
         "edge_id": "authored_by:MTG-2024-05:EV",
         "edge_type": "authored_by",
+        "entity_relationship_id": "entity-relation:sha256:8f0ca91483a36db37509fe9b265427aa54392edb16f26772693872709dffd83e",
+        "evidence_span_id": "span:sha256:17b6f2414d9cf468c5f748c19292d9d6f6786229e83f4056c390f2844ae40e08",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -245,6 +279,8 @@
       {
         "edge_id": "discussed_at:V-LIQ-MEETING:M-2024-05",
         "edge_type": "discussed_at",
+        "entity_relationship_id": "entity-relation:sha256:4ced6537d90cacd70cfff8483d1ec645ed5f60dcb6f42d35e65c71751021760d",
+        "evidence_span_id": "span:sha256:a09c85539e6d5f34e42612146c4b82e2d02efa4791c75b65670ba81acdc871f6",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -258,6 +294,8 @@
       {
         "edge_id": "employed_by:EV:CLC",
         "edge_type": "employed_by",
+        "entity_relationship_id": "entity-relation:sha256:478df9ccff69c6b0fe77549b2fbb4c4348eec057d261b9068a66003436caefec",
+        "evidence_span_id": "span:sha256:acd67764415a283bfc66724eab8fcfe193bd6f164bf94ca9e4fb0f3d5ccc5284",
         "from_date": "2024-01",
         "provenance": {
           "as_of": "2024-06",
@@ -271,6 +309,8 @@
       {
         "edge_id": "employed_by:EV:SPA",
         "edge_type": "employed_by",
+        "entity_relationship_id": "entity-relation:sha256:7a9eda5e471197194f9daa407748f984b3db975f787041cb9b950538fecc6075",
+        "evidence_span_id": "span:sha256:6ce0d7550afe116bd42558639518b525da708027629127fd4fd00b44bae64d34",
         "from_date": "2020-01",
         "provenance": {
           "as_of": "2024-06",
@@ -284,6 +324,8 @@
       {
         "edge_id": "employed_by:PA:SPA",
         "edge_type": "employed_by",
+        "entity_relationship_id": "entity-relation:sha256:a7c2ee7715eb5300de51f9f07bb504b13a598cf72199d1f276017850a6fe4fdc",
+        "evidence_span_id": "span:sha256:76a07e3a26cac9733687e48f806e98c8c71db067e3a2742c30ccc38af62bc2b4",
         "from_date": "2020-01",
         "provenance": {
           "as_of": "2024-06",
@@ -297,6 +339,8 @@
       {
         "edge_id": "expresses:L-2024Q1:V-LIQ-LETTER",
         "edge_type": "expresses",
+        "entity_relationship_id": "entity-relation:sha256:f49e4b6f9eefacb51b4c27fcd8c5e90e546760d5114d956e1febc63f62b6cef8",
+        "evidence_span_id": "span:sha256:48299f4abeb593e68cde3cf8df74f6c9bcf49eb1e357f6bf65b4937667b021e9",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -310,6 +354,8 @@
       {
         "edge_id": "expresses:MTG-2024-05:V-LIQ-MEETING",
         "edge_type": "expresses",
+        "entity_relationship_id": "entity-relation:sha256:d95be7514df0e4a9ba98a10136fa50c2cddd8570244323d16ff10a172cb230b6",
+        "evidence_span_id": "span:sha256:d02f54a5a80edb2bb87e75f34306b8aaeaf2827fd70d74f828ef38bc8440c3e3",
         "from_date": null,
         "provenance": {
           "as_of": "2024-06",
@@ -324,6 +370,8 @@
     "expansion_hops": 1,
     "nodes": [
       {
+        "evidence_item_id": "evidence:sha256:4fddf0bcc090b8d5b819e873d4b306f00164ffba742acf2e1df4da867bd88e5a",
+        "evidence_span_id": "span:sha256:f87d9d6778c33f2c15134b59ca398288276951a189e3a040719c54b85b0aeb38",
         "label": "DDQ-2024",
         "node_id": "DDQ-2024",
         "node_type": "document",
@@ -336,6 +384,8 @@
         "tier_grant_date": null
       },
       {
+        "evidence_item_id": "evidence:sha256:d5e316c85f03f00c56ef6dff408bf71b1142539c08116f9dc4915cad6c5567f2",
+        "evidence_span_id": "span:sha256:19b38c147675949aeb3dca2d9abe3430adedfda880a41e1b4e957d0efefafcd6",
         "label": "DDQ-WEX",
         "node_id": "DDQ-WEX",
         "node_type": "document",
@@ -348,6 +398,8 @@
         "tier_grant_date": null
       },
       {
+        "evidence_item_id": "evidence:sha256:6dbafde99d149c34e7b4bfb00444041c95f5af723602625abeab3ae16a4076f2",
+        "evidence_span_id": "span:sha256:22bb10b8415f28976ce0c59be6306df6c21764c5e072e6d024904af8d297b0d2",
         "label": "E3-RELATIONSHIPS",
         "node_id": "E3-RELATIONSHIPS",
         "node_type": "document",
@@ -360,6 +412,8 @@
         "tier_grant_date": null
       },
       {
+        "evidence_item_id": "evidence:sha256:3044ddb35edd91e7489f73ed11f17e075bebafdb1da7ee3fba764530bdd2cf6c",
+        "evidence_span_id": "span:sha256:68c71012cd43e8d18f91b4a8f8c44658bedd71be3ba9dfeb90090ce24a7b3658",
         "label": "L-2023Q4",
         "node_id": "L-2023Q4",
         "node_type": "document",
@@ -372,6 +426,8 @@
         "tier_grant_date": null
       },
       {
+        "evidence_item_id": "evidence:sha256:da17b0fa5078c19c0f70e11248fdb3d2d3229053a4e1016a78b4b0c11b7556cd",
+        "evidence_span_id": "span:sha256:5c06e747728d0fb22ed023c07e9bc0ebda49b368366645e24cb9992f5a323f90",
         "label": "L-2024Q1",
         "node_id": "L-2024Q1",
         "node_type": "document",
@@ -384,6 +440,8 @@
         "tier_grant_date": null
       },
       {
+        "evidence_item_id": "evidence:sha256:3e621a7e81d8b6215ad5d43caa935c5d83503bb86b8f611159d16b03d7ce667c",
+        "evidence_span_id": "span:sha256:f886bef5ea0dffe4076a7b8806c8818a31cffb58374420f59f582a4a06ec3099",
         "label": "MTG-2024-05",
         "node_id": "MTG-2024-05",
         "node_type": "document",
@@ -396,6 +454,7 @@
         "tier_grant_date": null
       },
       {
+        "evidence_span_id": "span:sha256:46c4b4b1c20405bc822c3dee6048de57782789f5f4419f24f12dc952f95cd747",
         "label": "Corvid Lane Capital",
         "node_id": "CLC",
         "node_type": "manager",
@@ -408,6 +467,7 @@
         "tier_grant_date": "2024-01"
       },
       {
+        "evidence_span_id": "span:sha256:d217137a7d9101f0911c275dcf3706b385dbda7a477bee85ddbb78b9b2bec7bd",
         "label": "Selby Point Advisors",
         "node_id": "SPA",
         "node_type": "manager",
@@ -420,6 +480,7 @@
         "tier_grant_date": "2023-01"
       },
       {
+        "evidence_span_id": "span:sha256:8708a18f466efb00a17333012a600cac7099811986d05e62b6e228b0280a6b14",
         "label": "Wexford Green Capital",
         "node_id": "WGC",
         "node_type": "manager",
@@ -432,6 +493,7 @@
         "tier_grant_date": "2024-01"
       },
       {
+        "evidence_span_id": "span:sha256:785ae6eb5ebf67a83a30184b581e3f07af73720b7767593a516b4e38a373387c",
         "label": "M-2024-05",
         "node_id": "M-2024-05",
         "node_type": "meeting",
@@ -444,6 +506,7 @@
         "tier_grant_date": null
       },
       {
+        "evidence_span_id": "span:sha256:b7a63dbe43d43bc59bfb28d0a1ee77694d8efcd53722de42c4ef3fadccac9c0b",
         "label": "Elena Voss",
         "node_id": "EV",
         "node_type": "person",
@@ -456,6 +519,7 @@
         "tier_grant_date": null
       },
       {
+        "evidence_span_id": "span:sha256:29ab29b6a49475efd902ca1816a19b29219b8076ce7bbd6ec09a31ccdd2202a9",
         "label": "Priya Anand",
         "node_id": "PA",
         "node_type": "person",
@@ -468,6 +532,7 @@
         "tier_grant_date": null
       },
       {
+        "evidence_span_id": "span:sha256:46c4b4b1c20405bc822c3dee6048de57782789f5f4419f24f12dc952f95cd747",
         "label": "Equity long/short",
         "node_id": "ELS",
         "node_type": "strategy",
@@ -480,6 +545,7 @@
         "tier_grant_date": null
       },
       {
+        "evidence_span_id": "span:sha256:537916e198cb79df56b8a1586661d503f760859df7fe4d4ef2bddf4d21065e22",
         "label": "Liquidity",
         "node_id": "LIQ",
         "node_type": "theme",
@@ -492,6 +558,7 @@
         "tier_grant_date": null
       },
       {
+        "evidence_span_id": "span:sha256:a766520c94b3891b23da4af336b87666e69973c279ea33e7d79908fa4e87626a",
         "label": "neutral-explicit",
         "node_id": "V-LIQ-LETTER",
         "node_type": "view",
@@ -504,6 +571,7 @@
         "tier_grant_date": null
       },
       {
+        "evidence_span_id": "span:sha256:e7b5e1040f898ff486b26997d084ef6cc968fa2ab261b41f0137b777311c8652",
         "label": "neutral-explicit",
         "node_id": "V-LIQ-MEETING",
         "node_type": "view",

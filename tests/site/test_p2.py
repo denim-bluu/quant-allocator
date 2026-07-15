@@ -54,7 +54,7 @@ def _build(tmp_path, *, gate_renders=True):
     )
     (site / "cards.yaml").write_text(yaml.safe_dump([_CARD]), encoding="utf-8")
     out = tmp_path / "out"
-    build(site, out)
+    build(site, out, allow_legacy=True)
     return (out / "p2.html").read_text(encoding="utf-8"), out
 
 

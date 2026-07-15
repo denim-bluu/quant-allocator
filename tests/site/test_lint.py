@@ -10,7 +10,38 @@ from quant_allocator.site.build import BuildError, _lint_outputs, build
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-VALID_PAGE = '<span class="synthetic-badge"></span><dl class="golive-box"></dl>'
+PHASE1_METADATA = {
+    "decision_question": "What can this evidence support?",
+    "primary_stage": "underwrite",
+    "stages": ["underwrite"],
+    "asset_classes": ["cross-asset"],
+    "vehicle_types": ["pooled-fund"],
+    "access_contexts": ["shortlisted-nda"],
+    "supported_data_modalities": ["returns"],
+    "minimum_data_modalities": ["returns"],
+    "decision_readiness": "data-conditional",
+    "evidence_roles": ["operational-analysis"],
+    "minimum_data": "Monthly net returns.",
+    "validation_status": "live-calibration-required",
+    "claims": [
+        {
+            "id": "interval",
+            "output_type": "interval",
+            "access_contexts": ["shortlisted-nda"],
+            "access_semantics": "synthetic-fixture-only",
+            "current_attestation": "D",
+            "live_attestation_ceiling": "B",
+            "validation_status": "live-calibration-required",
+            "receipt_required": True,
+            "refusal": "The history is incomplete.",
+        }
+    ],
+}
+
+VALID_PAGE = (
+    '<span class="synthetic-badge"></span><section class="card-context"></section>'
+    '<dl class="golive-box"></dl>'
+)
 
 
 def _card(**overrides):
@@ -52,6 +83,7 @@ def test_lint_missing_golive_raises(tmp_path):
 
 STANDING_PAGE = (
     '<span class="synthetic-badge"></span>'
+    '<section class="card-context"></section>'
     '<aside class="golive-replaced">never goes live</aside>'
 )
 
@@ -76,7 +108,11 @@ def test_lint_dangling_spec_link_raises(tmp_path):
 
 
 def test_lint_doctrine_requires_usage_note(tmp_path):
-    _write_page(tmp_path, "e1", '<aside class="usage-note"></aside>')
+    _write_page(
+        tmp_path,
+        "e1",
+        '<section class="card-context"></section><aside class="usage-note"></aside>',
+    )
     _write_spec(tmp_path, "e1")
     _lint_outputs([_card(id="e1", doctrine=True)], tmp_path)
 
@@ -86,6 +122,17 @@ def test_lint_doctrine_missing_usage_note_raises(tmp_path):
     _write_spec(tmp_path, "e1")
     with pytest.raises(BuildError, match="usage-note"):
         _lint_outputs([_card(id="e1", doctrine=True)], tmp_path)
+
+
+def test_lint_missing_decision_context_raises(tmp_path):
+    _write_page(
+        tmp_path,
+        "t1",
+        '<span class="synthetic-badge"></span><dl class="golive-box"></dl>',
+    )
+    _write_spec(tmp_path, "t1")
+    with pytest.raises(BuildError, match="card-context"):
+        _lint_outputs([_card()], tmp_path)
 
 
 def test_build_fails_on_missing_data_file(tmp_path):
@@ -103,6 +150,7 @@ def test_build_fails_on_missing_data_file(tmp_path):
         yaml.safe_dump(
             [
                 {
+                    **PHASE1_METADATA,
                     "id": "t1",
                     "title": "Test card",
                     "lane": "S",
@@ -139,6 +187,7 @@ def test_build_enforces_lint_end_to_end(tmp_path):
         yaml.safe_dump(
             [
                 {
+                    **PHASE1_METADATA,
                     "id": "t1",
                     "title": "Test card",
                     "lane": "S",
@@ -178,6 +227,7 @@ def test_real_demo_page_has_furniture(tmp_path):
         yaml.safe_dump(
             [
                 {
+                    **PHASE1_METADATA,
                     "id": "t1",
                     "title": "Test card",
                     "lane": "S",

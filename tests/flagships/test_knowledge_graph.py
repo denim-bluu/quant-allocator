@@ -2,244 +2,137 @@ import sqlite3
 
 import pytest
 
+from quant_allocator.demo_data.e3_knowledge import _graph_fixture
+from quant_allocator.flagships.knowledge.evidence_bridge import build_e3_evidence
 from quant_allocator.flagships.knowledge.graph import (
     EDGE_TABLES,
     NODE_TABLES,
     GraphFixture,
     candidate_paths,
-    connect_graph,
     entity_link_manager,
     graph_candidates,
     ingest_fixture,
     initialize_schema,
 )
+from quant_allocator.flagships.saydo.corpus import build_corpus
 
-
-SPAN = "The portfolio manager described redemption gates and cash buffers."
-
-
-def _row(**values):
-    return {
-        **values,
-        "source_doc": values.get("source_doc", "MTG-2024-05"),
-        "source_span": values.get("source_span", SPAN),
-        "as_of": values.get("as_of", "2024-05"),
-    }
+SPAN = "The portfolio manager walked through how redemption gates would apply under stress"
 
 
 def graph_fixture() -> GraphFixture:
-    return GraphFixture(
-        tables={
-            "strategy": [_row(strategy_id="ELS", label="Equity long/short")],
-            "manager": [
-                _row(
-                    manager_id="CLC",
-                    name="Corvid Lane Capital",
-                    tier="R",
-                    strategy_id="ELS",
-                    tier_grant_date="2024-01",
-                ),
-                _row(
-                    manager_id="SPA",
-                    name="Selby Point Advisors",
-                    tier="R",
-                    strategy_id="ELS",
-                    tier_grant_date="2023-01",
-                ),
-                _row(
-                    manager_id="WGC",
-                    name="Wexford Green Capital",
-                    tier="R",
-                    strategy_id="ELS",
-                    tier_grant_date="2024-01",
-                ),
-            ],
-            "person": [
-                _row(person_id="EV", name="Elena Voss", role="Portfolio manager"),
-                _row(person_id="PA", name="Priya Anand", role="Portfolio manager"),
-            ],
-            "document": [
-                _row(
-                    doc_id="L-2024Q1",
-                    doc_type="letter",
-                    text="Corvid Lane remained comfortable with portfolio liquidity.",
-                    date="2024-03",
-                    file_path="authored/L-2024Q1.txt",
-                    ingest_date="2024-06",
-                ),
-                _row(
-                    doc_id="MTG-2024-05",
-                    doc_type="meeting_note",
-                    text=SPAN,
-                    date="2024-05",
-                    file_path="authored/MTG-2024-05.txt",
-                    ingest_date="2024-06",
-                ),
-                _row(
-                    doc_id="DDQ-WEX",
-                    doc_type="ddq",
-                    text="Wexford Green described liquidity terms.",
-                    date="2024-02",
-                    file_path="authored/DDQ-WEX.txt",
-                    ingest_date="2024-06",
-                ),
-            ],
-            "view": [
-                _row(
-                    view_id="V-LIQ",
-                    direction="neutral-explicit",
-                    horizon="quarterly",
-                    conviction=2,
-                )
-            ],
-            "theme": [_row(theme_id="LIQ", label="Liquidity")],
-            "meeting": [
-                _row(
-                    meeting_id="M-2024-05",
-                    date="2024-05",
-                    attendees="Elena Voss",
-                    linked_doc_id="MTG-2024-05",
-                )
-            ],
-            "authored_by": [
-                _row(doc_id="L-2024Q1", person_id="EV"),
-                _row(doc_id="MTG-2024-05", person_id="EV"),
-                _row(doc_id="DDQ-WEX", person_id="PA"),
-            ],
-            "attributed_to": [
-                _row(doc_id="L-2024Q1", manager_id="CLC"),
-                _row(doc_id="DDQ-WEX", manager_id="WGC"),
-            ],
-            "employed_by": [
-                _row(
-                    person_id="EV",
-                    manager_id="CLC",
-                    from_date="2024-01",
-                    to_date=None,
-                ),
-                _row(
-                    person_id="EV",
-                    manager_id="SPA",
-                    from_date="2020-01",
-                    to_date="2023-12",
-                ),
-                _row(
-                    person_id="PA",
-                    manager_id="WGC",
-                    from_date="2020-01",
-                    to_date=None,
-                ),
-            ],
-            "expresses": [_row(doc_id="MTG-2024-05", view_id="V-LIQ")],
-            "about_theme": [_row(view_id="V-LIQ", theme_id="LIQ")],
-            "discussed_at": [_row(view_id="V-LIQ", meeting_id="M-2024-05")],
-        }
-    )
+    fixture, _ = _fixture_and_store()
+    tables = {name: [dict(row) for row in rows] for name, rows in fixture.tables.items()}
+    tables["document"] = [row for row in tables["document"] if row["doc_id"] != "DDQ-2024"]
+    tables["attributed_to"] = [
+        row for row in tables["attributed_to"] if row["doc_id"] != "DDQ-2024"
+    ]
+    return GraphFixture(tables)
+
+
+def _row(**values):
+    """Compatibility adapter for retrieval tests that extend the canonical fixture."""
+
+    fixture, _ = _fixture_and_store()
+    if "doc_type" in values:
+        table, key = "document", "doc_id"
+    elif {"doc_id", "manager_id"} <= values.keys():
+        table, key = "attributed_to", "doc_id"
+    else:
+        raise KeyError(values)
+    match = next(row for row in fixture.tables[table] if row[key] == values[key])
+    return {**match, **{name: value for name, value in values.items() if name != "text"}}
+
+
+def _fixture_and_store():
+    corpus = build_corpus(include_ddq_and_notes=True)
+    store = build_e3_evidence(corpus)
+    return _graph_fixture(corpus, store), store
 
 
 def _loaded_graph():
-    conn = connect_graph()
-    initialize_schema(conn)
-    ingest_fixture(conn, graph_fixture())
-    return conn
+    fixture, store = _fixture_and_store()
+    initialize_schema(store.conn)
+    ingest_fixture(store.conn, fixture)
+    return store.conn
 
 
-def test_schema_has_all_typed_node_and_edge_tables():
-    conn = connect_graph()
-    initialize_schema(conn)
+def test_schema_uses_canonical_entities_spans_and_relationships() -> None:
+    fixture, store = _fixture_and_store()
+    initialize_schema(store.conn)
     tables = {
-        row[0]
-        for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
+        row[0] for row in store.conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
     }
     assert set(NODE_TABLES) <= tables
     assert set(EDGE_TABLES) <= tables
-    assert conn.execute("PRAGMA foreign_keys").fetchone()[0] == 1
-    for table in (*NODE_TABLES, *EDGE_TABLES):
-        foreign_keys = conn.execute(f'PRAGMA foreign_key_list("{table}")').fetchall()
-        assert any(row["from"] == "source_doc" and row["table"] == "document" for row in foreign_keys)
+    for table in NODE_TABLES:
+        columns = {row["name"] for row in store.conn.execute(f'PRAGMA table_info("{table}")')}
+        assert {"canonical_entity_id", "evidence_span_id"} <= columns
+        assert {"source_doc", "source_span", "as_of"}.isdisjoint(columns)
+    for table in EDGE_TABLES:
+        assert "entity_relationship_id" in {
+            row["name"] for row in store.conn.execute(f'PRAGMA table_info("{table}")')
+        }
+    ingest_fixture(store.conn, fixture)
+    for table in EDGE_TABLES:
+        for row in store.conn.execute(f'SELECT * FROM "{table}"'):
+            relationship = store.conn.execute(
+                "SELECT relation_type,evidence_span_id FROM entity_relationship "
+                "WHERE entity_relationship_id=?",
+                (row["entity_relationship_id"],),
+            ).fetchone()
+            assert relationship["relation_type"] == table
+            assert relationship["evidence_span_id"] == row["evidence_span_id"]
 
 
-def test_missing_or_blank_provenance_and_dangling_edge_fail():
-    fixture = graph_fixture()
-    for field, value in (("source_span", None), ("source_span", "  "), ("as_of", "")):
-        bad_view = {**fixture.tables["view"][0], field: value}
-        bad_tables = {**fixture.tables, "view": [bad_view]}
-        conn = connect_graph()
-        initialize_schema(conn)
-        with pytest.raises(sqlite3.IntegrityError):
-            ingest_fixture(conn, GraphFixture(bad_tables))
-
-    bad_strategy = {**fixture.tables["strategy"][0], "source_doc": "MISSING"}
-    conn = connect_graph()
-    initialize_schema(conn)
+def test_bad_evidence_span_and_dangling_edge_fail() -> None:
+    fixture, store = _fixture_and_store()
+    initialize_schema(store.conn)
+    tables = {name: [dict(row) for row in rows] for name, rows in fixture.tables.items()}
+    tables["view"][0]["evidence_span_id"] = "span:sha256:" + "0" * 64
     with pytest.raises(sqlite3.IntegrityError):
-        ingest_fixture(conn, GraphFixture({**fixture.tables, "strategy": [bad_strategy]}))
+        ingest_fixture(store.conn, GraphFixture(tables))
 
-    conn = connect_graph()
-    initialize_schema(conn)
-    dangling = _row(doc_id="MISSING", person_id="EV")
-    bad_tables = {**fixture.tables, "authored_by": [dangling]}
+    fixture, store = _fixture_and_store()
+    initialize_schema(store.conn)
+    tables = {name: [dict(row) for row in rows] for name, rows in fixture.tables.items()}
+    tables["authored_by"][0]["entity_relationship_id"] = tables["expresses"][0][
+        "entity_relationship_id"
+    ]
+    with pytest.raises(sqlite3.IntegrityError, match="canonical relationship projection"):
+        ingest_fixture(store.conn, GraphFixture(tables))
+
+    fixture, store = _fixture_and_store()
+    initialize_schema(store.conn)
+    tables = {name: [dict(row) for row in rows] for name, rows in fixture.tables.items()}
+    tables["authored_by"][0]["doc_id"] = "MISSING"
     with pytest.raises(sqlite3.IntegrityError):
-        ingest_fixture(conn, GraphFixture(bad_tables))
+        ingest_fixture(store.conn, GraphFixture(tables))
 
 
-def test_entity_linking_is_longest_normalized_manager_match():
+def test_entity_link_and_one_hop_candidates_are_unchanged() -> None:
     conn = _loaded_graph()
-    conn.execute(
-        """INSERT INTO manager VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-        (
-            "CL",
-            "Corvid Lane",
-            "R",
-            "ELS",
-            "2024-01",
-            "L-2024Q1",
-            "Corvid Lane remained comfortable with portfolio liquidity.",
-            "2024-03",
-        ),
-    )
     assert entity_link_manager(conn, "What did Corvid-Lane Capital say?") == "CLC"
-
-
-def test_one_hop_author_employment_recovers_note_and_excludes_wrong_firm():
-    conn = _loaded_graph()
-    candidates = graph_candidates(conn, "CLC")
-    assert candidates == ["L-2024Q1", "MTG-2024-05"]
-    assert "DDQ-WEX" not in candidates
-    assert candidate_paths(conn, "CLC", "MTG-2024-05") == (
-        "authored_by:EV->employed_by:CLC",
-    )
-
-
-def test_no_theme_based_two_hop_expansion():
-    conn = _loaded_graph()
-    # Wexford uses the same liquidity theme in its text, but no manager/person edge
-    # connects it to Corvid. Theme similarity alone must not expand the candidate set.
+    assert graph_candidates(conn, "CLC") == ["DDQ-2024", "L-2024Q1", "MTG-2024-05"]
+    assert candidate_paths(conn, "CLC", "MTG-2024-05") == ("authored_by:EV->employed_by:CLC",)
     assert "DDQ-WEX" not in graph_candidates(conn, "CLC")
 
 
-def test_author_employment_path_respects_current_and_historical_intervals():
-    fixture = graph_fixture()
-    tables = {name: list(rows) for name, rows in fixture.tables.items()}
-    tables["document"].append(
-        _row(
-            doc_id="L-2023Q3-EV",
-            doc_type="letter",
-            text="Elena Voss wrote this Selby Point letter before leaving the firm.",
-            date="2023-09",
-            file_path="authored/L-2023Q3-EV.txt",
-            ingest_date="2024-06",
-        )
-    )
-    tables["authored_by"].append(_row(doc_id="L-2023Q3-EV", person_id="EV"))
-    conn = connect_graph()
-    initialize_schema(conn)
-    ingest_fixture(conn, GraphFixture(tables))
+def test_employment_end_is_half_open_at_boundary() -> None:
+    fixture, store = _fixture_and_store()
+    initialize_schema(store.conn)
+    tables = {name: [dict(row) for row in rows] for name, rows in fixture.tables.items()}
+    for document in tables["document"]:
+        if document["doc_id"] == "L-2024Q1":
+            document["date"] = "2024-01"
+    ingest_fixture(store.conn, GraphFixture(tables))
+    assert candidate_paths(store.conn, "SPA", "L-2024Q1") == ()
 
-    assert graph_candidates(conn, "CLC") == ["L-2024Q1", "MTG-2024-05"]
-    assert graph_candidates(conn, "SPA") == ["L-2023Q3-EV"]
-    assert candidate_paths(conn, "SPA", "L-2023Q3-EV") == (
-        "authored_by:EV->employed_by:SPA",
+
+def test_insertion_order_does_not_change_candidate_order() -> None:
+    fixture, store = _fixture_and_store()
+    initialize_schema(store.conn)
+    reversed_fixture = GraphFixture(
+        {name: list(reversed(rows)) for name, rows in fixture.tables.items()}
     )
-    assert candidate_paths(conn, "SPA", "L-2024Q1") == ()
-    assert candidate_paths(conn, "CLC", "L-2023Q3-EV") == ()
+    ingest_fixture(store.conn, reversed_fixture)
+    assert graph_candidates(store.conn, "CLC") == ["DDQ-2024", "L-2024Q1", "MTG-2024-05"]

@@ -17,6 +17,7 @@ def _builders() -> dict[str, Callable[[], Path]]:
     from quant_allocator.demo_data import (
         e2_pack,
         e3_knowledge,
+        e4_operational_change,
         m1_drift,
         m2_convexity,
         m3_alarms,
@@ -33,13 +34,16 @@ def _builders() -> dict[str, Callable[[], Path]]:
         s4_sell,
         s5_shortbook,
         s6_signatures,
+        s7_provenance,
         x1_atlas,
         x2_playground,
+        x3_universe,
     )
 
     return {
         "e2_pack": e2_pack.build,
         "e3_knowledge": e3_knowledge.build,
+        "e4_operational_change": e4_operational_change.build,
         "m1_drift": m1_drift.build,
         "m2_convexity": m2_convexity.build,
         "m3_alarms": m3_alarms.build,
@@ -56,8 +60,10 @@ def _builders() -> dict[str, Callable[[], Path]]:
         "s4_sell": s4_sell.build,
         "s5_shortbook": s5_shortbook.build,
         "s6_signatures": s6_signatures.build,
+        "s7_provenance": s7_provenance.build,
         "x1_atlas": x1_atlas.build,
         "x2_playground": x2_playground.build,
+        "x3_universe": x3_universe.build,
     }
 
 

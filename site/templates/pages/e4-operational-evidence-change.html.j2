@@ -1,0 +1,288 @@
+{% extends "demo.html.j2" %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/e4-operational-evidence-change.css">
+{% endblock %}
+
+{% set default_key = card_data.meta.default_state %}
+{% set default_state = card_data.interaction_states[default_key] %}
+
+{% block demo_content %}
+<section class="exhibit-intro" aria-label="What this exhibit shows">
+  <h2 class="exhibit-intro__title">What this exhibit shows</h2>
+  <div class="exhibit-intro__block">
+    <h3 class="exhibit-intro__sub">What you are looking at</h3>
+    <p>A point-in-time operational evidence graph. It separates effective time from when evidence
+      became knowable, preserves source independence, and routes exact evidence questions without
+      producing a scalar ODD score or manager ranking.</p>
+  </div>
+  <div class="exhibit-intro__block">
+    <h3 class="exhibit-intro__sub">How to read it</h3>
+    <ul class="exhibit-intro__list">
+      <li>Choose a cutoff and source view; every resulting fact, state, queue item, and receipt was
+        precomputed by the same Python pipeline.</li>
+      <li>Conflict wins over age, while unknown incident materiality routes to immediate
+        clarification even when the underlying evidence is stale.</li>
+      <li>Domain and evidence-state controls only filter visible IDs. They do not recalculate a
+        state or priority in the browser.</li>
+      <li>Use the table beside the graph as its complete accessible equivalent.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="e4-boundary" aria-labelledby="e4-boundary-title">
+  <div>
+    <p class="e4-kicker">Decision answer</p>
+    <h2 id="e4-boundary-title">Re-underwrite the evidence gaps, not a synthetic score</h2>
+    <p><span data-e4-cutoff>{{ default_state.cutoff }}</span> ·
+      <span data-e4-source-view>{{ default_state.source_view }}</span> · current attestation D.
+      The committed fact, state, and queue inventories for this selection appear below.</p>
+  </div>
+  <span class="verdict-chip" data-verdict="noise">evidence-conditioned</span>
+</section>
+
+<section class="e4-controls" aria-label="Operational evidence controls">
+  <fieldset>
+    <legend>Decision cutoff</legend>
+    {% for token in ['early', 'middle', 'latest'] %}
+    <button type="button" data-e4-cutoff-control="{{ token }}"
+      aria-pressed="{{ 'true' if token == 'latest' else 'false' }}">{{ token }}</button>
+    {% endfor %}
+  </fieldset>
+  <fieldset>
+    <legend>Source view</legend>
+    {% for token in ['public-only', 'all-entitled'] %}
+    <button type="button" data-e4-source-control="{{ token }}"
+      aria-pressed="{{ 'true' if token == 'all-entitled' else 'false' }}">{{ token }}</button>
+    {% endfor %}
+  </fieldset>
+  <label>Domain
+    <select data-e4-domain-control>
+      {% for token in ['all', 'organisation', 'process', 'control', 'provider', 'incident'] %}
+      <option value="{{ token }}">{{ token }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Evidence state
+    <select data-e4-state-control>
+      {% for token in ['all', 'corroborated', 'asserted', 'conflicted', 'stale'] %}
+      <option value="{{ token }}">{{ token }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <fieldset>
+    <legend>Evidence view</legend>
+    {% for token in ['timeline', 'graph', 'table'] %}
+    <button type="button" data-e4-panel-control="{{ token }}"
+      aria-pressed="{{ 'true' if token == 'timeline' else 'false' }}">{{ token }}</button>
+    {% endfor %}
+  </fieldset>
+  <button type="button" data-e4-reset>Reset</button>
+</section>
+
+<p class="e4-announcer" aria-live="polite" data-e4-announcer>
+  Showing {{ default_key }} with committed evidence-state memberships.
+</p>
+<p class="e4-empty" data-e4-empty hidden>No evidence matches this display-only filter.</p>
+
+<section class="e4-counts" aria-label="Evidence state counts">
+  {% for token in ['corroborated', 'asserted', 'conflicted', 'stale'] %}
+  <article data-state="{{ token }}">
+    <strong data-e4-count="{{ token }}">{{ default_state.state_counts.get(token, 0) }}</strong>
+    <span>{{ token }}</span>
+  </article>
+  {% endfor %}
+  <article data-state="refused">
+    <strong data-e4-count="refused">{{ default_state.refusal_count }}</strong>
+    <span>visible refusals</span>
+  </article>
+</section>
+
+<section class="e4-panel" aria-labelledby="e4-claims-title">
+  <header><p class="e4-kicker">Claim boundary</p><h2 id="e4-claims-title">Claim access and attestation</h2></header>
+  <div class="e4-table-wrap" role="region" aria-label="Operational claim access table" tabindex="0">
+    <table>
+      <thead><tr><th scope="col">Claim</th><th scope="col">Output</th><th scope="col">Access contexts</th><th scope="col">Access semantics</th><th scope="col">Attestation</th></tr></thead>
+      <tbody>
+      {% for row in card_data.claim_inventory %}
+        <tr data-e4-claim-id="{{ row.claim_id }}">
+          <td><code>{{ row.claim_id }}</code></td>
+          <td><code>{{ row.output_pointer }}</code><br>{{ row.output_type }}</td>
+          <td>{{ row.access_contexts | join(', ') }}</td>
+          <td>{{ row.access_semantics }}</td>
+          <td>Current {{ row.current_attestation }} · live ceiling {{ row.live_attestation_ceiling }} · receipt {{ 'required' if row.receipt_required else 'not required' }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="e4-state-receipts" aria-label="Evidence state receipts" data-e4-state-receipts>
+  {% for row in card_data.state_summary[default_key] %}
+  <article data-e4-state-id="{{ row.state_id }}">
+    <span class="e4-state" data-state="{{ row.state }}">{{ row.state }}</span>
+    <span>{{ row.fact_key[1] }} · {{ row.fact_key[2] }}</span>
+    <code>{{ row.receipt_id }}</code>
+  </article>
+  {% endfor %}
+</section>
+
+<section class="e4-panel" data-e4-panel="timeline" aria-labelledby="e4-timeline-title">
+  <header><p class="e4-kicker">What changed</p><h2 id="e4-timeline-title">Dated change timeline</h2></header>
+  <div class="e4-timeline">
+    {% for change in card_data.changes %}
+    <article data-e4-change-id="{{ change.change_id }}" data-domain="{{ change.fact_key[1] }}"
+      {% if change.change_id not in default_state.change_ids %}hidden{% endif %}>
+      <time>{{ change.effective_at }}</time>
+      <strong>{{ change.change_kind }}</strong>
+      <span>{{ change.fact_key[1] }} · {{ change.fact_key[2] }}</span>
+      <code>{{ change.receipt_ids_by_state.get(default_key, '') }}</code>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="e4-panel" data-e4-panel="graph" aria-labelledby="e4-graph-title">
+  <header><p class="e4-kicker">Evidence graph</p><h2 id="e4-graph-title">Typed operational relationships</h2></header>
+  <div class="e4-graph" role="region" aria-label="Operational relationship graph">
+    {% for row in card_data.relationships %}
+    {% set receipt_ns = namespace(state_key='', receipt_id='') %}
+    {% if row.receipt_ids_by_state.get(default_key) %}
+      {% set receipt_ns.state_key = default_key %}
+      {% set receipt_ns.receipt_id = row.receipt_ids_by_state[default_key] %}
+    {% else %}
+      {% for state_key, receipt_id in row.receipt_ids_by_state | dictsort %}
+        {% if not receipt_ns.receipt_id and receipt_id %}
+          {% set receipt_ns.state_key = state_key %}
+          {% set receipt_ns.receipt_id = receipt_id %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    <button type="button" class="e4-edge" data-e4-relationship-id="{{ row.relationship_id }}"
+      aria-label="{{ row.source_label }} {{ row.relation_type }} {{ row.target_label }}">
+      <span>{{ row.source_label }}</span><b>{{ row.relation_type }}</b><span>{{ row.target_label }}</span>
+      <noscript><small data-e4-receipt-state="{{ receipt_ns.state_key }}">Receipt state: {{ receipt_ns.state_key }}</small></noscript>
+      <code>{{ receipt_ns.receipt_id }}</code>
+    </button>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="e4-panel" data-e4-panel="table" aria-labelledby="e4-table-title">
+  <header><p class="e4-kicker">Accessible equivalent</p><h2 id="e4-table-title">Fact and relationship table</h2></header>
+  <div class="e4-table-wrap" role="region" aria-label="Operational fact table" tabindex="0">
+    <table>
+      <thead><tr><th scope="col">Domain</th><th scope="col">Subject</th><th scope="col">Predicate</th><th scope="col">Value</th><th scope="col">Source</th><th scope="col">Receipt</th></tr></thead>
+      <tbody>
+      {% for fact in card_data.facts %}
+        {% set state_ns = namespace(value='') %}
+        {% set receipt_ns = namespace(state_key='', receipt_id='') %}
+        {% for state in card_data.state_summary[default_key] %}
+          {% if fact.fact_id in state.supporting_fact_ids or fact.fact_id in state.conflicting_fact_ids %}
+            {% set state_ns.value = state.state %}
+          {% endif %}
+        {% endfor %}
+        {% if fact.receipt_ids_by_state.get(default_key) %}
+          {% set receipt_ns.state_key = default_key %}
+          {% set receipt_ns.receipt_id = fact.receipt_ids_by_state[default_key] %}
+        {% else %}
+          {% for state_key, receipt_id in fact.receipt_ids_by_state | dictsort %}
+            {% if not receipt_ns.receipt_id and receipt_id %}
+              {% set receipt_ns.state_key = state_key %}
+              {% set receipt_ns.receipt_id = receipt_id %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        <tr data-e4-fact-id="{{ fact.fact_id }}" data-domain="{{ fact.domain }}"
+          data-evidence-state="{{ state_ns.value }}">
+          <td><span class="e4-state" data-state="{{ state_ns.value }}">{{ state_ns.value or 'policy evidence' }}</span><br>{{ fact.domain }}</td>
+          <td>{{ fact.subject_entity_id }}</td><td>{{ fact.predicate }} · {{ fact.scope }}</td>
+          <td>{{ fact.typed_value }}</td>
+          <td>{{ fact.source_family }}<br><small>{{ fact.available_at }}</small></td>
+          <td><noscript><small data-e4-receipt-state="{{ receipt_ns.state_key }}">Receipt state: {{ receipt_ns.state_key }}</small></noscript>
+            <code>{{ receipt_ns.receipt_id }}</code></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <table class="e4-relationship-table">
+      <caption>Relationship rows equivalent to the graph</caption>
+      <thead><tr><th scope="col">Source</th><th scope="col">Relationship</th><th scope="col">Target</th><th scope="col">Effective interval</th><th scope="col">Receipt</th></tr></thead>
+      <tbody>
+      {% for row in card_data.relationships %}
+        {% set receipt_ns = namespace(state_key='', receipt_id='') %}
+        {% if row.receipt_ids_by_state.get(default_key) %}
+          {% set receipt_ns.state_key = default_key %}
+          {% set receipt_ns.receipt_id = row.receipt_ids_by_state[default_key] %}
+        {% else %}
+          {% for state_key, receipt_id in row.receipt_ids_by_state | dictsort %}
+            {% if not receipt_ns.receipt_id and receipt_id %}
+              {% set receipt_ns.state_key = state_key %}
+              {% set receipt_ns.receipt_id = receipt_id %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        <tr data-e4-relationship-row-id="{{ row.relationship_id }}">
+          <td>{{ row.source_label }}<br><small>{{ row.source_entity_id }}</small></td>
+          <td>{{ row.relation_type }}</td>
+          <td>{{ row.target_label }}<br><small>{{ row.target_entity_id }}</small></td>
+          <td>{{ row.effective_from or 'point' }} → {{ row.effective_to or 'open' }}</td>
+          <td><noscript><small data-e4-receipt-state="{{ receipt_ns.state_key }}">Receipt state: {{ receipt_ns.state_key }}</small></noscript>
+            <code>{{ receipt_ns.receipt_id }}</code></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="e4-panel" aria-labelledby="e4-queue-title">
+  <header><p class="e4-kicker">What requires re-underwriting</p><h2 id="e4-queue-title">Categorical action queue</h2></header>
+  <div class="e4-queue" data-e4-queue>
+  {% for row in card_data.reunderwriting_queue[default_key] %}
+    <details data-e4-queue-id="{{ row.queue_id }}" data-domain="{{ row.domain }}">
+      <summary><span class="e4-state" data-state="{{ row.action_bucket }}">{{ row.action_bucket }}</span> {{ row.question }}</summary>
+      <p>{{ row.reason_codes | join(', ') }}</p>
+      <code>{{ row.receipt_ids_by_state.get(default_key, '') }}</code>
+    </details>
+  {% endfor %}
+  </div>
+</section>
+
+<section class="e4-panel e4-refusal" aria-labelledby="e4-refusal-title">
+  <p class="e4-kicker">Method boundary</p>
+  <h2 id="e4-refusal-title">Scalar operational judgement is refused</h2>
+  <p>E4 never emits a scalar ODD score, clean or approve verdict, hire or fire decision,
+    recommendation, or manager rank. Evidence receipts establish lineage, not operational quality.</p>
+  <p><strong>Data-boundary refusals in this state:</strong>
+    <span data-e4-refusal-count>{{ default_state.data_boundary_refusal_ids | length }}</span>.</p>
+  <div class="e4-refusal-list" data-e4-refusal-list>
+    {% for row in card_data.refusals.data_boundary %}
+    {% if row.refusal_id in default_state.data_boundary_refusal_ids %}
+    <article data-e4-refusal-id="{{ row.refusal_id }}">
+      <strong>{{ row.reason_code }}</strong><span>{{ row.output_pointer }}</span>
+      <code>{{ row.receipt_ids_by_state[default_key] }}</code>
+    </article>
+    {% endif %}
+    {% endfor %}
+  </div>
+  <p><strong>Method refusal receipt:</strong>
+    <code data-e4-method-receipt>{{ card_data.refusals.method_boundary.receipt_ids_by_state[default_key] }}</code></p>
+</section>
+
+<noscript><p class="e4-noscript">JavaScript is optional. The full receipted cross-state audit catalog remains fully visible above. Queue, counts, and six data-boundary refusals use the latest/all-entitled default.</p></noscript>
+{% endblock %}
+
+{% block methodology %}
+<p>E4 selects the latest accessible revision before applying half-open valid time. It compares
+  complete operational keys, counts copied sources once, and applies conflict, stale,
+  corroborated, asserted precedence in that order.</p>
+<p>Evidence age is calculated in Python from explicit source freshness, not receipt time. The
+  page switches among six receipted outputs and never recomputes an age, join, state, or queue
+  bucket.</p>
+{% endblock %}
+
+{% block body_scripts %}
+<script src="{{ asset_base | default('') }}assets/e4-operational-evidence-change.js"></script>
+{% endblock %}

@@ -38,7 +38,7 @@ def _build(tmp_path):
     shutil.copy(REPO_ROOT / "docs" / "ideas" / "specs" / "s6-returns-only-signatures.md",
                 specs / "s6-returns-only-signatures.md")
     (site / "cards.yaml").write_text(yaml.safe_dump([_CARD]), encoding="utf-8")
-    build(site, tmp_path / "out")
+    build(site, tmp_path / "out", allow_legacy=True)
     return (tmp_path / "out" / "s6.html").read_text(encoding="utf-8"), tmp_path / "out"
 
 

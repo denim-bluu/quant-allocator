@@ -1,0 +1,3016 @@
+{
+  "claim_attestation": [
+    {
+      "access_contexts": [
+        "public"
+      ],
+      "access_semantics": "exact-per-dataset",
+      "claim_id": "public_source_membership",
+      "current_attestation": "D",
+      "live_ceiling": "A",
+      "receipt_id": "receipt:sha256:e3f6a1405e44df22117bed94c0c778bc22e951803605e729112d09d38b881c3b",
+      "receipt_required": true,
+      "rendered_refusal": "none",
+      "validation_status": "live-calibration-required"
+    },
+    {
+      "access_contexts": [
+        "pre-hire-public",
+        "shortlisted-nda"
+      ],
+      "access_semantics": "exact-per-selected-dataset",
+      "claim_id": "prehire_source_membership",
+      "current_attestation": "D",
+      "live_ceiling": "B",
+      "receipt_id": "receipt:sha256:3bc76b4fa32d31382e279763cc612cc5235b3415fd4598506788e8deb7dddd9f",
+      "receipt_required": true,
+      "rendered_refusal": "none",
+      "validation_status": "live-calibration-required"
+    },
+    {
+      "access_contexts": [
+        "public",
+        "pre-hire-public",
+        "shortlisted-nda"
+      ],
+      "access_semantics": "all-required-per-selected-dataset",
+      "claim_id": "entity_resolution_state",
+      "current_attestation": "D",
+      "live_ceiling": "B",
+      "receipt_id": "receipt:sha256:d191fe533731b8fe2541e074a0aae2806ed67b1ffbcf41ad9e2bb60de4ab079c",
+      "receipt_required": true,
+      "rendered_refusal": "none",
+      "validation_status": "live-calibration-required"
+    },
+    {
+      "access_contexts": [
+        "public",
+        "pre-hire-public",
+        "shortlisted-nda",
+        "internal-governance"
+      ],
+      "access_semantics": "all-required-per-dataset",
+      "claim_id": "target_cell_observation",
+      "current_attestation": "D",
+      "live_ceiling": "B",
+      "receipt_id": "receipt:sha256:fe7d7f88ff3ca2bf9e2f13a5d72a0d46d0ec959684f7611dde06b61d3c142afb",
+      "receipt_required": true,
+      "rendered_refusal": "typed-membership-cell-projection-required",
+      "validation_status": "live-calibration-required"
+    },
+    {
+      "access_contexts": [
+        "public",
+        "pre-hire-public",
+        "shortlisted-nda",
+        "internal-governance"
+      ],
+      "access_semantics": "all-required-per-dataset",
+      "claim_id": "source_union_novelty",
+      "current_attestation": "D",
+      "live_ceiling": "B",
+      "receipt_id": "receipt:sha256:3ca5c9a6e54d68e88aba883f5fd3ce7d3ab017c11667ca81e4832e888c0c796a",
+      "receipt_required": true,
+      "rendered_refusal": "none",
+      "validation_status": "live-calibration-required"
+    },
+    {
+      "access_contexts": [
+        "internal-governance"
+      ],
+      "access_semantics": "all-required-per-dataset",
+      "claim_id": "funnel_stage_counts",
+      "current_attestation": "D",
+      "live_ceiling": "B",
+      "receipt_id": "receipt:sha256:e886f6295f902606aba598ba775d7800554dd70a66759226645eeb77109d039f",
+      "receipt_required": true,
+      "rendered_refusal": "none",
+      "validation_status": "live-calibration-required"
+    },
+    {
+      "access_contexts": [
+        "internal-governance"
+      ],
+      "access_semantics": "all-required-per-dataset",
+      "claim_id": "funnel_conversion",
+      "current_attestation": "D",
+      "live_ceiling": "B",
+      "receipt_id": "receipt:sha256:973deb954c570bbfb40d50ed7fee40fdb691f33aaf4629f4651d0b5a153b62b5",
+      "receipt_required": true,
+      "rendered_refusal": "typed-mandate-brief-cohort-projection-required",
+      "validation_status": "live-calibration-required"
+    },
+    {
+      "access_contexts": [
+        "public",
+        "pre-hire-public",
+        "shortlisted-nda",
+        "internal-governance"
+      ],
+      "access_semantics": "all-required-per-dataset",
+      "claim_id": "research_cell_queue",
+      "current_attestation": "D",
+      "live_ceiling": "C",
+      "receipt_id": "receipt:sha256:7a42140b6478da5db4adf6cc25da6dcd150844ff539e3e4d0574a7dd7b248224",
+      "receipt_required": true,
+      "rendered_refusal": "typed-membership-cell-projection-required",
+      "validation_status": "live-calibration-required"
+    },
+    {
+      "access_contexts": [
+        "public"
+      ],
+      "access_semantics": "synthetic-fixture-only",
+      "claim_id": "synthetic_entity_recall",
+      "current_attestation": "D",
+      "live_ceiling": "D",
+      "receipt_id": "receipt:sha256:06b31fcf900c16923b16cb39e4e881153f90297c561b4467302c56ee5b650d10",
+      "receipt_required": true,
+      "rendered_refusal": "none",
+      "validation_status": "synthetic-demo-verified"
+    },
+    {
+      "access_contexts": [
+        "public"
+      ],
+      "access_semantics": "synthetic-fixture-only",
+      "claim_id": "synthetic_discovery_recall",
+      "current_attestation": "D",
+      "live_ceiling": "D",
+      "receipt_id": "receipt:sha256:ae88b0af97ab4f1a95d6e2efbb278f9a30c8e6ac2fe280043279c514037e2cdd",
+      "receipt_required": true,
+      "rendered_refusal": "none",
+      "validation_status": "synthetic-demo-verified"
+    },
+    {
+      "access_contexts": [
+        "public",
+        "pre-hire-public",
+        "shortlisted-nda",
+        "internal-governance"
+      ],
+      "access_semantics": "refusal-in-every-context",
+      "claim_id": "global_universe_coverage",
+      "current_attestation": "D",
+      "live_ceiling": "D",
+      "receipt_id": "receipt:sha256:f4a4a5e27bb97cb2e2610af00c2cb284b2ebc9473bfde6e9e4af1403ed9ae2b9",
+      "receipt_required": true,
+      "rendered_refusal": "global-universe-denominator-unknown",
+      "validation_status": "synthetic-demo-verified"
+    },
+    {
+      "access_contexts": [
+        "public",
+        "pre-hire-public",
+        "shortlisted-nda",
+        "internal-governance"
+      ],
+      "access_semantics": "refusal-in-every-context",
+      "claim_id": "manager_quality_ranking",
+      "current_attestation": "D",
+      "live_ceiling": "D",
+      "receipt_id": "receipt:sha256:258876da340648aabdefc4b7635b2d98e0c06cd58040483716b4b5a8cf4e212a",
+      "receipt_required": true,
+      "rendered_refusal": "manager-quality-ranking-prohibited",
+      "validation_status": "synthetic-demo-verified"
+    }
+  ],
+  "entity_resolution_audit": {
+    "fallback": "not-required",
+    "false_negatives": 10,
+    "false_positives": 0,
+    "gate_passes": true,
+    "precision_interval": [
+      0.990717,
+      1.0
+    ],
+    "recall_interval": [
+      0.956732,
+      0.987017
+    ],
+    "true_negatives": 420,
+    "true_positives": 410
+  },
+  "meta": {
+    "authored_closure_digest": "c5054f17d2e95bf6e80ba7c63a5a8f10f849f7e989f12cf9447d0d308744ac32",
+    "card_id": "x3",
+    "current_attestation": "D",
+    "default_state": "latest|public-plus-prehire|cross-asset",
+    "disclaimer": "This map measures the named sources and funnel, not the manager universe of the world. It prioritizes research cells, never managers.",
+    "fixture_digest": "14a159d4547960c937485d328c3b270051daba7114e54f1380869466a11275e0",
+    "fixture_id": "x3_evidence_v1",
+    "schema_digest": "43a0f22036e3e6b55fc15a05071e58d7771ff5546cedce7c4ee45155f38b0818",
+    "state_count": 27,
+    "synthetic_disclosure": "Synthetic authored evidence only; no real manager or fund names."
+  },
+  "method_receipts": {
+    "fixture_verified": true,
+    "manifest_digest": "14a159d4547960c937485d328c3b270051daba7114e54f1380869466a11275e0",
+    "point_in_time_cases": {
+      "accepted_only_extract": "funnel-cohort:sha256:c81aefc9e92b9aaaa3e3281063168087a3b53a37c61e91f70be88c36b0d91a14",
+      "ambiguous_collision": "x3-source-0014",
+      "dead_backfill": "x3-source-0004",
+      "duplicate_source_rows": "x3-source-0044",
+      "firm_only_registration": "dataset:x3-public-adviser",
+      "full_and_delta_absence_matrix": "dataset:x3-holdings-filer",
+      "global_coverage_refusal": "global-universe-denominator-unknown",
+      "impossible_or_stale_transition": "funnel-event:sha256:6013db91bf346cc07a2c5bde4ce7b9d7736bc52d19f8015ab58870df8e21405f",
+      "inactive_product": "x3-source-0019",
+      "incomplete_partition": "dataset-version:sha256:c058981d59b07bfc94ad3383fff1992afab78d5c7556587cac263f19df3ff574",
+      "late_alias_crosswalk": "x3-source-0009",
+      "late_taxonomy_remap": "x3-source-0013",
+      "later_relationship_revision": "entity-relation:sha256:39e5bd4667cfb5213f782606e34b601b581480e63ac0dcbb80161903b62d7a04",
+      "manager_ranking_refusal": "manager-quality-ranking-prohibited",
+      "mandate_brief_projection_refusal": "typed-mandate-brief-cohort-projection-required",
+      "merger_rebrand": "x3-source-0009",
+      "multi_source_and_right_refusal": "dataset:x3-strategy-export",
+      "not_inferable_absence": "dataset-version:sha256:005736004ad3d54a295b1b253b1b44beaeeed106e7fbbbded93e95ffbf73690d",
+      "post_cutoff_entitlement": "right:sha256:36c90f4d2985138569589399d742ffe2d74299952498f35256f2e7c9ae18a579",
+      "post_cutoff_receipt": "x3-source-0034",
+      "repeated_opportunity": "x3-opportunity-000",
+      "revised_funnel_event": "funnel-event:sha256:25f4c20b31a2f1717e01cbc0d9a7ed6b4883015d148a70486014806010fd604d",
+      "stale_funnel_schema": "funnel-schema:sha256:7aac9e489c1ee3546fc756ec79606a41b39a3e76ecfa5196584962f73bad83b1",
+      "typed_eligible_excluded_cells": "grid:sha256:5519826d30a793b2539cbc28ed75ef804d37d673ab8a34b4865c912c7223f209",
+      "unknown_denominator": "grid:sha256:0fd67b5b9a7b4d817ccc27e01c9e35f1810ab880f5629d87ee031808828b59bd"
+    },
+    "projection_schema_ids": [
+      "schema:canonical-entity-v1",
+      "schema:entity-mapping-v1",
+      "schema:universe-membership-v1",
+      "schema:entity-relationship-v1",
+      "schema:target-grid-v1",
+      "schema:funnel-opportunity-v1",
+      "schema:funnel-schema-v1",
+      "schema:funnel-cohort-v1",
+      "schema:funnel-event-v1",
+      "schema:funnel-cohort-event-link-v1"
+    ],
+    "shared_bundle_digests": [
+      "bundle:sha256:fd805708d68aadf01d7bc07eba7ae9b3a0126b84cb518446a49ceba1afe73130",
+      "bundle:sha256:1ae2bdabdb0989f2a64d68f26099b5c33c434126bcadc20ebeb7541d1685b09d",
+      "bundle:sha256:99d0289d3aa077cd43bfd4e245bb4118dfd28c0a73492c83cd3686604e7dceb5"
+    ],
+    "shared_join_receipts": [
+      "receipt:sha256:cc322b142677206f20a206f30b0a1942c6775ce45501d25c3c9d094a52e79228",
+      "receipt:sha256:215b4222f68d684551e2a995370ec6bf935a5f4fe2296a3f4378756d1d3e9c4b",
+      "receipt:sha256:35ceb7a12da7f300bb03364b6f61ceeb64a62e962a2284eda5db53a22d6a47cc"
+    ]
+  },
+  "provisional_constants": {
+    "funnel_rate_minimum": 20,
+    "minimum_perfect_tp": 381,
+    "precision_floor": 0.99,
+    "recall_floor": 0.95,
+    "wilson_z": 1.96
+  },
+  "refusal_ledger": [
+    {
+      "claim_id": "global_universe_coverage",
+      "code": "global-universe-denominator-unknown",
+      "pointer": "/claims/global"
+    },
+    {
+      "claim_id": "manager_quality_ranking",
+      "code": "manager-quality-ranking-prohibited",
+      "pointer": "/claims/ranking"
+    },
+    {
+      "claim_id": "funnel_conversion",
+      "code": "typed-mandate-brief-cohort-projection-required",
+      "pointer": "/funnel/conversion"
+    },
+    {
+      "claim_id": "target_cell_observation",
+      "code": "typed-membership-cell-projection-required",
+      "pointer": "/target_grid/observed_cells"
+    }
+  ],
+  "source_catalog": [
+    "dataset:x3-public-adviser",
+    "dataset:x3-registered-fund",
+    "dataset:x3-holdings-filer",
+    "dataset:x3-strategy-export",
+    "dataset:x3-rfi-ddq",
+    "dataset:x3-target-grid",
+    "dataset:x3-funnel-opportunity",
+    "dataset:x3-funnel-schema",
+    "dataset:x3-funnel-cohort",
+    "dataset:x3-funnel-event"
+  ],
+  "states": {
+    "early|full-synthetic-funnel|credit-private-markets": {
+      "bundle_digest": "bundle:sha256:e065e485d21744b7f612a7040bc4d29d90fabd4723c6fd7d0bc9ad8acd8eaee2",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:54a64e1b000ecf7deb7c2e89855aaded2d1a8b3a235b98bf9e518acc2ce24b06",
+        "funnel_conversion": "receipt:sha256:dcc256c4944066f9ad3e778268cfac0f46508a97f8d0023b98ab0c4cf8db5937",
+        "funnel_stage_counts": "receipt:sha256:d49462f15bc77474294166fa25192a9fae9650088ea26123b0b46443cab796d6",
+        "global_universe_coverage": "receipt:sha256:6bcbe4f74882c1a54dfd373f736f012e21475966a930b1a4b1d0405747360db4",
+        "manager_quality_ranking": "receipt:sha256:be0d3aef6904fc69f6435de0bcf44836a490fee54ab15f240e65045c2f8058d0",
+        "prehire_source_membership": "receipt:sha256:17cf4391a12274ef1d3f92e889a4e443c8f7cb0d07f8ee0eda45e1cae4498d05",
+        "public_source_membership": "receipt:sha256:b2aeb054a601483f2fdbaddb0d301d14128ee045fc23c685f2d1ae5abb769764",
+        "research_cell_queue": "receipt:sha256:b5e0f921ce04f8e931464f5fd7d6de531b5f06cc00d1b0a73f60018f7ab5536c",
+        "source_union_novelty": "receipt:sha256:c2082585dc2af93131a541735af1a5dc4e4eb6f33255224fedaa489609af1181",
+        "synthetic_discovery_recall": "receipt:sha256:3221d97c2d402af9f373dfeaf390074826f9091b0d1b185c81c0d537e4c03b7f",
+        "synthetic_entity_recall": "receipt:sha256:ff8ed0afe3abf9ff518ae864279fd85c70aad22de8865d47784ca952757b4bf4",
+        "target_cell_observation": "receipt:sha256:4c0ea9fb6a16b283f1d1904d0f6ba96378a5d288ea2ab5423f784fc302d966e3"
+      },
+      "decision_at": "2024-03-31T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "slice_receipt_id": "receipt:sha256:9fbfba667f239788a0e4d002fe139f60cbd010208d67d07d8d76797c8bc0816a",
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:14b12464bd15d2ef668ada0adf36a4e437dead0592543a42115aa9a43b6f0191",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "credit-private-markets",
+      "slice_receipts": {
+        "dataset:x3-funnel-event": "receipt:sha256:9fbfba667f239788a0e4d002fe139f60cbd010208d67d07d8d76797c8bc0816a",
+        "dataset:x3-holdings-filer": "receipt:sha256:6f0b580824805bd9cbf8398e0f37dacf920c6ee3bee0eb4641ac411850e68c62",
+        "dataset:x3-public-adviser": "receipt:sha256:a798726ab7a1ffdeca0b73905826982085dccd01f4a59e6bdca94a0c9665825f",
+        "dataset:x3-registered-fund": "receipt:sha256:f07d83dcf84e771b11bb8c1eef995b40bad47563f85c7c5e4bf0fa5c1cee882e",
+        "dataset:x3-rfi-ddq": "receipt:sha256:7a953061f5df36b0e0948030c83e4b2a61d9088b6b57f23345875243b45dc545",
+        "dataset:x3-strategy-export": "receipt:sha256:951622a6be6d7cdfbee0f56ddaecce123241cac2a8b3045d7fb7f350bc52de18",
+        "dataset:x3-target-grid": "receipt:sha256:623335c6c69226247c369e7b9cc5634f433088064da698dfb9c23d6b74acca56"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 834,
+        "source_rows": 834,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "full-synthetic-funnel",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 15,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:72acc2a0f292e58dfd273585b83a3c6535e2293645164fe03c44f87d9ca165bd",
+        "observed_cells": null
+      }
+    },
+    "early|full-synthetic-funnel|cross-asset": {
+      "bundle_digest": "bundle:sha256:cc6b8d871690e2decf5f2b883a75bcd6a6c730928d23de626e7281e2817a6eec",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:c29a92ba9c3c046051a5290b6743534770fdc36559bb8c10fad00450ace995ef",
+        "funnel_conversion": "receipt:sha256:ed92c96b85ac6feec835be0e074cef809358dfc0ee5725515c40d5a3ac4c5413",
+        "funnel_stage_counts": "receipt:sha256:cc6ba835d108d6e200dd0677614bbbb6af5be248433ac5e99d3bff78e6719fb8",
+        "global_universe_coverage": "receipt:sha256:3ce549b7e838043cd20fb04fdec41c2dc20d10e80ee63b2e0b08c2f00cabf713",
+        "manager_quality_ranking": "receipt:sha256:d3ca21e7d67d03b121b857ba39f17785e02ab84bb964bc951c3de5980aee6244",
+        "prehire_source_membership": "receipt:sha256:83d170b4efa71c0401a23ad106fac4c7ec2c64cc124b2d1019f46546ffce01c2",
+        "public_source_membership": "receipt:sha256:3a359f28921f6d96d210446fb7b50ec065e593596cd7f778e001b318613c0de6",
+        "research_cell_queue": "receipt:sha256:70a44c9156f19eb03943690231cbed38cd558e245c06d9df31eb87f64250b8a9",
+        "source_union_novelty": "receipt:sha256:8bdce57e51fdb98c559f2063e6b7339eefcb691393f386aae6dbb8ae010bcc7d",
+        "synthetic_discovery_recall": "receipt:sha256:a00f684ae537dbdaf562932f529dbab7ea49f5740e4ba6aa198771a5238b3fe9",
+        "synthetic_entity_recall": "receipt:sha256:5ed1d87913a8aa330d2b561e5b5bd6a94842f4398b45fa0394f142288f17eb8b",
+        "target_cell_observation": "receipt:sha256:0489346985625f3a4204acf24815018fc3aa7b343ac973ade15422d71baa5ccc"
+      },
+      "decision_at": "2024-03-31T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "slice_receipt_id": "receipt:sha256:9fbfba667f239788a0e4d002fe139f60cbd010208d67d07d8d76797c8bc0816a",
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:ad88985874ac4d1f7e6ee76722a2568fc5f126694f0a0a6f7e4ab6dd88ba920e",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "cross-asset",
+      "slice_receipts": {
+        "dataset:x3-funnel-event": "receipt:sha256:9fbfba667f239788a0e4d002fe139f60cbd010208d67d07d8d76797c8bc0816a",
+        "dataset:x3-holdings-filer": "receipt:sha256:6f0b580824805bd9cbf8398e0f37dacf920c6ee3bee0eb4641ac411850e68c62",
+        "dataset:x3-public-adviser": "receipt:sha256:a798726ab7a1ffdeca0b73905826982085dccd01f4a59e6bdca94a0c9665825f",
+        "dataset:x3-registered-fund": "receipt:sha256:f07d83dcf84e771b11bb8c1eef995b40bad47563f85c7c5e4bf0fa5c1cee882e",
+        "dataset:x3-rfi-ddq": "receipt:sha256:7a953061f5df36b0e0948030c83e4b2a61d9088b6b57f23345875243b45dc545",
+        "dataset:x3-strategy-export": "receipt:sha256:951622a6be6d7cdfbee0f56ddaecce123241cac2a8b3045d7fb7f350bc52de18",
+        "dataset:x3-target-grid": "receipt:sha256:623335c6c69226247c369e7b9cc5634f433088064da698dfb9c23d6b74acca56"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 834,
+        "source_rows": 834,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "full-synthetic-funnel",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 24,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:72acc2a0f292e58dfd273585b83a3c6535e2293645164fe03c44f87d9ca165bd",
+        "observed_cells": null
+      }
+    },
+    "early|full-synthetic-funnel|liquid-public-markets": {
+      "bundle_digest": "bundle:sha256:139bf7383034263a6c0242b1ce89e987e387a2569e5eff00f560fd04ba6d9178",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:ae14cd17150a5c5cf0341435c852301d93fbc67009f17c3eb2beedabbcb7408b",
+        "funnel_conversion": "receipt:sha256:f6fbf3abec670a2e3eaa594cb5205c1fdf46ea8a7aa965447a5ec1b0fe31a86c",
+        "funnel_stage_counts": "receipt:sha256:6dfce701b91b860f81802c2a5da5a073ebe2436f9b8fd29c6496c393560017ea",
+        "global_universe_coverage": "receipt:sha256:5a1f83b5cc116babf5c6bef0554cd0b4925087890df810d5eed843d7a6ae12ef",
+        "manager_quality_ranking": "receipt:sha256:495f406f34351018720711925a2dba62eb36396d84b6beb70b8be8e7610ac7f9",
+        "prehire_source_membership": "receipt:sha256:6a10d320dcada85db0e779fe24d60eb9c374a245c4b2ede0fcde5a238930036c",
+        "public_source_membership": "receipt:sha256:ab538bb175bf913ca1a29bafba39556569cc055c62d8e25b4d2b473d5f69f1a4",
+        "research_cell_queue": "receipt:sha256:137cbc3e99807261ed44a310ce1c318b2f7d9d1a1c68bd1c6a68cb3c14a09bdc",
+        "source_union_novelty": "receipt:sha256:92793d878d02c4dfe7ddf2b93a71cbb1a1bceaa758b526bde5714ca570a982ed",
+        "synthetic_discovery_recall": "receipt:sha256:fdbef9d5b0f9c5cd6b7a43ecf053d99a60a75941ff30843cac5b1987487d95fc",
+        "synthetic_entity_recall": "receipt:sha256:b3f14b6428f5e1979639aef355e82a59d386eb1a77221bac8c57b4a7dd9f4232",
+        "target_cell_observation": "receipt:sha256:a1dba9826e687409533529d1334f886acd800dc072f4971425dda786a2aaf940"
+      },
+      "decision_at": "2024-03-31T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "slice_receipt_id": "receipt:sha256:9fbfba667f239788a0e4d002fe139f60cbd010208d67d07d8d76797c8bc0816a",
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:6735a3d1b83fdf663466052a0c9c5e9b8202f082063be643d4acf84934d5d3ba",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "liquid-public-markets",
+      "slice_receipts": {
+        "dataset:x3-funnel-event": "receipt:sha256:9fbfba667f239788a0e4d002fe139f60cbd010208d67d07d8d76797c8bc0816a",
+        "dataset:x3-holdings-filer": "receipt:sha256:6f0b580824805bd9cbf8398e0f37dacf920c6ee3bee0eb4641ac411850e68c62",
+        "dataset:x3-public-adviser": "receipt:sha256:a798726ab7a1ffdeca0b73905826982085dccd01f4a59e6bdca94a0c9665825f",
+        "dataset:x3-registered-fund": "receipt:sha256:f07d83dcf84e771b11bb8c1eef995b40bad47563f85c7c5e4bf0fa5c1cee882e",
+        "dataset:x3-rfi-ddq": "receipt:sha256:7a953061f5df36b0e0948030c83e4b2a61d9088b6b57f23345875243b45dc545",
+        "dataset:x3-strategy-export": "receipt:sha256:951622a6be6d7cdfbee0f56ddaecce123241cac2a8b3045d7fb7f350bc52de18",
+        "dataset:x3-target-grid": "receipt:sha256:623335c6c69226247c369e7b9cc5634f433088064da698dfb9c23d6b74acca56"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 834,
+        "source_rows": 834,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "full-synthetic-funnel",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 9,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:72acc2a0f292e58dfd273585b83a3c6535e2293645164fe03c44f87d9ca165bd",
+        "observed_cells": null
+      }
+    },
+    "early|public-only|credit-private-markets": {
+      "bundle_digest": "bundle:sha256:9b76fe9554193436f7a54ad67748d8074eec412fd752c25c2d166b5196170a14",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:08d23f62ec8c7c1e1083f8627aeb5dbd91db5ff5681904348d557d32d9c34c24",
+        "funnel_conversion": "receipt:sha256:da47f348019f665914f35470bda651f7805a0caff9d932735bbe8bf8aa2933f0",
+        "funnel_stage_counts": "receipt:sha256:9289bb4d675f1724dad5711ff22fff161e0116488af722dc0944f4a7efb5f16b",
+        "global_universe_coverage": "receipt:sha256:4135fbd186741feefe946ccbdc7127ebb17633ebebe1dad46b8518bb652a72ab",
+        "manager_quality_ranking": "receipt:sha256:518833c45e2b08533d9c953fa2e4a5d62815a97bf9a22acc80423b8d7e1f54d9",
+        "prehire_source_membership": "receipt:sha256:5c9970691671337605746f0c0575aa77b220f6d1b9f2c6c18fbf47baecd831fb",
+        "public_source_membership": "receipt:sha256:5bfe5952b1179f7c6eba032602aab3e45cf360ad1ecae3a85d23df695f97c3b1",
+        "research_cell_queue": "receipt:sha256:db1fe0c30cb3ed85dde806ce074f722cc8e4d3c188915d80795c73c6195e3822",
+        "source_union_novelty": "receipt:sha256:3437fd98d71a4399101d033e742e195e467898d19630bed6cb294492e4caf597",
+        "synthetic_discovery_recall": "receipt:sha256:9127b83fbb28da1c83dd33e1b7114824bd47ff2e23d2d8e211b7b59faf843403",
+        "synthetic_entity_recall": "receipt:sha256:65536884efdcd707e500aa3857c6667645c2f5877f7454a7af038e664109d45d",
+        "target_cell_observation": "receipt:sha256:77edc6432773a07c7ef862df7e9d68e424279dd634c6d6bf8f49d33ba4ba979b"
+      },
+      "decision_at": "2024-03-31T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:9c6522ec6db49bc9d7045c5e2a98cdd971072f26028912f937f2eb6cba0368c1",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "credit-private-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6f0b580824805bd9cbf8398e0f37dacf920c6ee3bee0eb4641ac411850e68c62",
+        "dataset:x3-public-adviser": "receipt:sha256:a798726ab7a1ffdeca0b73905826982085dccd01f4a59e6bdca94a0c9665825f",
+        "dataset:x3-registered-fund": "receipt:sha256:f07d83dcf84e771b11bb8c1eef995b40bad47563f85c7c5e4bf0fa5c1cee882e",
+        "dataset:x3-target-grid": "receipt:sha256:623335c6c69226247c369e7b9cc5634f433088064da698dfb9c23d6b74acca56"
+      },
+      "source_counts": {
+        "ambiguous_rows": 0,
+        "canonical_members": 0,
+        "membership_rows": 503,
+        "source_rows": 503,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0
+      },
+      "source_preset": "public-only",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 15,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:72acc2a0f292e58dfd273585b83a3c6535e2293645164fe03c44f87d9ca165bd",
+        "observed_cells": null
+      }
+    },
+    "early|public-only|cross-asset": {
+      "bundle_digest": "bundle:sha256:2c712120f415e7b270cc6b99a28bd428a0aa5be649cdc73d0c1b2855845b171f",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:edc266355df53048db89e9c343c9b9620fc87aa29daae5de77c7f51b09924d49",
+        "funnel_conversion": "receipt:sha256:a73c88a078d7c78d5cc074844f9af0773e7a02b0f1596d024f4c4ffb2944b79f",
+        "funnel_stage_counts": "receipt:sha256:ce402ccf25cc9241f76bdf9a55a28f2b2c7df3efd46f9e86726977916953f190",
+        "global_universe_coverage": "receipt:sha256:95baef96d34514be5e459d345ca26b7895b0ed37543eac46b1a76b3a340ecb2e",
+        "manager_quality_ranking": "receipt:sha256:68299f6b52bdb0c89b20c0498c2554e95b143eac65c1be0d8040a5bf05a70c8d",
+        "prehire_source_membership": "receipt:sha256:9be5d6bbbdc7a141ef6e41c0efec70fc60a9a824c1df0e1d460afc57c443c84b",
+        "public_source_membership": "receipt:sha256:94c9c0ca4657b8d88dc8f91d603ca60dd7f3fa1de28f92e4ffe6a4d621a7e722",
+        "research_cell_queue": "receipt:sha256:05180c76a6ee54ac42e33485508d0a679c1b14a905b601ff9daed16ba4f116ce",
+        "source_union_novelty": "receipt:sha256:e6f7f8704fc50cf6d7e819784842db4c4a1a75707250af347ab85fd07ed0d02f",
+        "synthetic_discovery_recall": "receipt:sha256:dfbc30799c339b33a838f4832b8510b3375ecf5a8c43c90dbd42fb1a2220ade4",
+        "synthetic_entity_recall": "receipt:sha256:3875aac6b8b8d14f24ac4a48147cb281be1c846dc5fffd25301f954a45cd7062",
+        "target_cell_observation": "receipt:sha256:0a7271154488a303c6d71c1dc688457aeed983005c97e043c5e44ec3b47efbd5"
+      },
+      "decision_at": "2024-03-31T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:e16b53b6d854439344d2de67fd1ba1b6ba1e99e5f95c232293f0bad128b8323f",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "cross-asset",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6f0b580824805bd9cbf8398e0f37dacf920c6ee3bee0eb4641ac411850e68c62",
+        "dataset:x3-public-adviser": "receipt:sha256:a798726ab7a1ffdeca0b73905826982085dccd01f4a59e6bdca94a0c9665825f",
+        "dataset:x3-registered-fund": "receipt:sha256:f07d83dcf84e771b11bb8c1eef995b40bad47563f85c7c5e4bf0fa5c1cee882e",
+        "dataset:x3-target-grid": "receipt:sha256:623335c6c69226247c369e7b9cc5634f433088064da698dfb9c23d6b74acca56"
+      },
+      "source_counts": {
+        "ambiguous_rows": 0,
+        "canonical_members": 0,
+        "membership_rows": 503,
+        "source_rows": 503,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0
+      },
+      "source_preset": "public-only",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 24,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:72acc2a0f292e58dfd273585b83a3c6535e2293645164fe03c44f87d9ca165bd",
+        "observed_cells": null
+      }
+    },
+    "early|public-only|liquid-public-markets": {
+      "bundle_digest": "bundle:sha256:83901c5e01f51720e8ab1f93af0151bf5bd58d2384d890a5ae076355e62cc1aa",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:d281d37f104ab6d0c3526e8fc8d509e5a01c7ae08ae29d9f75bc5a424936f085",
+        "funnel_conversion": "receipt:sha256:853a3c6b5fd3292419f697c70100c09f519a1e1d8ff298c876e1f2d59d14012d",
+        "funnel_stage_counts": "receipt:sha256:4167dc67e6800bfd49b49e5fd104cd27db0b51a1d37b9deaf1afab5f2f3a8649",
+        "global_universe_coverage": "receipt:sha256:5c3061c891e27e921386947f01b2a9bf4d11366242d3c5806b2dcf1937861ee1",
+        "manager_quality_ranking": "receipt:sha256:b880585d28fff9c1503bdd204ff9f876347f14aa485fd5e0030b5e104347e16a",
+        "prehire_source_membership": "receipt:sha256:61707b5309c13eb6d5b3c63ae2883f1c9d73ab4b7c1b827145246abbf3a0b28f",
+        "public_source_membership": "receipt:sha256:fab50ddd69ae5f0e00f5f7adcef54043df7d94b28cadb0a4fff9a87492934d60",
+        "research_cell_queue": "receipt:sha256:a2837bd06864fd6a1cae5e2741fb5c0a042908cbe7142d7d1a4bf74517d731c6",
+        "source_union_novelty": "receipt:sha256:adff2df43933ce926e7806da78d4714cd74e1dff2c832b31616e3c6b4b444b78",
+        "synthetic_discovery_recall": "receipt:sha256:7f9962321f4cc49d153e25e667e9b97a44239897855f6a58418ec0f66be36750",
+        "synthetic_entity_recall": "receipt:sha256:87a62300aedead962a85db0be469fa1be0be8b6cb421f905b46df7e390039974",
+        "target_cell_observation": "receipt:sha256:baa453152cfe8ee095b8dad4b8422ce06b53b52d4024f25ccf2151c102ef72c8"
+      },
+      "decision_at": "2024-03-31T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:f5ead1b7024dabdbaf09890eb00d4810db9e188a7a9a124abb9d3a4a532ee3e5",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "liquid-public-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6f0b580824805bd9cbf8398e0f37dacf920c6ee3bee0eb4641ac411850e68c62",
+        "dataset:x3-public-adviser": "receipt:sha256:a798726ab7a1ffdeca0b73905826982085dccd01f4a59e6bdca94a0c9665825f",
+        "dataset:x3-registered-fund": "receipt:sha256:f07d83dcf84e771b11bb8c1eef995b40bad47563f85c7c5e4bf0fa5c1cee882e",
+        "dataset:x3-target-grid": "receipt:sha256:623335c6c69226247c369e7b9cc5634f433088064da698dfb9c23d6b74acca56"
+      },
+      "source_counts": {
+        "ambiguous_rows": 0,
+        "canonical_members": 0,
+        "membership_rows": 503,
+        "source_rows": 503,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0
+      },
+      "source_preset": "public-only",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 9,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:72acc2a0f292e58dfd273585b83a3c6535e2293645164fe03c44f87d9ca165bd",
+        "observed_cells": null
+      }
+    },
+    "early|public-plus-prehire|credit-private-markets": {
+      "bundle_digest": "bundle:sha256:7c4419ea6d03c0f0c1ce7a9bcd052477fedbbc61d86b0e33141f6a5129aa2e57",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:6b27cb69ad554f67e54098e87ffab1bc52bbe61f126b5f64a8107de808e57b9e",
+        "funnel_conversion": "receipt:sha256:cbbf952bccc1096ed409178b19e9aec8d3045e54b1bdb975833169dc95b9ba0f",
+        "funnel_stage_counts": "receipt:sha256:5a31b090a890bff12259f745162438224b497efc08590c5adf179a05205e79e3",
+        "global_universe_coverage": "receipt:sha256:a4736abb021dbfd84cd50141d8a5ea9c1a6dab81673f0232f5243d0f8d4e6c6d",
+        "manager_quality_ranking": "receipt:sha256:25d8971814064a74624f67872b6a937f184d6f21e29d16a99dd44f3514472b98",
+        "prehire_source_membership": "receipt:sha256:11887220a9aad73abc29ba18bbab53f3c334136aa112ef4279fc1237a86fc734",
+        "public_source_membership": "receipt:sha256:96039c571b25028a24ae660b6c8d7f5c3d08cfb70712a284cbe3b3d25ed66262",
+        "research_cell_queue": "receipt:sha256:db06b25f453e07f510d89145af50a8422fb2524b035d01dd40bfa1e09db70743",
+        "source_union_novelty": "receipt:sha256:e9bf75e2601755874b1b94683a1cc1661b840796d2d09ea7593170f33135e1d7",
+        "synthetic_discovery_recall": "receipt:sha256:0dcaf081af55774bc3b6fed070f02a92d732bdfa56c2d7edd5d3b62d7fe14c5c",
+        "synthetic_entity_recall": "receipt:sha256:aa824f20434063810e0e29e523855c2645451f6e52d62cce701d664982c142c8",
+        "target_cell_observation": "receipt:sha256:5416d73e2208529d907b7efdd73b789e98018e696a9f31099ad796e398a785e4"
+      },
+      "decision_at": "2024-03-31T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:3d6de170c7fb9c3ce638046c2f7785c4ce6e77aca0ace38012103611d9616ed6",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "credit-private-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6f0b580824805bd9cbf8398e0f37dacf920c6ee3bee0eb4641ac411850e68c62",
+        "dataset:x3-public-adviser": "receipt:sha256:a798726ab7a1ffdeca0b73905826982085dccd01f4a59e6bdca94a0c9665825f",
+        "dataset:x3-registered-fund": "receipt:sha256:f07d83dcf84e771b11bb8c1eef995b40bad47563f85c7c5e4bf0fa5c1cee882e",
+        "dataset:x3-rfi-ddq": "receipt:sha256:7a953061f5df36b0e0948030c83e4b2a61d9088b6b57f23345875243b45dc545",
+        "dataset:x3-strategy-export": "receipt:sha256:951622a6be6d7cdfbee0f56ddaecce123241cac2a8b3045d7fb7f350bc52de18",
+        "dataset:x3-target-grid": "receipt:sha256:623335c6c69226247c369e7b9cc5634f433088064da698dfb9c23d6b74acca56"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 834,
+        "source_rows": 834,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "public-plus-prehire",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 15,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:72acc2a0f292e58dfd273585b83a3c6535e2293645164fe03c44f87d9ca165bd",
+        "observed_cells": null
+      }
+    },
+    "early|public-plus-prehire|cross-asset": {
+      "bundle_digest": "bundle:sha256:33d2932b6ff515dd1aa3c9c8c4a6969799ae39f6230ceee2fb028ed4d0453c71",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:e4b4bd921370772e76e78fcf822e8ca6e237c18385260b5b6b7cf0bb3b94467f",
+        "funnel_conversion": "receipt:sha256:b6107d3501f7dc766e4f773e903a116961a81fbaba552b7b4be1cd4181d789cb",
+        "funnel_stage_counts": "receipt:sha256:0a4f2b4de44b5e70302ec21d8ec1d1330b930743f926730ce05dbb89a4154068",
+        "global_universe_coverage": "receipt:sha256:82d6639d50ccabe420cce8da47cd19a44ea014b913d704188693c1fddfc07183",
+        "manager_quality_ranking": "receipt:sha256:439974203fe05f4a948c4cbc44dc976eb497b35d4d18cb055a1c0e63f26f0b31",
+        "prehire_source_membership": "receipt:sha256:6c68bdaef38563eaa537aa9703fef05e64e5f1b96ab68ff273ae4ac931678601",
+        "public_source_membership": "receipt:sha256:b019b1e47ee5e24704a424dcfe3173503e70d1a77a22355ab06bc9ec5b6e27c9",
+        "research_cell_queue": "receipt:sha256:0f78865604e9925e072ac1654e201c2787615166579051927d1ee9840536c7b8",
+        "source_union_novelty": "receipt:sha256:7824f5b6c312b4c567d808d824f8e39aa54642b0b483c1e6c977bf7c9c303e21",
+        "synthetic_discovery_recall": "receipt:sha256:35cd042c724cd2de394e3595fb26d4453109bfcb21977297ceec4b51e5cc69ec",
+        "synthetic_entity_recall": "receipt:sha256:6186b0ecf2ce83e60b0e30d9552cc8b8b0cdba610da3b2931e4317377823b438",
+        "target_cell_observation": "receipt:sha256:1e644d3e43ed292662b8a6ff810383277477daaeb6aec1fdd9ce3a462659231e"
+      },
+      "decision_at": "2024-03-31T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:51063b7fd33bfde786c2d792df3c32553679ed5227e2d02dacd5d74999081b8a",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "cross-asset",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6f0b580824805bd9cbf8398e0f37dacf920c6ee3bee0eb4641ac411850e68c62",
+        "dataset:x3-public-adviser": "receipt:sha256:a798726ab7a1ffdeca0b73905826982085dccd01f4a59e6bdca94a0c9665825f",
+        "dataset:x3-registered-fund": "receipt:sha256:f07d83dcf84e771b11bb8c1eef995b40bad47563f85c7c5e4bf0fa5c1cee882e",
+        "dataset:x3-rfi-ddq": "receipt:sha256:7a953061f5df36b0e0948030c83e4b2a61d9088b6b57f23345875243b45dc545",
+        "dataset:x3-strategy-export": "receipt:sha256:951622a6be6d7cdfbee0f56ddaecce123241cac2a8b3045d7fb7f350bc52de18",
+        "dataset:x3-target-grid": "receipt:sha256:623335c6c69226247c369e7b9cc5634f433088064da698dfb9c23d6b74acca56"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 834,
+        "source_rows": 834,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "public-plus-prehire",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 24,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:72acc2a0f292e58dfd273585b83a3c6535e2293645164fe03c44f87d9ca165bd",
+        "observed_cells": null
+      }
+    },
+    "early|public-plus-prehire|liquid-public-markets": {
+      "bundle_digest": "bundle:sha256:1bfc1ef474d9954aa2fed5fc3c822b923a8bab67fbe45400ddcb1bada8d782c7",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:cfcc7617c7c8f467a60fec9324b628895212918305ffa9a64bd8b93c31b7fa6c",
+        "funnel_conversion": "receipt:sha256:0f6918ec4c34ea010b653ba3fa111290e9cc78002355c829ce748ec06cb523e9",
+        "funnel_stage_counts": "receipt:sha256:d48d1225c99892e9edc6ecbd34948b914552e1043a39e4c7b75c8dae593b0933",
+        "global_universe_coverage": "receipt:sha256:8058070b73e0f58e70952f1ae7e64a991490c85924f59df8570989e99b98be9d",
+        "manager_quality_ranking": "receipt:sha256:eb5f11c585098d4c99560d9c5accef5e2ceb6bbfdaa4fd010988a77bfc0b1da6",
+        "prehire_source_membership": "receipt:sha256:598eb148111e5313cc7f5262aaaade78c849545e87102b971e64b0912282e71c",
+        "public_source_membership": "receipt:sha256:abd9ae5e5e9c0a1cdf7c3c2f58bc20fd2e1d10b6b093fafebfab67ae4a717dd4",
+        "research_cell_queue": "receipt:sha256:d0047a7ff43b98e80e8b48fe438fed37698a6310e714fb332286775dada45deb",
+        "source_union_novelty": "receipt:sha256:d11dc678b13cc39cd4a440ce68fe90eb5ec1bffb4cc6d324265bf07c187410c5",
+        "synthetic_discovery_recall": "receipt:sha256:30580de3d4776a344bb5f1624f06386e12ed0c5520353a79970a4a3ea1cf98b2",
+        "synthetic_entity_recall": "receipt:sha256:c88abc2608a1f7afb544d1f7e766ce34b3079abe972a9018eb0e82deb6507cb3",
+        "target_cell_observation": "receipt:sha256:a0ccdde95a2029965c922c201114e3f31140954020529ac4b359f603897eab33"
+      },
+      "decision_at": "2024-03-31T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:181d67e58a80847aa5df141a284fc9700036902a912385a3293d9e671c392fb5",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "liquid-public-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6f0b580824805bd9cbf8398e0f37dacf920c6ee3bee0eb4641ac411850e68c62",
+        "dataset:x3-public-adviser": "receipt:sha256:a798726ab7a1ffdeca0b73905826982085dccd01f4a59e6bdca94a0c9665825f",
+        "dataset:x3-registered-fund": "receipt:sha256:f07d83dcf84e771b11bb8c1eef995b40bad47563f85c7c5e4bf0fa5c1cee882e",
+        "dataset:x3-rfi-ddq": "receipt:sha256:7a953061f5df36b0e0948030c83e4b2a61d9088b6b57f23345875243b45dc545",
+        "dataset:x3-strategy-export": "receipt:sha256:951622a6be6d7cdfbee0f56ddaecce123241cac2a8b3045d7fb7f350bc52de18",
+        "dataset:x3-target-grid": "receipt:sha256:623335c6c69226247c369e7b9cc5634f433088064da698dfb9c23d6b74acca56"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 834,
+        "source_rows": 834,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "public-plus-prehire",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 9,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:72acc2a0f292e58dfd273585b83a3c6535e2293645164fe03c44f87d9ca165bd",
+        "observed_cells": null
+      }
+    },
+    "latest|full-synthetic-funnel|credit-private-markets": {
+      "bundle_digest": "bundle:sha256:d2c828a6b915526dc6a9c2d0b0b9666059f340c9f94feac85629a4ce14625d42",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:61e7150a2e90a10a255ebd16edf4ecede7e53d2a07902ce78f0bfbe56e98e71c",
+        "funnel_conversion": "receipt:sha256:c4d27aaf6313ecf0c7c7ebe3e0e2654c99199cda83e79e0b463b0764403fc3db",
+        "funnel_stage_counts": "receipt:sha256:1972c975eb80f0b68c8fbadc8fefefcd7b8b697ea5869bdf3ba3361806333d6b",
+        "global_universe_coverage": "receipt:sha256:8ca34403e1bc4e985941366becb2b9826f7594276864479ad31106d1a8de6fb5",
+        "manager_quality_ranking": "receipt:sha256:c137824b7c8e619d16ad139d1c70e9b0dfc496722983153a1f26d3e4e937045e",
+        "prehire_source_membership": "receipt:sha256:cda37908eaef1f3e35f7c5a2661a5735914c987fb764ad0f6857f31e4220b311",
+        "public_source_membership": "receipt:sha256:9c3aec23d009269f8d068e3aac1864ed4979540984eef9d3940e76f1b19123db",
+        "research_cell_queue": "receipt:sha256:821193b09d75636bc60b7b89428f5a2421120ab5c9a6a5a30c6abaa296175ef2",
+        "source_union_novelty": "receipt:sha256:4a70e74532a13b4c57d545c35c6ac4efe28cc643428ed40f62f98c0f8f67278b",
+        "synthetic_discovery_recall": "receipt:sha256:d578100a211440baed599ccca42fd1724ce06026694528eb32e35c093dda5eec",
+        "synthetic_entity_recall": "receipt:sha256:fdc248d5d3ff394b0568f9c684f9d789a22df50eb913a4eee37c4c843f4df8e9",
+        "target_cell_observation": "receipt:sha256:a1ae7341ee2a74e5bbb189d1b46e07bb3a6f61c3d9e8d0ba23f68eee55cc47f5"
+      },
+      "decision_at": "2024-09-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "slice_receipt_id": "receipt:sha256:7313442d5a8b286c744591439453ba43fb429192fbaa246fdf855466b1d4d3be",
+        "stage_counts": [
+          {
+            "cohort_label": "x3-diligence-to-approved",
+            "conversion_interval": null,
+            "entry_count": 75,
+            "entry_stage": "diligence",
+            "evaluation_receipt_ids": [
+              "receipt:sha256:019812e5768d1a60560a16f9b9fe2d6ec06a6a86c9eb64ba57ce59a17b421fd2",
+              "receipt:sha256:0620bb1ce11412575d93f6ec40c25ef5d60235c4b8dd1a6237c3f3794ed74305",
+              "receipt:sha256:0b06cfb04f965a5a63711976f2d56b5488329dd8cc7e8c7d24d90c3a3537566e",
+              "receipt:sha256:0bfc8adb0ef7842f1c43ddbe5e4fdc1fda4e19aba80aa2c429a933e40a371c2f",
+              "receipt:sha256:0ea819cff8f8115ddc68e00f3589e8b8891a65086ac0284d5d770aca8227d601",
+              "receipt:sha256:12595d496fca8c1d9335798345d471aab4d0a9dad2d57aba74e4435024ed915b",
+              "receipt:sha256:166dc823d9543aed6ac54fcd64de0355309c875a9d72cb31175551ce8284bec1",
+              "receipt:sha256:166fdaec87298a5d2ef0612d7cd47c4efeac0987d047140598d2aeffce8348e8",
+              "receipt:sha256:17febce4caab865fbef634eb7f81f34e46d5b71e0293f3134627253c6d8d87fb",
+              "receipt:sha256:1a5652d78e435e5ecdb2424a55a6f761b4e27311ac4003532c8ea1bcec6dc4bf",
+              "receipt:sha256:206019b1a42219d0edd0f7093c0b1f3d983dfc7b0da22bb948e9e2cbff1f5f94",
+              "receipt:sha256:2c1437fcc2c2ca5fc5735c2361b5ce88b3bbd825bed2fa0e8aee4c3f6d519cad",
+              "receipt:sha256:337297d040d0fc2eb7080df99be11d6cfdf81e78cbbc44205b08e1676b8d8c34",
+              "receipt:sha256:375c8aa24b5b946f013b157dff3f24388a95c5d21f604a5e1f5794cf9b3054b7",
+              "receipt:sha256:39734e3cb948268b2f0956429686d02acb8666e940a32b2ce44fe6f8acb0c4df",
+              "receipt:sha256:3fe56c0451ac8df877267b30522e6630de9f323e6e46fc5d545ff25244603ce8",
+              "receipt:sha256:41873fd64d0047f6a53dbe16a05b72f06edc8d57004e59bb067a33284b524e65",
+              "receipt:sha256:43568a9ae22f4ef430e1b029f1a936d19cd37b72b1701a879d0c728d9f8c281b",
+              "receipt:sha256:4445c446ad041e24c5598822fb41925362a0ce59582694c1ecca18b58b264b40",
+              "receipt:sha256:47a6616cc544dad144f4139d1c1a2182071cd12deea4f022b14298e3dc3f04ed",
+              "receipt:sha256:4bc2ece45ffe689d2fc2f438ebb227b352766dd0a690d60b53bff63c94aa366c",
+              "receipt:sha256:4c823d7ebf99bc19d51b10dc03cc182112922fd0b5f150a47db06168a04b92f4",
+              "receipt:sha256:503630117062c2c8fc8c7b81e855ddaca4fdc1ce5193446e085313762f34c3ed",
+              "receipt:sha256:56564a2762e81bc4c74e1977551be0ec9bd07137ed8620868ed45085fd9f607b",
+              "receipt:sha256:57c4d093b7a0ab77a0fbc3bba6720037410b1c472dc2f6734f6c73818e6dd804",
+              "receipt:sha256:57ebcc1c55a60b64f4749604aa28e91572fdad17815879a105cfb43da001e870",
+              "receipt:sha256:5bb73161b25b9582a044c671be3863ea4cae3c0814c99bac563e4a371c7f8b46",
+              "receipt:sha256:5bdccb333d3f919dfed695b2077cc09ff65ac8f44e075396ff71eb633f6ec70f",
+              "receipt:sha256:6084ad36a5fd67960be0b249da457b865bd9325840cfd4d717ab3f7a529b7fa2",
+              "receipt:sha256:662d9ed25011089f4ffbc16dd87565f6e3102d16d45af8c6acc57db699687c5c",
+              "receipt:sha256:68c815d77a3a3e37f6c888cd9e71a930619a495da209e7529c82e8f55bf71d7f",
+              "receipt:sha256:6f4ad8ec4bb6eeb936a7daa2a89abb4d4d3597d53d61207162ab36246156faf6",
+              "receipt:sha256:6f64cd38f1c53a0db645fae43eef900b51c5d873792d601a3a7d341d35cfb9a5",
+              "receipt:sha256:74c9ecdc3666ac5935aa8e5693d79d3eb75da7d7e592f54f622234c7a2b86049",
+              "receipt:sha256:7702949d194eaa846b6159278ed6b1f6384fdf45efbd52e5e2d413a7d889eace",
+              "receipt:sha256:7705f6766529b44c1d49e678ebabfd9b89d78620630f9e0b2c9dd6234d591548",
+              "receipt:sha256:7cffb423eee287b17a3a574168b936c5e6f4baa7110a5bf6b92816111d91f6f6",
+              "receipt:sha256:7f474d85790d0a3ed8b9d2d1536c4b5088a21daf037366c7cd5d2d945dd99faa",
+              "receipt:sha256:833d33ca6d96f24de71122d64846604c787bca7cb0f6d58c2c3af5c45b570252",
+              "receipt:sha256:8543710835b9276512fafe1e7827c6e0c71b936d65278eb6264016f1527e1964",
+              "receipt:sha256:85e9445557fe72c8fd216619a5d2576584f5d8891aed9828ab60672deefb1edf",
+              "receipt:sha256:8c18b752d806e89a46e8e729e02e1f88fb227e522d3789f341a833e3840672ea",
+              "receipt:sha256:930ad2fa6593bc1849163076222b110e2421625332b77a1d2069e60d27de2528",
+              "receipt:sha256:9533b509cef7f8958e5d1eb8a9dbcb2077272a62986f04df04f18547858ea095",
+              "receipt:sha256:9587b76c10a09cb48f43afa4f2adc493720f083ed6b4a1b0ae1d51b6beb040bc",
+              "receipt:sha256:9692d3b19e62dbc9958cc44018c12cc3f2a88365c26b11884612a0b5c7ed76d9",
+              "receipt:sha256:9741ee8bdc409d4318848ac5d1cd7da95b0d7193b1193929bcf21765a70d03de",
+              "receipt:sha256:9b1c68956295a627df3ad477443b8c2a5b0bf02cf800a3c601c60576ff89308a",
+              "receipt:sha256:a0cafcb28a2c4425df7acf8a0e6a0515ed7344495cc869227ca4dc4873f21ed1",
+              "receipt:sha256:a145fb961ada83aadfbcd97cba4dd0202470d67bad3ab94c02df7bc93e507741",
+              "receipt:sha256:a3b0cc458a423f4bd5baa5c9d4a66c35daabbf2cd38f7758e02d611ebf4250b9",
+              "receipt:sha256:aa632ef9cc8abf2ad5f0af12e9d834d99f36b612be2b4deb2bc9b3d6cd3d2a6f",
+              "receipt:sha256:acd1440195e61c69fd1190d4396a258118d6fa11f9f125876e287cbe238cf81a",
+              "receipt:sha256:b012ae45118244b28239f18369fdde8ec15a98ea7438290ecd20ffb0a5874a04",
+              "receipt:sha256:b205d96e7b9cc61ff1e05cf2d40432752c3ebfd0192481c20425cc9e03be32f8",
+              "receipt:sha256:b22350e56915b006dcaabb08eef84224f50ce253bcc14f93c7ae0f70af20e443",
+              "receipt:sha256:b82be226067db1aa8617903522bc23e54ff7fe2cf1d2970f40e1625045366a14",
+              "receipt:sha256:bb55a12b12158c2542454cbd153b8175a2c8e7643395a4cba0b111a9fd9b86c0",
+              "receipt:sha256:bcbb66931cc078606adad2aae7695aa4d4004864f31baacaadecddb69ce0c06f",
+              "receipt:sha256:c2ffe21e9e4432373f1eca1fdac2f451ec527e55dc3d9ef72ca645bcbddb8e62",
+              "receipt:sha256:cb752ff6ba7a7f9d2052dc952a9e9161c78b7a668ae54593e1297deb9a30d826",
+              "receipt:sha256:cd00d3458c296d807ca12d32e6acb91f102b2e7063d2da41970194909a2ca05c",
+              "receipt:sha256:d293ff402c48dfb8baea1a942452d6cbae175d4bec1b7e141ee9533158a367e4",
+              "receipt:sha256:d3a18a7f5ca2ea5359a175ac7ece54ac531e32cda7221b5546b55b9dce30e229",
+              "receipt:sha256:d7cb8c18aa32de210fd605a63e840aa2827756ee70fc05b4dcf8452d2ff3488c",
+              "receipt:sha256:d808089600e03e39d4a99376ff05f14d3be67369a62609adc82cd19085b8e0d7",
+              "receipt:sha256:dd684afaacea02e85401b3900769216b56028d0e9dee2a700ffb7901a67ccbbc",
+              "receipt:sha256:df9ee762eb5e1bbd6f379ba59ba25d618dcf6054ec2fe382fbd7a4166568e80b",
+              "receipt:sha256:e0e4b540463e4f984814df32098389cd9459f49c06268f71dd66dada3474049c",
+              "receipt:sha256:e37c09e4ffe549f5131c013d7c2f5c9df43509d9a7718e92320e67c7df9a2095",
+              "receipt:sha256:e3ea11e8544e512c7124e9b6a6032824f78f67f14f6d1c3c8ce3ae08c1f402d3",
+              "receipt:sha256:e419aaf1b532bdf0ea958110c9f371d2cf948e0865ee98503e4e813c82804c3b",
+              "receipt:sha256:e8b87ac72aa2eb6ad9ac65f199f0879efbfc55ca6acd99627d5ace0ba1c49237",
+              "receipt:sha256:ebeef1a6d8ab32103364542721ed5ac6a79e1e33ced37cdc90986cc87042885d",
+              "receipt:sha256:ec08e9f2b851e98d2a2e1c3abd51a4e5d47271eaa1048628b081904004843c11",
+              "receipt:sha256:f13cc641b17bfbf1cf301033fe0ca188d9c03d29a6e549f95493aeeca4e07df1",
+              "receipt:sha256:f319970922a22565dc69c728a0589074ec92b9d3174f9b6491e6b71827d826d6",
+              "receipt:sha256:f3777501ee8208277764258f78ee2663d7cff8d1ef5a828fd648c1fb5b57491c",
+              "receipt:sha256:f408df3b89a699d56fa455beae20762833b44403b35c3e7ac3950877e82f6b67",
+              "receipt:sha256:f43c3dc4d302dbc892a855af56db92312b9825d08d2105ba2984622d22e6ac5b",
+              "receipt:sha256:f5a792b3a4cae423a7ef739e0bf5ba49297c92e785ed949a38bcab946ff78c89",
+              "receipt:sha256:f659d3c463f654efcbccfee75837277f1604e13249968bdc6258d1bb04903c40",
+              "receipt:sha256:f83accef4e410dc52812ea144efeceaa9182d53e677d1392822e1d2609dfdbfa",
+              "receipt:sha256:fc3ecd84fc2ca0aefe8002a850663e99098f3c1c69e2c23697b6c61d9fd7c8e9"
+            ],
+            "outcome_count": 7,
+            "outcome_stage": "approved",
+            "refusal": {
+              "code": "typed-mandate-brief-cohort-projection-required",
+              "detail": "Exact stage counts are labelled; conversion and mandate-brief inference refuse.",
+              "pointer": "/funnel/conversion"
+            }
+          },
+          {
+            "cohort_label": "x3-discovered-to-screen",
+            "conversion_interval": null,
+            "entry_count": 75,
+            "entry_stage": "discovered",
+            "evaluation_receipt_ids": [
+              "receipt:sha256:03736ecc269279716319be83158006e73bd308e598edf5b501d84e40d2a3a9f7",
+              "receipt:sha256:04fe1dca13796fbc6c2312d72fe668b2aa10371ddde3a066e0c783d510eb4c10",
+              "receipt:sha256:0a48818509e53b8092110a63058b98107de03e10c084796e8143f5783d14af6a",
+              "receipt:sha256:0a6daed1331f76b17d02780ffa3ed5e6be824d3879477072b662f0ecf6385e9b",
+              "receipt:sha256:0cc7e77dcea696c0c38501dbe08a80da297df094f1981c72b56927b01f371eef",
+              "receipt:sha256:0cd80fb9675322ccb5917b47b798538c778be404cd8770c626e77f78e64cf480",
+              "receipt:sha256:120d35a76b275fbe5a8bebe502ecd035aa606067fd65c70e506c77a2ca3729b0",
+              "receipt:sha256:13c08c6793b5371ccaf3b07128db5b3acde15a3bb7f71dd87e4866055c64ef0d",
+              "receipt:sha256:13cdae9ea35bacbecb4f9581b6eedd535b3cbc9d483a5f339b00fe74cdb21bd1",
+              "receipt:sha256:1469fe165d1e5d34201d31f857538400cb1f8b740561f97ff7834cb777f1456b",
+              "receipt:sha256:17cbb3466ac56fe2eef22ac06e52d1e8452d5c49b63ffe49f4134730118b00b3",
+              "receipt:sha256:1b80b9170fa14f66b2f7007d5fc4991af5584c52235ca7e72977a588fb698f88",
+              "receipt:sha256:1c7aa801cc33ed87cba7ace9872540a357130a503c0af5cbf09ac43d9edcefed",
+              "receipt:sha256:1f6ef1b092a1a18f688dda0cb05d8c5ce7e38dbcf77cd6f4cb0fa1e177578162",
+              "receipt:sha256:1f98d1bfc73c8341178df244fe6f411c185addda211185c955afe9da0751273f",
+              "receipt:sha256:252278326c87e2ba5a533dceae382b528a6c4dec903a22f5f9f938eefb93c968",
+              "receipt:sha256:28765a45a1b5608df343c1a5a56ab6d230247f249c7d34ae0657985c7f1a5aa8",
+              "receipt:sha256:2cc20e37adb0d4f58221cc4d8a0d996191d8e9edabd8724357e8a0f470f0cc21",
+              "receipt:sha256:2dbe97dca8b05d7a46d635c8004ab04ff35513e86762b460b3666f5097644f4d",
+              "receipt:sha256:2fea2bcea6e8c0bbf0aa456822f19cc4b60151970431d7050b87a81e346f7c67",
+              "receipt:sha256:32543eb651821c5a177e85b226fd5b51d7862e2b4596436ea6cdefdda8307f3f",
+              "receipt:sha256:34226daf9d15acafa1623e416c776a3f18375fa4200bb1f61e99b9a857fa0128",
+              "receipt:sha256:343d713b46db0dfe712f0e417ad3779fc5d0ce12b471813e905df8e87295a041",
+              "receipt:sha256:41e27818b980ed319d8d11358322d245f50ce047ae3245d45e06a10b85190f58",
+              "receipt:sha256:44ffe30e46a7cee2501bf0d2c0ef3586098de6bb44b49e29ac72b66443ac1e1c",
+              "receipt:sha256:485cf20018c97ea3cdc9ed3b41ea9d5132cff6a7871991c7bbc698575fb3d3d7",
+              "receipt:sha256:4c2e720b18267cb7911b99b2c06729b6669872635db2c08db9dbbd4f8a51cb8a",
+              "receipt:sha256:4e7823d8134e516da181b3f81cc441e449e568260aefba2065dce8b010658a06",
+              "receipt:sha256:503e28a4951c5f97cec01244b994c591aa2893734ce274eacec12e42cdf6a7cf",
+              "receipt:sha256:50c7f5ea752d8f633fc10b098d9acecbbc6a4f6f5fc6ddbf35f6ab1d8ca220c9",
+              "receipt:sha256:540bdddb30ed020f957cdeeb665c1011a00491688c5a2b8c95308ea52501fad6",
+              "receipt:sha256:554147e8eb27ceb6191a700ffc7283e7d8aa95a9ef65d14f38a8bbde2910064b",
+              "receipt:sha256:5656829e6daf1022ed56f7f29b52a70050523b08e60a2ccecbdb9a80e89aa336",
+              "receipt:sha256:5781ffeb347edfc699dc9d0eb8e1b4612a737cfa5c7ab0622a3eb0f97c271b79",
+              "receipt:sha256:59f736897e79641f46f28b064da57fc339c86e551911ced77619821b48c19ab1",
+              "receipt:sha256:5bd2daa77c155a5a5756b089bc141ff36ad7bf8090be14f33aae42f49e8407fc",
+              "receipt:sha256:649eef891f1515bc77a486bca7d9d152ab63cc0aa203cf114147058d7cfd22d5",
+              "receipt:sha256:68bf2aebca5411c685fa291ad11dcfe0cde79c0de5ba4bf7ad8a9551a862bbab",
+              "receipt:sha256:6f29d90f89e4231dad9b4566c3f258513b9e7567c7e88756dc79e28ea36999e0",
+              "receipt:sha256:6f9ac2423a442c1143f151d30ca4c519a07192d796356379bd9e379b5dbeb471",
+              "receipt:sha256:71b5e8617c6024e21310103cbe32637920e768412ce95682cd50084d76f24a77",
+              "receipt:sha256:726b697895cd4910d34dd988a064dd824da8b5db1691def5aa2d87df1e5168fc",
+              "receipt:sha256:73846bb97d737064dca66a6f8edeb9d1b6123951fc5c8341485d9a98820dba5a",
+              "receipt:sha256:7740462b2d4a17acf2028cd2f3a70159ccb5bd2a6de912d61cd5f6cb7afa0747",
+              "receipt:sha256:783e06a5cccc9bac1dd312b6569ea8051576e1aaf09ab7148ba5504f0494b26c",
+              "receipt:sha256:7c82d3aded3fedd4af88211b4db4224c8c538d7f4cd1f44973ae51992a1fb00e",
+              "receipt:sha256:7f932a48cef2896d00e20693a26b189613bbfdc3e7225a79976f979a070c3c3d",
+              "receipt:sha256:82b815e6ddb2c245d68ae4177cbedae2c0865bec3cdb42b4041fcd7f033478c5",
+              "receipt:sha256:83abc7d6f3dc57ce48610bff388fd01ea00f892b7e291531bf0e6fcb86d3ec13",
+              "receipt:sha256:850a4963090a22dbb2c44d3e55fe473c53920d0964428bc75f3e5609b4721602",
+              "receipt:sha256:8a336a9be9a3e49005c9aba67fa5c5f6c5ca20eae4674b71aa687ccaae2dd3c9",
+              "receipt:sha256:920cfea7b4a357a9d3fbc0c4c724dda5de82590263fe0d57f52cc4375dc5cf7d",
+              "receipt:sha256:949ec28a734b55e248f98f589d2e7f359fc0bd3ab9867c355f1c5f2393dea633",
+              "receipt:sha256:9e6f02992824bb698e8c4414eb9a9af28d5ed6ddb764874236a04ba3dfa595dc",
+              "receipt:sha256:a9cbc0fc3afd967c5193e57ef1c03429201599b07565d97f116d15f04dcd0894",
+              "receipt:sha256:af33784c703ab080e7d9c9c4c6b8d80cb48d6a0c830b474accea9f57fd3c227c",
+              "receipt:sha256:b153fdb7fb2cfa02474d23a17446d400c12769ede7fee1ec3c195e35fc99aa1a",
+              "receipt:sha256:b1eb3cfdbd5f5380ff572db054ed963c33628e38e0d6ce3fd9927474942417b8",
+              "receipt:sha256:b3abdf3710c89a49dc939fae4f3048cfc09c9c5d8860978fd567471de6727759",
+              "receipt:sha256:b3fbec8350f7ecee1150f4630f6505b79b0ceaf20b27c9517efaf1ca356be87e",
+              "receipt:sha256:b434c35d011d48a03163786420f15f32b92accda798fbbb9d52291792dde1415",
+              "receipt:sha256:b7cd34b0766680d41a72e0019a742637b43da287741acba719ed9dd57a16c9eb",
+              "receipt:sha256:b85430220841388fb7fd474e075668715b342b0c80b6199b298444fd17dffade",
+              "receipt:sha256:bf805d1028b2ac484649a7cecb8b8775c138a3544ae8885ef1ed6f511028beba",
+              "receipt:sha256:bf80b7179ce92a7468416c988a4911cb1bd28877bbaacaf233825545aff3dc9d",
+              "receipt:sha256:c30960bea6d32f173596363d122d560045c45af0b5538b1512fcdf2cf90d4855",
+              "receipt:sha256:c73b9f3804ea08a7d37fd177956d600b3406ad5338e1ed223791002b8ce8ae39",
+              "receipt:sha256:d03ee5b9a4fc4e4f0cf92a6360444423dcb56028fe7185ab51c4ca1e8eb32439",
+              "receipt:sha256:d0b3c0403d6a9290b4a99655d9d623d9dfb7f3ef9929ffef75def1c39ed059a3",
+              "receipt:sha256:d27198545bfd66c28dbbf1334b7e759d3d9b63fe1c604c67da33c0a66b52ad55",
+              "receipt:sha256:d7a7fe108d1f0bc9c637c7060aaced1b959f982ae319ce1181b972f23e85806c",
+              "receipt:sha256:d96d92c8d0aa31f3e9c81231640bc9baec67abb0ceb82cc18180009f3416459c",
+              "receipt:sha256:dad13fca3699371142f5dc991bf07cb5014932a07f487286cce87411e349e596",
+              "receipt:sha256:db807b74fdb98744e584773f88d849ef77797a58913a9ece1fadbb1a05a9929e",
+              "receipt:sha256:dd03fbfd68fc67e12d79d90bd162fe48fa53e35fefeae485123a4a26e5858cd3",
+              "receipt:sha256:ddbd681dd3d53ae5b29395f72b2c56a1b100b3222701b80397e1ee3db0843bfc",
+              "receipt:sha256:df0fd69f0638907a8aa4f097acef165886b56b80c8a1554827d52a5ae5078955",
+              "receipt:sha256:df174e1cda6eb0f2376116f7e0118cd6a784e8579a06ccb107e3be5b0089d20b",
+              "receipt:sha256:e166accce4ddf287be77624e07c2be1f916f03edef830df874e7325d834fa5ef",
+              "receipt:sha256:e47dccdc70e2ebc8357995a506583277be6e1bbcbb53013f559a7cae61f860dc",
+              "receipt:sha256:ed3b7d29b3e29e68dbe14b2582f057750f09e917538ed2882c4371ed08f25b4b",
+              "receipt:sha256:f03d03b0834dfa183bd9278e68cf681bf4a84212d6fc79a9f9ae52e0ba04be79",
+              "receipt:sha256:f175fe3f20d71945cc46a3eedfd83d41ef849e126bf9afada96688bdd7d07684",
+              "receipt:sha256:fdc1b06203a06fe2f6ef9f0aaafc2af81864560fcc72fe6ce7fbefde43fe136f"
+            ],
+            "outcome_count": 59,
+            "outcome_stage": "screened",
+            "refusal": {
+              "code": "typed-mandate-brief-cohort-projection-required",
+              "detail": "Exact stage counts are labelled; conversion and mandate-brief inference refuse.",
+              "pointer": "/funnel/conversion"
+            }
+          }
+        ]
+      },
+      "join_receipt_id": "receipt:sha256:aaab70e0173eb5e67c7e24ee7dac5693f787ca8eab7491829aad454bd4b0f5a0",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "credit-private-markets",
+      "slice_receipts": {
+        "dataset:x3-funnel-event": "receipt:sha256:7313442d5a8b286c744591439453ba43fb429192fbaa246fdf855466b1d4d3be",
+        "dataset:x3-holdings-filer": "receipt:sha256:6cd0048503928e0481190a3cca6c54c240b6b206d1bb494bbdeefdf800222b21",
+        "dataset:x3-public-adviser": "receipt:sha256:da5f26faa5d6c3d08c7a92da0382e6a12b499a635d5205791144a2e7ccc1c91e",
+        "dataset:x3-registered-fund": "receipt:sha256:ce5f3391a2376ccf6fd23dbb7fe932c258a858d05aa29f51caa9c56201c47325",
+        "dataset:x3-rfi-ddq": "receipt:sha256:9314abfdc2fa8443887d2ab6b1f0b0a422932853b7a058aad44733bd155f3640",
+        "dataset:x3-strategy-export": "receipt:sha256:6303526485bd9d8dd0da02ce7bd4593c104435c0b5140fe7be3ce37758180a8f",
+        "dataset:x3-target-grid": "receipt:sha256:f3f2582242fd119cc103eb92982d2c6dd021222f9e8ea156e28d6de2dbd5a306"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 835,
+        "source_rows": 835,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "full-synthetic-funnel",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 12,
+        "excluded_cells": 3,
+        "excluded_ledger": [
+          {
+            "cell_id": "grid-cell:sha256:0abf2415c53b842bd232f236c34ea9268d47d17e40730b6c9d9fde3066491b7c",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:328b7de910bec66947685ed2f54ef971dc96c1c19b64aa839a3e2c0301787797",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:f84a0134c3a41b4601f1e27d810d9a9c26bb7a6db194e01eeda427126d12a66f",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          }
+        ],
+        "grid_id": "grid:sha256:5519826d30a793b2539cbc28ed75ef804d37d673ab8a34b4865c912c7223f209",
+        "observed_cells": null
+      }
+    },
+    "latest|full-synthetic-funnel|cross-asset": {
+      "bundle_digest": "bundle:sha256:56fc85a3f78d74cf9c3de7ba53c58c55c40861fd36dbb45459921ca754d3387e",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:5f6f775080d3ddae4ba2e66b5757c1e30f17ccbfe3a1c3f3b02b0907c6812b70",
+        "funnel_conversion": "receipt:sha256:9daced943df31f1b2415f7197b846a0e135919b88670633e930dd30cab750606",
+        "funnel_stage_counts": "receipt:sha256:fd43b8aaa6d67903c68bdaf935393cfcd9e32c1b4b225b981c73dce2471a3162",
+        "global_universe_coverage": "receipt:sha256:e3b0d39eb62df83c91908efab2bf15fc5876939d296bb998a86926afbbc1e9e3",
+        "manager_quality_ranking": "receipt:sha256:ebf0f182ca2fb3953eadbf07ef19525b45466c4b0e8b9439aafd3300be57d52f",
+        "prehire_source_membership": "receipt:sha256:07ffccbce2496102a44f6b698e7316f53bb9cb56e476aee9f517fd0ab72e92f3",
+        "public_source_membership": "receipt:sha256:34e2edcee05aa95f441224ad8e81eb97000fc7901b6152ef07dbff4f7848aae4",
+        "research_cell_queue": "receipt:sha256:3e0434bfcd30c9ce569cd025a98f43ece33ed0abf5b892cccc008ce42375f979",
+        "source_union_novelty": "receipt:sha256:b3472abd0b9f6d01c03568cf414565ff6ebf4062f345c083065989f044f4732c",
+        "synthetic_discovery_recall": "receipt:sha256:46a2905f516d7983dc8f8c3c43f1185417eb5988df05f9d62de2ecc6c59284b8",
+        "synthetic_entity_recall": "receipt:sha256:8aca025c1b515ea9fa4e56199245e6c66a95465c9ab1591e4d1a0e0341f0e2f2",
+        "target_cell_observation": "receipt:sha256:4f0facab4309999953f3d5ea3506bfc2734a889510c54686535f958a9ed15a17"
+      },
+      "decision_at": "2024-09-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "slice_receipt_id": "receipt:sha256:7313442d5a8b286c744591439453ba43fb429192fbaa246fdf855466b1d4d3be",
+        "stage_counts": [
+          {
+            "cohort_label": "x3-diligence-to-approved",
+            "conversion_interval": null,
+            "entry_count": 75,
+            "entry_stage": "diligence",
+            "evaluation_receipt_ids": [
+              "receipt:sha256:019812e5768d1a60560a16f9b9fe2d6ec06a6a86c9eb64ba57ce59a17b421fd2",
+              "receipt:sha256:0620bb1ce11412575d93f6ec40c25ef5d60235c4b8dd1a6237c3f3794ed74305",
+              "receipt:sha256:0b06cfb04f965a5a63711976f2d56b5488329dd8cc7e8c7d24d90c3a3537566e",
+              "receipt:sha256:0bfc8adb0ef7842f1c43ddbe5e4fdc1fda4e19aba80aa2c429a933e40a371c2f",
+              "receipt:sha256:0ea819cff8f8115ddc68e00f3589e8b8891a65086ac0284d5d770aca8227d601",
+              "receipt:sha256:12595d496fca8c1d9335798345d471aab4d0a9dad2d57aba74e4435024ed915b",
+              "receipt:sha256:166dc823d9543aed6ac54fcd64de0355309c875a9d72cb31175551ce8284bec1",
+              "receipt:sha256:166fdaec87298a5d2ef0612d7cd47c4efeac0987d047140598d2aeffce8348e8",
+              "receipt:sha256:17febce4caab865fbef634eb7f81f34e46d5b71e0293f3134627253c6d8d87fb",
+              "receipt:sha256:1a5652d78e435e5ecdb2424a55a6f761b4e27311ac4003532c8ea1bcec6dc4bf",
+              "receipt:sha256:206019b1a42219d0edd0f7093c0b1f3d983dfc7b0da22bb948e9e2cbff1f5f94",
+              "receipt:sha256:2c1437fcc2c2ca5fc5735c2361b5ce88b3bbd825bed2fa0e8aee4c3f6d519cad",
+              "receipt:sha256:337297d040d0fc2eb7080df99be11d6cfdf81e78cbbc44205b08e1676b8d8c34",
+              "receipt:sha256:375c8aa24b5b946f013b157dff3f24388a95c5d21f604a5e1f5794cf9b3054b7",
+              "receipt:sha256:39734e3cb948268b2f0956429686d02acb8666e940a32b2ce44fe6f8acb0c4df",
+              "receipt:sha256:3fe56c0451ac8df877267b30522e6630de9f323e6e46fc5d545ff25244603ce8",
+              "receipt:sha256:41873fd64d0047f6a53dbe16a05b72f06edc8d57004e59bb067a33284b524e65",
+              "receipt:sha256:43568a9ae22f4ef430e1b029f1a936d19cd37b72b1701a879d0c728d9f8c281b",
+              "receipt:sha256:4445c446ad041e24c5598822fb41925362a0ce59582694c1ecca18b58b264b40",
+              "receipt:sha256:47a6616cc544dad144f4139d1c1a2182071cd12deea4f022b14298e3dc3f04ed",
+              "receipt:sha256:4bc2ece45ffe689d2fc2f438ebb227b352766dd0a690d60b53bff63c94aa366c",
+              "receipt:sha256:4c823d7ebf99bc19d51b10dc03cc182112922fd0b5f150a47db06168a04b92f4",
+              "receipt:sha256:503630117062c2c8fc8c7b81e855ddaca4fdc1ce5193446e085313762f34c3ed",
+              "receipt:sha256:56564a2762e81bc4c74e1977551be0ec9bd07137ed8620868ed45085fd9f607b",
+              "receipt:sha256:57c4d093b7a0ab77a0fbc3bba6720037410b1c472dc2f6734f6c73818e6dd804",
+              "receipt:sha256:57ebcc1c55a60b64f4749604aa28e91572fdad17815879a105cfb43da001e870",
+              "receipt:sha256:5bb73161b25b9582a044c671be3863ea4cae3c0814c99bac563e4a371c7f8b46",
+              "receipt:sha256:5bdccb333d3f919dfed695b2077cc09ff65ac8f44e075396ff71eb633f6ec70f",
+              "receipt:sha256:6084ad36a5fd67960be0b249da457b865bd9325840cfd4d717ab3f7a529b7fa2",
+              "receipt:sha256:662d9ed25011089f4ffbc16dd87565f6e3102d16d45af8c6acc57db699687c5c",
+              "receipt:sha256:68c815d77a3a3e37f6c888cd9e71a930619a495da209e7529c82e8f55bf71d7f",
+              "receipt:sha256:6f4ad8ec4bb6eeb936a7daa2a89abb4d4d3597d53d61207162ab36246156faf6",
+              "receipt:sha256:6f64cd38f1c53a0db645fae43eef900b51c5d873792d601a3a7d341d35cfb9a5",
+              "receipt:sha256:74c9ecdc3666ac5935aa8e5693d79d3eb75da7d7e592f54f622234c7a2b86049",
+              "receipt:sha256:7702949d194eaa846b6159278ed6b1f6384fdf45efbd52e5e2d413a7d889eace",
+              "receipt:sha256:7705f6766529b44c1d49e678ebabfd9b89d78620630f9e0b2c9dd6234d591548",
+              "receipt:sha256:7cffb423eee287b17a3a574168b936c5e6f4baa7110a5bf6b92816111d91f6f6",
+              "receipt:sha256:7f474d85790d0a3ed8b9d2d1536c4b5088a21daf037366c7cd5d2d945dd99faa",
+              "receipt:sha256:833d33ca6d96f24de71122d64846604c787bca7cb0f6d58c2c3af5c45b570252",
+              "receipt:sha256:8543710835b9276512fafe1e7827c6e0c71b936d65278eb6264016f1527e1964",
+              "receipt:sha256:85e9445557fe72c8fd216619a5d2576584f5d8891aed9828ab60672deefb1edf",
+              "receipt:sha256:8c18b752d806e89a46e8e729e02e1f88fb227e522d3789f341a833e3840672ea",
+              "receipt:sha256:930ad2fa6593bc1849163076222b110e2421625332b77a1d2069e60d27de2528",
+              "receipt:sha256:9533b509cef7f8958e5d1eb8a9dbcb2077272a62986f04df04f18547858ea095",
+              "receipt:sha256:9587b76c10a09cb48f43afa4f2adc493720f083ed6b4a1b0ae1d51b6beb040bc",
+              "receipt:sha256:9692d3b19e62dbc9958cc44018c12cc3f2a88365c26b11884612a0b5c7ed76d9",
+              "receipt:sha256:9741ee8bdc409d4318848ac5d1cd7da95b0d7193b1193929bcf21765a70d03de",
+              "receipt:sha256:9b1c68956295a627df3ad477443b8c2a5b0bf02cf800a3c601c60576ff89308a",
+              "receipt:sha256:a0cafcb28a2c4425df7acf8a0e6a0515ed7344495cc869227ca4dc4873f21ed1",
+              "receipt:sha256:a145fb961ada83aadfbcd97cba4dd0202470d67bad3ab94c02df7bc93e507741",
+              "receipt:sha256:a3b0cc458a423f4bd5baa5c9d4a66c35daabbf2cd38f7758e02d611ebf4250b9",
+              "receipt:sha256:aa632ef9cc8abf2ad5f0af12e9d834d99f36b612be2b4deb2bc9b3d6cd3d2a6f",
+              "receipt:sha256:acd1440195e61c69fd1190d4396a258118d6fa11f9f125876e287cbe238cf81a",
+              "receipt:sha256:b012ae45118244b28239f18369fdde8ec15a98ea7438290ecd20ffb0a5874a04",
+              "receipt:sha256:b205d96e7b9cc61ff1e05cf2d40432752c3ebfd0192481c20425cc9e03be32f8",
+              "receipt:sha256:b22350e56915b006dcaabb08eef84224f50ce253bcc14f93c7ae0f70af20e443",
+              "receipt:sha256:b82be226067db1aa8617903522bc23e54ff7fe2cf1d2970f40e1625045366a14",
+              "receipt:sha256:bb55a12b12158c2542454cbd153b8175a2c8e7643395a4cba0b111a9fd9b86c0",
+              "receipt:sha256:bcbb66931cc078606adad2aae7695aa4d4004864f31baacaadecddb69ce0c06f",
+              "receipt:sha256:c2ffe21e9e4432373f1eca1fdac2f451ec527e55dc3d9ef72ca645bcbddb8e62",
+              "receipt:sha256:cb752ff6ba7a7f9d2052dc952a9e9161c78b7a668ae54593e1297deb9a30d826",
+              "receipt:sha256:cd00d3458c296d807ca12d32e6acb91f102b2e7063d2da41970194909a2ca05c",
+              "receipt:sha256:d293ff402c48dfb8baea1a942452d6cbae175d4bec1b7e141ee9533158a367e4",
+              "receipt:sha256:d3a18a7f5ca2ea5359a175ac7ece54ac531e32cda7221b5546b55b9dce30e229",
+              "receipt:sha256:d7cb8c18aa32de210fd605a63e840aa2827756ee70fc05b4dcf8452d2ff3488c",
+              "receipt:sha256:d808089600e03e39d4a99376ff05f14d3be67369a62609adc82cd19085b8e0d7",
+              "receipt:sha256:dd684afaacea02e85401b3900769216b56028d0e9dee2a700ffb7901a67ccbbc",
+              "receipt:sha256:df9ee762eb5e1bbd6f379ba59ba25d618dcf6054ec2fe382fbd7a4166568e80b",
+              "receipt:sha256:e0e4b540463e4f984814df32098389cd9459f49c06268f71dd66dada3474049c",
+              "receipt:sha256:e37c09e4ffe549f5131c013d7c2f5c9df43509d9a7718e92320e67c7df9a2095",
+              "receipt:sha256:e3ea11e8544e512c7124e9b6a6032824f78f67f14f6d1c3c8ce3ae08c1f402d3",
+              "receipt:sha256:e419aaf1b532bdf0ea958110c9f371d2cf948e0865ee98503e4e813c82804c3b",
+              "receipt:sha256:e8b87ac72aa2eb6ad9ac65f199f0879efbfc55ca6acd99627d5ace0ba1c49237",
+              "receipt:sha256:ebeef1a6d8ab32103364542721ed5ac6a79e1e33ced37cdc90986cc87042885d",
+              "receipt:sha256:ec08e9f2b851e98d2a2e1c3abd51a4e5d47271eaa1048628b081904004843c11",
+              "receipt:sha256:f13cc641b17bfbf1cf301033fe0ca188d9c03d29a6e549f95493aeeca4e07df1",
+              "receipt:sha256:f319970922a22565dc69c728a0589074ec92b9d3174f9b6491e6b71827d826d6",
+              "receipt:sha256:f3777501ee8208277764258f78ee2663d7cff8d1ef5a828fd648c1fb5b57491c",
+              "receipt:sha256:f408df3b89a699d56fa455beae20762833b44403b35c3e7ac3950877e82f6b67",
+              "receipt:sha256:f43c3dc4d302dbc892a855af56db92312b9825d08d2105ba2984622d22e6ac5b",
+              "receipt:sha256:f5a792b3a4cae423a7ef739e0bf5ba49297c92e785ed949a38bcab946ff78c89",
+              "receipt:sha256:f659d3c463f654efcbccfee75837277f1604e13249968bdc6258d1bb04903c40",
+              "receipt:sha256:f83accef4e410dc52812ea144efeceaa9182d53e677d1392822e1d2609dfdbfa",
+              "receipt:sha256:fc3ecd84fc2ca0aefe8002a850663e99098f3c1c69e2c23697b6c61d9fd7c8e9"
+            ],
+            "outcome_count": 7,
+            "outcome_stage": "approved",
+            "refusal": {
+              "code": "typed-mandate-brief-cohort-projection-required",
+              "detail": "Exact stage counts are labelled; conversion and mandate-brief inference refuse.",
+              "pointer": "/funnel/conversion"
+            }
+          },
+          {
+            "cohort_label": "x3-discovered-to-screen",
+            "conversion_interval": null,
+            "entry_count": 75,
+            "entry_stage": "discovered",
+            "evaluation_receipt_ids": [
+              "receipt:sha256:03736ecc269279716319be83158006e73bd308e598edf5b501d84e40d2a3a9f7",
+              "receipt:sha256:04fe1dca13796fbc6c2312d72fe668b2aa10371ddde3a066e0c783d510eb4c10",
+              "receipt:sha256:0a48818509e53b8092110a63058b98107de03e10c084796e8143f5783d14af6a",
+              "receipt:sha256:0a6daed1331f76b17d02780ffa3ed5e6be824d3879477072b662f0ecf6385e9b",
+              "receipt:sha256:0cc7e77dcea696c0c38501dbe08a80da297df094f1981c72b56927b01f371eef",
+              "receipt:sha256:0cd80fb9675322ccb5917b47b798538c778be404cd8770c626e77f78e64cf480",
+              "receipt:sha256:120d35a76b275fbe5a8bebe502ecd035aa606067fd65c70e506c77a2ca3729b0",
+              "receipt:sha256:13c08c6793b5371ccaf3b07128db5b3acde15a3bb7f71dd87e4866055c64ef0d",
+              "receipt:sha256:13cdae9ea35bacbecb4f9581b6eedd535b3cbc9d483a5f339b00fe74cdb21bd1",
+              "receipt:sha256:1469fe165d1e5d34201d31f857538400cb1f8b740561f97ff7834cb777f1456b",
+              "receipt:sha256:17cbb3466ac56fe2eef22ac06e52d1e8452d5c49b63ffe49f4134730118b00b3",
+              "receipt:sha256:1b80b9170fa14f66b2f7007d5fc4991af5584c52235ca7e72977a588fb698f88",
+              "receipt:sha256:1c7aa801cc33ed87cba7ace9872540a357130a503c0af5cbf09ac43d9edcefed",
+              "receipt:sha256:1f6ef1b092a1a18f688dda0cb05d8c5ce7e38dbcf77cd6f4cb0fa1e177578162",
+              "receipt:sha256:1f98d1bfc73c8341178df244fe6f411c185addda211185c955afe9da0751273f",
+              "receipt:sha256:252278326c87e2ba5a533dceae382b528a6c4dec903a22f5f9f938eefb93c968",
+              "receipt:sha256:28765a45a1b5608df343c1a5a56ab6d230247f249c7d34ae0657985c7f1a5aa8",
+              "receipt:sha256:2cc20e37adb0d4f58221cc4d8a0d996191d8e9edabd8724357e8a0f470f0cc21",
+              "receipt:sha256:2dbe97dca8b05d7a46d635c8004ab04ff35513e86762b460b3666f5097644f4d",
+              "receipt:sha256:2fea2bcea6e8c0bbf0aa456822f19cc4b60151970431d7050b87a81e346f7c67",
+              "receipt:sha256:32543eb651821c5a177e85b226fd5b51d7862e2b4596436ea6cdefdda8307f3f",
+              "receipt:sha256:34226daf9d15acafa1623e416c776a3f18375fa4200bb1f61e99b9a857fa0128",
+              "receipt:sha256:343d713b46db0dfe712f0e417ad3779fc5d0ce12b471813e905df8e87295a041",
+              "receipt:sha256:41e27818b980ed319d8d11358322d245f50ce047ae3245d45e06a10b85190f58",
+              "receipt:sha256:44ffe30e46a7cee2501bf0d2c0ef3586098de6bb44b49e29ac72b66443ac1e1c",
+              "receipt:sha256:485cf20018c97ea3cdc9ed3b41ea9d5132cff6a7871991c7bbc698575fb3d3d7",
+              "receipt:sha256:4c2e720b18267cb7911b99b2c06729b6669872635db2c08db9dbbd4f8a51cb8a",
+              "receipt:sha256:4e7823d8134e516da181b3f81cc441e449e568260aefba2065dce8b010658a06",
+              "receipt:sha256:503e28a4951c5f97cec01244b994c591aa2893734ce274eacec12e42cdf6a7cf",
+              "receipt:sha256:50c7f5ea752d8f633fc10b098d9acecbbc6a4f6f5fc6ddbf35f6ab1d8ca220c9",
+              "receipt:sha256:540bdddb30ed020f957cdeeb665c1011a00491688c5a2b8c95308ea52501fad6",
+              "receipt:sha256:554147e8eb27ceb6191a700ffc7283e7d8aa95a9ef65d14f38a8bbde2910064b",
+              "receipt:sha256:5656829e6daf1022ed56f7f29b52a70050523b08e60a2ccecbdb9a80e89aa336",
+              "receipt:sha256:5781ffeb347edfc699dc9d0eb8e1b4612a737cfa5c7ab0622a3eb0f97c271b79",
+              "receipt:sha256:59f736897e79641f46f28b064da57fc339c86e551911ced77619821b48c19ab1",
+              "receipt:sha256:5bd2daa77c155a5a5756b089bc141ff36ad7bf8090be14f33aae42f49e8407fc",
+              "receipt:sha256:649eef891f1515bc77a486bca7d9d152ab63cc0aa203cf114147058d7cfd22d5",
+              "receipt:sha256:68bf2aebca5411c685fa291ad11dcfe0cde79c0de5ba4bf7ad8a9551a862bbab",
+              "receipt:sha256:6f29d90f89e4231dad9b4566c3f258513b9e7567c7e88756dc79e28ea36999e0",
+              "receipt:sha256:6f9ac2423a442c1143f151d30ca4c519a07192d796356379bd9e379b5dbeb471",
+              "receipt:sha256:71b5e8617c6024e21310103cbe32637920e768412ce95682cd50084d76f24a77",
+              "receipt:sha256:726b697895cd4910d34dd988a064dd824da8b5db1691def5aa2d87df1e5168fc",
+              "receipt:sha256:73846bb97d737064dca66a6f8edeb9d1b6123951fc5c8341485d9a98820dba5a",
+              "receipt:sha256:7740462b2d4a17acf2028cd2f3a70159ccb5bd2a6de912d61cd5f6cb7afa0747",
+              "receipt:sha256:783e06a5cccc9bac1dd312b6569ea8051576e1aaf09ab7148ba5504f0494b26c",
+              "receipt:sha256:7c82d3aded3fedd4af88211b4db4224c8c538d7f4cd1f44973ae51992a1fb00e",
+              "receipt:sha256:7f932a48cef2896d00e20693a26b189613bbfdc3e7225a79976f979a070c3c3d",
+              "receipt:sha256:82b815e6ddb2c245d68ae4177cbedae2c0865bec3cdb42b4041fcd7f033478c5",
+              "receipt:sha256:83abc7d6f3dc57ce48610bff388fd01ea00f892b7e291531bf0e6fcb86d3ec13",
+              "receipt:sha256:850a4963090a22dbb2c44d3e55fe473c53920d0964428bc75f3e5609b4721602",
+              "receipt:sha256:8a336a9be9a3e49005c9aba67fa5c5f6c5ca20eae4674b71aa687ccaae2dd3c9",
+              "receipt:sha256:920cfea7b4a357a9d3fbc0c4c724dda5de82590263fe0d57f52cc4375dc5cf7d",
+              "receipt:sha256:949ec28a734b55e248f98f589d2e7f359fc0bd3ab9867c355f1c5f2393dea633",
+              "receipt:sha256:9e6f02992824bb698e8c4414eb9a9af28d5ed6ddb764874236a04ba3dfa595dc",
+              "receipt:sha256:a9cbc0fc3afd967c5193e57ef1c03429201599b07565d97f116d15f04dcd0894",
+              "receipt:sha256:af33784c703ab080e7d9c9c4c6b8d80cb48d6a0c830b474accea9f57fd3c227c",
+              "receipt:sha256:b153fdb7fb2cfa02474d23a17446d400c12769ede7fee1ec3c195e35fc99aa1a",
+              "receipt:sha256:b1eb3cfdbd5f5380ff572db054ed963c33628e38e0d6ce3fd9927474942417b8",
+              "receipt:sha256:b3abdf3710c89a49dc939fae4f3048cfc09c9c5d8860978fd567471de6727759",
+              "receipt:sha256:b3fbec8350f7ecee1150f4630f6505b79b0ceaf20b27c9517efaf1ca356be87e",
+              "receipt:sha256:b434c35d011d48a03163786420f15f32b92accda798fbbb9d52291792dde1415",
+              "receipt:sha256:b7cd34b0766680d41a72e0019a742637b43da287741acba719ed9dd57a16c9eb",
+              "receipt:sha256:b85430220841388fb7fd474e075668715b342b0c80b6199b298444fd17dffade",
+              "receipt:sha256:bf805d1028b2ac484649a7cecb8b8775c138a3544ae8885ef1ed6f511028beba",
+              "receipt:sha256:bf80b7179ce92a7468416c988a4911cb1bd28877bbaacaf233825545aff3dc9d",
+              "receipt:sha256:c30960bea6d32f173596363d122d560045c45af0b5538b1512fcdf2cf90d4855",
+              "receipt:sha256:c73b9f3804ea08a7d37fd177956d600b3406ad5338e1ed223791002b8ce8ae39",
+              "receipt:sha256:d03ee5b9a4fc4e4f0cf92a6360444423dcb56028fe7185ab51c4ca1e8eb32439",
+              "receipt:sha256:d0b3c0403d6a9290b4a99655d9d623d9dfb7f3ef9929ffef75def1c39ed059a3",
+              "receipt:sha256:d27198545bfd66c28dbbf1334b7e759d3d9b63fe1c604c67da33c0a66b52ad55",
+              "receipt:sha256:d7a7fe108d1f0bc9c637c7060aaced1b959f982ae319ce1181b972f23e85806c",
+              "receipt:sha256:d96d92c8d0aa31f3e9c81231640bc9baec67abb0ceb82cc18180009f3416459c",
+              "receipt:sha256:dad13fca3699371142f5dc991bf07cb5014932a07f487286cce87411e349e596",
+              "receipt:sha256:db807b74fdb98744e584773f88d849ef77797a58913a9ece1fadbb1a05a9929e",
+              "receipt:sha256:dd03fbfd68fc67e12d79d90bd162fe48fa53e35fefeae485123a4a26e5858cd3",
+              "receipt:sha256:ddbd681dd3d53ae5b29395f72b2c56a1b100b3222701b80397e1ee3db0843bfc",
+              "receipt:sha256:df0fd69f0638907a8aa4f097acef165886b56b80c8a1554827d52a5ae5078955",
+              "receipt:sha256:df174e1cda6eb0f2376116f7e0118cd6a784e8579a06ccb107e3be5b0089d20b",
+              "receipt:sha256:e166accce4ddf287be77624e07c2be1f916f03edef830df874e7325d834fa5ef",
+              "receipt:sha256:e47dccdc70e2ebc8357995a506583277be6e1bbcbb53013f559a7cae61f860dc",
+              "receipt:sha256:ed3b7d29b3e29e68dbe14b2582f057750f09e917538ed2882c4371ed08f25b4b",
+              "receipt:sha256:f03d03b0834dfa183bd9278e68cf681bf4a84212d6fc79a9f9ae52e0ba04be79",
+              "receipt:sha256:f175fe3f20d71945cc46a3eedfd83d41ef849e126bf9afada96688bdd7d07684",
+              "receipt:sha256:fdc1b06203a06fe2f6ef9f0aaafc2af81864560fcc72fe6ce7fbefde43fe136f"
+            ],
+            "outcome_count": 59,
+            "outcome_stage": "screened",
+            "refusal": {
+              "code": "typed-mandate-brief-cohort-projection-required",
+              "detail": "Exact stage counts are labelled; conversion and mandate-brief inference refuse.",
+              "pointer": "/funnel/conversion"
+            }
+          }
+        ]
+      },
+      "join_receipt_id": "receipt:sha256:ae01c42f71f9931329af0a1c9ef507dece08c48ee7154e89331043e8b3af086c",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "cross-asset",
+      "slice_receipts": {
+        "dataset:x3-funnel-event": "receipt:sha256:7313442d5a8b286c744591439453ba43fb429192fbaa246fdf855466b1d4d3be",
+        "dataset:x3-holdings-filer": "receipt:sha256:6cd0048503928e0481190a3cca6c54c240b6b206d1bb494bbdeefdf800222b21",
+        "dataset:x3-public-adviser": "receipt:sha256:da5f26faa5d6c3d08c7a92da0382e6a12b499a635d5205791144a2e7ccc1c91e",
+        "dataset:x3-registered-fund": "receipt:sha256:ce5f3391a2376ccf6fd23dbb7fe932c258a858d05aa29f51caa9c56201c47325",
+        "dataset:x3-rfi-ddq": "receipt:sha256:9314abfdc2fa8443887d2ab6b1f0b0a422932853b7a058aad44733bd155f3640",
+        "dataset:x3-strategy-export": "receipt:sha256:6303526485bd9d8dd0da02ce7bd4593c104435c0b5140fe7be3ce37758180a8f",
+        "dataset:x3-target-grid": "receipt:sha256:f3f2582242fd119cc103eb92982d2c6dd021222f9e8ea156e28d6de2dbd5a306"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 835,
+        "source_rows": 835,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "full-synthetic-funnel",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 21,
+        "excluded_cells": 3,
+        "excluded_ledger": [
+          {
+            "cell_id": "grid-cell:sha256:0abf2415c53b842bd232f236c34ea9268d47d17e40730b6c9d9fde3066491b7c",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:328b7de910bec66947685ed2f54ef971dc96c1c19b64aa839a3e2c0301787797",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:f84a0134c3a41b4601f1e27d810d9a9c26bb7a6db194e01eeda427126d12a66f",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          }
+        ],
+        "grid_id": "grid:sha256:5519826d30a793b2539cbc28ed75ef804d37d673ab8a34b4865c912c7223f209",
+        "observed_cells": null
+      }
+    },
+    "latest|full-synthetic-funnel|liquid-public-markets": {
+      "bundle_digest": "bundle:sha256:71dfbfeb147b6dd449e3688e3e2e7d55694ddd92c29cf79efde6354c30075f5d",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:f73ca6e6a0095bf5c41b1d692a407afe28940b9d42ed5af46b45ec9fab5704aa",
+        "funnel_conversion": "receipt:sha256:fd586d589e61a18b5895423d508180f77d5e99874628dd87c7b7a3b65ccab653",
+        "funnel_stage_counts": "receipt:sha256:724e3669d09f8242bd80d7ab59cb62ef34b85b7204a2f7ddbecda252c5c8a1fa",
+        "global_universe_coverage": "receipt:sha256:cddbc51502018901443118669abb079f0be762a8a8ee303a6333f68f14f68f26",
+        "manager_quality_ranking": "receipt:sha256:4aedcf9ea06972bae59fa220f25302e8d64ec24994791d81d35770ccf41a79dd",
+        "prehire_source_membership": "receipt:sha256:a9b5bbad2a5fa22cb82d807bdb006a136d9e533f34b91d1b4184ad1d4c87b71c",
+        "public_source_membership": "receipt:sha256:0e84a96094da44c633a4645d234975079f7a441f25e2c66a0ae8e173f715587f",
+        "research_cell_queue": "receipt:sha256:5b43825b60dd82b5f49188e02d86c50e6bc81a5168be7175423df87553dec224",
+        "source_union_novelty": "receipt:sha256:d7f116c9f89a0b99b680f7b0df5cdde83cca6f51d19d0a4bf7cdd179a8488a31",
+        "synthetic_discovery_recall": "receipt:sha256:8bce27f398abfb504caeeb0199e58231488fdfa016973d0d09780143650a77d1",
+        "synthetic_entity_recall": "receipt:sha256:e023e1fb7b983d6c5da2154822618af26678ffb05e1dd8a086b129ed3011403c",
+        "target_cell_observation": "receipt:sha256:e6c774962d0a5b72bba643c29416fdc248f80b7d6d390ed2a58bdeacb04c7a60"
+      },
+      "decision_at": "2024-09-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "slice_receipt_id": "receipt:sha256:7313442d5a8b286c744591439453ba43fb429192fbaa246fdf855466b1d4d3be",
+        "stage_counts": [
+          {
+            "cohort_label": "x3-diligence-to-approved",
+            "conversion_interval": null,
+            "entry_count": 75,
+            "entry_stage": "diligence",
+            "evaluation_receipt_ids": [
+              "receipt:sha256:019812e5768d1a60560a16f9b9fe2d6ec06a6a86c9eb64ba57ce59a17b421fd2",
+              "receipt:sha256:0620bb1ce11412575d93f6ec40c25ef5d60235c4b8dd1a6237c3f3794ed74305",
+              "receipt:sha256:0b06cfb04f965a5a63711976f2d56b5488329dd8cc7e8c7d24d90c3a3537566e",
+              "receipt:sha256:0bfc8adb0ef7842f1c43ddbe5e4fdc1fda4e19aba80aa2c429a933e40a371c2f",
+              "receipt:sha256:0ea819cff8f8115ddc68e00f3589e8b8891a65086ac0284d5d770aca8227d601",
+              "receipt:sha256:12595d496fca8c1d9335798345d471aab4d0a9dad2d57aba74e4435024ed915b",
+              "receipt:sha256:166dc823d9543aed6ac54fcd64de0355309c875a9d72cb31175551ce8284bec1",
+              "receipt:sha256:166fdaec87298a5d2ef0612d7cd47c4efeac0987d047140598d2aeffce8348e8",
+              "receipt:sha256:17febce4caab865fbef634eb7f81f34e46d5b71e0293f3134627253c6d8d87fb",
+              "receipt:sha256:1a5652d78e435e5ecdb2424a55a6f761b4e27311ac4003532c8ea1bcec6dc4bf",
+              "receipt:sha256:206019b1a42219d0edd0f7093c0b1f3d983dfc7b0da22bb948e9e2cbff1f5f94",
+              "receipt:sha256:2c1437fcc2c2ca5fc5735c2361b5ce88b3bbd825bed2fa0e8aee4c3f6d519cad",
+              "receipt:sha256:337297d040d0fc2eb7080df99be11d6cfdf81e78cbbc44205b08e1676b8d8c34",
+              "receipt:sha256:375c8aa24b5b946f013b157dff3f24388a95c5d21f604a5e1f5794cf9b3054b7",
+              "receipt:sha256:39734e3cb948268b2f0956429686d02acb8666e940a32b2ce44fe6f8acb0c4df",
+              "receipt:sha256:3fe56c0451ac8df877267b30522e6630de9f323e6e46fc5d545ff25244603ce8",
+              "receipt:sha256:41873fd64d0047f6a53dbe16a05b72f06edc8d57004e59bb067a33284b524e65",
+              "receipt:sha256:43568a9ae22f4ef430e1b029f1a936d19cd37b72b1701a879d0c728d9f8c281b",
+              "receipt:sha256:4445c446ad041e24c5598822fb41925362a0ce59582694c1ecca18b58b264b40",
+              "receipt:sha256:47a6616cc544dad144f4139d1c1a2182071cd12deea4f022b14298e3dc3f04ed",
+              "receipt:sha256:4bc2ece45ffe689d2fc2f438ebb227b352766dd0a690d60b53bff63c94aa366c",
+              "receipt:sha256:4c823d7ebf99bc19d51b10dc03cc182112922fd0b5f150a47db06168a04b92f4",
+              "receipt:sha256:503630117062c2c8fc8c7b81e855ddaca4fdc1ce5193446e085313762f34c3ed",
+              "receipt:sha256:56564a2762e81bc4c74e1977551be0ec9bd07137ed8620868ed45085fd9f607b",
+              "receipt:sha256:57c4d093b7a0ab77a0fbc3bba6720037410b1c472dc2f6734f6c73818e6dd804",
+              "receipt:sha256:57ebcc1c55a60b64f4749604aa28e91572fdad17815879a105cfb43da001e870",
+              "receipt:sha256:5bb73161b25b9582a044c671be3863ea4cae3c0814c99bac563e4a371c7f8b46",
+              "receipt:sha256:5bdccb333d3f919dfed695b2077cc09ff65ac8f44e075396ff71eb633f6ec70f",
+              "receipt:sha256:6084ad36a5fd67960be0b249da457b865bd9325840cfd4d717ab3f7a529b7fa2",
+              "receipt:sha256:662d9ed25011089f4ffbc16dd87565f6e3102d16d45af8c6acc57db699687c5c",
+              "receipt:sha256:68c815d77a3a3e37f6c888cd9e71a930619a495da209e7529c82e8f55bf71d7f",
+              "receipt:sha256:6f4ad8ec4bb6eeb936a7daa2a89abb4d4d3597d53d61207162ab36246156faf6",
+              "receipt:sha256:6f64cd38f1c53a0db645fae43eef900b51c5d873792d601a3a7d341d35cfb9a5",
+              "receipt:sha256:74c9ecdc3666ac5935aa8e5693d79d3eb75da7d7e592f54f622234c7a2b86049",
+              "receipt:sha256:7702949d194eaa846b6159278ed6b1f6384fdf45efbd52e5e2d413a7d889eace",
+              "receipt:sha256:7705f6766529b44c1d49e678ebabfd9b89d78620630f9e0b2c9dd6234d591548",
+              "receipt:sha256:7cffb423eee287b17a3a574168b936c5e6f4baa7110a5bf6b92816111d91f6f6",
+              "receipt:sha256:7f474d85790d0a3ed8b9d2d1536c4b5088a21daf037366c7cd5d2d945dd99faa",
+              "receipt:sha256:833d33ca6d96f24de71122d64846604c787bca7cb0f6d58c2c3af5c45b570252",
+              "receipt:sha256:8543710835b9276512fafe1e7827c6e0c71b936d65278eb6264016f1527e1964",
+              "receipt:sha256:85e9445557fe72c8fd216619a5d2576584f5d8891aed9828ab60672deefb1edf",
+              "receipt:sha256:8c18b752d806e89a46e8e729e02e1f88fb227e522d3789f341a833e3840672ea",
+              "receipt:sha256:930ad2fa6593bc1849163076222b110e2421625332b77a1d2069e60d27de2528",
+              "receipt:sha256:9533b509cef7f8958e5d1eb8a9dbcb2077272a62986f04df04f18547858ea095",
+              "receipt:sha256:9587b76c10a09cb48f43afa4f2adc493720f083ed6b4a1b0ae1d51b6beb040bc",
+              "receipt:sha256:9692d3b19e62dbc9958cc44018c12cc3f2a88365c26b11884612a0b5c7ed76d9",
+              "receipt:sha256:9741ee8bdc409d4318848ac5d1cd7da95b0d7193b1193929bcf21765a70d03de",
+              "receipt:sha256:9b1c68956295a627df3ad477443b8c2a5b0bf02cf800a3c601c60576ff89308a",
+              "receipt:sha256:a0cafcb28a2c4425df7acf8a0e6a0515ed7344495cc869227ca4dc4873f21ed1",
+              "receipt:sha256:a145fb961ada83aadfbcd97cba4dd0202470d67bad3ab94c02df7bc93e507741",
+              "receipt:sha256:a3b0cc458a423f4bd5baa5c9d4a66c35daabbf2cd38f7758e02d611ebf4250b9",
+              "receipt:sha256:aa632ef9cc8abf2ad5f0af12e9d834d99f36b612be2b4deb2bc9b3d6cd3d2a6f",
+              "receipt:sha256:acd1440195e61c69fd1190d4396a258118d6fa11f9f125876e287cbe238cf81a",
+              "receipt:sha256:b012ae45118244b28239f18369fdde8ec15a98ea7438290ecd20ffb0a5874a04",
+              "receipt:sha256:b205d96e7b9cc61ff1e05cf2d40432752c3ebfd0192481c20425cc9e03be32f8",
+              "receipt:sha256:b22350e56915b006dcaabb08eef84224f50ce253bcc14f93c7ae0f70af20e443",
+              "receipt:sha256:b82be226067db1aa8617903522bc23e54ff7fe2cf1d2970f40e1625045366a14",
+              "receipt:sha256:bb55a12b12158c2542454cbd153b8175a2c8e7643395a4cba0b111a9fd9b86c0",
+              "receipt:sha256:bcbb66931cc078606adad2aae7695aa4d4004864f31baacaadecddb69ce0c06f",
+              "receipt:sha256:c2ffe21e9e4432373f1eca1fdac2f451ec527e55dc3d9ef72ca645bcbddb8e62",
+              "receipt:sha256:cb752ff6ba7a7f9d2052dc952a9e9161c78b7a668ae54593e1297deb9a30d826",
+              "receipt:sha256:cd00d3458c296d807ca12d32e6acb91f102b2e7063d2da41970194909a2ca05c",
+              "receipt:sha256:d293ff402c48dfb8baea1a942452d6cbae175d4bec1b7e141ee9533158a367e4",
+              "receipt:sha256:d3a18a7f5ca2ea5359a175ac7ece54ac531e32cda7221b5546b55b9dce30e229",
+              "receipt:sha256:d7cb8c18aa32de210fd605a63e840aa2827756ee70fc05b4dcf8452d2ff3488c",
+              "receipt:sha256:d808089600e03e39d4a99376ff05f14d3be67369a62609adc82cd19085b8e0d7",
+              "receipt:sha256:dd684afaacea02e85401b3900769216b56028d0e9dee2a700ffb7901a67ccbbc",
+              "receipt:sha256:df9ee762eb5e1bbd6f379ba59ba25d618dcf6054ec2fe382fbd7a4166568e80b",
+              "receipt:sha256:e0e4b540463e4f984814df32098389cd9459f49c06268f71dd66dada3474049c",
+              "receipt:sha256:e37c09e4ffe549f5131c013d7c2f5c9df43509d9a7718e92320e67c7df9a2095",
+              "receipt:sha256:e3ea11e8544e512c7124e9b6a6032824f78f67f14f6d1c3c8ce3ae08c1f402d3",
+              "receipt:sha256:e419aaf1b532bdf0ea958110c9f371d2cf948e0865ee98503e4e813c82804c3b",
+              "receipt:sha256:e8b87ac72aa2eb6ad9ac65f199f0879efbfc55ca6acd99627d5ace0ba1c49237",
+              "receipt:sha256:ebeef1a6d8ab32103364542721ed5ac6a79e1e33ced37cdc90986cc87042885d",
+              "receipt:sha256:ec08e9f2b851e98d2a2e1c3abd51a4e5d47271eaa1048628b081904004843c11",
+              "receipt:sha256:f13cc641b17bfbf1cf301033fe0ca188d9c03d29a6e549f95493aeeca4e07df1",
+              "receipt:sha256:f319970922a22565dc69c728a0589074ec92b9d3174f9b6491e6b71827d826d6",
+              "receipt:sha256:f3777501ee8208277764258f78ee2663d7cff8d1ef5a828fd648c1fb5b57491c",
+              "receipt:sha256:f408df3b89a699d56fa455beae20762833b44403b35c3e7ac3950877e82f6b67",
+              "receipt:sha256:f43c3dc4d302dbc892a855af56db92312b9825d08d2105ba2984622d22e6ac5b",
+              "receipt:sha256:f5a792b3a4cae423a7ef739e0bf5ba49297c92e785ed949a38bcab946ff78c89",
+              "receipt:sha256:f659d3c463f654efcbccfee75837277f1604e13249968bdc6258d1bb04903c40",
+              "receipt:sha256:f83accef4e410dc52812ea144efeceaa9182d53e677d1392822e1d2609dfdbfa",
+              "receipt:sha256:fc3ecd84fc2ca0aefe8002a850663e99098f3c1c69e2c23697b6c61d9fd7c8e9"
+            ],
+            "outcome_count": 7,
+            "outcome_stage": "approved",
+            "refusal": {
+              "code": "typed-mandate-brief-cohort-projection-required",
+              "detail": "Exact stage counts are labelled; conversion and mandate-brief inference refuse.",
+              "pointer": "/funnel/conversion"
+            }
+          },
+          {
+            "cohort_label": "x3-discovered-to-screen",
+            "conversion_interval": null,
+            "entry_count": 75,
+            "entry_stage": "discovered",
+            "evaluation_receipt_ids": [
+              "receipt:sha256:03736ecc269279716319be83158006e73bd308e598edf5b501d84e40d2a3a9f7",
+              "receipt:sha256:04fe1dca13796fbc6c2312d72fe668b2aa10371ddde3a066e0c783d510eb4c10",
+              "receipt:sha256:0a48818509e53b8092110a63058b98107de03e10c084796e8143f5783d14af6a",
+              "receipt:sha256:0a6daed1331f76b17d02780ffa3ed5e6be824d3879477072b662f0ecf6385e9b",
+              "receipt:sha256:0cc7e77dcea696c0c38501dbe08a80da297df094f1981c72b56927b01f371eef",
+              "receipt:sha256:0cd80fb9675322ccb5917b47b798538c778be404cd8770c626e77f78e64cf480",
+              "receipt:sha256:120d35a76b275fbe5a8bebe502ecd035aa606067fd65c70e506c77a2ca3729b0",
+              "receipt:sha256:13c08c6793b5371ccaf3b07128db5b3acde15a3bb7f71dd87e4866055c64ef0d",
+              "receipt:sha256:13cdae9ea35bacbecb4f9581b6eedd535b3cbc9d483a5f339b00fe74cdb21bd1",
+              "receipt:sha256:1469fe165d1e5d34201d31f857538400cb1f8b740561f97ff7834cb777f1456b",
+              "receipt:sha256:17cbb3466ac56fe2eef22ac06e52d1e8452d5c49b63ffe49f4134730118b00b3",
+              "receipt:sha256:1b80b9170fa14f66b2f7007d5fc4991af5584c52235ca7e72977a588fb698f88",
+              "receipt:sha256:1c7aa801cc33ed87cba7ace9872540a357130a503c0af5cbf09ac43d9edcefed",
+              "receipt:sha256:1f6ef1b092a1a18f688dda0cb05d8c5ce7e38dbcf77cd6f4cb0fa1e177578162",
+              "receipt:sha256:1f98d1bfc73c8341178df244fe6f411c185addda211185c955afe9da0751273f",
+              "receipt:sha256:252278326c87e2ba5a533dceae382b528a6c4dec903a22f5f9f938eefb93c968",
+              "receipt:sha256:28765a45a1b5608df343c1a5a56ab6d230247f249c7d34ae0657985c7f1a5aa8",
+              "receipt:sha256:2cc20e37adb0d4f58221cc4d8a0d996191d8e9edabd8724357e8a0f470f0cc21",
+              "receipt:sha256:2dbe97dca8b05d7a46d635c8004ab04ff35513e86762b460b3666f5097644f4d",
+              "receipt:sha256:2fea2bcea6e8c0bbf0aa456822f19cc4b60151970431d7050b87a81e346f7c67",
+              "receipt:sha256:32543eb651821c5a177e85b226fd5b51d7862e2b4596436ea6cdefdda8307f3f",
+              "receipt:sha256:34226daf9d15acafa1623e416c776a3f18375fa4200bb1f61e99b9a857fa0128",
+              "receipt:sha256:343d713b46db0dfe712f0e417ad3779fc5d0ce12b471813e905df8e87295a041",
+              "receipt:sha256:41e27818b980ed319d8d11358322d245f50ce047ae3245d45e06a10b85190f58",
+              "receipt:sha256:44ffe30e46a7cee2501bf0d2c0ef3586098de6bb44b49e29ac72b66443ac1e1c",
+              "receipt:sha256:485cf20018c97ea3cdc9ed3b41ea9d5132cff6a7871991c7bbc698575fb3d3d7",
+              "receipt:sha256:4c2e720b18267cb7911b99b2c06729b6669872635db2c08db9dbbd4f8a51cb8a",
+              "receipt:sha256:4e7823d8134e516da181b3f81cc441e449e568260aefba2065dce8b010658a06",
+              "receipt:sha256:503e28a4951c5f97cec01244b994c591aa2893734ce274eacec12e42cdf6a7cf",
+              "receipt:sha256:50c7f5ea752d8f633fc10b098d9acecbbc6a4f6f5fc6ddbf35f6ab1d8ca220c9",
+              "receipt:sha256:540bdddb30ed020f957cdeeb665c1011a00491688c5a2b8c95308ea52501fad6",
+              "receipt:sha256:554147e8eb27ceb6191a700ffc7283e7d8aa95a9ef65d14f38a8bbde2910064b",
+              "receipt:sha256:5656829e6daf1022ed56f7f29b52a70050523b08e60a2ccecbdb9a80e89aa336",
+              "receipt:sha256:5781ffeb347edfc699dc9d0eb8e1b4612a737cfa5c7ab0622a3eb0f97c271b79",
+              "receipt:sha256:59f736897e79641f46f28b064da57fc339c86e551911ced77619821b48c19ab1",
+              "receipt:sha256:5bd2daa77c155a5a5756b089bc141ff36ad7bf8090be14f33aae42f49e8407fc",
+              "receipt:sha256:649eef891f1515bc77a486bca7d9d152ab63cc0aa203cf114147058d7cfd22d5",
+              "receipt:sha256:68bf2aebca5411c685fa291ad11dcfe0cde79c0de5ba4bf7ad8a9551a862bbab",
+              "receipt:sha256:6f29d90f89e4231dad9b4566c3f258513b9e7567c7e88756dc79e28ea36999e0",
+              "receipt:sha256:6f9ac2423a442c1143f151d30ca4c519a07192d796356379bd9e379b5dbeb471",
+              "receipt:sha256:71b5e8617c6024e21310103cbe32637920e768412ce95682cd50084d76f24a77",
+              "receipt:sha256:726b697895cd4910d34dd988a064dd824da8b5db1691def5aa2d87df1e5168fc",
+              "receipt:sha256:73846bb97d737064dca66a6f8edeb9d1b6123951fc5c8341485d9a98820dba5a",
+              "receipt:sha256:7740462b2d4a17acf2028cd2f3a70159ccb5bd2a6de912d61cd5f6cb7afa0747",
+              "receipt:sha256:783e06a5cccc9bac1dd312b6569ea8051576e1aaf09ab7148ba5504f0494b26c",
+              "receipt:sha256:7c82d3aded3fedd4af88211b4db4224c8c538d7f4cd1f44973ae51992a1fb00e",
+              "receipt:sha256:7f932a48cef2896d00e20693a26b189613bbfdc3e7225a79976f979a070c3c3d",
+              "receipt:sha256:82b815e6ddb2c245d68ae4177cbedae2c0865bec3cdb42b4041fcd7f033478c5",
+              "receipt:sha256:83abc7d6f3dc57ce48610bff388fd01ea00f892b7e291531bf0e6fcb86d3ec13",
+              "receipt:sha256:850a4963090a22dbb2c44d3e55fe473c53920d0964428bc75f3e5609b4721602",
+              "receipt:sha256:8a336a9be9a3e49005c9aba67fa5c5f6c5ca20eae4674b71aa687ccaae2dd3c9",
+              "receipt:sha256:920cfea7b4a357a9d3fbc0c4c724dda5de82590263fe0d57f52cc4375dc5cf7d",
+              "receipt:sha256:949ec28a734b55e248f98f589d2e7f359fc0bd3ab9867c355f1c5f2393dea633",
+              "receipt:sha256:9e6f02992824bb698e8c4414eb9a9af28d5ed6ddb764874236a04ba3dfa595dc",
+              "receipt:sha256:a9cbc0fc3afd967c5193e57ef1c03429201599b07565d97f116d15f04dcd0894",
+              "receipt:sha256:af33784c703ab080e7d9c9c4c6b8d80cb48d6a0c830b474accea9f57fd3c227c",
+              "receipt:sha256:b153fdb7fb2cfa02474d23a17446d400c12769ede7fee1ec3c195e35fc99aa1a",
+              "receipt:sha256:b1eb3cfdbd5f5380ff572db054ed963c33628e38e0d6ce3fd9927474942417b8",
+              "receipt:sha256:b3abdf3710c89a49dc939fae4f3048cfc09c9c5d8860978fd567471de6727759",
+              "receipt:sha256:b3fbec8350f7ecee1150f4630f6505b79b0ceaf20b27c9517efaf1ca356be87e",
+              "receipt:sha256:b434c35d011d48a03163786420f15f32b92accda798fbbb9d52291792dde1415",
+              "receipt:sha256:b7cd34b0766680d41a72e0019a742637b43da287741acba719ed9dd57a16c9eb",
+              "receipt:sha256:b85430220841388fb7fd474e075668715b342b0c80b6199b298444fd17dffade",
+              "receipt:sha256:bf805d1028b2ac484649a7cecb8b8775c138a3544ae8885ef1ed6f511028beba",
+              "receipt:sha256:bf80b7179ce92a7468416c988a4911cb1bd28877bbaacaf233825545aff3dc9d",
+              "receipt:sha256:c30960bea6d32f173596363d122d560045c45af0b5538b1512fcdf2cf90d4855",
+              "receipt:sha256:c73b9f3804ea08a7d37fd177956d600b3406ad5338e1ed223791002b8ce8ae39",
+              "receipt:sha256:d03ee5b9a4fc4e4f0cf92a6360444423dcb56028fe7185ab51c4ca1e8eb32439",
+              "receipt:sha256:d0b3c0403d6a9290b4a99655d9d623d9dfb7f3ef9929ffef75def1c39ed059a3",
+              "receipt:sha256:d27198545bfd66c28dbbf1334b7e759d3d9b63fe1c604c67da33c0a66b52ad55",
+              "receipt:sha256:d7a7fe108d1f0bc9c637c7060aaced1b959f982ae319ce1181b972f23e85806c",
+              "receipt:sha256:d96d92c8d0aa31f3e9c81231640bc9baec67abb0ceb82cc18180009f3416459c",
+              "receipt:sha256:dad13fca3699371142f5dc991bf07cb5014932a07f487286cce87411e349e596",
+              "receipt:sha256:db807b74fdb98744e584773f88d849ef77797a58913a9ece1fadbb1a05a9929e",
+              "receipt:sha256:dd03fbfd68fc67e12d79d90bd162fe48fa53e35fefeae485123a4a26e5858cd3",
+              "receipt:sha256:ddbd681dd3d53ae5b29395f72b2c56a1b100b3222701b80397e1ee3db0843bfc",
+              "receipt:sha256:df0fd69f0638907a8aa4f097acef165886b56b80c8a1554827d52a5ae5078955",
+              "receipt:sha256:df174e1cda6eb0f2376116f7e0118cd6a784e8579a06ccb107e3be5b0089d20b",
+              "receipt:sha256:e166accce4ddf287be77624e07c2be1f916f03edef830df874e7325d834fa5ef",
+              "receipt:sha256:e47dccdc70e2ebc8357995a506583277be6e1bbcbb53013f559a7cae61f860dc",
+              "receipt:sha256:ed3b7d29b3e29e68dbe14b2582f057750f09e917538ed2882c4371ed08f25b4b",
+              "receipt:sha256:f03d03b0834dfa183bd9278e68cf681bf4a84212d6fc79a9f9ae52e0ba04be79",
+              "receipt:sha256:f175fe3f20d71945cc46a3eedfd83d41ef849e126bf9afada96688bdd7d07684",
+              "receipt:sha256:fdc1b06203a06fe2f6ef9f0aaafc2af81864560fcc72fe6ce7fbefde43fe136f"
+            ],
+            "outcome_count": 59,
+            "outcome_stage": "screened",
+            "refusal": {
+              "code": "typed-mandate-brief-cohort-projection-required",
+              "detail": "Exact stage counts are labelled; conversion and mandate-brief inference refuse.",
+              "pointer": "/funnel/conversion"
+            }
+          }
+        ]
+      },
+      "join_receipt_id": "receipt:sha256:90c45fd960dd41ffaf378b4208baf8eb29bb5ef0add2d8bb5688676288782634",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "liquid-public-markets",
+      "slice_receipts": {
+        "dataset:x3-funnel-event": "receipt:sha256:7313442d5a8b286c744591439453ba43fb429192fbaa246fdf855466b1d4d3be",
+        "dataset:x3-holdings-filer": "receipt:sha256:6cd0048503928e0481190a3cca6c54c240b6b206d1bb494bbdeefdf800222b21",
+        "dataset:x3-public-adviser": "receipt:sha256:da5f26faa5d6c3d08c7a92da0382e6a12b499a635d5205791144a2e7ccc1c91e",
+        "dataset:x3-registered-fund": "receipt:sha256:ce5f3391a2376ccf6fd23dbb7fe932c258a858d05aa29f51caa9c56201c47325",
+        "dataset:x3-rfi-ddq": "receipt:sha256:9314abfdc2fa8443887d2ab6b1f0b0a422932853b7a058aad44733bd155f3640",
+        "dataset:x3-strategy-export": "receipt:sha256:6303526485bd9d8dd0da02ce7bd4593c104435c0b5140fe7be3ce37758180a8f",
+        "dataset:x3-target-grid": "receipt:sha256:f3f2582242fd119cc103eb92982d2c6dd021222f9e8ea156e28d6de2dbd5a306"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 835,
+        "source_rows": 835,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "full-synthetic-funnel",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 9,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:5519826d30a793b2539cbc28ed75ef804d37d673ab8a34b4865c912c7223f209",
+        "observed_cells": null
+      }
+    },
+    "latest|public-only|credit-private-markets": {
+      "bundle_digest": "bundle:sha256:0cc5f58f8c47c7a85c9bdba56c0e7ed298741f5b4447c26987fcabce5d88f449",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:37bcdcc60a21aa9aff49a5fd1cd8491c30e16983ae25a4e1158a8542089582e9",
+        "funnel_conversion": "receipt:sha256:6803b5d572f7961836c29912e1b50a03b2b6e21a3cb88196dc01b92824d6a3ed",
+        "funnel_stage_counts": "receipt:sha256:d147ab12a7a884ebf8506c1a762f490ab9ca83b906d3d13fe59416c755844193",
+        "global_universe_coverage": "receipt:sha256:4bfa7ad5378f0d510105260ee8b1d58fef102092ba44fcbb550a7a4f60067645",
+        "manager_quality_ranking": "receipt:sha256:501f5d053b05fab704bcc12c414763a756906d1bfb290f8d9e5dcc841ca595a3",
+        "prehire_source_membership": "receipt:sha256:77f8ea55d13dc677af9163004f55787957ae5ddfde85c36e4eee2b851343d86a",
+        "public_source_membership": "receipt:sha256:11507722bad017ebf113edd94813942a9b3bb191b2049089378ce726e6795248",
+        "research_cell_queue": "receipt:sha256:674d608044ac95fb41164f996291a33b3743e8e8af052c1b5f802fa0bb69873c",
+        "source_union_novelty": "receipt:sha256:c4fe7b6afb174d903b3e7bbe0cc3a62c902e5689bcdefa4a696394771b221fde",
+        "synthetic_discovery_recall": "receipt:sha256:f3176d80c2c9d044c4b0646ff1176b2dbacdcfef1e7df40d990980d60782aad0",
+        "synthetic_entity_recall": "receipt:sha256:07848237f918e0a9d76b645f2c145de1cef2c45a9d062cc1379e254c11dfa83d",
+        "target_cell_observation": "receipt:sha256:41681c8918ceac4313624dd75c8d192f5f954209d8664431d8b8f5e5e48218d8"
+      },
+      "decision_at": "2024-09-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:e5dcf974832ca0773ce927552e7d0ed31c7e262487305f6c30dedca3edc506a1",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "credit-private-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6cd0048503928e0481190a3cca6c54c240b6b206d1bb494bbdeefdf800222b21",
+        "dataset:x3-public-adviser": "receipt:sha256:da5f26faa5d6c3d08c7a92da0382e6a12b499a635d5205791144a2e7ccc1c91e",
+        "dataset:x3-registered-fund": "receipt:sha256:ce5f3391a2376ccf6fd23dbb7fe932c258a858d05aa29f51caa9c56201c47325",
+        "dataset:x3-target-grid": "receipt:sha256:f3f2582242fd119cc103eb92982d2c6dd021222f9e8ea156e28d6de2dbd5a306"
+      },
+      "source_counts": {
+        "ambiguous_rows": 0,
+        "canonical_members": 0,
+        "membership_rows": 503,
+        "source_rows": 503,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0
+      },
+      "source_preset": "public-only",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 12,
+        "excluded_cells": 3,
+        "excluded_ledger": [
+          {
+            "cell_id": "grid-cell:sha256:0abf2415c53b842bd232f236c34ea9268d47d17e40730b6c9d9fde3066491b7c",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:328b7de910bec66947685ed2f54ef971dc96c1c19b64aa839a3e2c0301787797",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:f84a0134c3a41b4601f1e27d810d9a9c26bb7a6db194e01eeda427126d12a66f",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          }
+        ],
+        "grid_id": "grid:sha256:5519826d30a793b2539cbc28ed75ef804d37d673ab8a34b4865c912c7223f209",
+        "observed_cells": null
+      }
+    },
+    "latest|public-only|cross-asset": {
+      "bundle_digest": "bundle:sha256:eb8ef8a45971294a526389dffbcf57c0a513c9772310386290604a421a1e5393",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:72fa288ae315a6904e763e231394e4dc23e9fbe8038fec3b9c8fa2752247ce34",
+        "funnel_conversion": "receipt:sha256:896d1a68ec26ca05841770046247d7d6533e9019ec6d0e9544a6b6fcf3adef3b",
+        "funnel_stage_counts": "receipt:sha256:e48f755861de48c91e0d32e6d8115b0ff26f9961bf38a4535bbd2029771e0d0c",
+        "global_universe_coverage": "receipt:sha256:29689ce1882a02454d49dbde5faa343d0fcc047dbc89a8aebeae756cf9d5a112",
+        "manager_quality_ranking": "receipt:sha256:228cd5566bb098adbf9e59b3dc562b11226e3de10ad7626e784070d7e25a9fcb",
+        "prehire_source_membership": "receipt:sha256:fbf6347c69703838d018073ed6953bfb63d306e105803ddfba43d23fa64d810e",
+        "public_source_membership": "receipt:sha256:cd19d177683437dda172656fc278596accaf118f9851648b84ca0b1d1bde6f95",
+        "research_cell_queue": "receipt:sha256:7b1012a0f1e8cf51da3723cf1a6b7bd4aa69971612d9372f421aab85048fdc94",
+        "source_union_novelty": "receipt:sha256:6fb8bd4843cfaebb61b4d4b9265e7452ce054a3dfb9d079792825c77b17e74c3",
+        "synthetic_discovery_recall": "receipt:sha256:b133ec174e4b4ec93f41c7ab454c4da29750167c16f8c4ec012fda11fd69cfaf",
+        "synthetic_entity_recall": "receipt:sha256:85b974543c9d51d95f1bc921f70c808e96d246f13ff4ea7fae9e140e93cb1ec0",
+        "target_cell_observation": "receipt:sha256:9890fe7ad581b21500442da10ba27e8b2d956bfee47e240745ce498d68aff54e"
+      },
+      "decision_at": "2024-09-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:1f12e6a1320067723363a0e86e66d247b3d99f88d65219733bdb2b7b83eee36f",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "cross-asset",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6cd0048503928e0481190a3cca6c54c240b6b206d1bb494bbdeefdf800222b21",
+        "dataset:x3-public-adviser": "receipt:sha256:da5f26faa5d6c3d08c7a92da0382e6a12b499a635d5205791144a2e7ccc1c91e",
+        "dataset:x3-registered-fund": "receipt:sha256:ce5f3391a2376ccf6fd23dbb7fe932c258a858d05aa29f51caa9c56201c47325",
+        "dataset:x3-target-grid": "receipt:sha256:f3f2582242fd119cc103eb92982d2c6dd021222f9e8ea156e28d6de2dbd5a306"
+      },
+      "source_counts": {
+        "ambiguous_rows": 0,
+        "canonical_members": 0,
+        "membership_rows": 503,
+        "source_rows": 503,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0
+      },
+      "source_preset": "public-only",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 21,
+        "excluded_cells": 3,
+        "excluded_ledger": [
+          {
+            "cell_id": "grid-cell:sha256:0abf2415c53b842bd232f236c34ea9268d47d17e40730b6c9d9fde3066491b7c",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:328b7de910bec66947685ed2f54ef971dc96c1c19b64aa839a3e2c0301787797",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:f84a0134c3a41b4601f1e27d810d9a9c26bb7a6db194e01eeda427126d12a66f",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          }
+        ],
+        "grid_id": "grid:sha256:5519826d30a793b2539cbc28ed75ef804d37d673ab8a34b4865c912c7223f209",
+        "observed_cells": null
+      }
+    },
+    "latest|public-only|liquid-public-markets": {
+      "bundle_digest": "bundle:sha256:cfb5882409b3e5b59270e2b00cf2f7e64adf1d436f56f522d85640e4b0fe5379",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:cd0cf580edee3db7ea794234bb65e189194d7d419a859007151f880818c5a4c2",
+        "funnel_conversion": "receipt:sha256:e6e341d97fb81b6171408f8fb755272975d0cb08116f29fc1613eae357d3a45b",
+        "funnel_stage_counts": "receipt:sha256:ee5a8955c2d6dd3df58fa78f562fdde4ba7d7e2eed79990a57a4bc510b41ee68",
+        "global_universe_coverage": "receipt:sha256:3b2bece602c7c05dbeb6ac52ea42b564646d7d3ea08634f58b240805ed52b85f",
+        "manager_quality_ranking": "receipt:sha256:4e638e64967f12d3df1828c8343cbdfcb9802b481108a2d504bf76098b72a158",
+        "prehire_source_membership": "receipt:sha256:c342b708638333634b7383cefc9309aec1f4adb6f068e5db1dbd0e0bb99dbc85",
+        "public_source_membership": "receipt:sha256:fa1f6ca394a0fad9df4c093eeffa05d8658c30a392152019f3214e4a91628857",
+        "research_cell_queue": "receipt:sha256:bcc2265539e6c271912ccf0bcc268196178060a9c5cb1812ca367ad0d2ce8d30",
+        "source_union_novelty": "receipt:sha256:f43b6aeb862d80c19bccad684d1a96af428b3a04fc5897271b8d78759ca740d7",
+        "synthetic_discovery_recall": "receipt:sha256:2e06a8be50ce7386e67aa39d4d8dda4d198edbd6d7a5c3ea86b23f87c23954e5",
+        "synthetic_entity_recall": "receipt:sha256:bb629dbf4b3f8709c7456da193185e9cf66c32074e32c05e0904a3fe21259637",
+        "target_cell_observation": "receipt:sha256:77a62d4fd7e5dd062ba3dbbeeba8169e94aacc86de9c4132af29df8fad2a0db3"
+      },
+      "decision_at": "2024-09-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:09fbdcadbf3d1ad9f9bd3edc3d2fe5ff6ae77be59731876566379e7a3dae31f6",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "liquid-public-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6cd0048503928e0481190a3cca6c54c240b6b206d1bb494bbdeefdf800222b21",
+        "dataset:x3-public-adviser": "receipt:sha256:da5f26faa5d6c3d08c7a92da0382e6a12b499a635d5205791144a2e7ccc1c91e",
+        "dataset:x3-registered-fund": "receipt:sha256:ce5f3391a2376ccf6fd23dbb7fe932c258a858d05aa29f51caa9c56201c47325",
+        "dataset:x3-target-grid": "receipt:sha256:f3f2582242fd119cc103eb92982d2c6dd021222f9e8ea156e28d6de2dbd5a306"
+      },
+      "source_counts": {
+        "ambiguous_rows": 0,
+        "canonical_members": 0,
+        "membership_rows": 503,
+        "source_rows": 503,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0
+      },
+      "source_preset": "public-only",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 9,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:5519826d30a793b2539cbc28ed75ef804d37d673ab8a34b4865c912c7223f209",
+        "observed_cells": null
+      }
+    },
+    "latest|public-plus-prehire|credit-private-markets": {
+      "bundle_digest": "bundle:sha256:d7be1bca241f2b6606f2adf94eb8e2dbfe2950b5dc41f6b7ef61f13d50cd1951",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:a7ce7716f2f01a941de8935960f930dd0af088729ffaed9e17b5f39bec2f81f5",
+        "funnel_conversion": "receipt:sha256:705c297a81baed364ad973348528a4f4abb3eaa0a844dd4583ac415e0de31811",
+        "funnel_stage_counts": "receipt:sha256:5b632c62bd4177db5139bea2744450f0679d9610414f58cfa6cb0412ac3a2c00",
+        "global_universe_coverage": "receipt:sha256:b1b38a5eebabacb307e7740dcc16e4736778c913d207c24bad58ca45d8cefa99",
+        "manager_quality_ranking": "receipt:sha256:190b064b78c0d2f367cc2d2adfa484ecb31f838d50b80fb5afddafdd4683c1c7",
+        "prehire_source_membership": "receipt:sha256:84a5282863dd0ba1e79550cb989761ca1bfad1637342559b40f66715eeccc4fa",
+        "public_source_membership": "receipt:sha256:ad23ef2faf8cb70a152b1a910d3993173eaf59150c50423737f51d0fbbb0a334",
+        "research_cell_queue": "receipt:sha256:67e00539499534bb3ca171b567e28b53f0797bfc8bb8691b662a895764dee9a1",
+        "source_union_novelty": "receipt:sha256:c539bd938d69350dc439e1d41517a33d56db87291f6b232b8527a8fe9afb66ac",
+        "synthetic_discovery_recall": "receipt:sha256:ba0b91b14156d9fadb5c3490f5478dcda42d4065c7eeafd97194390406be7201",
+        "synthetic_entity_recall": "receipt:sha256:8b27ac769b2c9fe8be86f6d4c89069640f921edb54dc90b6efd92912d55eeaff",
+        "target_cell_observation": "receipt:sha256:45e61f75e2ff7cb887dde4d1f50c3f118d16a3575eea3a59217805be5557eef5"
+      },
+      "decision_at": "2024-09-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:2bd84831e2886ee16b65a081bc093ad6357687cf988a65a58d0fca0ec326f518",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "credit-private-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6cd0048503928e0481190a3cca6c54c240b6b206d1bb494bbdeefdf800222b21",
+        "dataset:x3-public-adviser": "receipt:sha256:da5f26faa5d6c3d08c7a92da0382e6a12b499a635d5205791144a2e7ccc1c91e",
+        "dataset:x3-registered-fund": "receipt:sha256:ce5f3391a2376ccf6fd23dbb7fe932c258a858d05aa29f51caa9c56201c47325",
+        "dataset:x3-rfi-ddq": "receipt:sha256:9314abfdc2fa8443887d2ab6b1f0b0a422932853b7a058aad44733bd155f3640",
+        "dataset:x3-strategy-export": "receipt:sha256:6303526485bd9d8dd0da02ce7bd4593c104435c0b5140fe7be3ce37758180a8f",
+        "dataset:x3-target-grid": "receipt:sha256:f3f2582242fd119cc103eb92982d2c6dd021222f9e8ea156e28d6de2dbd5a306"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 835,
+        "source_rows": 835,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "public-plus-prehire",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 12,
+        "excluded_cells": 3,
+        "excluded_ledger": [
+          {
+            "cell_id": "grid-cell:sha256:0abf2415c53b842bd232f236c34ea9268d47d17e40730b6c9d9fde3066491b7c",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:328b7de910bec66947685ed2f54ef971dc96c1c19b64aa839a3e2c0301787797",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:f84a0134c3a41b4601f1e27d810d9a9c26bb7a6db194e01eeda427126d12a66f",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          }
+        ],
+        "grid_id": "grid:sha256:5519826d30a793b2539cbc28ed75ef804d37d673ab8a34b4865c912c7223f209",
+        "observed_cells": null
+      }
+    },
+    "latest|public-plus-prehire|cross-asset": {
+      "bundle_digest": "bundle:sha256:db63e0afac87a1a3f6bce235c7ec3263fa3d547073c0d08bdcf1ae5de18718ec",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:d191fe533731b8fe2541e074a0aae2806ed67b1ffbcf41ad9e2bb60de4ab079c",
+        "funnel_conversion": "receipt:sha256:973deb954c570bbfb40d50ed7fee40fdb691f33aaf4629f4651d0b5a153b62b5",
+        "funnel_stage_counts": "receipt:sha256:e886f6295f902606aba598ba775d7800554dd70a66759226645eeb77109d039f",
+        "global_universe_coverage": "receipt:sha256:f4a4a5e27bb97cb2e2610af00c2cb284b2ebc9473bfde6e9e4af1403ed9ae2b9",
+        "manager_quality_ranking": "receipt:sha256:258876da340648aabdefc4b7635b2d98e0c06cd58040483716b4b5a8cf4e212a",
+        "prehire_source_membership": "receipt:sha256:3bc76b4fa32d31382e279763cc612cc5235b3415fd4598506788e8deb7dddd9f",
+        "public_source_membership": "receipt:sha256:e3f6a1405e44df22117bed94c0c778bc22e951803605e729112d09d38b881c3b",
+        "research_cell_queue": "receipt:sha256:7a42140b6478da5db4adf6cc25da6dcd150844ff539e3e4d0574a7dd7b248224",
+        "source_union_novelty": "receipt:sha256:3ca5c9a6e54d68e88aba883f5fd3ce7d3ab017c11667ca81e4832e888c0c796a",
+        "synthetic_discovery_recall": "receipt:sha256:ae88b0af97ab4f1a95d6e2efbb278f9a30c8e6ac2fe280043279c514037e2cdd",
+        "synthetic_entity_recall": "receipt:sha256:06b31fcf900c16923b16cb39e4e881153f90297c561b4467302c56ee5b650d10",
+        "target_cell_observation": "receipt:sha256:fe7d7f88ff3ca2bf9e2f13a5d72a0d46d0ec959684f7611dde06b61d3c142afb"
+      },
+      "decision_at": "2024-09-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:3821fd88286a88edb0ed70559e829a7f86488109c577c93be4748119c1d32535",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "cross-asset",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6cd0048503928e0481190a3cca6c54c240b6b206d1bb494bbdeefdf800222b21",
+        "dataset:x3-public-adviser": "receipt:sha256:da5f26faa5d6c3d08c7a92da0382e6a12b499a635d5205791144a2e7ccc1c91e",
+        "dataset:x3-registered-fund": "receipt:sha256:ce5f3391a2376ccf6fd23dbb7fe932c258a858d05aa29f51caa9c56201c47325",
+        "dataset:x3-rfi-ddq": "receipt:sha256:9314abfdc2fa8443887d2ab6b1f0b0a422932853b7a058aad44733bd155f3640",
+        "dataset:x3-strategy-export": "receipt:sha256:6303526485bd9d8dd0da02ce7bd4593c104435c0b5140fe7be3ce37758180a8f",
+        "dataset:x3-target-grid": "receipt:sha256:f3f2582242fd119cc103eb92982d2c6dd021222f9e8ea156e28d6de2dbd5a306"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 835,
+        "source_rows": 835,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "public-plus-prehire",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 21,
+        "excluded_cells": 3,
+        "excluded_ledger": [
+          {
+            "cell_id": "grid-cell:sha256:0abf2415c53b842bd232f236c34ea9268d47d17e40730b6c9d9fde3066491b7c",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:328b7de910bec66947685ed2f54ef971dc96c1c19b64aa839a3e2c0301787797",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          },
+          {
+            "cell_id": "grid-cell:sha256:f84a0134c3a41b4601f1e27d810d9a9c26bb7a6db194e01eeda427126d12a66f",
+            "reason": "outside-authored-scope",
+            "state": "not_targeted"
+          }
+        ],
+        "grid_id": "grid:sha256:5519826d30a793b2539cbc28ed75ef804d37d673ab8a34b4865c912c7223f209",
+        "observed_cells": null
+      }
+    },
+    "latest|public-plus-prehire|liquid-public-markets": {
+      "bundle_digest": "bundle:sha256:cc18368f6f66d930d56e5f6e60adc3ffb38e5da8938d60e6242dd56abd0fdbd9",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:212937df9b52ba6d9ee1ebef12a7101c7ad024f45b931b6d6a649556cbd7080c",
+        "funnel_conversion": "receipt:sha256:d06e80be1fb9f3d4e1996b63cc422ba834c444cbeaf89a5440615165a9e60c73",
+        "funnel_stage_counts": "receipt:sha256:40be3badfd4ca61ab0cc7c041d1b8efd63723c5cb7e06d7824f2b7e8c784b75b",
+        "global_universe_coverage": "receipt:sha256:b02d1b26bfff50bfbf477191cc1582ff85aaf8b01f9b13c290b4a01f2a40bea2",
+        "manager_quality_ranking": "receipt:sha256:37bfefed3007c6c887d21317817302d06994e5f84363b4e10d015d22d091a4c3",
+        "prehire_source_membership": "receipt:sha256:8a36967c6991b6d8ccbc25818dac56f5df612a2e9f29d3f8ebb26ce9bdda5ad7",
+        "public_source_membership": "receipt:sha256:e7daf7617278ba1de6c2484affb2f0e3bee9d2ebd40784c8e9bc8f7f00d62b57",
+        "research_cell_queue": "receipt:sha256:a7fc724af8b993b59d1a7d15081b92dc103214de0d5aa96a1278668b76fd741f",
+        "source_union_novelty": "receipt:sha256:c7f39dae4121159c41036bbdf6ba60d0d5a8f879dbc287d4b97f4d2fa547ca87",
+        "synthetic_discovery_recall": "receipt:sha256:e52b31ac98b2378b9959d7636cb9243e7e6561c57f64f50160554ff5853cd7a1",
+        "synthetic_entity_recall": "receipt:sha256:03acf49e7d5034193ad519ec5365484f8b4018e390c87d247752b59b5970c64b",
+        "target_cell_observation": "receipt:sha256:cef58d8dbc24460909208642e99bc92efc19048ad01589dfdcf0accbb7978164"
+      },
+      "decision_at": "2024-09-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:d6c9e98dd998219ec1caf1f09de931a0929096920f490ed277569e162ef88571",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "liquid-public-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:6cd0048503928e0481190a3cca6c54c240b6b206d1bb494bbdeefdf800222b21",
+        "dataset:x3-public-adviser": "receipt:sha256:da5f26faa5d6c3d08c7a92da0382e6a12b499a635d5205791144a2e7ccc1c91e",
+        "dataset:x3-registered-fund": "receipt:sha256:ce5f3391a2376ccf6fd23dbb7fe932c258a858d05aa29f51caa9c56201c47325",
+        "dataset:x3-rfi-ddq": "receipt:sha256:9314abfdc2fa8443887d2ab6b1f0b0a422932853b7a058aad44733bd155f3640",
+        "dataset:x3-strategy-export": "receipt:sha256:6303526485bd9d8dd0da02ce7bd4593c104435c0b5140fe7be3ce37758180a8f",
+        "dataset:x3-target-grid": "receipt:sha256:f3f2582242fd119cc103eb92982d2c6dd021222f9e8ea156e28d6de2dbd5a306"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 835,
+        "source_rows": 835,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "public-plus-prehire",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 9,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:5519826d30a793b2539cbc28ed75ef804d37d673ab8a34b4865c912c7223f209",
+        "observed_cells": null
+      }
+    },
+    "middle|full-synthetic-funnel|credit-private-markets": {
+      "bundle_digest": "bundle:sha256:94b9963558ec99ab906e6c22f159d7c1b4c48c5cd2093cb1f22bf52c98c398ad",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:4810887a69f5ac500bbc8b3f2d98bf7da3205274c6d3e4c2ed2b7124e34a45d3",
+        "funnel_conversion": "receipt:sha256:9e7420a6f534bc6c8b9a0586729d99b0036b0517d6d2465fd9379168377cbb26",
+        "funnel_stage_counts": "receipt:sha256:6cb6d5a1950e556241bbfdaa85b1bb874516a6cd850232c6b8efc4591d26c489",
+        "global_universe_coverage": "receipt:sha256:72e479a8b37174d725b93e4beb6cd7b2191ac483e6079110c8dfd47d11b1d1ae",
+        "manager_quality_ranking": "receipt:sha256:8462ffe909dba15c42fe6f02a90b1f96112c97ff6180a71ccdf62c86af781305",
+        "prehire_source_membership": "receipt:sha256:2afb47899963e62b2bbead28ace36f37bb7b934a45e034ab80bd04dbba080994",
+        "public_source_membership": "receipt:sha256:1b8f834ba20dad13bb308a5d67ea0c5ef8df224f5daeb468e5a1f186929bd97f",
+        "research_cell_queue": "receipt:sha256:c0a1849f035a79251eaa08737a5b23e2213d737ff890072fc6f52723748c7fa4",
+        "source_union_novelty": "receipt:sha256:247c8909dfd46de5c60922ec39a582b65daf139b336dec70276851feecdd2bb8",
+        "synthetic_discovery_recall": "receipt:sha256:f6d4a5476c60c971cc905ae5b699b30654a4e80bc76b2cfd354032235c6890ef",
+        "synthetic_entity_recall": "receipt:sha256:1c2ac083c0c40a0dc56e8b5f8ae00e67557557331bfee676fac70cfbec13cd39",
+        "target_cell_observation": "receipt:sha256:9f145e1a2026e4bc56e82f9a5dd48a5a5e716eab2f12c896098bf65aa2388001"
+      },
+      "decision_at": "2024-06-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "slice_receipt_id": "receipt:sha256:c76837a27810f36487b6fe6c1fca17845e22055769bb3338571b8514983ac816",
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:6b64f3f40d55e0ad6ec4760e27e5ae624e30546a15206b47b07b2bbcafb14608",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "credit-private-markets",
+      "slice_receipts": {
+        "dataset:x3-funnel-event": "receipt:sha256:c76837a27810f36487b6fe6c1fca17845e22055769bb3338571b8514983ac816",
+        "dataset:x3-holdings-filer": "receipt:sha256:124f18e387a22c0ebc845af98f1844e8e739afeca163cc7d5e6fafdbdd0fe950",
+        "dataset:x3-public-adviser": "receipt:sha256:8be5ace1fc051be9f742cbca5a95caa11223cd3456d43ed910e122b3dad32029",
+        "dataset:x3-registered-fund": "receipt:sha256:48a34b689a0c02a3e46a769fa19f75bba29f22c8d9fe5e79d332468dcbb8aa9b",
+        "dataset:x3-rfi-ddq": "receipt:sha256:80234360b0d6a39f98c6189e9d5d00b9945b196265d93af98615ba0e5ebc5304",
+        "dataset:x3-strategy-export": "receipt:sha256:9176ad970539cb382b551a647c1ba3b6e11c9c40ef9d256e182f7c3f00ea7f08",
+        "dataset:x3-target-grid": "receipt:sha256:1132492ce97946e052e823afd3676f9b4239946d9766a0abfffd7ff12999c3b7"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 830,
+        "source_rows": 830,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "full-synthetic-funnel",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 15,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:fd85e17215629f2f3a8cc12b2840366acde11ead995991613d4e332a81f3021b",
+        "observed_cells": null
+      }
+    },
+    "middle|full-synthetic-funnel|cross-asset": {
+      "bundle_digest": "bundle:sha256:bd76d3cf48a2857d62e976f668b119be94b09dfa7f147ae054f939959c3f0be4",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:3e8efac244dab6df13d65f3e6e9bd15f3de8d6dab60bd1c4482a3f5291dbc1d6",
+        "funnel_conversion": "receipt:sha256:44b1fc83873f2c80d719c9ec60f341413c425db0b0bf20df6f22d48d7b1dd079",
+        "funnel_stage_counts": "receipt:sha256:69d35efb760485d47f3f32715dabb0e1b4d23713827e3d8f5cfab35962983167",
+        "global_universe_coverage": "receipt:sha256:1ce6c8664601062c558756419e70e00fc5647fedd2b534c791f5705ff68e4d8c",
+        "manager_quality_ranking": "receipt:sha256:435c484af762a04356dbb2969eacd7c4e63ba51c94b19215193c6edf4dd4d3b4",
+        "prehire_source_membership": "receipt:sha256:a1eee73f382dad7119494f7944517dd36b7746b503b1163fed202fa2249cfdaa",
+        "public_source_membership": "receipt:sha256:b795f6d178c753aece3ce14658f2f038a17451ccc8b6eb8bd70594ab5f1ee05b",
+        "research_cell_queue": "receipt:sha256:55d44b5922c5fbd83a99fa7e27415d39574c6f8bb091a9a91c558b80d7210d9a",
+        "source_union_novelty": "receipt:sha256:b3136551cd5111131eefddcf33e5223eb64a1115c659b34df88771c4d1f28adf",
+        "synthetic_discovery_recall": "receipt:sha256:4899df3e315bc3c3ed37caddeeb13c4b3515fced444261e4e34044025acd981b",
+        "synthetic_entity_recall": "receipt:sha256:3fb143ee7dc475d76738e3401e8486cb09fae93630b735ddacb7194c45081852",
+        "target_cell_observation": "receipt:sha256:4b9ed7c167207fa8d4e2a7a6087adeba719750663239cfb2caa02d22bac60b91"
+      },
+      "decision_at": "2024-06-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "slice_receipt_id": "receipt:sha256:c76837a27810f36487b6fe6c1fca17845e22055769bb3338571b8514983ac816",
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:d0d2a36eaa742c0b07fd149ecf6e77bc6133b61e736cd8eb8b006a4f7d822270",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "cross-asset",
+      "slice_receipts": {
+        "dataset:x3-funnel-event": "receipt:sha256:c76837a27810f36487b6fe6c1fca17845e22055769bb3338571b8514983ac816",
+        "dataset:x3-holdings-filer": "receipt:sha256:124f18e387a22c0ebc845af98f1844e8e739afeca163cc7d5e6fafdbdd0fe950",
+        "dataset:x3-public-adviser": "receipt:sha256:8be5ace1fc051be9f742cbca5a95caa11223cd3456d43ed910e122b3dad32029",
+        "dataset:x3-registered-fund": "receipt:sha256:48a34b689a0c02a3e46a769fa19f75bba29f22c8d9fe5e79d332468dcbb8aa9b",
+        "dataset:x3-rfi-ddq": "receipt:sha256:80234360b0d6a39f98c6189e9d5d00b9945b196265d93af98615ba0e5ebc5304",
+        "dataset:x3-strategy-export": "receipt:sha256:9176ad970539cb382b551a647c1ba3b6e11c9c40ef9d256e182f7c3f00ea7f08",
+        "dataset:x3-target-grid": "receipt:sha256:1132492ce97946e052e823afd3676f9b4239946d9766a0abfffd7ff12999c3b7"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 830,
+        "source_rows": 830,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "full-synthetic-funnel",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 24,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:fd85e17215629f2f3a8cc12b2840366acde11ead995991613d4e332a81f3021b",
+        "observed_cells": null
+      }
+    },
+    "middle|full-synthetic-funnel|liquid-public-markets": {
+      "bundle_digest": "bundle:sha256:62b832af835cf875d054e5399db79996cf6f4e40bbdbaea57b6c920678526e44",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:cbd4123ee82c771752d3ef435a9a36ac5fd121b8797c1624cf5fe1418502c777",
+        "funnel_conversion": "receipt:sha256:79babab5ed80ffaee24885aaa92205691bc9f17cc2c2cdc143b6459f20ea89ea",
+        "funnel_stage_counts": "receipt:sha256:bb0c8d90bda3c348203517845abdeac2b5db6902d1a2ab4244e65813ba3b1792",
+        "global_universe_coverage": "receipt:sha256:5d6b8b961bbc29cf3d67a9e21dde667bc78d41983ac47bbc2c985d696f8b9f99",
+        "manager_quality_ranking": "receipt:sha256:3ab399ce15d0642f9253f5e4dbb5fc2bb9996746ebf3f9670c8708d8e8bc3363",
+        "prehire_source_membership": "receipt:sha256:8138c5c7cc61f8c88fb36408e2bcf1e01eeef153f442bf35d98c98ce2d07e67d",
+        "public_source_membership": "receipt:sha256:b0a8d83f008bf79fcc85f99d93211e22ad4b3278632569d7a80496963a8fbf9a",
+        "research_cell_queue": "receipt:sha256:26b66bcff684642fcae364061d423ea49e8750712e91e50542a5ac2c19890dac",
+        "source_union_novelty": "receipt:sha256:cc1483c8602897960611c76443a3117e2eba635e17bdb53bb1378e8aa17e5608",
+        "synthetic_discovery_recall": "receipt:sha256:18a96e95ed430d4017aee5ca7e5b47a820c74eed163d9c8dfc34ebf33f50fe35",
+        "synthetic_entity_recall": "receipt:sha256:2c474fe89aae7ae04bbee48f90a2009031b18a40320e7326c90f4deac2c8fa38",
+        "target_cell_observation": "receipt:sha256:3624e636d73892d0ed1dcd9e57259e8ee977620de7486b246bb9738bb4793f6d"
+      },
+      "decision_at": "2024-06-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "slice_receipt_id": "receipt:sha256:c76837a27810f36487b6fe6c1fca17845e22055769bb3338571b8514983ac816",
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:c7f3852ce5f4754759194989fb8f15237183c60db96b2ddd0dcb9ab45b66b885",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "liquid-public-markets",
+      "slice_receipts": {
+        "dataset:x3-funnel-event": "receipt:sha256:c76837a27810f36487b6fe6c1fca17845e22055769bb3338571b8514983ac816",
+        "dataset:x3-holdings-filer": "receipt:sha256:124f18e387a22c0ebc845af98f1844e8e739afeca163cc7d5e6fafdbdd0fe950",
+        "dataset:x3-public-adviser": "receipt:sha256:8be5ace1fc051be9f742cbca5a95caa11223cd3456d43ed910e122b3dad32029",
+        "dataset:x3-registered-fund": "receipt:sha256:48a34b689a0c02a3e46a769fa19f75bba29f22c8d9fe5e79d332468dcbb8aa9b",
+        "dataset:x3-rfi-ddq": "receipt:sha256:80234360b0d6a39f98c6189e9d5d00b9945b196265d93af98615ba0e5ebc5304",
+        "dataset:x3-strategy-export": "receipt:sha256:9176ad970539cb382b551a647c1ba3b6e11c9c40ef9d256e182f7c3f00ea7f08",
+        "dataset:x3-target-grid": "receipt:sha256:1132492ce97946e052e823afd3676f9b4239946d9766a0abfffd7ff12999c3b7"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 830,
+        "source_rows": 830,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "full-synthetic-funnel",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 9,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:fd85e17215629f2f3a8cc12b2840366acde11ead995991613d4e332a81f3021b",
+        "observed_cells": null
+      }
+    },
+    "middle|public-only|credit-private-markets": {
+      "bundle_digest": "bundle:sha256:25dd9886cf2550f786e674d27030206206d81dd6f727c4a83d1baa00ea2fa733",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:5163c969f88cdaba7d59524dd7472d7615c4e9119646cabdc840ffd7c3812ce9",
+        "funnel_conversion": "receipt:sha256:c64e6e42a3b96bc34eba5ae7bb86bea2ca33799e9822aa3061a4a58120d6478e",
+        "funnel_stage_counts": "receipt:sha256:290d0b82e6d182b3450ba6d53d2d72b0df62130ec72972e57e0f9662e93fef0b",
+        "global_universe_coverage": "receipt:sha256:a046704a6bac448f0c1fcbb37875a20d47b978833633b34f51e7589102ea9879",
+        "manager_quality_ranking": "receipt:sha256:68de4595b71e1f343ed1997642d72233e7e1479b361fca73635f45d5e0b8faa0",
+        "prehire_source_membership": "receipt:sha256:53608278031b8b5331b1539d3942fcc1e2f910d728f0d749f2fc2b964afb66f5",
+        "public_source_membership": "receipt:sha256:e49db6883874d9c066fd41af551472e013a495d60cfb3f91766f5eec4078deba",
+        "research_cell_queue": "receipt:sha256:f6f02fb02cb9b3e914dc99d4f770cce8c3a8e900e8b7b3dd4d06b241698a9087",
+        "source_union_novelty": "receipt:sha256:6b34cc3897ebeba9c11cf4f78a53bbb77b33e52a1f413c4973d5047e5c95847c",
+        "synthetic_discovery_recall": "receipt:sha256:5a06b390ab55ae8681deb508b397084a60f75978957fe8ddeaab34065c910f3e",
+        "synthetic_entity_recall": "receipt:sha256:955fd04393f6db2e8f7327a98cd0d9e1a13982ff83945768237d27564c02c226",
+        "target_cell_observation": "receipt:sha256:a302ed00ebaa1783416b206e2e4de1100dbb0d3ac6dbd6d34c32efe3b4719ae7"
+      },
+      "decision_at": "2024-06-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:5a6747e7ead55a52d4639be8d9cc4422423ac08d945cfa32c3f6cc8da10ff5cb",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "credit-private-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:124f18e387a22c0ebc845af98f1844e8e739afeca163cc7d5e6fafdbdd0fe950",
+        "dataset:x3-public-adviser": "receipt:sha256:8be5ace1fc051be9f742cbca5a95caa11223cd3456d43ed910e122b3dad32029",
+        "dataset:x3-registered-fund": "receipt:sha256:48a34b689a0c02a3e46a769fa19f75bba29f22c8d9fe5e79d332468dcbb8aa9b",
+        "dataset:x3-target-grid": "receipt:sha256:1132492ce97946e052e823afd3676f9b4239946d9766a0abfffd7ff12999c3b7"
+      },
+      "source_counts": {
+        "ambiguous_rows": 0,
+        "canonical_members": 0,
+        "membership_rows": 501,
+        "source_rows": 501,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0
+      },
+      "source_preset": "public-only",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 15,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:fd85e17215629f2f3a8cc12b2840366acde11ead995991613d4e332a81f3021b",
+        "observed_cells": null
+      }
+    },
+    "middle|public-only|cross-asset": {
+      "bundle_digest": "bundle:sha256:21c6eaab9db353449660e6737f6446f927e00ea076891d005a9caeac294dc22a",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:95d25925f760a77887d0d8d22e5f5091213d3565396294c1e068884c44b20084",
+        "funnel_conversion": "receipt:sha256:d85eb2c9d5db70de2cf94fdeca331e55bcd83194e4237b6a5baeaa4a78d744a9",
+        "funnel_stage_counts": "receipt:sha256:277c03494f647d388065a6e200208f940081ae2789ef622fcf81841a66910c7c",
+        "global_universe_coverage": "receipt:sha256:79bae797b3ead35cf026eb73e7f1d65a8d5ee247c6c5bd8553f6e71832c90074",
+        "manager_quality_ranking": "receipt:sha256:c1265a3ee9a802cd021fd396eb8d4a5d46f3ad3beb80ba064f7c267efa1e3914",
+        "prehire_source_membership": "receipt:sha256:5032e719ce794a56d1e9354da0d118fb10da61a2ca03b71f2dc99b3d0ce3b873",
+        "public_source_membership": "receipt:sha256:629bd673f375923b36c5b6f469d4233db89dcad575465a0c11797b653cd0114f",
+        "research_cell_queue": "receipt:sha256:ac7e7d1e47cb621ec32a5839ddd221c4fbb1d3d4d5aecec723737dc93c014b25",
+        "source_union_novelty": "receipt:sha256:1b5e52dd4d04b968690cd74dd5afb5dcb92bbab3745c5d9efa863bd5c8bc2d07",
+        "synthetic_discovery_recall": "receipt:sha256:dd555b9beae1b7602e1b8eaedba97053d88e69fed0f45e063b9995794d7fdba6",
+        "synthetic_entity_recall": "receipt:sha256:2e8b14ce5a947ad82e469abdd7e28ae1b9e89fdcb21ae4876c23497595928caf",
+        "target_cell_observation": "receipt:sha256:d13c81dc7489ee4274db83f2a9bde30204ea82ed4d8d8adcffd5ee6f228db843"
+      },
+      "decision_at": "2024-06-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:a9499d892d373e20e6d0e6784e3c124802f941036d3a74c3e4b45fd19b10732b",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "cross-asset",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:124f18e387a22c0ebc845af98f1844e8e739afeca163cc7d5e6fafdbdd0fe950",
+        "dataset:x3-public-adviser": "receipt:sha256:8be5ace1fc051be9f742cbca5a95caa11223cd3456d43ed910e122b3dad32029",
+        "dataset:x3-registered-fund": "receipt:sha256:48a34b689a0c02a3e46a769fa19f75bba29f22c8d9fe5e79d332468dcbb8aa9b",
+        "dataset:x3-target-grid": "receipt:sha256:1132492ce97946e052e823afd3676f9b4239946d9766a0abfffd7ff12999c3b7"
+      },
+      "source_counts": {
+        "ambiguous_rows": 0,
+        "canonical_members": 0,
+        "membership_rows": 501,
+        "source_rows": 501,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0
+      },
+      "source_preset": "public-only",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 24,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:fd85e17215629f2f3a8cc12b2840366acde11ead995991613d4e332a81f3021b",
+        "observed_cells": null
+      }
+    },
+    "middle|public-only|liquid-public-markets": {
+      "bundle_digest": "bundle:sha256:310100b52fb166618e19ba82c3fb29889457194079caab5dc98c8f72accfd838",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:47ee7e418b2c172399611f4a48f44bc5a61391974691bcc8068389d2ef036d72",
+        "funnel_conversion": "receipt:sha256:1d1a45e1a8b49cc7e7a50d6b2bccf42148b0cd66d396b98b33b133c92aa3105f",
+        "funnel_stage_counts": "receipt:sha256:0c1ab6e147ad51742afd2ff5da09da7c310a2e2d2c86e286c0a689587ed95246",
+        "global_universe_coverage": "receipt:sha256:eafc45663b7af16b1f4d69b9cd313a2352b79530993ef83a36d45c3d778e9e56",
+        "manager_quality_ranking": "receipt:sha256:88010f993803f3f7f976b69a56d1b103f9f4ba10379d2a60ff0d805eb0450edc",
+        "prehire_source_membership": "receipt:sha256:52f0bbdc5fa6a01e8e12b712350b5896b2a36a3343ee2cda03460efc0edacf5b",
+        "public_source_membership": "receipt:sha256:b88433ea8e4abb1744bc6cae6a96309737e2dafed6e43b9fea8562d1f5064067",
+        "research_cell_queue": "receipt:sha256:5c54d89bb4c99dfb7340590fc972359c2b1ac219167b6a6098098de9a9379224",
+        "source_union_novelty": "receipt:sha256:f269b306dfab8ffc9995cf13a0a59b46a96b3a5bd177ae005d2d7b1ce1987011",
+        "synthetic_discovery_recall": "receipt:sha256:74419d3f8d14223e3b1c65472ea46ad6f8dc8763044c52fc9a33c54fb165a30d",
+        "synthetic_entity_recall": "receipt:sha256:ae5014f9eca7d95f73996853c8594766aebf1d7bfb59be9ab622028cfb7c973d",
+        "target_cell_observation": "receipt:sha256:848b2190cd4d6b4eec921aa36706620a6b806dd84fccb98c75334e3fd13a96fd"
+      },
+      "decision_at": "2024-06-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:01575ecd1cb93e77844cbaccde7fd50e47606b52ab02652198c47a1e6ad81901",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "liquid-public-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:124f18e387a22c0ebc845af98f1844e8e739afeca163cc7d5e6fafdbdd0fe950",
+        "dataset:x3-public-adviser": "receipt:sha256:8be5ace1fc051be9f742cbca5a95caa11223cd3456d43ed910e122b3dad32029",
+        "dataset:x3-registered-fund": "receipt:sha256:48a34b689a0c02a3e46a769fa19f75bba29f22c8d9fe5e79d332468dcbb8aa9b",
+        "dataset:x3-target-grid": "receipt:sha256:1132492ce97946e052e823afd3676f9b4239946d9766a0abfffd7ff12999c3b7"
+      },
+      "source_counts": {
+        "ambiguous_rows": 0,
+        "canonical_members": 0,
+        "membership_rows": 501,
+        "source_rows": 501,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0
+      },
+      "source_preset": "public-only",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 9,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:fd85e17215629f2f3a8cc12b2840366acde11ead995991613d4e332a81f3021b",
+        "observed_cells": null
+      }
+    },
+    "middle|public-plus-prehire|credit-private-markets": {
+      "bundle_digest": "bundle:sha256:d7f97eac4995425425eb15979ad6a8c54192868cebd2c1a0b38444716103d13b",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:4dfdf68b180295845fb428cb4a508230cf0a8bddec564652b60c9ed8017cf81a",
+        "funnel_conversion": "receipt:sha256:c011da2908770efe8eb4372ae5a67df82ca493aa8c667b72347513db161817c9",
+        "funnel_stage_counts": "receipt:sha256:570a5e107b43026b1751652b57bf1b3281593eff1c9c67c5e23aa8ac2781c64e",
+        "global_universe_coverage": "receipt:sha256:46ee1b34c3aa1af65fdab5c1f813b44138ae92f02506ca737f507726bb82537a",
+        "manager_quality_ranking": "receipt:sha256:ec42b5a1c2ab65e9f83f01e601dc68eb47c3ee2e7437c8a17f46e96e98c45823",
+        "prehire_source_membership": "receipt:sha256:10e9c90ec2bdebca50b507aeae7699379614e8d06bd583492e035608a89f41cb",
+        "public_source_membership": "receipt:sha256:bed9eeab5b92fc7120f36cf4a3cfeb75f052a8d5091bd2e29fa14052b576a203",
+        "research_cell_queue": "receipt:sha256:769f58dff80eba77070d219c50389bb7fad9144a2f918278a0f5c1a3df832d1e",
+        "source_union_novelty": "receipt:sha256:d81dd7351682cd67596d549e3440b6677c174cc3ae3a9cc1f036a3e2559d9d02",
+        "synthetic_discovery_recall": "receipt:sha256:5cf8bef7159c041d29e89ddf413f1ed2a1556c69d958e94d331355501b84fe70",
+        "synthetic_entity_recall": "receipt:sha256:b89dc0dc39bc631ef72397d7b3636132d277aed8cf419519027aa2282de00883",
+        "target_cell_observation": "receipt:sha256:a4f86444953c00bad36d925a7f7391b9bdf5b238cc59ef3ef768ce77bf7d6d7c"
+      },
+      "decision_at": "2024-06-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:ea379be0171a584f4be3d7253c1617af87924af5476cb26d2ce1ed00968fee3c",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "credit-private-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:124f18e387a22c0ebc845af98f1844e8e739afeca163cc7d5e6fafdbdd0fe950",
+        "dataset:x3-public-adviser": "receipt:sha256:8be5ace1fc051be9f742cbca5a95caa11223cd3456d43ed910e122b3dad32029",
+        "dataset:x3-registered-fund": "receipt:sha256:48a34b689a0c02a3e46a769fa19f75bba29f22c8d9fe5e79d332468dcbb8aa9b",
+        "dataset:x3-rfi-ddq": "receipt:sha256:80234360b0d6a39f98c6189e9d5d00b9945b196265d93af98615ba0e5ebc5304",
+        "dataset:x3-strategy-export": "receipt:sha256:9176ad970539cb382b551a647c1ba3b6e11c9c40ef9d256e182f7c3f00ea7f08",
+        "dataset:x3-target-grid": "receipt:sha256:1132492ce97946e052e823afd3676f9b4239946d9766a0abfffd7ff12999c3b7"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 830,
+        "source_rows": 830,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "public-plus-prehire",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 15,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:fd85e17215629f2f3a8cc12b2840366acde11ead995991613d4e332a81f3021b",
+        "observed_cells": null
+      }
+    },
+    "middle|public-plus-prehire|cross-asset": {
+      "bundle_digest": "bundle:sha256:6b8f149c2c204d0089b9dc8f82f5e445beab515f16544efe3ec062a78242de79",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:0cf9e2525258aff831e9cba6288120e0efe591e04b3e74a3056ed44510a96f22",
+        "funnel_conversion": "receipt:sha256:4da8bd7807742147ff2179a443187a84545f0575c005271f727ca63678dd36da",
+        "funnel_stage_counts": "receipt:sha256:110d648c0b8a73e81478cdbade20802d954d71b4b44b5f37bb83801dd692a289",
+        "global_universe_coverage": "receipt:sha256:a05a244272139e39529f6de1fc1535ced2351cb795ad13323de28be4fa3fa006",
+        "manager_quality_ranking": "receipt:sha256:a7776a8f383665d89f943b2d75dc47a63f3a41f06cfbfbe82e9bcb1a10563330",
+        "prehire_source_membership": "receipt:sha256:71a66ca9c5f74c3718181d8cf9eca00d1156721c68d45cf7a328a8b4210762d0",
+        "public_source_membership": "receipt:sha256:da06d9b0c8fbc63565905fb9fed1373fd500009e610179f335cde8d7899afb1d",
+        "research_cell_queue": "receipt:sha256:67ce53df6edcb349787c8fe476bc01ab3920a11f083263caac644e88aea9c134",
+        "source_union_novelty": "receipt:sha256:4a94ce8b4d139942288bd996c3b7a923179b01f5989f1b6353c7bf476553073b",
+        "synthetic_discovery_recall": "receipt:sha256:eee413d651cd36802e2c9a348145073f3cccddc992ffafb8233e8fe56c5d8c64",
+        "synthetic_entity_recall": "receipt:sha256:d47bf8740a62dfdd8e389994c7f47f9f3b9ba1f0dd6ea45714ee3edac38883bd",
+        "target_cell_observation": "receipt:sha256:49699cdf9457191a9a4f6f8929f8ffa983780ece269e89bf5063374e8619564c"
+      },
+      "decision_at": "2024-06-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:a861edf0a9020c95e007d55fa49376caa2937567348e977b7e99e0391d66d370",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "cross-asset",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:124f18e387a22c0ebc845af98f1844e8e739afeca163cc7d5e6fafdbdd0fe950",
+        "dataset:x3-public-adviser": "receipt:sha256:8be5ace1fc051be9f742cbca5a95caa11223cd3456d43ed910e122b3dad32029",
+        "dataset:x3-registered-fund": "receipt:sha256:48a34b689a0c02a3e46a769fa19f75bba29f22c8d9fe5e79d332468dcbb8aa9b",
+        "dataset:x3-rfi-ddq": "receipt:sha256:80234360b0d6a39f98c6189e9d5d00b9945b196265d93af98615ba0e5ebc5304",
+        "dataset:x3-strategy-export": "receipt:sha256:9176ad970539cb382b551a647c1ba3b6e11c9c40ef9d256e182f7c3f00ea7f08",
+        "dataset:x3-target-grid": "receipt:sha256:1132492ce97946e052e823afd3676f9b4239946d9766a0abfffd7ff12999c3b7"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 830,
+        "source_rows": 830,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "public-plus-prehire",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 24,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:fd85e17215629f2f3a8cc12b2840366acde11ead995991613d4e332a81f3021b",
+        "observed_cells": null
+      }
+    },
+    "middle|public-plus-prehire|liquid-public-markets": {
+      "bundle_digest": "bundle:sha256:8c56c3dc5c2f06449fa07b58389c52b9ffdff75eaa1dc5e5631bc302a747f2ab",
+      "claim_receipt_ids": {
+        "entity_resolution_state": "receipt:sha256:dd07fac1766114328eaf41e703496348b2feee991d4688c20cab84f4f59feb31",
+        "funnel_conversion": "receipt:sha256:aae29c709d3441dc66862ef6f00bc326f59073082975a97f1cbc94d0216766ac",
+        "funnel_stage_counts": "receipt:sha256:97a6e0ee89eb93267446b4c3f427ec3a808b209578166d81098320c2ed5836d9",
+        "global_universe_coverage": "receipt:sha256:9c7163a4538c7b42b84da2ad18d258eba06fd14f25d3c01c487e5949ec9c36b9",
+        "manager_quality_ranking": "receipt:sha256:17030b03cb5e1bb4d45c58f3a88a85c6d0227f49c2546ca0ede440826c9ac90e",
+        "prehire_source_membership": "receipt:sha256:44e2ccef89b6084345491dcc648471e5f735489730fca8ea0307beab5d8e154b",
+        "public_source_membership": "receipt:sha256:143e7427b15619ed3f1355e6e4f9006c870e0d41a6f74f6a1c7fa13525702434",
+        "research_cell_queue": "receipt:sha256:2af35ed34229d14c9ad6ac0920d53d31a4c36afc76a48a317140625ab20dc234",
+        "source_union_novelty": "receipt:sha256:5f819b2e21d82928cdb82fc8cc238b7b4f84f2792a245d752c6342d1926cf9bb",
+        "synthetic_discovery_recall": "receipt:sha256:33fea9f9d162da1f45b896937f380ec3fa496460ab85e48919e3d852383905ff",
+        "synthetic_entity_recall": "receipt:sha256:cc3a64932b825e135ccb21ddf13c3211e3890171bf2927fb5da05cff920498b0",
+        "target_cell_observation": "receipt:sha256:f2687d1d413b895d9c3f7803ba34814769d3cc576fdded0e000a82034b643dcb"
+      },
+      "decision_at": "2024-06-30T23:59:59+00:00",
+      "denominator_label": "eligible allocator target-grid cells at strategy grain",
+      "entity_grain": "strategy",
+      "funnel": {
+        "conversion_interval": null,
+        "refusal": {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "Exact labelled stage counts may render; conversion and mandate-brief inference refuse.",
+          "pointer": "/funnel/conversion"
+        },
+        "stage_counts": []
+      },
+      "join_receipt_id": "receipt:sha256:168576225c5ce032bfb2e4a35be4abc685da3750d92d3593dc9347d5fef8230e",
+      "queue": [],
+      "refusals": [
+        {
+          "code": "typed-membership-cell-projection-required",
+          "detail": "The shared membership projection has no canonical target-cell link; no label or ordinal inference is permitted.",
+          "pointer": "/target_grid/observed_cells"
+        },
+        {
+          "code": "typed-mandate-brief-cohort-projection-required",
+          "detail": "The shared opportunity projection has no typed mandate-brief/cohort-key columns.",
+          "pointer": "/funnel/conversion"
+        }
+      ],
+      "scope_preset": "liquid-public-markets",
+      "slice_receipts": {
+        "dataset:x3-holdings-filer": "receipt:sha256:124f18e387a22c0ebc845af98f1844e8e739afeca163cc7d5e6fafdbdd0fe950",
+        "dataset:x3-public-adviser": "receipt:sha256:8be5ace1fc051be9f742cbca5a95caa11223cd3456d43ed910e122b3dad32029",
+        "dataset:x3-registered-fund": "receipt:sha256:48a34b689a0c02a3e46a769fa19f75bba29f22c8d9fe5e79d332468dcbb8aa9b",
+        "dataset:x3-rfi-ddq": "receipt:sha256:80234360b0d6a39f98c6189e9d5d00b9945b196265d93af98615ba0e5ebc5304",
+        "dataset:x3-strategy-export": "receipt:sha256:9176ad970539cb382b551a647c1ba3b6e11c9c40ef9d256e182f7c3f00ea7f08",
+        "dataset:x3-target-grid": "receipt:sha256:1132492ce97946e052e823afd3676f9b4239946d9766a0abfffd7ff12999c3b7"
+      },
+      "source_counts": {
+        "ambiguous_rows": 1,
+        "canonical_members": 24,
+        "membership_rows": 830,
+        "source_rows": 830,
+        "unresolved_rows": 0
+      },
+      "source_novelty": {
+        "dataset:x3-holdings-filer": 0,
+        "dataset:x3-public-adviser": 0,
+        "dataset:x3-registered-fund": 0,
+        "dataset:x3-rfi-ddq": 24,
+        "dataset:x3-strategy-export": 0
+      },
+      "source_preset": "public-plus-prehire",
+      "target_grid": {
+        "denominator_rule": "eligible-authored-cells",
+        "eligible_cells": 9,
+        "excluded_cells": 0,
+        "excluded_ledger": [],
+        "grid_id": "grid:sha256:fd85e17215629f2f3a8cc12b2840366acde11ead995991613d4e332a81f3021b",
+        "observed_cells": null
+      }
+    }
+  },
+  "synthetic_discovery_audit": {
+    "hidden_denominator": 24,
+    "label": "synthetic fixture recall",
+    "observed_hidden": 23,
+    "recall": 0.958333
+  },
+  "taxonomy": {
+    "entity_grain": "strategy",
+    "scope_presets": [
+      "cross-asset",
+      "liquid-public-markets",
+      "credit-private-markets"
+    ]
+  }
+}

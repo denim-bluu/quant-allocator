@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ page_title | default('Idea Gallery') }} · {{ site_title }}</title>
+  <meta name="description" content="Quantitative methods for allocator decisions under partial transparency.">
+  <title>{{ page_title | default('Research') }} · {{ site_title }}</title>
   <script>
     (function () {
       var stored = null;
@@ -12,29 +13,48 @@
       root.setAttribute("data-theme", stored || root.getAttribute("data-default-theme") || "light");
     })();
   </script>
-  <link rel="stylesheet" href="{{ asset_base | default('') }}assets/design-tokens.css">
-  <link rel="stylesheet" href="{{ asset_base | default('') }}assets/interval.css">
+  <link rel="stylesheet" href="{{ asset_base | default('') }}assets/design-tokens.css?v={{ asset_version }}">
+  <link rel="stylesheet" href="{{ asset_base | default('') }}assets/interval.css?v={{ asset_version }}">
   {% block head_extra %}{% endblock %}
 </head>
 <body>
+  {% set home_path = (asset_base | default('')) ~ 'index.html' %}
+  {% set section_path = '' if is_home | default(false) else home_path %}
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <div class="site-header__title">{{ site_title }}</div>
-    <nav class="site-nav" aria-label="Primary">
-      <a href="{{ asset_base | default('') }}index.html">Gallery</a>
-    </nav>
-    <button type="button" class="theme-toggle" data-theme-toggle
-            aria-label="Toggle light or dark theme">Theme</button>
+  <header class="publication-header">
+    <div class="publication-header__inner">
+      <a class="publication-wordmark" href="{{ home_path }}" aria-label="Quant Allocator home">QUANT ALLOCATOR</a>
+      <nav class="publication-nav" aria-label="Primary">
+        <a href="{{ section_path }}#start-here">Start here</a>
+        <a href="{{ section_path }}#research">Research</a>
+        <a href="{{ section_path }}#exhibits">Exhibits</a>
+        <a href="{{ section_path }}#browse">Browse</a>
+      </nav>
+      <button type="button" class="theme-toggle" data-theme-toggle
+              aria-label="Toggle light or dark theme">Theme</button>
+      <details class="publication-menu">
+        <summary>Menu</summary>
+        <nav aria-label="Mobile primary">
+          <a href="{{ section_path }}#start-here">Start here</a>
+          <a href="{{ section_path }}#research">Research</a>
+          <a href="{{ section_path }}#exhibits">Exhibits</a>
+          <a href="{{ section_path }}#browse">Browse</a>
+        </nav>
+      </details>
+    </div>
   </header>
   <div class="site-banner" role="note">All data on this site is synthetic or public; all manager names are fictional.</div>
   <main id="main" class="site-main">
     {% block content %}{% endblock %}
   </main>
   <footer class="site-footer">
-    <span>MIT License</span>
-    <a href="{{ repo_url }}">Source repository</a>
+    <p>Quantitative methods for allocator decisions under partial transparency.</p>
+    <nav aria-label="Publication links">
+      <span>MIT License</span>
+      <a href="{{ repo_url }}">Source repository</a>
+    </nav>
   </footer>
-  <script src="{{ asset_base | default('') }}assets/interval.js"></script>
+  <script src="{{ asset_base | default('') }}assets/interval.js?v={{ asset_version }}"></script>
   {% block body_scripts %}{% endblock %}
 </body>
 </html>

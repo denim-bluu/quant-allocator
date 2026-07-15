@@ -5,6 +5,28 @@
   decisions: [select, size]
   tiers: [R, E, P]
   status: live
+  decision_question: Is the reported alpha robust enough to support selection or sizing?
+  primary_stage: underwrite
+  stages: [underwrite, construct]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [shortlisted-nda, funded-commingled]
+  supported_data_modalities: [returns]
+  minimum_data_modalities: [returns]
+  decision_readiness: data-conditional
+  evidence_roles: [operational-analysis]
+  minimum_data: Comparable, point-in-time monthly net returns with strategy labels.
+  validation_status: live-calibration-required
+  claims:
+    - id: posterior-alpha-interval
+      output_type: interval
+      access_contexts: [shortlisted-nda, funded-commingled]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Historical vintages or a comparable strategy roster are missing.
   demo: pages/s1-ledger.html.j2
   data: s1_ledger.json
   spec: s1-bayesian-alpha-engine.md
@@ -19,6 +41,28 @@
   decisions: [monitor, select]
   tiers: [R, E, P]
   status: live
+  decision_question: What can the observed track record support without hiding uncertainty?
+  primary_stage: monitor
+  stages: [underwrite, monitor]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [pre-hire-public, shortlisted-nda, funded-commingled]
+  supported_data_modalities: [returns]
+  minimum_data_modalities: [returns]
+  decision_readiness: usable-now
+  evidence_roles: [operational-analysis]
+  minimum_data: Monthly net returns, risk-free returns, and an appropriate factor set.
+  validation_status: synthetic-demo-verified
+  claims:
+    - id: uncertainty-honest-tearsheet
+      output_type: interval
+      access_contexts: [pre-hire-public, shortlisted-nda, funded-commingled]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: protocol-ready
+      receipt_required: true
+      refusal: Fewer than 36 monthly observations or no defensible factor set.
   demo: pages/s2-tearsheet.html.j2
   data: s2_tearsheet.json
   spec: s2-tear-sheet-engine.md
@@ -33,6 +77,28 @@
   decisions: [size, select]
   tiers: [P]
   status: live
+  decision_question: Does manager edge come from picking, sizing, or holding-period discipline?
+  primary_stage: underwrite
+  stages: [underwrite, monitor]
+  asset_classes: [public-equity, hedge-funds]
+  vehicle_types: [segregated-mandate]
+  access_contexts: [segregated-mandate]
+  supported_data_modalities: [holdings, trades, exposures]
+  minimum_data_modalities: [holdings, trades]
+  decision_readiness: data-conditional
+  evidence_roles: [operational-analysis]
+  minimum_data: Dated signed positions and trades with enough independent events for power.
+  validation_status: live-calibration-required
+  claims:
+    - id: sizing-decay-attribution
+      output_type: interval
+      access_contexts: [segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: A
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Trade independence or the certified event-count threshold is not met.
   demo: pages/s3-lab.html.j2
   data: s3_lab.json
   spec: s3-sizing-decay-lab.md
@@ -47,6 +113,28 @@
   decisions: [engage, monitor]
   tiers: [P, E]
   status: live
+  decision_question: Is value lost systematically when the manager exits positions?
+  primary_stage: monitor
+  stages: [underwrite, monitor]
+  asset_classes: [public-equity, hedge-funds, fixed-income-credit]
+  vehicle_types: [segregated-mandate]
+  access_contexts: [segregated-mandate]
+  supported_data_modalities: [holdings, trades, exposures]
+  minimum_data_modalities: [trades]
+  decision_readiness: data-conditional
+  evidence_roles: [operational-analysis]
+  minimum_data: Exit-dated transactions and a defensible asset-specific residual model.
+  validation_status: live-calibration-required
+  claims:
+    - id: sell-discipline-gap
+      output_type: interval
+      access_contexts: [segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: A
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Too few independent exits or no credible counterfactual execution model.
   demo: pages/s4-sell.html.j2
   data: s4_sell.json
   spec: s4-sell-discipline.md
@@ -65,6 +153,28 @@
   decisions: [size, redeem]
   tiers: [P, E, R]
   status: live
+  decision_question: Does the short book add skill or mainly deliver an expensive hedge?
+  primary_stage: underwrite
+  stages: [underwrite, construct, monitor]
+  asset_classes: [hedge-funds]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [shortlisted-nda, funded-commingled, segregated-mandate]
+  supported_data_modalities: [returns, exposures, holdings, trades]
+  minimum_data_modalities: [returns]
+  decision_readiness: data-conditional
+  evidence_roles: [operational-analysis]
+  minimum_data: Disclosed sleeve returns or signed positions, factors, and borrow costs.
+  validation_status: live-calibration-required
+  claims:
+    - id: short-book-quality
+      output_type: interval
+      access_contexts: [shortlisted-nda, funded-commingled, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: A
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: The short sleeve cannot be isolated or borrow and hedge costs are unavailable.
   demo: pages/s5-shortbook.html.j2
   data: s5_shortbook.json
   spec: s5-short-book-quality.md
@@ -79,6 +189,28 @@
   decisions: [monitor, select]
   tiers: [R]
   status: live
+  decision_question: Can monthly returns alone identify sizing or alpha-decay behavior?
+  primary_stage: discover
+  stages: [discover, underwrite]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund]
+  access_contexts: [pre-hire-public]
+  supported_data_modalities: [returns]
+  minimum_data_modalities: [returns]
+  decision_readiness: research-finding
+  evidence_roles: [negative-result]
+  minimum_data: Synthetic population experiments; a single manager record is insufficient.
+  validation_status: negative-result
+  claims:
+    - id: returns-only-identifiability
+      output_type: verdict
+      access_contexts: [pre-hire-public]
+      access_semantics: refusal-in-every-context
+      current_attestation: D
+      live_attestation_ceiling: D
+      validation_status: negative-result
+      receipt_required: false
+      refusal: Refuse operational classification of an individual manager from returns alone.
   demo: pages/s6-signatures.html.j2
   data: s6_signatures.json
   spec: s6-returns-only-signatures.md
@@ -93,6 +225,28 @@
   decisions: [monitor, engage]
   tiers: [E, P, R]
   status: live
+  decision_question: Is the portfolio staying inside the exposures the manager said it would run?
+  primary_stage: monitor
+  stages: [monitor, govern]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [funded-commingled, segregated-mandate]
+  supported_data_modalities: [returns, exposures, holdings, mandate-terms]
+  minimum_data_modalities: [exposures, mandate-terms]
+  decision_readiness: usable-now
+  evidence_roles: [operational-analysis, governance-workflow]
+  minimum_data: Dated exposure summaries and stated mandate or letter bands.
+  validation_status: protocol-ready
+  claims:
+    - id: exposure-drift-verdict
+      output_type: verdict
+      access_contexts: [funded-commingled, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: A
+      validation_status: protocol-ready
+      receipt_required: true
+      refusal: Exposure definitions, mandate bands, or a calibrated persistence rule are missing.
   demo: pages/m1-drift.html.j2
   data: m1_drift.json
   spec: m1-exposure-drift-monitor.md
@@ -107,6 +261,28 @@
   decisions: [monitor, redeem]
   tiers: [R, E, P]
   status: live
+  decision_question: Could a smooth return history be concealing sold optionality?
+  primary_stage: monitor
+  stages: [underwrite, monitor]
+  asset_classes: [hedge-funds, rates-macro, structured-credit]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [pre-hire-public, shortlisted-nda, funded-commingled]
+  supported_data_modalities: [returns, exposures, holdings]
+  minimum_data_modalities: [returns]
+  decision_readiness: prototype
+  evidence_roles: [operational-analysis]
+  minimum_data: At least 48 monthly net returns and relevant market or option factors.
+  validation_status: live-calibration-required
+  claims:
+    - id: hidden-convexity-screen
+      output_type: verdict
+      access_contexts: [pre-hire-public, shortlisted-nda, funded-commingled]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: The false-alarm gate fails or appraisal smoothing dominates the return process.
   demo: pages/m2-convexity.html.j2
   data: m2_convexity.json
   spec: m2-hidden-convexity-screen.md
@@ -121,6 +297,28 @@
   decisions: [redeem, monitor]
   tiers: [R, E]
   status: live
+  decision_question: Is the current drawdown unusual for this manager's own risk process?
+  primary_stage: monitor
+  stages: [monitor]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [funded-commingled, segregated-mandate]
+  supported_data_modalities: [returns, exposures]
+  minimum_data_modalities: [returns]
+  decision_readiness: prototype
+  evidence_roles: [operational-analysis]
+  minimum_data: Monthly net returns and a maintained expected-return or Sharpe assumption.
+  validation_status: live-calibration-required
+  claims:
+    - id: calibrated-drawdown-alarm
+      output_type: verdict
+      access_contexts: [funded-commingled, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: The chosen null cannot represent the asset's valuation and liquidity process.
   demo: pages/m3-alarms.html.j2
   data: m3_alarms.json
   spec: m3-drawdown-alarms.md
@@ -135,6 +333,28 @@
   decisions: [size, monitor, redeem]
   tiers: [P, E, R]
   status: live
+  decision_question: Are apparently different managers concentrating the allocator in the same risks?
+  primary_stage: construct
+  stages: [construct, monitor]
+  asset_classes: [public-equity, hedge-funds, fixed-income-credit]
+  vehicle_types: [segregated-mandate, public-filing-portfolio]
+  access_contexts: [public, segregated-mandate]
+  supported_data_modalities: [returns, exposures, holdings, filings]
+  minimum_data_modalities: [holdings]
+  decision_readiness: data-conditional
+  evidence_roles: [operational-analysis]
+  minimum_data: Holdings aligned to a common security universe with liquidity attributes.
+  validation_status: live-calibration-required
+  claims:
+    - id: overlap-concentration
+      output_type: exact-measurement
+      access_contexts: [public, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: A
+      validation_status: protocol-ready
+      receipt_required: true
+      refusal: Coverage is too low or security identity and valuation dates cannot be aligned.
   demo: pages/m4-crowding.html.j2
   data: m4_crowding.json
   spec: m4-crowding-overlap-radar.md
@@ -149,6 +369,28 @@
   decisions: [monitor, engage]
   tiers: [R, E, P]
   status: live
+  decision_question: Do dated portfolio exposures support what the manager said in its communications?
+  primary_stage: monitor
+  stages: [underwrite, monitor, govern]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [shortlisted-nda, funded-commingled, segregated-mandate]
+  supported_data_modalities: [documents, exposures, holdings]
+  minimum_data_modalities: [documents, exposures]
+  decision_readiness: prototype
+  evidence_roles: [operational-analysis, governance-workflow]
+  minimum_data: Dated manager documents plus exposure summaries sharing an entity and period.
+  validation_status: live-calibration-required
+  claims:
+    - id: say-do-alignment
+      output_type: verdict
+      access_contexts: [shortlisted-nda, funded-commingled, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Document provenance, exposure definitions, or temporal alignment is incomplete.
   demo: pages/m5-saydo.html.j2
   data: m5_saydo.json
   spec: m5-say-do-gap.md
@@ -163,6 +405,28 @@
   decisions: [monitor, engage]
   tiers: [P]
   status: live
+  decision_question: What do public reported long holdings reveal without overstating fund exposure?
+  primary_stage: monitor
+  stages: [discover, underwrite, monitor]
+  asset_classes: [public-equity, hedge-funds]
+  vehicle_types: [public-filing-portfolio]
+  access_contexts: [public, pre-hire-public]
+  supported_data_modalities: [holdings, filings]
+  minimum_data_modalities: [filings]
+  decision_readiness: data-conditional
+  evidence_roles: [operational-analysis]
+  minimum_data: Versioned public filings, eligibility reference data, and filing coverage.
+  validation_status: protocol-ready
+  claims:
+    - id: reported-long-concentration
+      output_type: exact-measurement
+      access_contexts: [public, pre-hire-public]
+      access_semantics: exact-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: A
+      validation_status: protocol-ready
+      receipt_required: true
+      refusal: Filing coverage is below threshold or reported longs are treated as the full portfolio.
   demo: pages/m6-holdings.html.j2
   data: m6_holdings.json
   spec: m6-13f-long-book.md
@@ -177,6 +441,28 @@
   decisions: [size, redeem]
   tiers: [R, E, P]
   status: live
+  decision_question: How much capital is defensible once skill uncertainty is carried through sizing?
+  primary_stage: construct
+  stages: [construct, govern]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [funded-commingled, internal-governance]
+  supported_data_modalities: [returns, exposures, mandate-terms]
+  minimum_data_modalities: [returns]
+  decision_readiness: prototype
+  evidence_roles: [operational-analysis, governance-workflow]
+  minimum_data: Posterior skill intervals, residual risk, and allocator sizing constraints.
+  validation_status: live-calibration-required
+  claims:
+    - id: allocation-band
+      output_type: interval
+      access_contexts: [funded-commingled, internal-governance]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Skill intervals, joint risk, liquidity, or allocator constraints are incomplete.
   demo: pages/p1-allocation.html.j2
   data: p1_allocation.json
   spec: p1-allocation-uncertainty.md
@@ -195,6 +481,28 @@
   decisions: [monitor, size]
   tiers: [R, E, P]
   status: live
+  decision_question: What factor exposures can be supported across managers with unequal transparency?
+  primary_stage: construct
+  stages: [construct, monitor]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [funded-commingled, segregated-mandate]
+  supported_data_modalities: [returns, exposures, holdings]
+  minimum_data_modalities: [returns]
+  decision_readiness: redesign-required
+  evidence_roles: [operational-analysis]
+  minimum_data: Returns for all managers plus calibrated modality-quality and joint-risk inputs.
+  validation_status: redesign-required
+  claims:
+    - id: tiered-book-exposure
+      output_type: interval
+      access_contexts: [funded-commingled, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: redesign-required
+      receipt_required: true
+      refusal: Modality-quality error and joint multi-factor covariance are not calibrated.
   demo: pages/p2-xray.html.j2
   data: p2_xray.json
   spec: p2-tiered-book-xray.md
@@ -209,6 +517,28 @@
   decisions: [redeem, select]
   tiers: [R]
   status: live
+  decision_question: Are the allocator's own hire and fire decisions improving outcomes over time?
+  primary_stage: govern
+  stages: [underwrite, monitor, govern]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [internal-governance]
+  supported_data_modalities: [returns, documents]
+  minimum_data_modalities: [returns, documents]
+  decision_readiness: usable-now
+  evidence_roles: [governance-workflow]
+  minimum_data: A prospective decision journal and complete roster-wide outcome history.
+  validation_status: protocol-ready
+  claims:
+    - id: decision-process-calibration
+      output_type: interval
+      access_contexts: [internal-governance]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: protocol-ready
+      receipt_required: true
+      refusal: Decisions were not journaled prospectively or failed candidates are missing.
   demo: pages/p3-hirefire.html.j2
   data: p3_hirefire.json
   spec: p3-hirefire-audit.md
@@ -228,6 +558,28 @@
   decisions: [engage]
   tiers: [R, E, P]
   status: live
+  decision_question: What is the smallest defensible data ask for the next manager conversation?
+  primary_stage: govern
+  stages: [underwrite, monitor, govern]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate, drawdown-fund]
+  access_contexts: [pre-hire-public, shortlisted-nda, funded-commingled, segregated-mandate]
+  supported_data_modalities: [returns, documents, exposures, holdings, trades, mandate-terms]
+  minimum_data_modalities: [documents]
+  decision_readiness: usable-now
+  evidence_roles: [governance-workflow]
+  minimum_data: A specific decision question and the evidence right already available.
+  validation_status: protocol-ready
+  claims:
+    - id: next-data-ask
+      output_type: verdict
+      access_contexts: [pre-hire-public, shortlisted-nda, funded-commingled, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: C
+      live_attestation_ceiling: C
+      validation_status: protocol-ready
+      receipt_required: false
+      refusal: No decision question or reciprocal purpose for the requested evidence is stated.
   doctrine: true
   demo: pages/e1-ladder.html.j2
   spec: e1-transparency-ladder.md
@@ -239,6 +591,28 @@
   decisions: [engage]
   tiers: [R, E, P]
   status: live
+  decision_question: What evidence and questions should the next manager engagement contain?
+  primary_stage: govern
+  stages: [monitor, govern]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [funded-commingled, segregated-mandate, internal-governance]
+  supported_data_modalities: [returns, documents, exposures, holdings]
+  minimum_data_modalities: [documents]
+  decision_readiness: usable-now
+  evidence_roles: [governance-workflow]
+  minimum_data: Validated outputs from the selected analyses and their source receipts.
+  validation_status: protocol-ready
+  claims:
+    - id: engagement-pack
+      output_type: evidence-graph
+      access_contexts: [funded-commingled, segregated-mandate, internal-governance]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: protocol-ready
+      receipt_required: true
+      refusal: Any included section lacks its own power, provenance, or refusal state.
   demo: pages/e2-pack.html.j2
   data: e2_pack.json
   spec: e2-engagement-pack.md
@@ -253,6 +627,28 @@
   decisions: [engage, select]
   tiers: [R, E, P]
   status: live
+  decision_question: Which dated manager evidence supports or contradicts an underwriting claim?
+  primary_stage: discover
+  stages: [discover, underwrite, monitor, govern]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate, drawdown-fund]
+  access_contexts: [pre-hire-public, shortlisted-nda, funded-commingled, internal-governance]
+  supported_data_modalities: [documents, exposures, holdings, filings]
+  minimum_data_modalities: [documents]
+  decision_readiness: prototype
+  evidence_roles: [operational-analysis, governance-workflow]
+  minimum_data: Versioned documents with entity identity, receipt time, and citation spans.
+  validation_status: live-calibration-required
+  claims:
+    - id: retrieved-evidence
+      output_type: evidence-graph
+      access_contexts: [pre-hire-public, shortlisted-nda, funded-commingled, internal-governance]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Corpus provenance, entity resolution, or extraction evaluation is incomplete.
   demo: pages/e3-knowledge.html.j2
   data: e3_knowledge.json
   spec: e3-manager-knowledge-graph.md
@@ -267,6 +663,28 @@
   decisions: [select, monitor, engage]
   tiers: [R, E, P]
   status: live
+  decision_question: How much data and power does a proposed manager metric actually need?
+  primary_stage: govern
+  stages: [underwrite, monitor, govern]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [internal-governance]
+  supported_data_modalities: [returns, exposures, holdings, trades]
+  minimum_data_modalities: [returns]
+  decision_readiness: prototype
+  evidence_roles: [governance-workflow, teaching-simulator]
+  minimum_data: A pre-registered metric, effect grid, cadence, and synthetic null process.
+  validation_status: live-calibration-required
+  claims:
+    - id: metric-power-gate
+      output_type: verdict
+      access_contexts: [internal-governance]
+      access_semantics: synthetic-fixture-only
+      current_attestation: D
+      live_attestation_ceiling: D
+      validation_status: live-calibration-required
+      receipt_required: false
+      refusal: Simulation assumptions do not match the proposed live data-generating process.
   demo: pages/x1-atlas.html.j2
   data: x1_atlas.json
   spec: x1-tier-power-atlas.md
@@ -281,6 +699,28 @@
   decisions: [engage]
   tiers: [R, E, P]
   status: live
+  decision_question: How does transparency change what an allocator may honestly claim?
+  primary_stage: govern
+  stages: [underwrite, construct, monitor, govern]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate]
+  access_contexts: [internal-governance]
+  supported_data_modalities: [returns, exposures, holdings]
+  minimum_data_modalities: [returns]
+  decision_readiness: usable-now
+  evidence_roles: [teaching-simulator]
+  minimum_data: No live manager data; this is a precomputed synthetic teaching surface.
+  validation_status: synthetic-demo-verified
+  claims:
+    - id: transparency-teaching-state
+      output_type: scenario-set
+      access_contexts: [internal-governance]
+      access_semantics: synthetic-fixture-only
+      current_attestation: D
+      live_attestation_ceiling: D
+      validation_status: synthetic-demo-verified
+      receipt_required: false
+      refusal: Never use the simulator as an operational manager finding.
   theme: dark
   demo: pages/x2-playground.html.j2
   data: x2_playground.json
@@ -289,3 +729,318 @@
     This page is the thesis, not a product — it never goes live against a real
     manager. It renders a precomputed subset of the X1 atlas and stays synthetic
     forever; the only release event is the v1 → v2 atlas regeneration.
+- id: x3
+  title: Manager-universe & sourcing-funnel coverage map
+  lane: X
+  one_liner: See which target cells the named sources and funnel represent, without inventing a global denominator.
+  decisions: [discover, underwrite, govern]
+  tiers: [P, E, R]
+  decision_question: Which target cells are represented, unresolved, stale, or still unsearched?
+  primary_stage: discover
+  stages: [discover, underwrite, govern]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, fund-of-funds, segregated-mandate, drawdown-fund]
+  access_contexts: [public, pre-hire-public, shortlisted-nda, internal-governance]
+  supported_data_modalities: [documents, filings, operating-data]
+  minimum_data_modalities: [filings]
+  decision_readiness: data-conditional
+  evidence_roles: [operational-analysis, governance-workflow]
+  minimum_data: Versioned source membership, canonical entity mapping, target-grid version, receipt times, and funnel events for internal conversion claims.
+  validation_status: live-calibration-required
+  status: live
+  demo: pages/x3-universe.html.j2
+  data: x3_universe.json
+  spec: x3-manager-universe.md
+  claims:
+    - id: public_source_membership
+      output_type: exact-measurement
+      access_contexts: [public]
+      access_semantics: exact-per-dataset
+      current_attestation: D
+      live_attestation_ceiling: A
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: The public dataset version, publication time, canonical grain, right, purpose, or reconstruction receipt is missing.
+    - id: prehire_source_membership
+      output_type: exact-measurement
+      access_contexts: [pre-hire-public, shortlisted-nda]
+      access_semantics: exact-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: The selected pre-hire dataset lacks a complete receipted version, field dictionary, right, purpose, or canonical grain.
+    - id: entity_resolution_state
+      output_type: exact-measurement
+      access_contexts: [public, pre-hire-public, shortlisted-nda]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: A required shared mapping or relationship projection, typed reference, entity grain, or dataset right is absent or ambiguous.
+    - id: target_cell_observation
+      output_type: exact-measurement
+      access_contexts: [public, pre-hire-public, shortlisted-nda, internal-governance]
+      access_semantics: all-required-per-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Any selected source or target-grid dataset lacks its exact right, purpose, complete version, shared projection, included/excluded cell receipt, or bundle join receipt.
+    - id: source_union_novelty
+      output_type: exact-measurement
+      access_contexts: [public, pre-hire-public, shortlisted-nda, internal-governance]
+      access_semantics: all-required-per-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Any selected source fails its dataset-specific access or the sources differ in cutoff, entity grain, taxonomy, completeness, join rule, or receipt coverage.
+    - id: funnel_stage_counts
+      output_type: exact-measurement
+      access_contexts: [internal-governance]
+      access_semantics: all-required-per-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Opportunity, funnel-schema, cohort, cohort-assignment, event, completeness, absence, right, purpose, or observation-window evidence is incomplete; only labelled extract counts may remain.
+    - id: funnel_conversion
+      output_type: interval
+      access_contexts: [internal-governance]
+      access_semantics: all-required-per-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Any opportunity, funnel-schema, cohort, cohort-assignment, event, completeness, absence, right, purpose, window, or denominator gate fails.
+    - id: research_cell_queue
+      output_type: verdict
+      access_contexts: [public, pre-hire-public, shortlisted-nda, internal-governance]
+      access_semantics: all-required-per-dataset
+      current_attestation: D
+      live_attestation_ceiling: C
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Any selected source, eligible target cell, entity grain, completion stage, queue reason, right, purpose, or typed exclusion receipt is not explicitly versioned.
+    - id: synthetic_entity_recall
+      output_type: interval
+      access_contexts: [public]
+      access_semantics: synthetic-fixture-only
+      current_attestation: D
+      live_attestation_ceiling: D
+      validation_status: synthetic-demo-verified
+      receipt_required: true
+      refusal: The card-local truth labels do not exactly reconcile to the pinned shared fixture or the Wilson gate cannot be independently reproduced.
+    - id: synthetic_discovery_recall
+      output_type: exact-measurement
+      access_contexts: [public]
+      access_semantics: synthetic-fixture-only
+      current_attestation: D
+      live_attestation_ceiling: D
+      validation_status: synthetic-demo-verified
+      receipt_required: true
+      refusal: A complete authored hidden-universe denominator is unavailable or the output is requested as a live/global claim.
+    - id: global_universe_coverage
+      output_type: refusal
+      access_contexts: [public, pre-hire-public, shortlisted-nda, internal-governance]
+      access_semantics: refusal-in-every-context
+      current_attestation: D
+      live_attestation_ceiling: D
+      validation_status: synthetic-demo-verified
+      receipt_required: true
+      refusal: The global manager and product denominator is unknown.
+    - id: manager_quality_ranking
+      output_type: refusal
+      access_contexts: [public, pre-hire-public, shortlisted-nda, internal-governance]
+      access_semantics: refusal-in-every-context
+      current_attestation: D
+      live_attestation_ceiling: D
+      validation_status: synthetic-demo-verified
+      receipt_required: true
+      refusal: X3 prioritizes research cells and never ranks manager quality.
+  golive:
+    data_ask: Per-dataset rights, purposes, complete version manifests and exact absence rules; shared entity, relationship, membership and grid projections; and complete opportunity, funnel-schema, cohort, cohort-assignment and event evidence with typed bundle receipts.
+    sample: Exact source and eligible-cell counts have no minimum; conversion intervals require at least 20 eligible opportunities in the disclosed complete cohort, while the synthetic entity precision gate requires at least 381 accepted true-positive links and zero false positives.
+    effort: L
+- id: e4
+  title: Operational evidence & change graph
+  lane: E
+  one_liner: Reconstruct dated operational facts and route evidence gaps without a scalar ODD score.
+  decisions: [engage, monitor, select]
+  tiers: [R, E, P]
+  status: live
+  decision_question: What operationally changed, what evidence supports it, and what requires re-underwriting now?
+  primary_stage: underwrite
+  stages: [underwrite, monitor, govern]
+  asset_classes: [cross-asset]
+  vehicle_types: [pooled-fund, segregated-mandate, drawdown-fund]
+  access_contexts: [public, pre-hire-public, shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+  supported_data_modalities: [documents, filings, holdings, mandate-terms]
+  minimum_data_modalities: [documents]
+  decision_readiness: data-conditional
+  evidence_roles: [operational-analysis, governance-workflow]
+  minimum_data: Versioned operational documents and filings with explicit effective and receipt times, canonical entity mappings and relationships, per-dataset rights, independence spans, delivery completeness, and reconstruction receipts.
+  validation_status: live-calibration-required
+  claims:
+    - id: public_operational_facts
+      output_type: evidence-graph
+      access_contexts: [public, pre-hire-public]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: C
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: No admissible public source version and right exists at the requested cutoff.
+    - id: operational_change_graph
+      output_type: evidence-graph
+      access_contexts: [shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: A source is unversioned, effective time is inferred, or lineage and delivery closure are incomplete.
+    - id: operational_evidence_state
+      output_type: verdict
+      access_contexts: [shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Entity, right, independence, temporal shape, or source compatibility is unresolved.
+    - id: reunderwriting_queue
+      output_type: exact-measurement
+      access_contexts: [shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: An underlying state or change receipt fails exact closure.
+    - id: operational_data_boundary_refusals
+      output_type: refusal
+      access_contexts: [public, pre-hire-public, shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: refusal-per-inadmissible-input
+      current_attestation: D
+      live_attestation_ceiling: D
+      validation_status: synthetic-demo-verified
+      receipt_required: true
+      refusal: Every inadmissible access, delivery, lineage, time, identity, independence, absence, or null-key input remains visibly refused.
+    - id: operational_method_boundary_refusal
+      output_type: refusal
+      access_contexts: [public, pre-hire-public, shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: refusal-in-every-context
+      current_attestation: D
+      live_attestation_ceiling: D
+      validation_status: synthetic-demo-verified
+      receipt_required: true
+      refusal: E4 never emits a scalar ODD score, clean or approve verdict, hire or fire decision, recommendation, or manager rank.
+    - id: synthetic_state_validation
+      output_type: exact-measurement
+      access_contexts: [public]
+      access_semantics: synthetic-fixture-only
+      current_attestation: D
+      live_attestation_ceiling: D
+      validation_status: synthetic-demo-verified
+      receipt_required: true
+      refusal: Hidden expected outcomes do not reconcile exactly to the public synthetic fixture.
+  demo: pages/e4-operational-evidence-change.html.j2
+  data: e4_operational_change.json
+  spec: e4-operational-evidence-change.md
+  golive:
+    data_ask: Permissioned versioned operational sources with effective and receipt times, entity and relationship provenance, independence spans, per-dataset rights, delivery completeness, and reconstruction receipts.
+    sample: At least one reviewed live-shaped case per intended source family, revision and absence mode, access context, and planted refusal boundary; this is validation coverage, not an estimator sample threshold.
+    effort: L
+- id: s7
+  title: Track-record provenance inspector
+  lane: S
+  one_liner: Separate knowable history from later backfills, basis breaks, and unsupported predecessor claims.
+  decisions: [discover, underwrite, monitor, govern]
+  tiers: [R, E, P]
+  decision_question: Is this track record complete, comparable, point-in-time, and portable to the current team and process?
+  primary_stage: underwrite
+  stages: [discover, underwrite, monitor, govern]
+  asset_classes: [public-equity, hedge-funds, fixed-income-credit, private-credit, private-equity]
+  vehicle_types: [pooled-fund, segregated-mandate, drawdown-fund]
+  access_contexts: [public, pre-hire-public, shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+  supported_data_modalities: [returns, cashflows-nav, documents, filings, mandate-terms]
+  minimum_data_modalities: [returns]
+  decision_readiness: data-conditional
+  evidence_roles: [operational-analysis, governance-workflow]
+  minimum_data: Versioned native-frequency returns or cashflows/NAV, entity and composite lineage, fee/currency/benchmark basis, X3 membership vintages, dead products, receipt times, rights, and predecessor/team evidence for portability claims.
+  validation_status: live-calibration-required
+  status: live
+  demo: pages/s7-provenance.html.j2
+  data: s7_provenance.json
+  spec: s7-track-record-provenance.md
+  claims:
+    - id: track_lineage
+      output_type: exact-measurement
+      access_contexts: [public, pre-hire-public, shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: A selected source version, right, canonical entity grain, X3 membership, lineage relation, or typed receipt is missing or unresolved.
+    - id: point_in_time_vintage_audit
+      output_type: exact-measurement
+      access_contexts: [public, pre-hire-public, shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Archived versions, observations, delivery/absence semantics, dead products, or all-known-versions receipts are incomplete.
+    - id: basis_breaks
+      output_type: verdict
+      access_contexts: [pre-hire-public, shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Fee, currency/FX, benchmark, frequency/calendar, valuation, composite-membership, or cash-flow basis is missing or incomparable.
+    - id: comparable_native_panel
+      output_type: exact-measurement
+      access_contexts: [pre-hire-public, shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Identity, membership, completeness, basis, native-frequency, inclusion/exclusion reconciliation, or typed receipt gates do not all pass.
+    - id: predecessor_portability_evidence
+      output_type: verdict
+      access_contexts: [shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: C
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Predecessor identity, transfer scope, current-team chronology, or source evidence is missing or contradictory.
+    - id: historical_selection_refusal
+      output_type: refusal
+      access_contexts: [public, pre-hire-public, shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: all-required-per-selected-dataset
+      current_attestation: D
+      live_attestation_ceiling: B
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: Historical selection is refused without archived vintages, dead products, first-known times, and exact denominator scope.
+    - id: performance_estimator_refusal
+      output_type: refusal
+      access_contexts: [public, pre-hire-public, shortlisted-nda, funded-commingled, funded-private-partnership, segregated-mandate]
+      access_semantics: refusal-in-every-context
+      current_attestation: D
+      live_attestation_ceiling: D
+      validation_status: live-calibration-required
+      receipt_required: true
+      refusal: S7 intentionally emits no alpha, Sharpe, IRR, PME, skill, or manager ranking; use the appropriate downstream method after its own gates.
+  golive:
+    data_ask: Archived source vintages and observations; complete full/delta/tombstone contract; entity/composite/vehicle/share-class lineage; fee/currency/benchmark/valuation basis; X3 memberships/dead products; predecessor/team evidence; per-dataset rights and receipts.
+    sample: At least one real, permissioned case in each intended source shape, including one known revision/backfill and one basis break. This is validation coverage, not an estimator sample-size threshold.
+    effort: Reconcile live schemas and licences, obtain manager/data-owner sign-off on lineage, independently reproduce one panel and one refusal, and calibrate copy without upgrading attestation beyond the evidence.

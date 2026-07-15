@@ -1,16 +1,30 @@
 # Quant Allocator Agent Guide
 
-This repository is a public, demo-first research portfolio. Agents implement one
-small, reviewable slice at a time and preserve the numerical and publication gates.
+This repository builds a public, static editorial research publication and project-idea
+bank. Agents implement one small, reviewable slice at a time and preserve the numerical
+and publication gates.
 
 ## Authority and sources of truth
 
-1. Read `.superpowers/sdd/progress.md` end to end before continuing a campaign.
-   It is the operational ledger, even though `.superpowers/` is intentionally local.
-2. Trust the current Git graph and committed plans/specs over summaries.
-3. In each method spec, section 8 rulings override conflicting text in sections 1-7.
-4. The primary agent owns synthesis, gate rulings, integration, and publication.
-   Track agents do not make silent scope or numerical-policy decisions.
+1. Direct current-task user instruction.
+2. Read `docs/PRODUCT.md` first. It is the canonical product authority.
+3. Read `.harness/current.yaml` second. It names the current objective, task, next
+   action, parked work, and outward-action authority.
+4. Read only the approved specification or implementation plan cited by the current
+   task. A plan may add implementation detail but may not broaden the product charter.
+5. Treat `.superpowers/sdd/progress.md`, old plans, handoffs, reports, and Git history
+   as historical evidence, not normal initialization or automatic continuation.
+6. In each method spec, section 8 rulings govern that article's arithmetic and claims;
+   they do not govern the overall product roadmap.
+7. The primary agent owns synthesis, scope rulings, integration, and publication.
+
+A false authority flag is a prohibition. Merge, push, and publication each require
+explicit user approval and the corresponding true flag in `.harness/current.yaml`.
+
+No agent may resume parked work or create a platform layer or publication prerequisite
+without explicit user approval. Articles, exhibits, and supporting code require an
+approved current task. Amend `docs/PRODUCT.md` only when the product objective, platform
+boundary, or publication prerequisites change.
 
 ## Public-repository constraints
 
@@ -42,16 +56,15 @@ small, reviewable slice at a time and preserve the numerical and publication gat
 - Agents may inspect the whole repository, but they may edit only their declared files.
   Existing unrelated changes belong to the user and must be preserved.
 
-## Implementation loop
+## Article and exhibit implementation loop
 
-1. Read the card spec, its committed implementation plan, relevant substrate, and one
-   shipped analogue.
+1. Read the current task's approved spec or plan, relevant substrate, and one shipped
+   analogue.
 2. Start with the smallest failing targeted test, then implement the narrow slice.
 3. Run the smallest falsifying check, review the diff, and commit that task without
    trailers. Do not batch unrelated cleanup.
-4. End a card track with a handoff report: commits, owned-file diff, tests, deterministic
-   JSON status, provisional numbers, deviations, unresolved gate items, and exact shared
-   seam values for integration.
+4. End a delegated track with a handoff report: commits, owned-file diff, tests,
+   deviations, unresolved gates, and shared-seam values when applicable.
 5. A separate reviewer re-derives load-bearing arithmetic and checks the rendered-copy
    obligations. The implementer does not self-certify a numerical gate.
 
@@ -82,15 +95,16 @@ teaching-code numbers. Reconcile the method spec to the real pipeline output ins
 - If a track's reachable history contains a publication canary literal, scan it first and
   squash-merge only the clean final tree. Delete local-only literal-bearing refs only at
   the planned wave-close hygiene step; do not rewrite published main history.
-- Only the primary agent may push. A push publishes the GitHub Pages site and therefore
-  requires the user-approved publication checkpoint recorded in the progress ledger.
+- Only the primary agent may merge, push, or publish; the authority rule above applies
+  separately to each action.
 
 ## Page and numerical doctrine
 
 - No estimate-bearing bare points: render an interval or an explicit verdict chip.
 - Power gates show their arithmetic and refuse below the certified threshold.
-- Every page includes tier badges, the synthetic-data disclosure, go-live requirements,
-  and a tested `What this exhibit shows` section linking to the method spec.
+- Every quantitative exhibit includes tier or provenance labels, the synthetic-data
+  disclosure, go-live requirements, and a tested `What this exhibit shows` section
+  linking to the method spec.
 - JavaScript may map committed values to pixels or switch among precomputed states; it
   must not recompute statistical estimators in the browser.
 - Use named integer random-stream tags. Never derive seeds with `hash()`.

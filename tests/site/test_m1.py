@@ -33,7 +33,7 @@ def _build_with_m1_live(tmp_path):
                          "decisions": ["monitor", "engage"], "tiers": ["E", "P", "R"], **M1_LIVE})
     (tmp_site / "cards.yaml").write_text(yaml.safe_dump(cards, sort_keys=False, allow_unicode=True), encoding="utf-8")
     out = tmp_path / "out"
-    build(tmp_site, out)
+    build(tmp_site, out, allow_legacy=True)
     return (out / "m1.html").read_text(encoding="utf-8"), out
 
 

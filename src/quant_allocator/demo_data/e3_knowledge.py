@@ -11,11 +11,18 @@ from pathlib import Path
 
 from quant_allocator.demo_data._emit import SITE_DATA_DIR, write_json
 from quant_allocator.flagships.knowledge.brief import compose_meeting_brief
+from quant_allocator.flagships.knowledge.evidence_bridge import (
+    E3_DECISION_AT,
+    E3EvidenceStore,
+    build_e3_evidence,
+    documents_as_known_at,
+    e3_snapshot_bundle,
+    provenance_from_span,
+)
 from quant_allocator.flagships.knowledge.eval import evaluate_gate, evaluate_retrieval
 from quant_allocator.flagships.knowledge.graph import (
     GraphFixture,
     candidate_paths,
-    connect_graph,
     graph_candidates,
     ingest_fixture,
     initialize_schema,
@@ -104,6 +111,14 @@ _EDGE_ENDPOINTS = {
     "about_theme": ("view_id", "theme_id"),
     "discussed_at": ("view_id", "meeting_id"),
 }
+_EDGE_ENTITY_TYPES = {
+    "authored_by": ("document", "person"),
+    "attributed_to": ("document", "manager"),
+    "employed_by": ("person", "manager"),
+    "expresses": ("document", "view"),
+    "about_theme": ("view", "theme"),
+    "discussed_at": ("view", "meeting"),
+}
 
 
 def _sentences(document: Document) -> list[str]:
@@ -118,26 +133,24 @@ def _span(documents: dict[str, Document], doc_id: str, index: int = 0) -> str:
 
 
 def _relationship_fact(span_index: int, **values) -> dict:
-    return {
-        **values,
-        "source_doc": RELATIONSHIP_RECORD_ID,
-        "source_span": _RELATIONSHIP_SENTENCES[span_index],
-        "as_of": RELATIONSHIP_RECORD_AS_OF,
-    }
+    return {**values, "_span_index": span_index}
 
 
-def _graph_fixture(corpus: list[Document]) -> GraphFixture:
+def _canonical_entity_id(table: str, identifier: str) -> str:
+    return f"{table}:{identifier.lower()}"
+
+
+def _graph_fixture(corpus: list[Document], store: E3EvidenceStore) -> GraphFixture:
     document_rows = [
         {
             "doc_id": document.doc_id,
             "doc_type": document.doc_type,
-            "text": document.text,
             "date": document.as_of,
             "file_path": f"authored/{document.doc_id}.txt",
             "ingest_date": "2024-06",
-            "source_doc": document.doc_id,
-            "source_span": document.text,
-            "as_of": document.as_of,
+            "canonical_entity_id": _canonical_entity_id("document", document.doc_id),
+            "evidence_item_id": store.document_item_ids[document.doc_id],
+            "evidence_span_id": store.document_span_ids[document.doc_id],
         }
         for document in corpus
     ]
@@ -145,16 +158,15 @@ def _graph_fixture(corpus: list[Document]) -> GraphFixture:
         {
             "doc_id": RELATIONSHIP_RECORD_ID,
             "doc_type": "relationship_record",
-            "text": RELATIONSHIP_RECORD_TEXT,
             "date": RELATIONSHIP_RECORD_AS_OF,
             "file_path": "authored/E3-RELATIONSHIPS.txt",
             "ingest_date": RELATIONSHIP_RECORD_AS_OF,
-            "source_doc": RELATIONSHIP_RECORD_ID,
-            "source_span": _RELATIONSHIP_SENTENCES[0],
-            "as_of": RELATIONSHIP_RECORD_AS_OF,
+            "canonical_entity_id": _canonical_entity_id("document", RELATIONSHIP_RECORD_ID),
+            "evidence_item_id": store.relationship_item_id,
+            "evidence_span_id": store.relationship_span_ids[0],
         }
     )
-    return GraphFixture(
+    fixture = GraphFixture(
         tables={
             "strategy": [
                 _relationship_fact(
@@ -307,10 +319,29 @@ def _graph_fixture(corpus: list[Document]) -> GraphFixture:
             ],
         }
     )
-
-
-def _provenance(row: dict) -> dict:
-    return {key: row[key] for key in ("source_doc", "source_span", "as_of")}
+    bound: dict[str, list[dict]] = {}
+    for table, rows in fixture.tables.items():
+        id_key = _NODE_ID.get(table)
+        bound[table] = []
+        for original in rows:
+            row = dict(original)
+            span_index = row.pop("_span_index", None)
+            if span_index is not None:
+                row["evidence_span_id"] = store.relationship_span_ids[span_index]
+            if id_key is not None and table != "document":
+                row["canonical_entity_id"] = _canonical_entity_id(table, str(row[id_key]))
+            if table in _EDGE_ENDPOINTS:
+                source_key, target_key = _EDGE_ENDPOINTS[table]
+                source_kind, target_kind = _EDGE_ENTITY_TYPES[table]
+                row["entity_relationship_id"] = store.entity_relationship_ids[
+                    (
+                        table,
+                        _canonical_entity_id(source_kind, str(row[source_key])),
+                        _canonical_entity_id(target_kind, str(row[target_key])),
+                    )
+                ]
+            bound[table].append(row)
+    return GraphFixture(tables=bound)
 
 
 def _graph_payload(fixture: GraphFixture, conn) -> dict:
@@ -324,7 +355,13 @@ def _graph_payload(fixture: GraphFixture, conn) -> dict:
                     "label": row[_NODE_LABEL[node_type]],
                     "tier": row.get("tier"),
                     "tier_grant_date": row.get("tier_grant_date"),
-                    "provenance": _provenance(row),
+                    "evidence_span_id": row["evidence_span_id"],
+                    **(
+                        {"evidence_item_id": row["evidence_item_id"]}
+                        if row.get("evidence_item_id")
+                        else {}
+                    ),
+                    "provenance": provenance_from_span(conn, row["evidence_span_id"]),
                 }
             )
     edges = []
@@ -340,7 +377,13 @@ def _graph_payload(fixture: GraphFixture, conn) -> dict:
                     "target": target,
                     "from_date": row.get("from_date"),
                     "to_date": row.get("to_date"),
-                    "provenance": _provenance(row),
+                    "evidence_span_id": row["evidence_span_id"],
+                    **(
+                        {"entity_relationship_id": row["entity_relationship_id"]}
+                        if row.get("entity_relationship_id")
+                        else {}
+                    ),
+                    "provenance": provenance_from_span(conn, row["evidence_span_id"]),
                 }
             )
     candidates = graph_candidates(conn, MANAGER_ID)
@@ -351,15 +394,12 @@ def _graph_payload(fixture: GraphFixture, conn) -> dict:
         "edges": sorted(edges, key=lambda row: row["edge_id"]),
         "candidate_doc_ids": candidates,
         "candidate_paths": {
-            doc_id: list(candidate_paths(conn, MANAGER_ID, doc_id))
-            for doc_id in candidates
+            doc_id: list(candidate_paths(conn, MANAGER_ID, doc_id)) for doc_id in candidates
         },
     }
 
 
-def _ranked_passages(
-    ranking: list[RankedPassage], documents: dict[str, Document]
-) -> list[dict]:
+def _ranked_passages(ranking: list[RankedPassage], documents: dict[str, Document]) -> list[dict]:
     return [
         {
             "doc_id": row.doc_id,
@@ -377,14 +417,17 @@ def _ranked_passages(
 
 
 def build(out_dir: Path = SITE_DATA_DIR) -> Path:
-    corpus = build_corpus(include_ddq_and_notes=True)
+    authored_corpus = build_corpus(include_ddq_and_notes=True)
+    store = build_e3_evidence(authored_corpus)
+    bundle = e3_snapshot_bundle(store, E3_DECISION_AT)
+    corpus = list(documents_as_known_at(store, bundle))
     documents = {document.doc_id: document for document in corpus}
     planted = planted_relevance()
     query_fixture = planted[0]
     relevant = set(query_fixture["relevant_doc_ids"])
 
-    fixture = _graph_fixture(corpus)
-    conn = connect_graph()
+    fixture = _graph_fixture(corpus, store)
+    conn = store.conn
     initialize_schema(conn)
     ingest_fixture(conn, fixture)
 
@@ -447,6 +490,19 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
             "graph_status": gate["graph_status"],
             "extraction": "authored_demo_only",
             "dense_backend": "authored_concept_table_demo_only",
+        },
+        "evidence": {
+            "schema_version": "evidence-v1",
+            "schema_digest": store.schema_digest,
+            "decision_at": bundle.slices[0].decision_at,
+            "access_context": bundle.slices[0].request.access_context,
+            "evidence_right_id": store.evidence_right_id,
+            "licence_purpose": bundle.slices[0].request.licence_purpose,
+            "slice_digest": bundle.slices[0].digest,
+            "join_receipt_id": bundle.join_receipt_id,
+            "bundle_digest": bundle.bundle_digest,
+            "record_count": len(bundle.slices[0].rows),
+            "receipt_ids": [bundle.slices[0].receipt_id, bundle.join_receipt_id],
         },
         "graph_candidate": _graph_payload(fixture, conn),
         "retrieval": {

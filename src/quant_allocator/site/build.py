@@ -11,34 +11,163 @@ import json
 import shutil
 import xml.etree.ElementTree as etree
 from pathlib import Path
+from urllib.parse import quote, unquote, urlsplit
 
 import markdown
 import yaml
 from jinja2 import Environment, FileSystemLoader
 from markdown.extensions import Extension
 from markdown.inlinepatterns import InlineProcessor
+from markdown.treeprocessors import Treeprocessor
 from markdown.util import AtomicString
 
-REQUIRED_KEYS = {"id", "title", "lane", "one_liner", "decisions", "tiers", "status"}
+REQUIRED_KEYS = {
+    "access_contexts",
+    "asset_classes",
+    "claims",
+    "decisions",
+    "decision_question",
+    "decision_readiness",
+    "evidence_roles",
+    "id",
+    "lane",
+    "minimum_data",
+    "minimum_data_modalities",
+    "one_liner",
+    "primary_stage",
+    "stages",
+    "status",
+    "supported_data_modalities",
+    "tiers",
+    "title",
+    "validation_status",
+    "vehicle_types",
+}
+LEGACY_REQUIRED_KEYS = {"id", "title", "lane", "one_liner", "decisions", "tiers", "status"}
+PHASE1_REQUIRED_KEYS = REQUIRED_KEYS - LEGACY_REQUIRED_KEYS
 OPTIONAL_KEYS = {
+    "access_contexts",
+    "asset_classes",
+    "claims",
+    "decision_question",
+    "decision_readiness",
     "doctrine",
     "demo",
     "data",
     "spec",
     "golive",
+    "evidence_roles",
+    "minimum_data",
+    "minimum_data_modalities",
+    "primary_stage",
+    "stages",
+    "supported_data_modalities",
     "usage_note",
     "standing_note",
     "theme",
+    "validation_status",
+    "vehicle_types",
 }
 ALLOWED_KEYS = REQUIRED_KEYS | OPTIONAL_KEYS
 VALID_LANES = {"S", "M", "P", "E", "X"}
 VALID_STATUSES = {"live", "planned"}
 GOLIVE_KEYS = {"data_ask", "sample", "effort"}
 VALID_THEMES = {"light", "dark"}
+VALID_STAGES = {"discover", "underwrite", "mandate", "construct", "monitor", "govern"}
+VALID_ASSET_CLASSES = {
+    "cross-asset",
+    "public-equity",
+    "hedge-funds",
+    "rates-macro",
+    "fixed-income-credit",
+    "structured-credit",
+    "private-credit",
+    "private-equity",
+    "real-assets",
+}
+VALID_VEHICLE_TYPES = {
+    "pooled-fund",
+    "fund-of-funds",
+    "segregated-mandate",
+    "drawdown-fund",
+    "co-investment",
+    "public-filing-portfolio",
+}
+VALID_ACCESS_CONTEXTS = {
+    "public",
+    "pre-hire-public",
+    "shortlisted-nda",
+    "funded-commingled",
+    "funded-private-partnership",
+    "segregated-mandate",
+    "internal-governance",
+}
+VALID_DATA_MODALITIES = {
+    "returns",
+    "documents",
+    "exposures",
+    "holdings",
+    "trades",
+    "cashflows-nav",
+    "operating-data",
+    "filings",
+    "mandate-terms",
+}
+VALID_DECISION_READINESS = {
+    "usable-now",
+    "data-conditional",
+    "prototype",
+    "redesign-required",
+    "research-finding",
+}
+VALID_EVIDENCE_ROLES = {
+    "operational-analysis",
+    "governance-workflow",
+    "teaching-simulator",
+    "negative-result",
+}
+VALID_VALIDATION_STATUSES = {
+    "synthetic-demo-verified",
+    "protocol-ready",
+    "live-calibration-required",
+    "redesign-required",
+    "negative-result",
+}
+VALID_OUTPUT_TYPES = {
+    "exact-measurement",
+    "interval",
+    "scenario-set",
+    "distribution",
+    "evidence-graph",
+    "verdict",
+    "refusal",
+}
+VALID_ATTESTATIONS = {"A", "B", "C", "D"}
+VALID_ACCESS_SEMANTICS = {
+    "exact-per-dataset",
+    "exact-per-selected-dataset",
+    "all-required-per-selected-dataset",
+    "all-required-per-dataset",
+    "synthetic-fixture-only",
+    "refusal-in-every-context",
+    "refusal-per-inadmissible-input",
+}
+CLAIM_KEYS = {
+    "id",
+    "output_type",
+    "access_contexts",
+    "access_semantics",
+    "current_attestation",
+    "live_attestation_ceiling",
+    "validation_status",
+    "receipt_required",
+    "refusal",
+}
 
 # Placeholder repo URL; set the real one at Pages enablement (see docs/PUBLISHING.md).
 REPO_URL = "https://github.com/denim-bluu/quant-allocator"
-SITE_TITLE = "Quant Allocator — Idea Gallery"
+SITE_TITLE = "Quant Allocator"
+ASSET_VERSION = "editorial-v4"
 LANE_ORDER = ["S", "M", "P", "E", "X"]
 LANE_HEADINGS = {
     "S": "S — Skill & inference",
@@ -46,6 +175,72 @@ LANE_HEADINGS = {
     "P": "P — Portfolio construction & governance",
     "E": "E — Engagement & knowledge",
     "X": "X — Meta / infrastructure",
+}
+START_HERE_IDS = ("s2", "x1", "x2")
+FEATURED_IDS = ("s1", "m3", "m4", "p1", "s7")
+PILLAR_DETAILS = {
+    "S": ("Signal & skill", "Measure skill without rewarding noise."),
+    "M": ("Monitoring", "Detect change, deterioration, and hidden concentration."),
+    "P": ("Portfolio decisions", "Size, combine, and govern under uncertainty."),
+    "E": ("Evidence & engagement", "Gather, challenge, and act on dated evidence."),
+    "X": ("Cross-cutting foundations", "Define what the available data can support."),
+}
+STAGE_ORDER = ["discover", "underwrite", "mandate", "construct", "monitor", "govern"]
+STAGE_HEADINGS = {
+    "discover": "Discover opportunities and managers",
+    "underwrite": "Underwrite manager and strategy",
+    "mandate": "Design mandate and terms",
+    "construct": "Construct and fund the portfolio",
+    "monitor": "Monitor and re-underwrite",
+    "govern": "Govern, learn, and attest",
+}
+TOKEN_LABELS = {
+    "cross-asset": "Cross-asset",
+    "public-equity": "Public equity",
+    "hedge-funds": "Hedge funds",
+    "rates-macro": "Rates and macro",
+    "fixed-income-credit": "Fixed income and credit",
+    "structured-credit": "Structured credit",
+    "private-credit": "Private credit",
+    "private-equity": "Private equity",
+    "real-assets": "Real assets",
+    "pooled-fund": "Pooled fund",
+    "fund-of-funds": "Fund of funds",
+    "segregated-mandate": "Segregated mandate",
+    "drawdown-fund": "Drawdown fund",
+    "co-investment": "Co-investment",
+    "public-filing-portfolio": "Public filing portfolio",
+    "public": "Public",
+    "pre-hire-public": "Pre-hire public",
+    "shortlisted-nda": "Shortlisted under NDA",
+    "funded-commingled": "Funded commingled",
+    "funded-private-partnership": "Funded private partnership",
+    "internal-governance": "Internal governance",
+    "exact-per-dataset": "Exact per dataset",
+    "exact-per-selected-dataset": "Exact per selected dataset",
+    "all-required-per-selected-dataset": "All required per selected dataset",
+    "all-required-per-dataset": "All required per dataset",
+    "synthetic-fixture-only": "Synthetic fixture only",
+    "refusal-in-every-context": "Refusal in every context",
+    "refusal-per-inadmissible-input": "Refusal per inadmissible input",
+    "returns": "Returns",
+    "documents": "Documents and DDQs",
+    "exposures": "Exposures",
+    "holdings": "Holdings",
+    "trades": "Trades",
+    "cashflows-nav": "Cash flows and NAV",
+    "operating-data": "Operating data",
+    "filings": "Public filings",
+    "mandate-terms": "Mandate terms",
+    "usable-now": "Usable now",
+    "data-conditional": "Data conditional",
+    "prototype": "Prototype",
+    "redesign-required": "Redesign required",
+    "research-finding": "Research finding",
+    "synthetic-demo-verified": "Synthetic demo verified",
+    "protocol-ready": "Protocol ready",
+    "live-calibration-required": "Live calibration required",
+    "negative-result": "Negative result",
 }
 MARKDOWN_EXTENSIONS = ["tables", "fenced_code", "toc"]
 MATH_OPEN_PATTERN = r"(?<!\\)(?P<slash_pairs>(?:\\\\)*)(?P<delimiter>\$\$|(?<!\$)\$(?!\$))"
@@ -128,6 +323,52 @@ class _MathProtectionExtension(Extension):
         )
 
 
+class _SourceLinkTreeprocessor(Treeprocessor):
+    """Turn relative source-document links into stable repository links."""
+
+    def __init__(self, md, *, source: Path, repo_root: Path):
+        super().__init__(md)
+        self.source = source
+        self.repo_root = repo_root.resolve()
+
+    def run(self, root):
+        for anchor in root.iter("a"):
+            href = anchor.get("href", "")
+            split = urlsplit(href)
+            if split.scheme or split.netloc or not split.path:
+                continue
+            target = (self.source.parent / unquote(split.path)).resolve()
+            try:
+                relative = target.relative_to(self.repo_root)
+            except ValueError:
+                continue
+            if not target.exists():
+                continue
+            repository_href = f"{REPO_URL}/blob/main/{quote(relative.as_posix(), safe='/')}"
+            if split.fragment:
+                repository_href += f"#{quote(unquote(split.fragment), safe='-._~')}"
+            anchor.set("href", repository_href)
+        return root
+
+
+class _SourceLinkExtension(Extension):
+    def __init__(self, *, source: Path, repo_root: Path):
+        super().__init__()
+        self.source = source
+        self.repo_root = repo_root
+
+    def extendMarkdown(self, md):  # noqa: N802 - Python-Markdown public API
+        md.treeprocessors.register(
+            _SourceLinkTreeprocessor(
+                md,
+                source=self.source,
+                repo_root=self.repo_root,
+            ),
+            "source_links",
+            1,
+        )
+
+
 def _markdown_extensions() -> list[str | Extension]:
     return [*MARKDOWN_EXTENSIONS, _MathProtectionExtension()]
 
@@ -139,7 +380,7 @@ class BuildError(Exception):
     """
 
 
-def load_manifest(path: Path) -> list[dict]:
+def load_manifest(path: Path, *, allow_legacy: bool = False) -> list[dict]:
     """Load and strictly validate the card manifest at ``path``.
 
     ``site_dir`` is ``path.parent``. Referenced files are resolved relative to
@@ -154,6 +395,13 @@ def load_manifest(path: Path) -> list[dict]:
     cards: list[dict] = []
     seen_ids: set[str] = set()
     for index, entry in enumerate(raw):
+        if (
+            allow_legacy
+            and isinstance(entry, dict)
+            and LEGACY_REQUIRED_KEYS <= entry.keys()
+            and not (PHASE1_REQUIRED_KEYS & entry.keys())
+        ):
+            _upgrade_legacy_entry(entry)
         _validate_entry(entry, index, path, site_dir)
         entry_id = entry["id"]
         if entry_id in seen_ids:
@@ -161,6 +409,63 @@ def load_manifest(path: Path) -> list[dict]:
         seen_ids.add(entry_id)
         cards.append(entry)
     return cards
+
+
+def _upgrade_legacy_entry(entry: dict) -> None:
+    """Upgrade pre-Phase-1 test fixtures without weakening partial-schema validation."""
+    decision_to_stage = {
+        "select": "underwrite",
+        "size": "construct",
+        "monitor": "monitor",
+        "redeem": "monitor",
+        "engage": "govern",
+    }
+    stages = []
+    for decision in entry["decisions"]:
+        stage = decision_to_stage.get(decision, "underwrite")
+        if stage not in stages:
+            stages.append(stage)
+    if not stages:
+        stages = ["underwrite"]
+
+    supported = []
+    tier_modalities = {"R": "returns", "E": "exposures", "P": "holdings"}
+    for tier in entry["tiers"]:
+        modality = tier_modalities.get(tier)
+        if modality and modality not in supported:
+            supported.append(modality)
+    if not supported:
+        supported = ["documents"]
+    access = ["pre-hire-public"]
+    entry.update(
+        {
+            "decision_question": entry["one_liner"],
+            "primary_stage": stages[0],
+            "stages": stages,
+            "asset_classes": ["cross-asset"],
+            "vehicle_types": ["pooled-fund"],
+            "access_contexts": access,
+            "supported_data_modalities": supported,
+            "minimum_data_modalities": [supported[0]],
+            "decision_readiness": "prototype",
+            "evidence_roles": ["operational-analysis"],
+            "minimum_data": "Legacy fixture metadata; not a production data contract.",
+            "validation_status": "synthetic-demo-verified",
+            "claims": [
+                {
+                    "id": "legacy-fixture-claim",
+                    "output_type": "verdict",
+                    "access_contexts": access,
+                    "access_semantics": "all-required-per-selected-dataset",
+                    "current_attestation": "D",
+                    "live_attestation_ceiling": "D",
+                    "validation_status": "synthetic-demo-verified",
+                    "receipt_required": False,
+                    "refusal": "This compatibility metadata is not a live evidence contract.",
+                }
+            ],
+        }
+    )
 
 
 def _validate_entry(entry: object, index: int, path: Path, site_dir: Path) -> None:
@@ -191,6 +496,8 @@ def _validate_entry(entry: object, index: int, path: Path, site_dir: Path) -> No
             f"(must be one of {sorted(VALID_STATUSES)})"
         )
 
+    _validate_phase1_metadata(entry, card_id, path)
+
     theme = entry.get("theme")
     if theme is not None and theme not in VALID_THEMES:
         raise BuildError(
@@ -200,6 +507,129 @@ def _validate_entry(entry: object, index: int, path: Path, site_dir: Path) -> No
 
     if entry["status"] == "live":
         _validate_live_entry(entry, card_id, path, site_dir)
+
+
+def _validate_token_list(
+    entry: dict,
+    key: str,
+    allowed: set[str],
+    card_id: str,
+    path: Path,
+) -> None:
+    values = entry[key]
+    if not isinstance(values, list) or not values or not all(isinstance(v, str) for v in values):
+        raise BuildError(f"{path}: card '{card_id}' {key} must be a non-empty string list")
+    if len(values) != len(set(values)):
+        raise BuildError(f"{path}: card '{card_id}' {key} contains duplicate values")
+    invalid = set(values) - allowed
+    if invalid:
+        raise BuildError(f"{path}: card '{card_id}' has invalid {key}: {sorted(invalid)}")
+
+
+def _validate_phase1_metadata(entry: dict, card_id: str, path: Path) -> None:
+    for key in ("decision_question", "minimum_data"):
+        if not isinstance(entry[key], str) or not entry[key].strip():
+            raise BuildError(f"{path}: card '{card_id}' {key} must be a non-empty string")
+
+    list_fields = {
+        "stages": VALID_STAGES,
+        "asset_classes": VALID_ASSET_CLASSES,
+        "vehicle_types": VALID_VEHICLE_TYPES,
+        "access_contexts": VALID_ACCESS_CONTEXTS,
+        "supported_data_modalities": VALID_DATA_MODALITIES,
+        "minimum_data_modalities": VALID_DATA_MODALITIES,
+        "evidence_roles": VALID_EVIDENCE_ROLES,
+    }
+    for key, allowed in list_fields.items():
+        _validate_token_list(entry, key, allowed, card_id, path)
+
+    primary_stage = entry["primary_stage"]
+    if primary_stage not in VALID_STAGES:
+        raise BuildError(f"{path}: card '{card_id}' has invalid primary_stage '{primary_stage}'")
+    if primary_stage not in entry["stages"]:
+        raise BuildError(f"{path}: card '{card_id}' primary_stage must appear in stages")
+
+    unsupported_minimum = set(entry["minimum_data_modalities"]) - set(
+        entry["supported_data_modalities"]
+    )
+    if unsupported_minimum:
+        raise BuildError(
+            f"{path}: card '{card_id}' minimum_data_modalities must be a subset of "
+            "supported_data_modalities"
+        )
+
+    if entry["decision_readiness"] not in VALID_DECISION_READINESS:
+        raise BuildError(
+            f"{path}: card '{card_id}' has invalid decision_readiness "
+            f"'{entry['decision_readiness']}'"
+        )
+    if entry["validation_status"] not in VALID_VALIDATION_STATUSES:
+        raise BuildError(
+            f"{path}: card '{card_id}' has invalid validation_status "
+            f"'{entry['validation_status']}'"
+        )
+
+    claims = entry["claims"]
+    if not isinstance(claims, list) or not claims:
+        raise BuildError(f"{path}: card '{card_id}' claims must be a non-empty list")
+    claim_ids: set[str] = set()
+    claim_access_union: set[str] = set()
+    for claim_index, claim in enumerate(claims):
+        if not isinstance(claim, dict) or set(claim) != CLAIM_KEYS:
+            raise BuildError(
+                f"{path}: card '{card_id}' claim #{claim_index} must define exactly "
+                f"{sorted(CLAIM_KEYS)}"
+            )
+        claim_id = claim["id"]
+        if not isinstance(claim_id, str) or not claim_id.strip() or claim_id in claim_ids:
+            raise BuildError(f"{path}: card '{card_id}' has empty or duplicate claim id")
+        claim_ids.add(claim_id)
+        if claim["output_type"] not in VALID_OUTPUT_TYPES:
+            raise BuildError(f"{path}: card '{card_id}' claim '{claim_id}' has invalid output_type")
+        if (
+            not isinstance(claim["access_semantics"], str)
+            or claim["access_semantics"] not in VALID_ACCESS_SEMANTICS
+        ):
+            raise BuildError(
+                f"{path}: card '{card_id}' claim '{claim_id}' has invalid access_semantics"
+            )
+        claim_access = claim["access_contexts"]
+        if (
+            not isinstance(claim_access, list)
+            or not claim_access
+            or len(claim_access) != len(set(claim_access))
+            or set(claim_access) - VALID_ACCESS_CONTEXTS
+            or set(claim_access) - set(entry["access_contexts"])
+        ):
+            raise BuildError(
+                f"{path}: card '{card_id}' claim '{claim_id}' has invalid access_contexts"
+            )
+        claim_access_union.update(claim_access)
+        for attestation_key in ("current_attestation", "live_attestation_ceiling"):
+            if claim[attestation_key] not in VALID_ATTESTATIONS:
+                raise BuildError(
+                    f"{path}: card '{card_id}' claim '{claim_id}' has invalid {attestation_key}"
+                )
+        if claim["validation_status"] not in VALID_VALIDATION_STATUSES:
+            raise BuildError(
+                f"{path}: card '{card_id}' claim '{claim_id}' has invalid validation_status"
+            )
+        if not isinstance(claim["receipt_required"], bool):
+            raise BuildError(
+                f"{path}: card '{card_id}' claim '{claim_id}' receipt_required must be boolean"
+            )
+        if claim["live_attestation_ceiling"] in {"A", "B"} and not claim["receipt_required"]:
+            raise BuildError(
+                f"{path}: card '{card_id}' claim '{claim_id}' A/B ceiling requires a receipt"
+            )
+        if not isinstance(claim["refusal"], str) or not claim["refusal"].strip():
+            raise BuildError(f"{path}: card '{card_id}' claim '{claim_id}' refusal is required")
+
+    if set(entry["access_contexts"]) != claim_access_union:
+        raise BuildError(
+            f"{path}: card '{card_id}' access_contexts must exactly equal claim "
+            "access_contexts union"
+        )
 
 
 def _validate_live_entry(entry: dict, card_id: str, path: Path, site_dir: Path) -> None:
@@ -248,9 +678,9 @@ def _validate_live_entry(entry: dict, card_id: str, path: Path, site_dir: Path) 
             )
 
 
-def build(site_dir: Path, out_dir: Path) -> None:
+def build(site_dir: Path, out_dir: Path, *, allow_legacy: bool = False) -> None:
     """Validate the manifest, render index/specs/demo pages, copy assets, lint."""
-    cards = load_manifest(site_dir / "cards.yaml")
+    cards = load_manifest(site_dir / "cards.yaml", allow_legacy=allow_legacy)
 
     env = Environment(
         loader=FileSystemLoader(str(site_dir / "templates")),
@@ -258,6 +688,9 @@ def build(site_dir: Path, out_dir: Path) -> None:
     )
     env.globals["repo_url"] = REPO_URL
     env.globals["site_title"] = SITE_TITLE
+    env.globals["asset_version"] = ASSET_VERSION
+    env.globals["stage_headings"] = STAGE_HEADINGS
+    env.globals["labels"] = TOKEN_LABELS
 
     out_dir.mkdir(parents=True, exist_ok=True)
     _render_index(env, cards, out_dir)
@@ -268,18 +701,117 @@ def build(site_dir: Path, out_dir: Path) -> None:
 
 
 def _render_index(env: Environment, cards: list[dict], out_dir: Path) -> None:
-    lanes = [
+    view_cards = []
+    for card in cards:
+        rendered_card = dict(card)
+        rendered_card["current_attestations"] = sorted(
+            {claim["current_attestation"] for claim in card["claims"]}
+        )
+        rendered_card["claim_access_contexts"] = sorted(
+            {
+                access
+                for claim in card["claims"]
+                for access in claim["access_contexts"]
+            }
+        )
+        rendered_card["search_corpus"] = _search_corpus(card)
+        view_cards.append(rendered_card)
+    cards_by_id = {card["id"]: card for card in view_cards}
+    start_here = [cards_by_id[card_id] for card_id in START_HERE_IDS if card_id in cards_by_id]
+    featured_cards = [
+        cards_by_id[card_id] for card_id in FEATURED_IDS if card_id in cards_by_id
+    ]
+    pillars = [
         {
             "key": lane,
-            "heading": LANE_HEADINGS[lane],
-            "cards": [card for card in cards if card["lane"] == lane],
+            "heading": PILLAR_DETAILS[lane][0],
+            "description": PILLAR_DETAILS[lane][1],
+            "cards": [card for card in view_cards if card["lane"] == lane],
         }
         for lane in LANE_ORDER
     ]
+    stages = [
+        {
+            "key": stage,
+            "heading": STAGE_HEADINGS[stage],
+            "cards": [card for card in view_cards if card["primary_stage"] == stage],
+        }
+        for stage in STAGE_ORDER
+    ]
     html = env.get_template("index.html.j2").render(
-        lanes=lanes, page_title="Idea Gallery", asset_base="", default_theme="light"
+        start_here=start_here,
+        featured_cards=featured_cards,
+        pillars=pillars,
+        stages=stages,
+        cards=view_cards,
+        stage_headings=STAGE_HEADINGS,
+        labels=TOKEN_LABELS,
+        asset_options=sorted(VALID_ASSET_CLASSES),
+        vehicle_options=sorted(VALID_VEHICLE_TYPES),
+        access_options=sorted(VALID_ACCESS_CONTEXTS),
+        modality_options=sorted(VALID_DATA_MODALITIES),
+        readiness_options=[
+            "usable-now",
+            "data-conditional",
+            "prototype",
+            "redesign-required",
+            "research-finding",
+        ],
+        lane_options=LANE_ORDER,
+        page_title="Idea Gallery",
+        is_home=True,
+        asset_base="",
+        default_theme="light",
     )
     (out_dir / "index.html").write_text(html, encoding="utf-8")
+
+
+def _search_corpus(card: dict) -> str:
+    """Return escaped-at-render search text spanning every decision/evidence field."""
+    parts = [card["title"], card["one_liner"]]
+    scalar_fields = (
+        "lane",
+        "status",
+        "decision_question",
+        "primary_stage",
+        "decision_readiness",
+        "minimum_data",
+        "validation_status",
+    )
+    list_fields = (
+        "decisions",
+        "tiers",
+        "stages",
+        "asset_classes",
+        "vehicle_types",
+        "access_contexts",
+        "supported_data_modalities",
+        "minimum_data_modalities",
+        "evidence_roles",
+    )
+    claim_fields = (
+        "id",
+        "output_type",
+        "access_contexts",
+        "access_semantics",
+        "current_attestation",
+        "live_attestation_ceiling",
+        "validation_status",
+        "receipt_required",
+        "refusal",
+    )
+    parts.extend(str(card[field]) for field in scalar_fields)
+    if "theme" in card:
+        parts.append(str(card["theme"]))
+    parts.extend(str(value) for field in list_fields for value in card[field])
+    for claim in card["claims"]:
+        for field in claim_fields:
+            value = claim[field]
+            if isinstance(value, list):
+                parts.extend(str(item) for item in value)
+            else:
+                parts.append(str(value).lower() if isinstance(value, bool) else str(value))
+    return " ".join(parts)
 
 
 def _copy_assets(site_dir: Path, out_dir: Path) -> None:
@@ -299,7 +831,11 @@ def _render_specs(env: Environment, cards: list[dict], site_dir: Path, out_dir: 
             continue
         source = specs_dir / card["spec"]
         body_html = markdown.markdown(
-            source.read_text(encoding="utf-8"), extensions=_markdown_extensions()
+            source.read_text(encoding="utf-8"),
+            extensions=[
+                *_markdown_extensions(),
+                _SourceLinkExtension(source=source, repo_root=site_dir.parent),
+            ],
         )
         html = template.render(
             page_title=card["title"],
@@ -356,6 +892,11 @@ def _lint_outputs(cards: list[dict], out_dir: Path) -> None:
                     f"{page_path}: card '{card['id']}' output missing golive-box "
                     f"or standing-note (golive-replaced)"
                 )
+
+        if "card-context" not in html:
+            raise BuildError(
+                f"{page_path}: card '{card['id']}' output missing card-context block"
+            )
 
         spec_target = out_dir / "specs" / f"{card['id']}.html"
         if not spec_target.exists():

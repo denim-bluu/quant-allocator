@@ -1,0 +1,154 @@
+{% extends "demo.html.j2" %}
+{% set default_state = card_data.states[card_data.meta.default_state] %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/x3.css">
+{% endblock %}
+
+{% block demo_content %}
+<section class="exhibit-intro" aria-label="What this exhibit shows">
+  <h2 class="exhibit-intro__title">What this exhibit shows</h2>
+  <div class="exhibit-intro__block">
+    <h3 class="exhibit-intro__sub">What you are looking at</h3>
+    <p>{{ card_data.meta.disclaimer }}</p>
+    <p>Exact source, mapping, membership, and authored-grid counts come from the reviewed shared
+      evidence projections. Missing typed membership-to-cell and mandate-brief projections are
+      shown as refusals; the exhibit does not manufacture those links.</p>
+  </div>
+  <div class="exhibit-intro__block">
+    <h3 class="exhibit-intro__sub">How to read it</h3>
+    <ul class="exhibit-intro__list">
+      <li>Change only the three discrete controls; all 27 states are precomputed.</li>
+      <li>Read the exact named-source counts separately from the allocator-authored grid.</li>
+      <li>Follow pointer-specific refusal codes to the missing shared evidence contract.</li>
+      <li>Read the <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>
+        for formulas, access semantics, and binding rulings.</li>
+    </ul>
+  </div>
+</section>
+
+<p class="x3-disclaimer" role="note">{{ card_data.meta.disclaimer }}</p>
+
+<section class="x3-controls" aria-label="Precomputed coverage state">
+  <label for="x3-cutoff">Decision cutoff
+    <select id="x3-cutoff">
+      <option value="early">early</option><option value="middle">middle</option>
+      <option value="latest" selected>latest</option>
+    </select>
+  </label>
+  <label for="x3-source">Source/access preset
+    <select id="x3-source">
+      <option value="public-only">public only</option>
+      <option value="public-plus-prehire" selected>public + pre-hire</option>
+      <option value="full-synthetic-funnel">full synthetic funnel</option>
+    </select>
+  </label>
+  <label for="x3-scope">Scope preset
+    <select id="x3-scope">
+      <option value="cross-asset" selected>cross-asset</option>
+      <option value="liquid-public-markets">liquid public markets</option>
+      <option value="credit-private-markets">credit/private markets</option>
+    </select>
+  </label>
+</section>
+
+<p id="x3-live" class="x3-live" aria-live="polite">Showing {{ card_data.meta.default_state }}.</p>
+<p id="x3-unsupported" class="x3-refusal" hidden>unsupported-state-key: restored the complete server default.</p>
+
+<section class="x3-summary" id="x3-visual" data-state-key="{{ card_data.meta.default_state }}" aria-labelledby="x3-summary-title">
+  <h2 id="x3-summary-title">Named-source snapshot</h2>
+  <div class="x3-metrics">
+    <p><strong data-x3="source-rows">{{ default_state.source_counts.source_rows }}</strong><span>source mapping rows</span></p>
+    <p><strong data-x3="canonical-members">{{ default_state.source_counts.canonical_members }}</strong><span>resolved active strategy IDs</span></p>
+    <p><strong data-x3="eligible-cells">{{ default_state.target_grid.eligible_cells }}</strong><span>eligible authored cells</span></p>
+    <p><strong data-x3="excluded-cells">{{ default_state.target_grid.excluded_cells }}</strong><span>excluded authored cells</span></p>
+  </div>
+  <p><strong>Denominator:</strong> <span data-x3="denominator">{{ default_state.denominator_label }}</span>.</p>
+  <p><strong>Observed cells:</strong> refused — <code>typed-membership-cell-projection-required</code>.</p>
+</section>
+
+<section class="x3-panel" aria-labelledby="x3-receipts-title">
+  <h2 id="x3-receipts-title">Source and receipt table</h2>
+  <div class="x3-table-wrap"><table>
+    <thead><tr><th>Dataset</th><th>Slice receipt</th></tr></thead>
+    <tbody id="x3-receipts">
+    {% for dataset_id, receipt_id in default_state.slice_receipts.items() %}
+      <tr><td>{{ dataset_id }}</td><td><code>{{ receipt_id }}</code></td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <p>Multi-source access uses AND semantics: each listed dataset has its own right, purpose,
+    version, and receipt. A right for one dataset never authorizes another.</p>
+</section>
+
+<section class="x3-panel" aria-labelledby="x3-exclusions-title">
+  <h2 id="x3-exclusions-title">Excluded target cells</h2>
+  <div class="x3-table-wrap"><table>
+    <thead><tr><th>Cell</th><th>State</th><th>Reason</th></tr></thead>
+    <tbody id="x3-exclusions">
+    {% for row in default_state.target_grid.excluded_ledger %}
+      <tr><td><code>{{ row.cell_id }}</code></td><td>{{ row.state }}</td><td>{{ row.reason }}</td></tr>
+    {% else %}<tr><td colspan="3">No excluded cells in this scope.</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</section>
+
+<section class="x3-panel" aria-labelledby="x3-funnel-title">
+  <h2 id="x3-funnel-title">Receipted funnel boundary</h2>
+  <p><strong>Conversion interval: refused.</strong> Exact labelled cohort stage counts may render
+    only when the shared evaluation receipts pass. Target-cell conversion and mandate-brief
+    inference remain unavailable.</p>
+  <ul id="x3-funnel-counts">
+  {% for row in default_state.funnel.stage_counts %}
+    <li>{{ row.cohort_label }}: {{ row.entry_count }} entry / {{ row.outcome_count }} outcome</li>
+  {% else %}<li>No funnel stage counts in this source preset.</li>{% endfor %}
+  </ul>
+</section>
+
+<section class="x3-panel x3-refusals" aria-labelledby="x3-refusal-title">
+  <h2 id="x3-refusal-title">Visible refusals</h2>
+  <ul id="x3-refusals">
+  {% for row in default_state.refusals %}
+    <li><code>{{ row.pointer }}</code> · <strong>{{ row.code }}</strong> — {{ row.detail }}</li>
+  {% endfor %}
+  </ul>
+  <p><strong>Global denominator:</strong> refused because the world denominator is unknown.</p>
+  <p><strong>Manager ranking:</strong> refused because X3 prioritizes research cells, never managers.</p>
+</section>
+
+<section class="x3-panel" aria-labelledby="x3-claims-title">
+  <h2 id="x3-claims-title">Claim access, attestation, and refusal register</h2>
+  <div class="x3-table-wrap"><table>
+    <thead><tr><th>Claim</th><th>Access contexts</th><th>Access semantics</th><th>Attestation</th><th>Validation</th><th>Receipt</th><th>Rendered refusal</th></tr></thead>
+    <tbody>
+    {% for row in card_data.claim_attestation %}
+      <tr><td><code>{{ row.claim_id }}</code></td><td>{{ row.access_contexts | join(', ') }}</td><td>{{ row.access_semantics }}</td>
+        <td>Current {{ row.current_attestation }} · live ceiling {{ row.live_ceiling }}</td>
+        <td>{{ row.validation_status }} · receipt {{ 'required' if row.receipt_required else 'not required' }}</td>
+        <td><code>{{ row.receipt_id }}</code></td>
+        <td>{{ row.rendered_refusal }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</section>
+
+<section class="x3-panel" aria-labelledby="x3-audit-title">
+  <h2 id="x3-audit-title">Synthetic validation · current attestation D</h2>
+  <p>Entity precision lower bound {{ "%.4f" | format(card_data.entity_resolution_audit.precision_interval[0]) }};
+    recall lower bound {{ "%.4f" | format(card_data.entity_resolution_audit.recall_interval[0]) }}.
+    The finite-sample gate requires at least 381 accepted true-positive links and zero false positives.</p>
+  <p><strong>Synthetic fixture recall:</strong>
+    {{ card_data.synthetic_discovery_audit.observed_hidden }} / {{ card_data.synthetic_discovery_audit.hidden_denominator }}.
+    This authored denominator is never a live market-coverage claim.</p>
+</section>
+{% endblock %}
+
+{% block methodology %}
+<p>X3 selects point-in-time shared evidence slices, consumes typed mappings, memberships, grids,
+  opportunities, schemas, cohorts, evaluations, and events, then emits exact source-conditioned
+  counts. It does not resolve identities or infer missing relationships.</p>
+<p>Entity validation uses two-sided 95% Wilson intervals. Browser code selects one of 27 committed
+  states; it performs no estimator, coverage arithmetic, cohort assignment, or ranking.</p>
+{% endblock %}
+
+{% block body_scripts %}<script src="{{ asset_base | default('') }}assets/x3-universe.js"></script>{% endblock %}

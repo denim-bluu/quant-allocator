@@ -1,28 +1,33 @@
 :root {
-  --paper: #FBFBF9;
-  --ink: #1F2428;
-  --dim: #5C6470;
-  --line: #E4E3DD;
-  --track: #EEEDE7;
-  --accent: #10685E;
-  --band: rgba(16, 104, 94, 0.16);
-  --pos: #3D7A4E;
-  --neg: #B04A3E;
-  --warn: #99621D;
+  --paper: #f7f4ee;
+  --ink: #1d211f;
+  --dim: #626662;
+  --line: #d8d2c8;
+  --track: #eee9e0;
+  --accent: #0f5f59;
+  --link: #963b25;
+  --band: rgba(15, 95, 89, 0.16);
+  --pos: #39764b;
+  --neg: #a8453a;
+  --warn: #95611f;
+  --font-reading: "Iowan Old Style", "Charter", "Charter BT", "Source Serif 4", Georgia, serif;
+  --font-ui: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 :root[data-theme="dark"] {
-  --paper: #13161B;
-  --ink: #D5DCE4;
-  --dim: #828D9B;
-  --line: #272E38;
-  --track: #1C222B;
-  --accent: #4FB3A5;
-  --band: rgba(79, 179, 165, 0.18);
-  --pos: #55B97C;
-  --neg: #E05252;
-  --warn: #C9893B;
-  --data: #E8A33D;
+  --paper: #171a19;
+  --ink: #e6e0d7;
+  --dim: #a39f96;
+  --line: #383b38;
+  --track: #232725;
+  --accent: #61b9aa;
+  --link: #e18b70;
+  --band: rgba(97, 185, 170, 0.18);
+  --pos: #67bf82;
+  --neg: #e16c61;
+  --warn: #d19a55;
+  --data: #e8a33d;
 }
 
 * {
@@ -31,26 +36,44 @@
 
 html {
   color-scheme: light dark;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 16px;
-  line-height: 1.55;
+  font-family: var(--font-reading);
+  font-size: 17px;
+  line-height: 1.65;
   font-variant-numeric: tabular-nums;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+summary,
+textarea {
+  font-family: var(--font-ui);
 }
 
 h1,
 h2,
 h3 {
-  letter-spacing: -0.015em;
+  letter-spacing: -0.025em;
   text-wrap: balance;
-  line-height: 1.2;
+  line-height: 1.08;
 }
 
 a {
-  color: var(--accent);
+  color: var(--link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

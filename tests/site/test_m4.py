@@ -64,7 +64,7 @@ def _build(tmp_path):
         yaml.safe_dump([_CARD], sort_keys=False, allow_unicode=True), encoding="utf-8"
     )
     out = tmp_path / "out"
-    build(site, out)
+    build(site, out, allow_legacy=True)
     return (out / "m4.html").read_text(encoding="utf-8"), out
 
 

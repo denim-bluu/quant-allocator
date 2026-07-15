@@ -5,8 +5,25 @@
 {% endblock %}
 
 {% block content %}
-<article class="spec-page">
-  <a class="spec-page__back" href="{{ asset_base | default('') }}index.html">← Gallery</a>
+<article class="spec-page article-shell">
+  <header class="article-shell__header">
+    <nav class="article-breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ asset_base | default('') }}index.html#research">Research</a>
+      <span aria-hidden="true">/</span>
+      <span>{{ card.lane }}</span>
+    </nav>
+    <a class="article-link" href="{{ asset_base | default('') }}{{ card.id }}.html">Open the paired exhibit</a>
+  </header>
+  <section class="article-intro" aria-labelledby="article-title">
+    <p class="article-intro__kicker">{{ card.lane }} research · {{ stage_headings[card.primary_stage] }}</p>
+    <h1 id="article-title">{{ card.title }}</h1>
+    <p class="article-intro__deck">{{ card.one_liner }}</p>
+    <dl class="article-intro__meta">
+      <div><dt>Decision</dt><dd>{{ card.decision_question }}</dd></div>
+      <div><dt>Maturity</dt><dd>{{ labels[card.decision_readiness] }}</dd></div>
+      <div><dt>Minimum evidence</dt><dd>{{ card.minimum_data }}</dd></div>
+    </dl>
+  </section>
   <div class="spec-page__body" data-math-render-status="error">
     {{ spec_html | safe }}
   </div>

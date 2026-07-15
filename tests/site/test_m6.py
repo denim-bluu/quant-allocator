@@ -59,7 +59,7 @@ def _build(tmp_path):
     shutil.copy(REPO_ROOT / "docs" / "ideas" / "specs" / _CARD["spec"], specs)
     (site / "cards.yaml").write_text(yaml.safe_dump([_CARD]), encoding="utf-8")
     out = tmp_path / "out"
-    build(site, out)
+    build(site, out, allow_legacy=True)
     return (out / "m6.html").read_text(encoding="utf-8"), out
 
 

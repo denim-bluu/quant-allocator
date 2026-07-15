@@ -41,7 +41,7 @@ def _build(tmp_path):
         specs / "m3-drawdown-alarms.md",
     )
     (site / "cards.yaml").write_text(yaml.safe_dump([_CARD]), encoding="utf-8")
-    build(site, tmp_path / "out")
+    build(site, tmp_path / "out", allow_legacy=True)
     return (tmp_path / "out" / "m3.html").read_text(encoding="utf-8"), tmp_path / "out"
 
 

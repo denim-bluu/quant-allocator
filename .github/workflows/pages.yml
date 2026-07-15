@@ -2,7 +2,8 @@ name: Deploy gallery to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, codex/editorial-publication]
+  workflow_dispatch:
 
 permissions:
   contents: read

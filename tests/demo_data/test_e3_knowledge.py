@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 
@@ -25,15 +26,40 @@ def _publication_terms() -> tuple[str, ...]:
 
 def test_schema_and_binding_fallback_states(tmp_path):
     data = _load(e3_knowledge.build(out_dir=tmp_path))
-    assert {"meta", "graph_candidate", "retrieval", "retrieval_gate", "brief"} <= data.keys()
+    assert {
+        "meta",
+        "evidence",
+        "graph_candidate",
+        "retrieval",
+        "retrieval_gate",
+        "brief",
+    } <= data.keys()
     assert data["meta"]["active_retrieval"] == "hybrid_search"
     assert data["meta"]["graph_status"] == "candidate_gate_not_cleared"
     assert data["meta"]["extraction"] == "authored_demo_only"
     assert data["meta"]["dense_backend"] == "authored_concept_table_demo_only"
     assert data["meta"]["corpus_count"] == 5
-    assert data["meta"]["graph_receipt_doc_ids"] == [
-        e3_knowledge.RELATIONSHIP_RECORD_ID
-    ]
+    assert data["meta"]["graph_receipt_doc_ids"] == [e3_knowledge.RELATIONSHIP_RECORD_ID]
+    evidence = data["evidence"]
+    assert evidence["decision_at"] == "2024-06-30T23:59:59.999999Z"
+    assert evidence["access_context"] == "shortlisted-synthetic-demo"
+    assert evidence["licence_purpose"] == "research-demo"
+    assert evidence["record_count"] == 6
+    assert len(evidence["receipt_ids"]) == 2
+
+
+def test_canonical_retrieval_gate_and_brief_bytes_are_unchanged(tmp_path):
+    data = _load(e3_knowledge.build(out_dir=tmp_path))
+    expected = {
+        "retrieval": "dfff11fbb495e02f860c74b8a04bad681fa529e0d62286483158c2b710728b42",
+        "retrieval_gate": "a2cf35c9d72481c39f5781c31016346b7beafdd0b755b8c23eb978ccdc3d1613",
+        "brief": "57a4678a2d6ff77469837d446345dac804db0f2c8826411fcb49d5add1f3a597",
+    }
+    for key, digest in expected.items():
+        encoded = json.dumps(
+            data[key], sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        ).encode()
+        assert hashlib.sha256(encoded).hexdigest() == digest
 
 
 def test_exact_rankings_and_gate_numbers(tmp_path):
@@ -64,8 +90,7 @@ def test_exact_rankings_and_gate_numbers(tmp_path):
 def test_graph_provenance_and_wrong_firm_exclusion(tmp_path):
     data = _load(e3_knowledge.build(out_dir=tmp_path))
     corpus = {
-        document.doc_id: document.text
-        for document in build_corpus(include_ddq_and_notes=True)
+        document.doc_id: document.text for document in build_corpus(include_ddq_and_notes=True)
     }
     corpus[e3_knowledge.RELATIONSHIP_RECORD_ID] = e3_knowledge.RELATIONSHIP_RECORD_TEXT
     graph = data["graph_candidate"]
@@ -88,7 +113,11 @@ def test_graph_provenance_and_wrong_firm_exclusion(tmp_path):
     assert e3_knowledge.RELATIONSHIP_RECORD_ID not in graph["candidate_doc_ids"]
     assert all(
         row["doc_id"] != e3_knowledge.RELATIONSHIP_RECORD_ID
-        for ranking in (data["retrieval"]["lexical"], data["retrieval"]["plain_hybrid"], data["retrieval"]["graph_candidate"])
+        for ranking in (
+            data["retrieval"]["lexical"],
+            data["retrieval"]["plain_hybrid"],
+            data["retrieval"]["graph_candidate"],
+        )
         for row in ranking
     )
 
@@ -96,11 +125,7 @@ def test_graph_provenance_and_wrong_firm_exclusion(tmp_path):
 def test_relationship_receipts_substantiate_displayed_claims(tmp_path):
     data = _load(e3_knowledge.build(out_dir=tmp_path))
     graph = data["graph_candidate"]
-    managers = {
-        node["node_id"]: node
-        for node in graph["nodes"]
-        if node["node_type"] == "manager"
-    }
+    managers = {node["node_id"]: node for node in graph["nodes"] if node["node_type"] == "manager"}
     for manager_id, strategy in (
         ("CLC", "Equity long/short"),
         ("SPA", "Equity long/short"),
@@ -113,11 +138,7 @@ def test_relationship_receipts_substantiate_displayed_claims(tmp_path):
         assert node["tier_grant_date"] in span
         assert strategy in span
 
-    people = {
-        node["node_id"]: node
-        for node in graph["nodes"]
-        if node["node_type"] == "person"
-    }
+    people = {node["node_id"]: node for node in graph["nodes"] if node["node_type"] == "person"}
     for node in people.values():
         span = node["provenance"]["source_span"]
         assert node["label"] in span

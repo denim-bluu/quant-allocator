@@ -1,8 +1,22 @@
+from pathlib import Path
+
 import yaml
 
 import pytest
 
 from quant_allocator.site.build import BuildError, load_manifest
+
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+ACCESS_SEMANTICS = {
+    "exact-per-dataset",
+    "exact-per-selected-dataset",
+    "all-required-per-selected-dataset",
+    "all-required-per-dataset",
+    "synthetic-fixture-only",
+    "refusal-in-every-context",
+    "refusal-per-inadmissible-input",
+}
 
 
 def _write_manifest(tmp_path, entries):
@@ -33,6 +47,7 @@ def _planned_entry():
         "decisions": ["select", "size"],
         "tiers": ["R", "E", "P"],
         "status": "planned",
+        **_phase1_metadata(),
     }
 
 
@@ -49,7 +64,373 @@ def _live_entry():
         "data": "t1.json",
         "spec": "t1.md",
         "golive": {"data_ask": "R", "sample": "36m", "effort": "S"},
+        **_phase1_metadata(),
     }
+
+
+def _phase1_metadata():
+    return {
+        "decision_question": "Is the reported edge robust enough to underwrite?",
+        "primary_stage": "underwrite",
+        "stages": ["underwrite", "construct"],
+        "asset_classes": ["cross-asset"],
+        "vehicle_types": ["pooled-fund"],
+        "access_contexts": ["shortlisted-nda", "funded-commingled"],
+        "supported_data_modalities": ["returns", "documents"],
+        "minimum_data_modalities": ["returns"],
+        "decision_readiness": "data-conditional",
+        "evidence_roles": ["operational-analysis"],
+        "minimum_data": "Monthly net returns with historical vintages.",
+        "validation_status": "live-calibration-required",
+        "claims": [
+            {
+                "id": "posterior_interval",
+                "output_type": "interval",
+                "access_contexts": ["shortlisted-nda", "funded-commingled"],
+                "access_semantics": "synthetic-fixture-only",
+                "current_attestation": "D",
+                "live_attestation_ceiling": "B",
+                "validation_status": "live-calibration-required",
+                "receipt_required": True,
+                "refusal": "Historical vintages or comparable peers are missing.",
+            }
+        ],
+    }
+
+
+def test_phase1_decision_and_evidence_metadata_loads(tmp_path):
+    _make_live_files(tmp_path)
+    entry = _live_entry()
+    entry.update(_phase1_metadata())
+    manifest = _write_manifest(tmp_path, [entry])
+
+    cards = load_manifest(manifest)
+
+    assert cards[0]["primary_stage"] == "underwrite"
+    assert cards[0]["claims"][0]["current_attestation"] == "D"
+
+
+def test_decision_metadata_is_required_independently_of_publication_status(tmp_path):
+    entry = _planned_entry()
+    del entry["decision_question"]
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="missing required keys.*decision_question"):
+        load_manifest(manifest)
+
+
+def test_primary_stage_must_be_controlled_and_present_in_stages(tmp_path):
+    entry = _planned_entry()
+    entry["primary_stage"] = "select"
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="invalid primary_stage"):
+        load_manifest(manifest)
+
+
+def test_minimum_modalities_must_be_supported(tmp_path):
+    entry = _planned_entry()
+    entry["minimum_data_modalities"] = ["holdings"]
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="must be a subset"):
+        load_manifest(manifest)
+
+
+def test_controlled_token_lists_reject_duplicates(tmp_path):
+    entry = _planned_entry()
+    entry["stages"] = ["underwrite", "underwrite"]
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="stages contains duplicate values"):
+        load_manifest(manifest)
+
+
+def test_claim_ids_are_unique(tmp_path):
+    entry = _planned_entry()
+    entry["claims"] = [entry["claims"][0], dict(entry["claims"][0])]
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="empty or duplicate claim id"):
+        load_manifest(manifest)
+
+
+def test_a_or_b_attestation_ceiling_requires_reconstruction_receipt(tmp_path):
+    entry = _planned_entry()
+    entry["claims"][0]["receipt_required"] = False
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="A/B ceiling requires a receipt"):
+        load_manifest(manifest)
+
+
+def test_claim_access_semantics_is_required(tmp_path):
+    entry = _planned_entry()
+    del entry["claims"][0]["access_semantics"]
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="access_semantics"):
+        load_manifest(manifest)
+
+
+@pytest.mark.parametrize("value", ["unknown-semantics", 7])
+def test_claim_access_semantics_rejects_unknown_or_non_string_values(tmp_path, value):
+    entry = _planned_entry()
+    entry["claims"][0]["access_semantics"] = value
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="invalid access_semantics"):
+        load_manifest(manifest)
+
+
+def test_all_controlled_claim_access_semantics_load(tmp_path):
+    for semantic in ACCESS_SEMANTICS:
+        entry = _planned_entry()
+        entry["claims"][0]["access_semantics"] = semantic
+        manifest = _write_manifest(tmp_path / semantic, [entry])
+
+        assert load_manifest(manifest)[0]["claims"][0]["access_semantics"] == semantic
+
+
+def test_wave_a_manifest_rows_preserve_reviewed_claim_contracts():
+    cards = {
+        card["id"]: card
+        for card in yaml.safe_load(
+            (REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8")
+        )
+    }
+    expected = {
+        "x3": {
+            "title": "Manager-universe & sourcing-funnel coverage map",
+            "primary_stage": "discover",
+            "tiers": ["P", "E", "R"],
+            "stages": ["discover", "underwrite", "govern"],
+            "asset_classes": ["cross-asset"],
+            "vehicle_types": [
+                "pooled-fund",
+                "fund-of-funds",
+                "segregated-mandate",
+                "drawdown-fund",
+            ],
+            "supported_data_modalities": ["documents", "filings", "operating-data"],
+            "minimum_data_modalities": ["filings"],
+            "claim_ids": [
+                "public_source_membership",
+                "prehire_source_membership",
+                "entity_resolution_state",
+                "target_cell_observation",
+                "source_union_novelty",
+                "funnel_stage_counts",
+                "funnel_conversion",
+                "research_cell_queue",
+                "synthetic_entity_recall",
+                "synthetic_discovery_recall",
+                "global_universe_coverage",
+                "manager_quality_ranking",
+            ],
+            "output_types": [
+                "exact-measurement",
+                "exact-measurement",
+                "exact-measurement",
+                "exact-measurement",
+                "exact-measurement",
+                "exact-measurement",
+                "interval",
+                "verdict",
+                "interval",
+                "exact-measurement",
+                "refusal",
+                "refusal",
+            ],
+            "semantics": [
+                "exact-per-dataset",
+                "exact-per-selected-dataset",
+                "all-required-per-selected-dataset",
+                "all-required-per-dataset",
+                "all-required-per-dataset",
+                "all-required-per-dataset",
+                "all-required-per-dataset",
+                "all-required-per-dataset",
+                "synthetic-fixture-only",
+                "synthetic-fixture-only",
+                "refusal-in-every-context",
+                "refusal-in-every-context",
+            ],
+            "ceilings": ["A", "B", "B", "B", "B", "B", "B", "C", "D", "D", "D", "D"],
+        },
+        "e4": {
+            "title": "Operational evidence & change graph",
+            "primary_stage": "underwrite",
+            "tiers": ["R", "E", "P"],
+            "stages": ["underwrite", "monitor", "govern"],
+            "asset_classes": ["cross-asset"],
+            "vehicle_types": ["pooled-fund", "segregated-mandate", "drawdown-fund"],
+            "supported_data_modalities": ["documents", "filings", "holdings", "mandate-terms"],
+            "minimum_data_modalities": ["documents"],
+            "claim_ids": [
+                "public_operational_facts",
+                "operational_change_graph",
+                "operational_evidence_state",
+                "reunderwriting_queue",
+                "operational_data_boundary_refusals",
+                "operational_method_boundary_refusal",
+                "synthetic_state_validation",
+            ],
+            "output_types": [
+                "evidence-graph",
+                "evidence-graph",
+                "verdict",
+                "exact-measurement",
+                "refusal",
+                "refusal",
+                "exact-measurement",
+            ],
+            "semantics": [
+                "all-required-per-selected-dataset",
+                "all-required-per-selected-dataset",
+                "all-required-per-selected-dataset",
+                "all-required-per-selected-dataset",
+                "refusal-per-inadmissible-input",
+                "refusal-in-every-context",
+                "synthetic-fixture-only",
+            ],
+            "ceilings": ["C", "B", "B", "B", "D", "D", "D"],
+        },
+        "s7": {
+            "title": "Track-record provenance inspector",
+            "primary_stage": "underwrite",
+            "tiers": ["R", "E", "P"],
+            "stages": ["discover", "underwrite", "monitor", "govern"],
+            "asset_classes": [
+                "public-equity",
+                "hedge-funds",
+                "fixed-income-credit",
+                "private-credit",
+                "private-equity",
+            ],
+            "vehicle_types": ["pooled-fund", "segregated-mandate", "drawdown-fund"],
+            "supported_data_modalities": [
+                "returns",
+                "cashflows-nav",
+                "documents",
+                "filings",
+                "mandate-terms",
+            ],
+            "minimum_data_modalities": ["returns"],
+            "claim_ids": [
+                "track_lineage",
+                "point_in_time_vintage_audit",
+                "basis_breaks",
+                "comparable_native_panel",
+                "predecessor_portability_evidence",
+                "historical_selection_refusal",
+                "performance_estimator_refusal",
+            ],
+            "output_types": [
+                "exact-measurement",
+                "exact-measurement",
+                "verdict",
+                "exact-measurement",
+                "verdict",
+                "refusal",
+                "refusal",
+            ],
+            "semantics": [
+                "all-required-per-selected-dataset",
+                "all-required-per-selected-dataset",
+                "all-required-per-selected-dataset",
+                "all-required-per-selected-dataset",
+                "all-required-per-selected-dataset",
+                "all-required-per-selected-dataset",
+                "refusal-in-every-context",
+            ],
+            "ceilings": ["B", "B", "B", "B", "C", "B", "D"],
+        },
+    }
+    for card_id, contract in expected.items():
+        card = cards[card_id]
+        for field in (
+            "title",
+            "primary_stage",
+            "tiers",
+            "stages",
+            "asset_classes",
+            "vehicle_types",
+            "supported_data_modalities",
+            "minimum_data_modalities",
+        ):
+            assert card[field] == contract[field]
+        claims = card["claims"]
+        assert [claim["id"] for claim in claims] == contract["claim_ids"]
+        assert [claim["output_type"] for claim in claims] == contract["output_types"]
+        assert [claim["access_semantics"] for claim in claims] == contract["semantics"]
+        assert [claim["current_attestation"] for claim in claims] == ["D"] * len(claims)
+        assert [claim["live_attestation_ceiling"] for claim in claims] == contract["ceilings"]
+        assert card["access_contexts"] == list(
+            dict.fromkeys(
+                context
+                for claim in claims
+                for context in claim["access_contexts"]
+            )
+        )
+
+
+def test_legacy_fixture_entry_is_upgraded_for_compatibility(tmp_path):
+    legacy = {
+        "id": "s1",
+        "title": "Legacy card",
+        "lane": "S",
+        "one_liner": "A pre-migration fixture.",
+        "decisions": ["select"],
+        "tiers": ["R"],
+        "status": "planned",
+    }
+    manifest = _write_manifest(tmp_path, [legacy])
+
+    card = load_manifest(manifest, allow_legacy=True)[0]
+
+    assert card["primary_stage"] == "underwrite"
+    assert card["decision_readiness"] == "prototype"
+    assert card["claims"][0]["current_attestation"] == "D"
+    assert card["claims"][0]["access_semantics"] == "all-required-per-selected-dataset"
+
+
+def test_legacy_fixture_is_rejected_without_explicit_opt_in(tmp_path):
+    entry = _planned_entry()
+    for key in _phase1_metadata():
+        del entry[key]
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="missing required keys.*access_contexts"):
+        load_manifest(manifest)
+
+
+def test_production_row_with_phase1_fields_deleted_is_rejected(tmp_path):
+    entry = yaml.safe_load((REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8"))[0]
+    for key in _phase1_metadata():
+        del entry[key]
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="missing required keys.*access_contexts"):
+        load_manifest(manifest)
+
+
+def test_production_claim_with_access_semantics_deleted_is_rejected(tmp_path):
+    entry = yaml.safe_load((REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8"))[0]
+    del entry["claims"][0]["access_semantics"]
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="access_semantics"):
+        load_manifest(manifest)
+
+
+def test_card_access_contexts_must_equal_claim_access_union(tmp_path):
+    entry = _planned_entry()
+    entry["access_contexts"].append("segregated-mandate")
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="must exactly equal claim access_contexts union"):
+        load_manifest(manifest)
 
 
 def test_valid_planned_entry_loads(tmp_path):

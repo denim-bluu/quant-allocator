@@ -229,7 +229,7 @@ def _fixture_site(tmp_path):
 
 def test_spec_renders_math_untouched_and_table(tmp_path):
     site = _fixture_site(tmp_path)
-    build(site, tmp_path / "out")
+    build(site, tmp_path / "out", allow_legacy=True)
     html = (tmp_path / "out" / "specs" / "t1.html").read_text(encoding="utf-8")
     assert r"$\alpha$" in html
     assert "<table>" in html
@@ -250,7 +250,7 @@ def test_spec_markdown_protects_tex_before_inline_formatting(tmp_path):
         encoding="utf-8",
     )
 
-    build(site, tmp_path / "out")
+    build(site, tmp_path / "out", allow_legacy=True)
 
     rendered = (tmp_path / "out" / "specs" / "t1.html").read_text(encoding="utf-8")
     body = _rendered_spec_bodies(tmp_path / "out")["t1"]
@@ -281,7 +281,7 @@ def test_math_delimiters_use_even_odd_backslash_parity(tmp_path):
     )
     spec.write_text(source, encoding="utf-8")
 
-    build(site, tmp_path / "out")
+    build(site, tmp_path / "out", allow_legacy=True)
 
     body = _rendered_spec_bodies(tmp_path / "out")["t1"]
     active = ["x_i", r"y_i\\", r"z_i\\"]
@@ -308,7 +308,7 @@ def test_math_delimiters_use_even_odd_backslash_parity(tmp_path):
         r"Three-slash display tokens: \\\$$not_display_three\\\$$."
     )
     spec.write_text(escaped_source, encoding="utf-8")
-    build(site, tmp_path / "escaped-out")
+    build(site, tmp_path / "escaped-out", allow_legacy=True)
     escaped_body = _rendered_spec_bodies(tmp_path / "escaped-out")["t1"]
     assert _source_math_expressions(escaped_source) == []
     assert _math_expressions(escaped_body) == []
@@ -326,7 +326,7 @@ def test_unmatched_even_run_openers_survive_as_raw_and_keep_error_default(tmp_pa
         encoding="utf-8",
     )
 
-    build(site, tmp_path / "out")
+    build(site, tmp_path / "out", allow_legacy=True)
 
     rendered = (tmp_path / "out" / "specs" / "t1.html").read_text(encoding="utf-8")
     body = _rendered_spec_bodies(tmp_path / "out")["t1"]
@@ -347,7 +347,7 @@ def test_balanced_math_audit_handles_currency_and_multiline_fixtures(tmp_path):
         "\n$$\n",
         encoding="utf-8",
     )
-    build(site, tmp_path / "out")
+    build(site, tmp_path / "out", allow_legacy=True)
 
     body = _rendered_spec_bodies(tmp_path / "out")["t1"]
     collector = _MathTextCollector()
@@ -389,7 +389,7 @@ def test_all_live_specs_have_no_unmatched_math_dollars_before_javascript(tmp_pat
 def test_all_live_specs_have_contiguous_balanced_katex_parseable_math(tmp_path):
     build(REPO_ROOT / "site", tmp_path / "out")
     bodies = _rendered_spec_bodies(tmp_path / "out")
-    assert len(bodies) == 20
+    assert len(bodies) == 23
 
     expression_rows = [
         {"spec": spec_id, "index": index, "expression": expression}
