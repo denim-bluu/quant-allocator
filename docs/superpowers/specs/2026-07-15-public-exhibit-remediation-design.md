@@ -1,6 +1,6 @@
 # Public Exhibit Remediation Design
 
-**Status:** Approved design, awaiting written-spec review
+**Status:** Approved for implementation
 
 **Approved direction:** Reader-facing remediation of all 23 public exhibit/article pairs, based on the rendered audit completed on 2026-07-15.
 
@@ -77,7 +77,8 @@ This is rejected as unnecessary scope. The current typography, article substrate
 - `R / E / P` becomes `Returns only / Exposure summaries / Positions and trades`; the letter may appear only after the full phrase is introduced and only where repeated comparison benefits from it.
 - `Power gate` becomes a plain statement of the minimum sample or evidence needed.
 - `Refusal` becomes a direct explanation that the result is not calculated because required evidence is missing.
-- `Receipt` becomes `Source record`; cryptographic identifiers remain technical evidence.
+- `Receipt` becomes `Source record`. Cryptographic identifiers remain available in the
+  repository evidence and committed data, but are not rendered in public HTML.
 - `Evidence-conditioned` becomes `Based only on evidence available by this date`.
 - Attestation and live-ceiling letters become readable readiness states such as `Synthetic demonstration` or `Requires live-data validation`.
 

@@ -14,6 +14,9 @@ READER_AUDIT = ROOT / "docs" / "audits" / "2026-07-15-reader-journey-audit.md"
 READER_PLAN = ROOT / "docs" / "superpowers" / "plans" / (
     "2026-07-15-reader-first-editorial-restructure.md"
 )
+REMEDIATION_PLAN = ROOT / "docs" / "superpowers" / "plans" / (
+    "2026-07-15-public-exhibit-remediation.md"
+)
 ROADMAP = ROOT / "docs" / "superpowers" / "plans" / (
     "2026-07-10-external-manager-roadmap-implementation.md"
 )
@@ -61,7 +64,7 @@ def test_product_charter_is_the_canonical_editorial_objective():
     assert "A charter amendment is required only when changing" in text
 
 
-def test_current_context_selects_editorial_website_and_no_platform_plan():
+def test_current_context_selects_public_exhibit_remediation():
     current = _current()
     assert current["version"] == 1
     assert current["product_charter"] == "docs/PRODUCT.md"
@@ -73,11 +76,13 @@ def test_current_context_selects_editorial_website_and_no_platform_plan():
     assert current["objective"]["id"] == "editorial-site"
     assert current["objective"]["mode"] == "website-first"
     assert current["objective"]["outcome"].strip()
-    assert current["scheduler"]["active_plan"] is None
-    assert current["scheduler"]["current_task"] == (
-        "WEBSITE-EDITORIAL-PUBLISH-R1-COMPLETE"
+    assert current["scheduler"]["active_plan"] == (
+        "docs/superpowers/plans/2026-07-15-public-exhibit-remediation.md"
     )
-    assert "repository hygiene are complete" in current["scheduler"][
+    assert current["scheduler"]["current_task"] == (
+        "WEBSITE-EXHIBIT-REMEDIATION-R2"
+    )
+    assert "shared public-language projection" in current["scheduler"][
         "next_action"
     ].lower()
     assert "no outward action is authorized" in current["scheduler"][
@@ -92,7 +97,7 @@ def test_current_context_selects_editorial_website_and_no_platform_plan():
         "publish": False,
     }
     assert current["verification"]["current_level"] == (
-        "reader-first-site-live-and-main-integrated"
+        "public-exhibit-remediation-in-progress"
     )
     assert "targeted-site-tests" in current["verification"]["required"]
     assert "output-integrity" in current["verification"]["required"]
@@ -108,12 +113,18 @@ def test_reader_first_context_links_binding_documents():
     assert audit_path == READER_AUDIT
     assert editorial_path.is_file()
     assert audit_path.is_file()
-    assert current["scheduler"]["active_plan"] is None
+    assert current["scheduler"]["active_plan"] == REMEDIATION_PLAN.relative_to(
+        ROOT
+    ).as_posix()
     assert READER_PLAN.is_file()
+    assert REMEDIATION_PLAN.is_file()
 
-    plan = READER_PLAN.read_text(encoding="utf-8")
+    plan = REMEDIATION_PLAN.read_text(encoding="utf-8")
     assert "docs/EDITORIAL_SYSTEM.md" in plan
-    assert "docs/audits/2026-07-15-reader-journey-audit.md" in plan
+    assert (
+        "docs/superpowers/specs/2026-07-15-public-exhibit-remediation-design.md"
+        in plan
+    )
 
 
 @pytest.mark.parametrize("plan", [ROADMAP, P4_CARD, P4_FIXTURE])
@@ -126,7 +137,9 @@ def test_active_plan_guard_rejects_superseded_or_parked_plans(plan: Path):
 
 def test_active_plan_guard_accepts_an_existing_unparked_plan():
     current = _current()
-    current["scheduler"]["active_plan"] = READER_PLAN.relative_to(ROOT).as_posix()
+    current["scheduler"]["active_plan"] = REMEDIATION_PLAN.relative_to(
+        ROOT
+    ).as_posix()
     _assert_active_plan_is_eligible(current)
 
 

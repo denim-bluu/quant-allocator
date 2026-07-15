@@ -10,12 +10,12 @@ objective:
     Build a public static editorial research publication and project-idea bank with
     Aligrithm-style composition and Interval quantitative semantics.
 scheduler:
-  current_task: WEBSITE-EDITORIAL-PUBLISH-R1-COMPLETE
-  active_plan: null
+  current_task: WEBSITE-EXHIBIT-REMEDIATION-R2
+  active_plan: docs/superpowers/plans/2026-07-15-public-exhibit-remediation.md
   next_action: >-
-    Reader-first publication, main integration, and repository hygiene are complete.
-    No outward action is authorized; parked work remains parked pending explicit
-    approval.
+    Implement the shared public-language projection and validator unit tests, then
+    execute the approved file-disjoint exhibit remediation tracks. No outward action
+    is authorized; parked work remains parked.
 parked_work:
   p4:
     status: parked
@@ -30,7 +30,7 @@ authority:
   push: false
   publish: false
 verification:
-  current_level: reader-first-site-live-and-main-integrated
+  current_level: public-exhibit-remediation-in-progress
   required:
     - targeted-site-tests
     - fresh-static-build
