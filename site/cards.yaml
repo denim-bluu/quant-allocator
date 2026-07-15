@@ -32,7 +32,7 @@
   article: s1-bayesian-alpha-engine.md
   spec: s1-bayesian-alpha-engine.md
   golive:
-    data_ask: Monthly net returns for the roster (R), with strategy labels
+    data_ask: Monthly net returns for the roster, with strategy labels
     sample: ≥36 months × ≥10 managers
     effort: M
 - id: s2
@@ -69,7 +69,7 @@
   article: s2-uncertainty-honest-tear-sheet.md
   spec: s2-tear-sheet-engine.md
   golive:
-    data_ask: Monthly net returns (R) + risk-free series + strategy factor set
+    data_ask: Monthly net returns, a risk-free series, and a strategy factor set
     sample: ≥36 months
     effort: S–M
 - id: s3
@@ -106,7 +106,8 @@
   article: s3-sizing-decay-lab.md
   spec: s3-sizing-decay-lab.md
   golive:
-    data_ask: "Dated position snapshots (signed weights) + trades (entry/exit) + factor returns (P)"
+    data_ask: Dated position snapshots with signed weights, entry and exit trades,
+      and factor returns
     sample: "A book clearing ~780 independent trades (65-name, 25%-turnover reaches it in ~3-4 years)"
     effort: "M"
 - id: s4
@@ -144,8 +145,8 @@
   spec: s4-sell-discipline.md
   golive:
     data_ask: >-
-      Tier P — transaction history or monthly holdings with exit dates and security
-      identifiers, plus a factor/risk model for residualization
+      Position-and-trade evidence: transaction history or monthly holdings with exit
+      dates and security identifiers, plus a factor or risk model for residualization
     sample: >-
       150 exits minimum for the headline gap (~270 bp/exit leaks); ~1,900 exits for
       field-size effects; a 30-name low-turnover book never clears
@@ -184,7 +185,10 @@
   article: s5-short-book-quality.md
   spec: s5-short-book-quality.md
   golive:
-    data_ask: "Tier P — month-end positions with signed weights, a risk-model loadings feed (bought), per-name borrow fees where disclosed; E buys the factor split only; R refuses unless the manager discloses sleeve returns"
+    data_ask: >-
+      Position-and-trade evidence uses month-end signed weights, risk-model loadings,
+      and disclosed per-name borrow fees. Exposure summaries support only the factor
+      split. Returns alone are insufficient unless the manager discloses sleeve returns.
     sample: "Decomposition and hedge share honest at any T; the alpha verdict needs T ≥ 36 to render (wide until ~60+); the hit rate is gated on independent trades (~10yr for a 25-name quarter-turnover sleeve; high-turnover books certify in 1–2yr)"
     effort: "M (demo scope; borrow realism and FINRA adapter deferred). Upstream: the short-side IC simulator dial (S)"
 - id: s6
@@ -221,7 +225,10 @@
   article: s6-returns-only-signatures.md
   spec: s6-returns-only-signatures.md
   golive:
-    data_ask: None — 100% simulator (tier R by construction); the optional external-validity rung later needs E/P summaries for a handful of transparent managers as labels only
+    data_ask: >-
+      No live manager data. This is a synthetic population experiment; a later
+      external-validity study would need exposure summaries or positions from a small
+      set of transparent managers as labels only.
     sample: The pre-registered grid (500 managers per class per cell); a live read of one manager against a population is honest only as a weak prior nudge
     effort: M–L — kernels and test layer small; the confirmatory runs, the overlay stress, and the publish-either-way write-up are the work
 - id: m1
@@ -258,8 +265,14 @@
   article: m1-exposure-drift-monitor.md
   spec: m1-exposure-drift-monitor.md
   golive:
-    data_ask: Exposure summaries (E — net/gross, factor betas, sector/duration buckets) + the stated bands from mandate/letters; + positions (P) for drift attribution; R rolling-beta needs returns + a factor set only
-    sample: n/a per-window — the measurement is exact at any T; the sustained-drift alarm renders only where the X1 registry says the detector clears at the manager's cadence and horizon
+    data_ask: >-
+      Exposure summaries such as net and gross exposure, factor betas, and sector or
+      duration buckets, plus the stated mandate bands. Positions add drift attribution;
+      a rolling-beta view needs returns and a factor set.
+    sample: >-
+      Each window can be measured directly. A sustained-drift alarm is shown only when
+      its false-alarm and detection requirements clear at the manager's cadence and
+      horizon.
     effort: S–M (incl. the null-calibration harness and the net-beta-drift simulator dial)
 - id: m2
   title: Hidden-convexity / short-vol screen
@@ -295,7 +308,9 @@
   article: m2-hidden-convexity-screen.md
   spec: m2-hidden-convexity-screen.md
   golive:
-    data_ask: Monthly net returns (R) + a market-factor return series; the straddle rung adds the public Fung–Hsieh PTFS factor series (adapter not yet built)
+    data_ask: >-
+      Monthly net returns and a market-factor return series. The optional straddle
+      comparison also uses the public Fung–Hsieh PTFS factor series.
     sample: Calibrated false-alarm, not a raw count — composite renders at T ≥ 48 months where honest-manager false-alarm (including honest-but-smooth) sits ≤ 0.10; below that the individual interval stats render with a NOISE composite chip
     effort: M
 - id: m3
@@ -332,7 +347,9 @@
   article: m3-drawdown-alarms.md
   spec: m3-drawdown-alarms.md
   golive:
-    data_ask: Monthly net returns (R) + a maintained Sharpe (S1 posterior or claimed) + a risk-free series
+    data_ask: >-
+      Monthly net returns, a maintained expected Sharpe estimate, and a risk-free
+      series
     sample: Any T — the output is a calibrated band and a stated budget, not a point; detection improves with T
     effort: S
 - id: m4
@@ -370,7 +387,10 @@
   spec: m4-crowding-overlap-radar.md
   golive:
     data_ask: Position-level holdings aligned to a shared name universe, plus per-name dollar ADV and daily volatility; the public rung later consumes public filings through the shared adapter
-    sample: None for the point-in-time measurement; predictive loss and any size-cap recommendation remain refused until atlas gate 2 clears
+    sample: >-
+      No minimum for the point-in-time measurement. Predictive loss and any size-cap
+      recommendation remain unavailable until the required out-of-sample reliability
+      threshold is met.
     effort: M–L
 - id: m5
   title: Say–do gap monitor
@@ -406,8 +426,10 @@
   article: m5-say-do-gap.md
   spec: m5-say-do-gap.md
   golive:
-    data_ask: Letters (R) + exposure summaries (E)
-    sample: n/a — per-letter analytic, eval-harness-gated
+    data_ask: Dated manager letters and exposure summaries covering the same period
+    sample: >-
+      Each letter can be assessed after extraction quality meets the documented 80%
+      threshold.
     effort: M–L (includes the eval harness)
 - id: m6
   title: 13F long-book intelligence
@@ -481,8 +503,9 @@
   spec: p1-allocation-uncertainty.md
   golive:
     data_ask: >-
-      S1's tier-R inputs (monthly net returns >=36m for >=10 managers with strategy labels, factor
-      sets, risk-free) plus a per-manager residual vol (S2 de-smoothed).
+      At least 36 monthly net-return observations for at least 10 managers, with
+      strategy labels, factor sets, a risk-free series, and a de-smoothed residual-risk
+      estimate for each manager.
     sample: >-
       Any T renders honest bands (width carries the honesty); decisive bands (floors clear of zero,
       the point optimizer reliably beaten) need T >= 48 and true skill dispersion >= 2%/yr.
@@ -521,7 +544,9 @@
   article: p2-tiered-book-xray.md
   spec: p2-tiered-book-xray.md
   golive:
-    data_ask: Returns and a factor set for the full book (R), risk buckets where disclosed (E), and dated holdings where position-transparent (P)
+    data_ask: >-
+      Returns and a factor set for the full book, disclosed exposure or risk summaries,
+      and dated holdings for position-transparent managers
     sample: Any tier mix renders an honest band; the information-gain claim requires calibrated exposure-error rows and must clear the 20% floor
     effort: L — static demo now; temporal filter and calibrated atlas rows in wave 3
 - id: p3
@@ -561,7 +586,7 @@
     data_ask: >-
       A prospectively-maintained decision journal (dates + type + pre-committed
       thesis, expected alpha, horizon, kill criterion) + monthly net returns for
-      every manager touched by a decision (tier R, roster-wide)
+      every manager touched by a decision, measured consistently across the full roster
     sample: >-
       None for the journal; the aggregate renders an average only above 12
       effective events, and even then as an interval that straddles zero for years
@@ -617,7 +642,7 @@
   minimum_data_modalities: [documents]
   decision_readiness: usable-now
   evidence_roles: [governance-workflow]
-  minimum_data: Validated outputs from the selected analyses and their source receipts.
+  minimum_data: Validated outputs from the selected analyses and their dated source records.
   validation_status: protocol-ready
   claims:
     - id: engagement-pack
@@ -634,8 +659,12 @@
   article: e2-engagement-pack.md
   spec: e2-engagement-pack.md
   golive:
-    data_ask: None of its own — inherits each section's ask (S1/S2 returns; M1/M5 exposure)
-    sample: Inherited — the X1 PowerGate registry gates each section
+    data_ask: >-
+      No additional source of its own. Each included section brings its required
+      returns, exposure summaries, holdings, or documents.
+    sample: >-
+      Each included section must meet its own documented sample and reliability
+      threshold.
     effort: S
 - id: e3
   title: Manager knowledge graph & retrieval
@@ -671,7 +700,9 @@
   article: e3-manager-knowledge-graph.md
   spec: e3-manager-knowledge-graph.md
   golive:
-    data_ask: Manager documents at tier R — dated letters, DDQs, and meeting notes; public documents only in the repository. Tier E adds exposure summaries and tier P adds holdings
+    data_ask: >-
+      Dated manager letters, due-diligence questionnaires, and meeting notes. Exposure
+      summaries and holdings add progressively richer context when available.
     sample: No sample-size threshold; real facts require extraction precision and recall at least 0.8 per core slot, and graph expansion requires at least +0.10 absolute recall@10 with the paired interval excluding zero
     effort: M–L
 - id: x1
@@ -746,9 +777,8 @@
   article: x2-transparency-playground.md
   spec: x2-transparency-playground.md
   standing_note: >-
-    This page is the thesis, not a product — it never goes live against a real
-    manager. It renders a precomputed subset of the X1 atlas and stays synthetic
-    forever; the only release event is the v1 → v2 atlas regeneration.
+    This page is a synthetic teaching example, not a live manager product. It remains
+    synthetic and changes only when the underlying teaching scenarios are refreshed.
 - id: x3
   title: Manager-universe & sourcing-funnel coverage map
   lane: X
@@ -765,7 +795,9 @@
   minimum_data_modalities: [filings]
   decision_readiness: data-conditional
   evidence_roles: [operational-analysis, governance-workflow]
-  minimum_data: Versioned source membership, canonical entity mapping, target-grid version, receipt times, and funnel events for internal conversion claims.
+  minimum_data: >-
+    Versioned source membership, canonical entity mapping, a dated target grid, source
+    times, and complete funnel events for any conversion estimate.
   validation_status: live-calibration-required
   status: live
   demo: pages/x3-universe.html.j2
@@ -882,7 +914,10 @@
       receipt_required: true
       refusal: X3 prioritizes research cells and never ranks manager quality.
   golive:
-    data_ask: Per-dataset rights, purposes, complete version manifests and exact absence rules; shared entity, relationship, membership and grid projections; and complete opportunity, funnel-schema, cohort, cohort-assignment and event evidence with typed bundle receipts.
+    data_ask: >-
+      Rights and permitted purposes for each source, complete version histories and
+      absence rules, consistent entity and relationship mappings, and complete cohort,
+      assignment, opportunity, and event records.
     sample: Exact source and eligible-cell counts have no minimum; conversion intervals require at least 20 eligible opportunities in the disclosed complete cohort, while the synthetic entity precision gate requires at least 381 accepted true-positive links and zero false positives.
     effort: L
 - id: e4
@@ -902,7 +937,10 @@
   minimum_data_modalities: [documents]
   decision_readiness: data-conditional
   evidence_roles: [operational-analysis, governance-workflow]
-  minimum_data: Versioned operational documents and filings with explicit effective and receipt times, canonical entity mappings and relationships, per-dataset rights, independence spans, delivery completeness, and reconstruction receipts.
+  minimum_data: >-
+    Versioned operational documents and filings with explicit effective and first-known
+    times, canonical entity relationships, source rights, independence spans, and
+    delivery-completeness evidence.
   validation_status: live-calibration-required
   claims:
     - id: public_operational_facts
@@ -973,7 +1011,10 @@
   article: e4-operational-evidence-change.md
   spec: e4-operational-evidence-change.md
   golive:
-    data_ask: Permissioned versioned operational sources with effective and receipt times, entity and relationship provenance, independence spans, per-dataset rights, delivery completeness, and reconstruction receipts.
+    data_ask: >-
+      Permissioned versioned operational sources with effective and first-known times,
+      entity and relationship provenance, independence spans, source rights, and
+      delivery-completeness evidence.
     sample: At least one reviewed live-shaped case per intended source family, revision and absence mode, access context, and planted refusal boundary; this is validation coverage, not an estimator sample threshold.
     effort: L
 - id: s7
@@ -992,7 +1033,10 @@
   minimum_data_modalities: [returns]
   decision_readiness: data-conditional
   evidence_roles: [operational-analysis, governance-workflow]
-  minimum_data: Versioned native-frequency returns or cashflows/NAV, entity and composite lineage, fee/currency/benchmark basis, X3 membership vintages, dead products, receipt times, rights, and predecessor/team evidence for portability claims.
+  minimum_data: >-
+    Versioned native-frequency returns or cash flows and NAV, entity and composite
+    lineage, fee, currency, and benchmark basis, dated universe membership, dead
+    products, source times and rights, and predecessor-team evidence for portability.
   validation_status: live-calibration-required
   status: live
   demo: pages/s7-provenance.html.j2
@@ -1064,6 +1108,10 @@
       receipt_required: true
       refusal: S7 intentionally emits no alpha, Sharpe, IRR, PME, skill, or manager ranking; use the appropriate downstream method after its own gates.
   golive:
-    data_ask: Archived source vintages and observations; complete full/delta/tombstone contract; entity/composite/vehicle/share-class lineage; fee/currency/benchmark/valuation basis; X3 memberships/dead products; predecessor/team evidence; per-dataset rights and receipts.
+    data_ask: >-
+      Archived source versions and observations; complete full, change, and deletion
+      histories; entity, composite, vehicle, and share-class lineage; fee, currency,
+      benchmark, and valuation basis; dated universe membership and dead products;
+      predecessor-team evidence; and rights for each source.
     sample: At least one real, permissioned case in each intended source shape, including one known revision/backfill and one basis break. This is validation coverage, not an estimator sample-size threshold.
     effort: Reconcile live schemas and licences, obtain manager/data-owner sign-off on lineage, independently reproduce one panel and one refusal, and calibrate copy without upgrading attestation beyond the evidence.

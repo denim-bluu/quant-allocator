@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 
 import yaml
 
@@ -17,6 +18,12 @@ ACCESS_SEMANTICS = {
     "refusal-in-every-context",
     "refusal-per-inadmissible-input",
 }
+PUBLIC_COPY_INTERNAL_PATTERN = re.compile(
+    r"\b(?:S|M|P|E|X)\d+\b|\btier[- ]?[REP]\b|\bPowerGate\b|"
+    r"\beval-harness\b|\brepository history\b|\bship rule\b|"
+    r"\bcommitted JSON\b|\bsource receipts?\b",
+    re.IGNORECASE,
+)
 
 
 def _write_manifest(tmp_path, entries):
@@ -190,6 +197,23 @@ def test_all_controlled_claim_access_semantics_load(tmp_path):
         manifest = _write_manifest(tmp_path / semantic, [entry])
 
         assert load_manifest(manifest)[0]["claims"][0]["access_semantics"] == semantic
+
+
+def test_manifest_owned_public_copy_uses_reader_facing_language():
+    cards = yaml.safe_load(
+        (REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8")
+    )
+
+    for card in cards:
+        public_fields = [card["minimum_data"]]
+        if card.get("standing_note"):
+            public_fields.append(card["standing_note"])
+        if card.get("golive"):
+            public_fields.extend(
+                [card["golive"]["data_ask"], card["golive"]["sample"]]
+            )
+        for value in public_fields:
+            assert not PUBLIC_COPY_INTERNAL_PATTERN.search(value), (card["id"], value)
 
 
 def test_wave_a_manifest_rows_preserve_reviewed_claim_contracts():
