@@ -10,11 +10,11 @@ objective:
     Build a public static editorial research publication and project-idea bank with
     Aligrithm-style composition and Interval quantitative semantics.
 scheduler:
-  current_task: WEBSITE-EDITORIAL-PUBLISH-R1
+  current_task: WEBSITE-EDITORIAL-PUBLISH-R1-COMPLETE
   active_plan: null
   next_action: >-
-    Run the required publication gate, then push and publish the reader-first editorial
-    site under the user's explicit 2026-07-15 approval.
+    Reader-first publication and main integration are complete. No outward action is
+    authorized; parked work remains parked pending explicit approval.
 parked_work:
   p4:
     status: parked
@@ -26,10 +26,10 @@ parked_work:
     card_tip: 7c2964f
 authority:
   merge: false
-  push: true
-  publish: true
+  push: false
+  publish: false
 verification:
-  current_level: reader-first-site-merged-and-locally-verified
+  current_level: reader-first-site-live-and-main-integrated
   required:
     - targeted-site-tests
     - fresh-static-build

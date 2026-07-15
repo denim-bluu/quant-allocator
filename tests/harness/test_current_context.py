@@ -74,18 +74,22 @@ def test_current_context_selects_editorial_website_and_no_platform_plan():
     assert current["objective"]["mode"] == "website-first"
     assert current["objective"]["outcome"].strip()
     assert current["scheduler"]["active_plan"] is None
-    assert current["scheduler"]["current_task"] == "WEBSITE-EDITORIAL-PUBLISH-R1"
-    assert "push and publish" in current["scheduler"]["next_action"]
+    assert current["scheduler"]["current_task"] == (
+        "WEBSITE-EDITORIAL-PUBLISH-R1-COMPLETE"
+    )
+    assert "no outward action is authorized" in current["scheduler"][
+        "next_action"
+    ].lower()
     _assert_active_plan_is_eligible(current)
     assert set(current["authority"]) == {"merge", "push", "publish"}
     assert all(type(value) is bool for value in current["authority"].values())
     assert current["authority"] == {
         "merge": False,
-        "push": True,
-        "publish": True,
+        "push": False,
+        "publish": False,
     }
     assert current["verification"]["current_level"] == (
-        "reader-first-site-merged-and-locally-verified"
+        "reader-first-site-live-and-main-integrated"
     )
     assert "targeted-site-tests" in current["verification"]["required"]
     assert "output-integrity" in current["verification"]["required"]
