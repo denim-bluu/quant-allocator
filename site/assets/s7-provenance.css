@@ -8,7 +8,7 @@
 }
 
 .s7-disclosure,
-.s7-answer,
+.s7-opening-state,
 .s7-source,
 .s7-controls,
 .s7-view,
@@ -28,18 +28,51 @@
   gap: 0.4rem;
 }
 
-.s7-answer {
+.s7-opening-state {
   align-items: start;
-  display: flex;
+  display: grid;
   gap: 1rem;
-  justify-content: space-between;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.7fr) auto;
 }
 
-.s7-answer h2,
+.s7-opening-state h2,
 .s7-source h2,
 .s7-view h2,
 .s7-always h2 {
   margin-top: 0;
+}
+
+.s7-opening-state__counts {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.s7-opening-state__counts p {
+  background: var(--track);
+  border-radius: 0.5rem;
+  margin: 0;
+  padding: 0.75rem;
+}
+
+.s7-opening-state__counts strong,
+.s7-opening-state__counts span {
+  display: block;
+}
+
+.s7-opening-state__counts strong {
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.s7-opening-state__counts span {
+  color: var(--dim);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.s7-opening-state__chip {
+  white-space: nowrap;
 }
 
 .s7-source {
@@ -91,6 +124,7 @@
 
 .s7-controls button:focus-visible,
 .s7-table-wrap:focus-visible,
+.s7-advanced > summary:focus-visible,
 .s7-always summary:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent);
   outline-offset: 3px;
@@ -108,6 +142,32 @@
   border: 1px solid #a66b12;
   border-radius: 0.45rem;
   padding: 0.7rem;
+}
+
+.s7-advanced {
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  max-width: 100%;
+  overflow: clip;
+}
+
+.s7-advanced > summary {
+  align-items: center;
+  background: var(--track);
+  cursor: pointer;
+  display: flex;
+  font-weight: 750;
+  min-height: 44px;
+  padding: 0.9rem 1.1rem;
+}
+
+.s7-advanced[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.s7-advanced__body {
+  padding: 0 1.1rem 0.1rem;
 }
 
 .s7-chip {
@@ -237,8 +297,12 @@
     grid-template-columns: 1fr;
   }
 
-  .s7-answer {
-    display: block;
+  .s7-opening-state {
+    grid-template-columns: 1fr;
+  }
+
+  .s7-opening-state__chip {
+    justify-self: start;
   }
 
   .s7-refusal-list article,
@@ -263,13 +327,29 @@
   }
 
   .s7-disclosure,
-  .s7-answer,
+  .s7-opening-state,
   .s7-source,
   .s7-controls,
   .s7-view,
   .s7-always {
     border-radius: 0.45rem;
     padding: 0.85rem;
+  }
+
+  .s7-opening-state__counts {
+    grid-template-columns: 1fr;
+  }
+
+  .s7-advanced {
+    border-radius: 0.45rem;
+  }
+
+  .s7-advanced > summary {
+    padding: 0.85rem;
+  }
+
+  .s7-advanced__body {
+    padding: 0 0.85rem 0.1rem;
   }
 
   .s7-controls button {

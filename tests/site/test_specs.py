@@ -399,7 +399,11 @@ def test_all_live_specs_have_contiguous_balanced_katex_parseable_math(tmp_path):
     assert expression_rows, "the live spec corpus unexpectedly contains no math"
     cards = yaml.safe_load((REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8"))
     for card in cards:
-        source = (REPO_ROOT / "docs" / "ideas" / "specs" / card["spec"]).read_text(encoding="utf-8")
+        if card.get("article"):
+            source_path = REPO_ROOT / "docs" / "ideas" / "articles" / card["article"]
+        else:
+            source_path = REPO_ROOT / "docs" / "ideas" / "specs" / card["spec"]
+        source = source_path.read_text(encoding="utf-8")
         expected_count = len(_source_math_expressions(source))
         actual_count = sum(row["spec"] == card["id"] for row in expression_rows)
         assert actual_count == expected_count, (

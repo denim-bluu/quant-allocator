@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<article class="spec-page article-shell">
+<article class="spec-page article-shell{% if is_public_article %} article-shell--reader{% endif %}">
   <header class="article-shell__header">
     <nav class="article-breadcrumb" aria-label="Breadcrumb">
       <a href="{{ asset_base | default('') }}index.html#research">Research</a>
@@ -14,6 +14,23 @@
     </nav>
     <a class="article-link" href="{{ asset_base | default('') }}{{ card.id }}.html">Open the paired exhibit</a>
   </header>
+  {% if is_public_article %}
+  <section class="article-intro article-intro--reader" aria-labelledby="article-title">
+    <p class="article-intro__kicker">{{ article_meta.position }}</p>
+    <h1 id="article-title">{{ card.title }}</h1>
+    <p class="article-intro__deck">{{ card.one_liner }}</p>
+    <ul class="article-cues" aria-label="Reading details">
+      <li>{{ article_meta.reading_time }} read</li>
+      <li>{{ article_meta.difficulty }}</li>
+      <li>{{ stage_headings[card.primary_stage] }}</li>
+    </ul>
+  </section>
+  <aside class="article-contents" aria-label="Article contents">
+    <p class="article-contents__label">On this page</p>
+    {{ article_toc | safe }}
+    <a class="article-contents__method" href="{{ method_source_url }}">Technical method and provenance</a>
+  </aside>
+  {% else %}
   <section class="article-intro" aria-labelledby="article-title">
     <p class="article-intro__kicker">{{ card.lane }} research · {{ stage_headings[card.primary_stage] }}</p>
     <h1 id="article-title">{{ card.title }}</h1>
@@ -24,8 +41,29 @@
       <div><dt>Minimum evidence</dt><dd>{{ card.minimum_data }}</dd></div>
     </dl>
   </section>
+  {% endif %}
   <div class="spec-page__body" data-math-render-status="error">
     {{ spec_html | safe }}
+    {% if is_public_article %}
+    <nav class="article-continuation" aria-label="Continue reading">
+      <div>
+        <p>See the evidence</p>
+        <a href="{{ asset_base | default('') }}{{ card.id }}.html">Open the paired exhibit</a>
+      </div>
+      {% if article_meta.previous_id %}
+      <div>
+        <p>Previous in this path</p>
+        <a href="{{ article_meta.previous_id }}.html">{{ article_meta.previous_title }}</a>
+      </div>
+      {% endif %}
+      {% if article_meta.next_id %}
+      <div>
+        <p>Next in this path</p>
+        <a href="{{ article_meta.next_id }}.html">{{ article_meta.next_title }}</a>
+      </div>
+      {% endif %}
+    </nav>
+    {% endif %}
   </div>
 </article>
 {% endblock %}
@@ -68,6 +106,14 @@
     if (mathErrors.length) {
       specBody.setAttribute("data-math-render-status", "error");
       throw new Error("Spec math rendering failed: " + mathErrors.join(" | "));
+    }
+    if (specBody.querySelectorAll) {
+      Array.prototype.forEach.call(specBody.querySelectorAll(".katex-display"), function (equation) {
+        if (equation.scrollWidth > equation.clientWidth) {
+          equation.setAttribute("tabindex", "0");
+          equation.setAttribute("aria-label", "Scrollable equation");
+        }
+      });
     }
     specBody.setAttribute("data-math-render-status", "ok");
   });

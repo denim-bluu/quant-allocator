@@ -8,17 +8,18 @@
 {% set comparison = card_data.cells["0.04|12|0.8|120|E"] %}
 
 {% macro dial(name, label, values, active, numeric=True) %}
-<div class="x2-dial" data-dial="{{ name }}">
-  <span class="x2-dial__label">{{ label }}</span>
+<fieldset class="x2-dial" data-dial="{{ name }}">
+  <legend class="x2-dial__label">{{ label }}</legend>
   <div class="x2-dial__options">
     {% for v in values %}
     {% set token = "%g"|format(v) if numeric else v %}
     <button type="button" class="x2-dial__btn{% if token == active %} x2-dial__btn--active{% endif %}"
             data-value="{{ token }}"
+            aria-label="{{ label }}: {{ token }}"
             aria-pressed="{{ 'true' if token == active else 'false' }}">{{ token }}</button>
     {% endfor %}
   </div>
-</div>
+</fieldset>
 {% endmacro %}
 
 {% macro analytic_slot(name, label) %}
@@ -56,21 +57,64 @@
 
 <section class="x2-exhibit" aria-label="What this exhibit shows">
   <h2 class="x2-exhibit__title">What this exhibit shows</h2>
-  <p class="x2-exhibit__subhead">What you are looking at</p>
-  <p class="x2-exhibit__lede">
-    The page opens on one simulated manager at middling skill (IC 0.04), a 12-month alpha
-    half-life, disciplined sizing, a 48-month track record, viewed at the returns-only tier
-    (R). Its annualized alpha reads {{ "%.3f"|format(opening.alpha[0]) }}, but the 95% band runs from
-    {% if opening.alpha[1] < 0 %}&minus;{% else %}+{% endif %}{{ "%.5f"|format(opening.alpha[1] | abs) }} to
-    {% if opening.alpha[2] >= 0 %}+{% else %}&minus;{% endif %}{{ "%.4f"|format(opening.alpha[2] | abs) }}
-    &mdash; it straddles zero, so the verdict is <em>noise</em>: forty-eight months cannot tell
-    this manager from a lucky one. Select track length 120 and pin exposures (tier E): alpha is
-    {{ "%.3f"|format(comparison.alpha[0]) }}, with a band from
-    {% if comparison.alpha[1] >= 0 %}+{% else %}&minus;{% endif %}{{ "%.6f"|format(comparison.alpha[1] | abs) }} to
-    {% if comparison.alpha[2] >= 0 %}+{% else %}&minus;{% endif %}{{ "%.5f"|format(comparison.alpha[2] | abs) }},
-    and the verdict is <em>{{ comparison.alpha[3] }}</em>. Nothing is
-    computed in your browser &mdash; each dial just opens a precomputed cell of the X1 atlas.
-  </p>
+  <section class="x2-before-after" aria-labelledby="x2-before-after-title">
+    <header class="x2-before-after__header">
+      <p class="x2-before-after__eyebrow">Instructed comparison</p>
+      <h3 id="x2-before-after-title">Hold the manager fixed. Change the evidence.</h3>
+      <p>Read left to right before using the controls. Both states come from committed X1
+        atlas cells; the browser only reveals them.</p>
+    </header>
+
+    <div class="x2-before-after__grid">
+      <article class="x2-before-after__state x2-before-after__state--before">
+        <p class="x2-before-after__label">Before · 48 months · tier R</p>
+        <p class="x2-before-after__estimate">
+          <strong>{{ "%.3f"|format(opening.alpha[0]) }}</strong>
+          <span>annualized alpha</span>
+        </p>
+        <p class="x2-before-after__band">
+          95% band
+          {% if opening.alpha[1] < 0 %}&minus;{% else %}+{% endif %}{{ "%.5f"|format(opening.alpha[1] | abs) }}
+          to
+          {% if opening.alpha[2] >= 0 %}+{% else %}&minus;{% endif %}{{ "%.4f"|format(opening.alpha[2] | abs) }}
+        </p>
+        <span class="verdict-chip" data-verdict="{{ opening.alpha[3] }}">{{ opening.alpha[3] }}</span>
+        <p class="x2-before-after__note">Returns alone leave enough estimation noise for the
+          interval to cross zero.</p>
+      </article>
+
+      <span class="x2-before-after__arrow" aria-hidden="true">&rarr;</span>
+
+      <article class="x2-before-after__state x2-before-after__state--after">
+        <p class="x2-before-after__label">After · 120 months · tier E</p>
+        <p class="x2-before-after__estimate">
+          <strong>{{ "%.3f"|format(comparison.alpha[0]) }}</strong>
+          <span>annualized alpha</span>
+        </p>
+        <p class="x2-before-after__band">
+          95% band
+          {% if comparison.alpha[1] >= 0 %}+{% else %}&minus;{% endif %}{{ "%.6f"|format(comparison.alpha[1] | abs) }}
+          to
+          {% if comparison.alpha[2] >= 0 %}+{% else %}&minus;{% endif %}{{ "%.5f"|format(comparison.alpha[2] | abs) }}
+        </p>
+        <span class="verdict-chip" data-verdict="{{ comparison.alpha[3] }}">{{ comparison.alpha[3] }}</span>
+        <p class="x2-before-after__note">More history and pinned exposures reduce estimation
+          noise enough for the interval to clear zero.</p>
+      </article>
+    </div>
+
+    <div class="x2-before-after__change">
+      <h3>What changed</h3>
+      <p>The alpha point barely moves. The evidence gets tighter: longer history and measured
+        exposures reduce noise, so the verdict moves from <em>{{ opening.alpha[3] }}</em> to
+        <em>{{ comparison.alpha[3] }}</em>. In the committed comparison, shrinkage supports a
+        positive effect while refusing to treat the full headline estimate as robust.</p>
+    </div>
+  </section>
+
+  <p class="x2-exhibit__lede">The dials below let you inspect the same measured grid without
+    interpolating between cells. Use the labels here to separate the point estimate, interval,
+    verdict, and power refusal as the evidence changes.</p>
   <p class="x2-exhibit__subhead">How to read it</p>
   <ul class="x2-exhibit__map">
     <li><b>Dials</b> are buttons, not sliders: they <em>snap</em> to computed cells, because the

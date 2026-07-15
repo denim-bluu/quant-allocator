@@ -1,6 +1,8 @@
 version: 1
 updated_at: "2026-07-15"
 product_charter: docs/PRODUCT.md
+editorial_system: docs/EDITORIAL_SYSTEM.md
+evidence_record: docs/audits/2026-07-15-reader-journey-audit.md
 objective:
   id: editorial-site
   mode: website-first
@@ -8,11 +10,11 @@ objective:
     Build a public static editorial research publication and project-idea bank with
     Aligrithm-style composition and Interval quantitative semantics.
 scheduler:
-  current_task: WEBSITE-PUBLISH-T1-COMPLETE
+  current_task: WEBSITE-EDITORIAL-PUBLISH-R1
   active_plan: null
   next_action: >-
-    Website publication and main integration are complete. Await explicit user
-    instruction; parked work remains parked and no outward action is authorized.
+    Run the required publication gate, then push and publish the reader-first editorial
+    site under the user's explicit 2026-07-15 approval.
 parked_work:
   p4:
     status: parked
@@ -24,13 +26,14 @@ parked_work:
     card_tip: 7c2964f
 authority:
   merge: false
-  push: false
-  publish: false
+  push: true
+  publish: true
 verification:
-  current_level: website-live-and-main-integrated
+  current_level: reader-first-site-merged-and-locally-verified
   required:
-    - full-site-suite
+    - targeted-site-tests
     - fresh-static-build
+    - output-integrity
     - rendered-desktop-mobile-qa
     - scoped-publication-canary
     - consolidated-final-review

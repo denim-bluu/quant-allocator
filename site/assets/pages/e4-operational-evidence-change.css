@@ -8,9 +8,11 @@
 }
 
 .e4-boundary,
+.e4-opening-state,
 .e4-controls,
 .e4-panel,
-.e4-counts {
+.e4-counts,
+.e4-advanced {
   margin: 1.5rem 0;
 }
 
@@ -29,7 +31,31 @@
 }
 
 .e4-boundary h2,
+.e4-opening-state h2,
 .e4-panel h2 {
+  margin-top: 0;
+}
+
+.e4-opening-state {
+  align-items: start;
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
+  border-left: 4px solid var(--accent);
+  border-radius: 0.75rem;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(14rem, 0.75fr) minmax(0, 1.25fr);
+  padding: 1.25rem;
+}
+
+.e4-opening-state h2,
+.e4-opening-state p {
+  margin-bottom: 0;
+}
+
+.e4-opening-state > p {
+  color: var(--dim);
+  line-height: 1.65;
   margin-top: 0;
 }
 
@@ -75,10 +101,48 @@
 .e4-controls button[aria-pressed="true"],
 .e4-controls button:focus-visible,
 .e4-controls select:focus-visible,
+.e4-advanced > summary:focus-visible,
 .e4-edge:focus-visible {
   border-color: var(--accent);
   outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
   outline-offset: 2px;
+}
+
+.e4-advanced {
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  overflow-wrap: anywhere;
+  padding: 0 1.25rem 1.25rem;
+}
+
+.e4-advanced > summary {
+  cursor: pointer;
+  font-weight: 750;
+  line-height: 1.35;
+  margin: 0 -1.25rem;
+  min-height: 45px;
+  padding: 1rem 1.25rem;
+}
+
+.e4-advanced > summary::marker {
+  color: var(--accent);
+}
+
+.e4-advanced[open] > summary {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1.25rem;
+}
+
+.e4-advanced > .e4-announcer:first-of-type {
+  margin-top: 0;
+}
+
+.e4-advanced code {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .e4-announcer,
@@ -218,9 +282,24 @@
     display: block;
   }
 
+  .e4-opening-state,
   .e4-controls,
   .e4-counts {
     grid-template-columns: 1fr;
+  }
+
+  .e4-opening-state {
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .e4-advanced {
+    padding: 0 0.85rem 0.85rem;
+  }
+
+  .e4-advanced > summary {
+    margin: 0 -0.85rem;
+    padding: 0.9rem 0.85rem;
   }
 
   .e4-timeline article,

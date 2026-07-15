@@ -54,13 +54,23 @@
 </article>
 {% endmacro %}
 
-{% block demo_content %}
+{% block demo_lead %}
 <section class="m3-intro">
   <p class="m3-headline">
     The same &minus;12% drawdown is a shrug for a 20%-vol trend book and a five-alarm fire for a
     smooth 6%-vol credit book &mdash; not because 12% means different things, but because each
     manager is read against <strong>their own simulated null</strong>, not a flat house rule.
   </p>
+</section>
+
+<section class="m3-split">
+  {{ manager_panel(split[0]) }}
+  {{ manager_panel(split[1]) }}
+</section>
+{% endblock %}
+
+{% block demo_content %}
+<section class="m3-intro">
   <p class="m3-window">
     Budgets are stated <strong>per review window</strong>; the window here is the
     <strong>full evaluated track</strong> ({{ card_data.meta.months }} months). AMBER fires above
@@ -117,11 +127,6 @@
     </p>
   </div>
 </aside>
-
-<section class="m3-split">
-  {{ manager_panel(split[0]) }}
-  {{ manager_panel(split[1]) }}
-</section>
 
 <section class="m3-roster">
   <h2 class="m3-roster__title">Roster heat-list</h2>

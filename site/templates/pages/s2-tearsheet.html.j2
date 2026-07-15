@@ -3,69 +3,45 @@
 {% set st = card_data.statistics %}
 {% set ab = card_data.alt_beta %}
 {% set dd = card_data.drawdown_band %}
+{% set sharpe_scale_lo = [st.sharpe_reported.ci_lo, st.sharpe_desmoothed.ci_lo] | min %}
+{% set sharpe_scale_hi = [st.sharpe_reported.ci_hi, st.sharpe_desmoothed.ci_hi] | max %}
+{% set sharpe_zero_pct = (0 - sharpe_scale_lo) / (sharpe_scale_hi - sharpe_scale_lo) * 100 %}
+{% set drawdown_floor = dd.p99 | min %}
 
-{% block demo_content %}
-<section class="tearsheet-intro">
-  <p class="tearsheet-headline">
-    <strong>Decision:</strong> keep monitoring and open a fees-for-beta conversation; do not
-    add on the point estimates. One synthetic manager
-    (<strong>{{ card_data.meta.manager_name }}</strong>, equity
-    long/short, {{ card_data.meta.months }} months, tier {{ card_data.meta.tier }}). Every
-    statistic ships as an interval with a verdict &mdash; no bare point, no overstated
-    confidence. Risk-free {{ "%.1f"|format(card_data.meta.rf_annual * 100) }}%/yr
-    <span class="tearsheet-synthetic">(synthetic)</span>.
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/s2.css?v={{ asset_version }}">
+{% endblock %}
+
+{% block demo_lead %}
+<div class="tearsheet-lead">
+<section class="tearsheet-decision" id="s2-decision-takeaway" aria-labelledby="s2-decision-title">
+  <p class="tearsheet-eyebrow">Decision takeaway</p>
+  <h2 id="s2-decision-title">Keep monitoring. Do not add on the point estimates.</h2>
+  <p>
+    <strong>Decision:</strong> keep collecting evidence and open a fees-for-beta
+    conversation. The 48-month intervals do not separate skill from noise and factor
+    exposure, so the positive points do not support a conviction add.
+  </p>
+  <p class="tearsheet-decision__sample">
+    Synthetic manager <strong>{{ card_data.meta.manager_name }}</strong> · equity
+    long/short · {{ card_data.meta.months }} months · tier {{ card_data.meta.tier }} ·
+    risk-free {{ "%.1f"|format(card_data.meta.rf_annual * 100) }}%/yr
+    <span class="tearsheet-synthetic">(synthetic)</span>
   </p>
 </section>
 
-<section class="tearsheet-panel" aria-label="What this exhibit shows">
-  <h2 class="tearsheet-panel__title">What this exhibit shows</h2>
-  <p class="tearsheet-note">
-    <strong>What you are looking at.</strong> One synthetic manager's honest tear
-    sheet. The de-smoothing panel drops the Sharpe from
-    {{ "%.2f"|format(st.sharpe_reported.point) }} (reported) to
-    {{ "%.2f"|format(st.sharpe_desmoothed.point) }} (economic) once smoothed marks
-    are undone, and both come with a 95% interval that straddles zero. The factor
-    panel reports an annualized alpha of {{ "%+.1f"|format(st.alpha.point * 100) }}%
-    whose 90% interval includes zero, so 48 months cannot yet separate skill from
-    factor exposure. The realized drawdown stays inside its simulated 99th-percentile
-    band &mdash; an ordinary loss under the paid-for-skill hypothesis.
-  </p>
-  <p class="tearsheet-note"><strong>How to read it.</strong></p>
-  <ul class="tearsheet-note">
-    <li><strong>Interval stat</strong> (a value with a shaded rail) &mdash; the point
-      estimate plus its confidence interval; the wider the band, the less the track
-      length resolves.</li>
-    <li><strong>Reported vs de-smoothed Sharpe pair</strong> &mdash; the gap is the
-      volatility that smoothing hid; the economic Sharpe is the defensible one.</li>
-    <li><strong>MPPM chip</strong> &mdash; a manipulation-proof return beside the
-      Sharpe; read the <em>gap</em> between them, not the level.</li>
-    <li><strong>Verdict chip</strong> (&ldquo;provisionally alternative beta&rdquo;)
-      &mdash; a calibration statement that the alpha interval includes zero at this
-      track length, not an accusation of no skill.</li>
-    <li><strong>Drawdown band</strong> &mdash; the pointwise 50 / 95 / 99th percentile
-      null envelope; a realized path inside it is an ordinary drawdown.</li>
-  </ul>
-  <p class="tearsheet-note">
-    The full methodology &mdash; with the math and a reference implementation &mdash;
-    is in the <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method
-    spec</a>. This known-truth construction exercises de-smoothing, interval estimation,
-    factor attribution, and drawdown-refusal mechanics. It does not establish external
-    calibration, predictive accuracy, or a conclusion about a live manager.
-  </p>
-</section>
-
-<section class="tearsheet-panel">
-  <h2 class="tearsheet-panel__title">De-smoothing &mdash; reported vs economic Sharpe</h2>
-  <p class="tearsheet-note">
-    Getmansky&ndash;Lo&ndash;Makarov unsmoothing restores the volatility that smoothed
-    marks hide, so the economic Sharpe is lower. Smoothing kernel
-    &theta; = ({{ "%.2f"|format(card_data.theta[0]) }},
-    {{ "%.2f"|format(card_data.theta[1]) }},
-    {{ "%.2f"|format(card_data.theta[2]) }}); vol ratio
-    {{ "%.2f"|format(card_data.unsmoothing.vol_ratio) }}. De-smoothing lowers the Sharpe
-    from {{ "%.2f"|format(st.sharpe_reported.point) }} to
-    {{ "%.2f"|format(st.sharpe_desmoothed.point) }}.
-  </p>
+<figure class="tearsheet-focal" id="s2-focal-comparison"
+        aria-labelledby="s2-focal-title" aria-describedby="s2-focal-caption">
+  <div class="tearsheet-focal__intro">
+    <p class="tearsheet-eyebrow">Focal comparison</p>
+    <h2 id="s2-focal-title">Smoothing made the track record look more precise than it is.</h2>
+    <p>
+      Undoing smoothed marks lowers the Sharpe from
+      {{ "%.2f"|format(st.sharpe_reported.point) }} to
+      {{ "%.2f"|format(st.sharpe_desmoothed.point) }}. Both 95% intervals cross zero,
+      so the economic correction changes the estimate without resolving the skill call.
+    </p>
+  </div>
   <div class="tearsheet-stat-pair">
     <div class="interval-stat" data-domain="sharpe"
          data-lo="{{ st.sharpe_reported.ci_lo }}"
@@ -76,6 +52,11 @@
       <div class="interval-stat__rail">
         <div class="interval-stat__band"></div>
         <div class="interval-stat__point"></div>
+      </div>
+      <div class="interval-stat__scale" aria-label="Shared Sharpe scale from {{ '%.2f'|format(sharpe_scale_lo) }} to {{ '%.2f'|format(sharpe_scale_hi) }}">
+        <span>{{ "%.2f"|format(sharpe_scale_lo) }}</span>
+        <span class="interval-stat__zero-label" style="left: {{ '%.2f'|format(sharpe_zero_pct) }}%">0</span>
+        <span>{{ "%.2f"|format(sharpe_scale_hi) }}</span>
       </div>
       <span class="interval-stat__range">95% interval {{ "%.2f"|format(st.sharpe_reported.ci_lo) }} &hellip; {{ "%.2f"|format(st.sharpe_reported.ci_hi) }}</span>
     </div>
@@ -90,18 +71,52 @@
         <div class="interval-stat__band"></div>
         <div class="interval-stat__point"></div>
       </div>
+      <div class="interval-stat__scale" aria-label="Shared Sharpe scale from {{ '%.2f'|format(sharpe_scale_lo) }} to {{ '%.2f'|format(sharpe_scale_hi) }}">
+        <span>{{ "%.2f"|format(sharpe_scale_lo) }}</span>
+        <span class="interval-stat__zero-label" style="left: {{ '%.2f'|format(sharpe_zero_pct) }}%">0</span>
+        <span>{{ "%.2f"|format(sharpe_scale_hi) }}</span>
+      </div>
       <span class="interval-stat__range">95% interval {{ "%.2f"|format(st.sharpe_desmoothed.ci_lo) }} &hellip; {{ "%.2f"|format(st.sharpe_desmoothed.ci_hi) }}</span>
     </div>
   </div>
   <p class="tearsheet-mppm">
-    MPPM (&rho;=3) {{ "%+.1f"|format(st.mppm.point * 100) }}%/yr, shown beside the Sharpe
-    as a manipulation check &mdash; the Sharpe&ndash;MPPM <em>gap</em>, not the level, is
-    the signal.
+    Smoothing kernel &theta; = ({{ "%.2f"|format(card_data.theta[0]) }},
+    {{ "%.2f"|format(card_data.theta[1]) }}, {{ "%.2f"|format(card_data.theta[2]) }});
+    economic/reported volatility ratio {{ "%.2f"|format(card_data.unsmoothing.vol_ratio) }}.
+    MPPM (&rho;=3) is {{ "%+.1f"|format(st.mppm.point * 100) }}%/yr; read the
+    Sharpe&ndash;MPPM gap as a manipulation check, not another ranking score.
+  </p>
+  <figcaption id="s2-focal-caption" class="tearsheet-interpretation">
+    <strong>What it changes.</strong> The de-smoothed estimate is the defensible basis
+    for underwriting. <strong>What remains uncertain.</strong> The interval is still too
+    wide to support either a skill or no-skill conclusion.
+  </figcaption>
+</figure>
+</div>
+{% endblock %}
+
+{% block demo_content %}
+<section class="tearsheet-panel tearsheet-further-analysis" aria-label="What this exhibit shows">
+  <p class="tearsheet-eyebrow">Further analysis</p>
+  <h2 class="tearsheet-panel__title">What this exhibit shows</h2>
+  <p class="tearsheet-note">
+    The focal comparison corrects the headline risk-adjusted return. The panels below
+    ask the next two questions: whether the residual return clears factor uncertainty,
+    and whether the realized loss is unusual under the maintained skill hypothesis.
+  </p>
+  <p class="tearsheet-note">
+    This known-truth construction exercises de-smoothing, interval estimation, factor
+    attribution, and drawdown-refusal mechanics. It does not establish external
+    calibration, predictive accuracy, or a conclusion about a live manager.
   </p>
 </section>
 
 <section class="tearsheet-panel">
   <h2 class="tearsheet-panel__title">Factor regression &mdash; interval alpha</h2>
+  <p class="tearsheet-note">
+    The factor model tests whether the remaining return can be distinguished from zero
+    after the estimated exposures are removed.
+  </p>
   <div class="tearsheet-factor">
     <div class="interval-stat" data-domain="alpha"
          data-lo="{{ st.alpha.ci_lo }}"
@@ -130,24 +145,70 @@
       &mdash; not distinguishable from factor beta at this track length.
     </span>
   </div>
-</section>
-
-<section class="tearsheet-panel">
-  <h2 class="tearsheet-panel__title">Drawdown vs simulation-calibrated null</h2>
-  <p class="tearsheet-note">
-    The realized drawdown path against the <strong>pointwise</strong> 50 / 95 / 99th
-    percentile null envelope (AR(1) {{ "%.2f"|format(dd.ar1) }}). The realized path
-    <strong>stays within the 99th-percentile envelope</strong> &mdash; an ordinary
-    drawdown under the paid-for-skill hypothesis.
+  <p class="tearsheet-interpretation">
+    <strong>What it changes.</strong> A positive alpha point is not treated as
+    demonstrated alpha. <strong>What remains uncertain.</strong> The record permits both
+    useful skill and no residual alpha after factor exposure.
   </p>
-  <svg class="s2-drawdown" viewBox="0 0 100 40" preserveAspectRatio="none"
-       role="img" aria-label="Realized drawdown against the pointwise null envelope"></svg>
 </section>
 
 <section class="tearsheet-panel">
-  <h2 class="tearsheet-panel__title">Monthly returns</h2>
-  <svg class="s2-strip" viewBox="0 0 100 30" preserveAspectRatio="none"
-       role="img" aria-label="Monthly return strip"></svg>
+  <h2 class="tearsheet-panel__title" id="s2-drawdown-title">Drawdown vs simulation-calibrated null</h2>
+  <figure class="tearsheet-chart" aria-labelledby="s2-drawdown-title s2-drawdown-caption">
+    <div class="tearsheet-chart__plot">
+      <div class="tearsheet-chart__y-axis" aria-hidden="true">
+        <span>0%</span>
+        <strong>Drawdown (%)</strong>
+        <span>{{ "%.0f"|format(drawdown_floor * 100) }}%</span>
+      </div>
+      <svg class="s2-drawdown" viewBox="0 0 100 40" preserveAspectRatio="none"
+           role="img" aria-label="Realized drawdown against the pointwise null envelope"></svg>
+    </div>
+    <div class="tearsheet-chart__x-axis" aria-hidden="true">
+      <span>Month 1</span><span>Month {{ card_data.meta.months }}</span>
+    </div>
+    <ul class="tearsheet-chart__legend" aria-label="Drawdown chart legend">
+      <li><span class="tearsheet-key tearsheet-key--realized"></span>Realized drawdown</li>
+      <li><span class="tearsheet-key tearsheet-key--median"></span>Median path</li>
+      <li><span class="tearsheet-key tearsheet-key--p95"></span>95th-percentile envelope</li>
+      <li><span class="tearsheet-key tearsheet-key--p99"></span>99th-percentile envelope</li>
+    </ul>
+    <figcaption id="s2-drawdown-caption" class="tearsheet-interpretation">
+      <strong>What it changes.</strong> The realized path
+      <strong>stays within the 99th-percentile envelope</strong>, so this exhibit
+      supplies no loss alarm.
+      <strong>What remains uncertain.</strong> The bands are pointwise, not a
+      familywise-calibrated rule for repeated monitoring.
+    </figcaption>
+  </figure>
+</section>
+
+<section class="tearsheet-panel">
+  <h2 class="tearsheet-panel__title" id="s2-returns-title">Monthly returns</h2>
+  <figure class="tearsheet-chart" aria-labelledby="s2-returns-title s2-returns-caption">
+    <div class="tearsheet-chart__plot tearsheet-chart__plot--returns">
+      <div class="tearsheet-chart__y-axis" aria-hidden="true">
+        <span>+</span>
+        <strong>Monthly net return (%)</strong>
+        <span>&minus;</span>
+      </div>
+      <svg class="s2-strip" viewBox="0 0 100 30" preserveAspectRatio="none"
+           role="img" aria-label="Monthly net return strip in percent"></svg>
+    </div>
+    <div class="tearsheet-chart__x-axis" aria-hidden="true">
+      <span>Month 1</span><span>Month {{ card_data.meta.months }}</span>
+    </div>
+    <ul class="tearsheet-chart__legend" aria-label="Monthly return chart legend">
+      <li><span class="tearsheet-key tearsheet-key--positive"></span>Positive month</li>
+      <li><span class="tearsheet-key tearsheet-key--negative"></span>Negative month</li>
+    </ul>
+    <figcaption id="s2-returns-caption" class="tearsheet-interpretation">
+      <strong>What it changes.</strong> The strip makes clustering and sign changes
+      visible instead of hiding the path inside one annualized statistic.
+      <strong>What remains uncertain.</strong> A return strip does not explain the
+      economic cause of a month or establish persistence.
+    </figcaption>
+  </figure>
 </section>
 {% endblock %}
 

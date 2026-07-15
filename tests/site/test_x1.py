@@ -18,6 +18,10 @@ def _build_with_modified_payload(tmp_path):
     site = tmp_path / "site"
     shutil.copytree(REPO_ROOT / "site", site)
     shutil.copytree(REPO_ROOT / "docs" / "ideas" / "specs", tmp_path / "docs" / "ideas" / "specs")
+    shutil.copytree(
+        REPO_ROOT / "docs" / "ideas" / "articles",
+        tmp_path / "docs" / "ideas" / "articles",
+    )
     data_path = site / "data" / "x1_atlas.json"
     data = json.loads(data_path.read_text(encoding="utf-8"))
     data["headline"]["reference"]["target_power"] = 0.81

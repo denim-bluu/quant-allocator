@@ -21,7 +21,7 @@ def _built_index(tmp_path):
 
 def _tile_attribute(index_html, card_id, attribute):
     tile = re.search(
-        rf'<a class="card-tile[^"]*"[^>]*data-card-id="{card_id}"[^>]*>',
+        rf'<article class="card-tile[^"]*"[^>]*data-card-id="{card_id}"[^>]*>',
         index_html,
     )
     assert tile is not None
@@ -37,14 +37,32 @@ def test_homepage_is_an_editorial_publication_before_it_is_a_catalog(tmp_path):
     assert "Quantitative methods for allocator decisions under partial transparency." in page
     assert 'id="start-here"' in page
     assert 'id="research"' in page
+    assert 'id="featured"' in page
     assert 'id="browse"' in page
-    assert page.index('id="start-here"') < page.index('id="browse"')
-    for title in (
-        "Uncertainty-honest tear-sheet engine",
-        "Tier &amp; Power Atlas",
-        "Transparency playground",
+    ordered_sections = [
+        page.index('id="start-here"'),
+        page.index('id="research"'),
+        page.index('id="featured"'),
+        page.index('id="browse"'),
+    ]
+    assert ordered_sections == sorted(ordered_sections)
+
+    start_here = page.split('id="start-here"', 1)[1].split('id="research"', 1)[0]
+    assert re.findall(r'data-curriculum-id="([^"]+)"', start_here) == ["s2", "s1", "m3"]
+    for text in (
+        "Treating a point estimate as evidence.",
+        "Read track-record statistics as uncertain estimates and know when to refuse a conclusion.",
+        "Treating a noisy ranking as a ranking of manager skill.",
+        "Understand shrinkage, partial pooling, and posterior rank uncertainty.",
+        "Applying the same flat drawdown threshold to unlike managers.",
+        "Compare a realized drawdown with the manager-specific null",
+        "Reading time",
+        "Difficulty",
+        "Why this comes next",
     ):
-        assert title in page
+        assert text in start_here
+    assert "Tier &amp; Power Atlas" not in start_here
+    assert "Transparency playground" not in start_here
     for pillar, count in (
         ("Signal &amp; skill", 7),
         ("Monitoring", 6),
@@ -61,22 +79,26 @@ def test_homepage_article_index_links_every_idea_to_its_long_form_article(tmp_pa
     page = _built_index(tmp_path)
     cards = yaml.safe_load((REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8"))
 
-    assert all(f'href="specs/{card["id"]}.html"' in page for card in cards)
-    for card_id in ("s2", "x1", "x2"):
-        assert f'<h3><a href="specs/{card_id}.html">' in page
+    for card in cards:
+        assert f'href="specs/{card["id"]}.html">Read article</a>' in page
+        assert f'href="{card["id"]}.html">View exhibit</a>' in page
 
 
-def test_static_gallery_is_a_complete_decision_journey_without_javascript(tmp_path):
+def test_static_gallery_is_complete_without_javascript(tmp_path):
     html = _built_index(tmp_path)
 
-    assert "What are you trying to decide?" in html
+    assert "All research" in html
     assert 'data-gallery-view="journey"' in html
     assert 'data-gallery-view="catalog"' in html
+    assert ">Detailed</button>" in html
+    assert ">Compact</button>" in html
     assert 'aria-pressed="true"' in html
     assert 'aria-pressed="false"' in html
-    for stage in ("discover", "underwrite", "mandate", "construct", "monitor", "govern"):
+    for stage in ("discover", "underwrite", "construct", "monitor", "govern"):
         assert f'id="stage-{stage}"' in html
         assert f'href="#stage-{stage}"' in html
+    assert 'id="stage-mandate"' not in html
+    assert "Research by allocator journey" not in html
     assert html.count('data-card-id="') == 23
     cards = yaml.safe_load((REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8"))
     assert f"All {len(cards)} ideas remain available when JavaScript is disabled." in html
@@ -109,6 +131,10 @@ def test_static_no_javascript_count_is_derived_from_the_manifest(tmp_path):
     repo = tmp_path / "repo"
     shutil.copytree(REPO_ROOT / "site", repo / "site")
     shutil.copytree(REPO_ROOT / "docs" / "ideas" / "specs", repo / "docs" / "ideas" / "specs")
+    shutil.copytree(
+        REPO_ROOT / "docs" / "ideas" / "articles",
+        repo / "docs" / "ideas" / "articles",
+    )
     manifest_path = repo / "site" / "cards.yaml"
     cards = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))[:-1]
     manifest_path.write_text(yaml.safe_dump(cards, sort_keys=False), encoding="utf-8")
@@ -212,6 +238,10 @@ def test_search_corpus_includes_all_controlled_access_semantics(tmp_path):
     repo = tmp_path / "repo"
     shutil.copytree(REPO_ROOT / "site", repo / "site")
     shutil.copytree(REPO_ROOT / "docs" / "ideas" / "specs", repo / "docs" / "ideas" / "specs")
+    shutil.copytree(
+        REPO_ROOT / "docs" / "ideas" / "articles",
+        repo / "docs" / "ideas" / "articles",
+    )
     manifest = repo / "site" / "cards.yaml"
     cards = yaml.safe_load(manifest.read_text(encoding="utf-8"))
     semantics = [
@@ -277,10 +307,25 @@ assert.equal(gallery.matchesCard(card, gallery.presetState('returns-only')), fal
     assert completed.returncode == 0, completed.stderr
 
 
+def test_complete_exhibit_index_is_generated_from_the_manifest(tmp_path):
+    out = tmp_path / "out"
+    build(REPO_ROOT / "site", out)
+    page = (out / "exhibits.html").read_text(encoding="utf-8")
+    cards = yaml.safe_load((REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8"))
+
+    assert "All exhibits" in page
+    assert page.count('class="exhibit-index__entry"') == 23
+    for card in cards:
+        assert f'href="{card["id"]}.html">View exhibit</a>' in page
+        assert f'href="specs/{card["id"]}.html">Read article</a>' in page
+
+
 def test_gallery_styles_cover_views_controls_empty_state_and_mobile():
     css = (REPO_ROOT / "site" / "assets" / "gallery.css").read_text(encoding="utf-8")
     required = [
         ".journey-nav",
+        ".curriculum-step",
+        ".exhibit-index",
         ".gallery-tools",
         ".gallery-view",
         ".gallery-search",

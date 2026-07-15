@@ -71,6 +71,38 @@ def test_page_furniture_assets_and_answer_first_copy(tmp_path: Path) -> None:
         assert f'data-tier="{tier}"' in html
 
 
+def test_e4_narrates_one_opening_state_before_advanced_tables(tmp_path: Path) -> None:
+    html, _ = _build(tmp_path)
+
+    opening = html.index('class="e4-opening-state"')
+    guide = html.index("What this exhibit shows")
+    advanced = html.index('<details class="e4-advanced">')
+    assert opening < guide < advanced
+    opening_html = html[opening:advanced]
+    assert "Latest entitled state" in opening_html
+    assert "10 actions require review" in opening_html
+    advanced_html = html[advanced:]
+    assert "Explore the complete evidence graph" in advanced_html
+    assert 'aria-label="Operational fact table"' in advanced_html
+
+
+def test_e4_advanced_receipts_are_mobile_overflow_safe() -> None:
+    css = (
+        REPO_ROOT
+        / "site"
+        / "assets"
+        / "pages"
+        / "e4-operational-evidence-change.css"
+    ).read_text(encoding="utf-8")
+
+    selector = css.split(".e4-advanced code", 1)[1].split("}", 1)[0]
+    containers = re.findall(r"\.e4-advanced \{([^}]*)\}", css)
+    assert any("overflow-wrap: anywhere" in block for block in containers)
+    assert "max-width: 100%" in selector
+    assert "overflow-wrap: anywhere" in selector
+    assert "white-space: normal" in selector
+
+
 def test_controls_accessible_table_queue_and_refusal_are_server_rendered(tmp_path: Path) -> None:
     html, _ = _build(tmp_path)
     assert html.count("data-e4-cutoff-control=") == 3

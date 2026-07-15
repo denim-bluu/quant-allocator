@@ -1,5 +1,10 @@
 # Quant Allocator Editorial Website Implementation Plan
 
+> **COMPLETED HISTORICAL PLAN:** This plan produced the first editorial shell and is not
+> active. Its Start Here selection, full-spec article rendering, and exhibit-preservation
+> boundaries are superseded by `docs/EDITORIAL_SYSTEM.md` and the active plan named in
+> `.harness/current.yaml`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. The user has selected inline execution with one implementation owner and a single consolidated review at the end.
 
 **Goal:** Rebuild Quant Allocator as a responsive publication-first editorial website while preserving all 23 tested exhibits and their quantitative semantics.

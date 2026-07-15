@@ -4,9 +4,11 @@
 
 1. Read `docs/PRODUCT.md`.
 2. Read `.harness/current.yaml`.
-3. Read `AGENTS.md`.
-4. Read only the specification or plan explicitly named by the current task.
-5. Verify the Git branch and worktree before editing.
+3. For a reader-facing website task, read the path named by `editorial_system` and the
+   path named by `evidence_record`.
+4. Read `AGENTS.md`.
+5. Read only the specification or `active_plan` explicitly named by the current task.
+6. Verify the Git branch and worktree before editing.
 
 Do not initialize from `.superpowers/sdd/progress.md`, old continuation prompts,
 completed implementation plans, or review reports. They are historical evidence for

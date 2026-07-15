@@ -37,7 +37,7 @@ def test_every_generated_page_has_unique_ids_and_resolving_local_links(tmp_path)
     pages = sorted(out.glob("*.html")) + sorted((out / "specs").glob("*.html"))
     parsed = {page.resolve(): _parse(page) for page in pages}
 
-    assert len(pages) == 47
+    assert len(pages) == 48
     for page, document in parsed.items():
         assert len(document.ids) == len(set(document.ids)), page.relative_to(out)
         source = page.read_text(encoding="utf-8")

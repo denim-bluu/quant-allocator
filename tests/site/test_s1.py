@@ -3,6 +3,7 @@ from pathlib import Path
 from quant_allocator.site.build import build
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+METHOD_SPEC = REPO_ROOT / "docs" / "ideas" / "specs" / "s1-bayesian-alpha-engine.md"
 
 
 def test_s1_page_provenance_and_copy(tmp_path):
@@ -52,14 +53,12 @@ def test_s1_copy_is_shrinkage_not_true_skill_recovery(tmp_path):
         assert overclaim not in template
 
 
-def test_s1_spec_has_reproduction_map(tmp_path):
-    out = tmp_path / "out"
-    build(REPO_ROOT / "site", out)
-    html = (out / "specs" / "s1.html").read_text(encoding="utf-8")
-    assert "Displayed field" in html
-    assert "JSON field" in html
-    assert "s1_ledger.py" in html
-    assert "test_s1_ledger.py" in html
+def test_s1_method_spec_has_reproduction_map():
+    source = METHOD_SPEC.read_text(encoding="utf-8")
+    assert "Displayed field" in source
+    assert "JSON field" in source
+    assert "s1_ledger.py" in source
+    assert "test_s1_ledger.py" in source
 
 
 def test_s1_page_script_loaded(tmp_path):
@@ -75,3 +74,19 @@ def test_s1_page_has_exhibit_explainer(tmp_path):
     build(REPO_ROOT / "site", out)
     html = (out / "s1.html").read_text(encoding="utf-8")
     assert "What this exhibit shows" in html
+
+
+def test_s1_opens_with_three_focal_managers_before_the_full_roster(tmp_path):
+    out = tmp_path / "out"
+    build(REPO_ROOT / "site", out)
+    html = (out / "s1.html").read_text(encoding="utf-8")
+
+    assert html.count("data-focal-manager=") == 3
+    for code in ("A10", "B10", "A07"):
+        assert f'data-focal-manager="{code}"' in html
+    focal = html.index('class="ledger-focal"')
+    roster = html.index('<details class="ledger-roster">')
+    assert focal < roster
+    roster_html = html[roster:]
+    assert "Explore all 20 managers" in roster_html
+    assert roster_html.count('<article class="ledger-row') == 20

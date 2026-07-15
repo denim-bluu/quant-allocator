@@ -1,32 +1,39 @@
-# Publishing runbook (manual, last)
+# Publishing runbook (updates only; manual and last)
 
-Publication is deliberate and human-gated. Do not automate these steps.
+The public repository and GitHub Pages site already exist. Do not recreate the
+repository or repeat first-publication setup. Every update remains deliberate and
+human-gated.
 
-1. **Populate local sensitive terms.** Create `tools/.publication_terms`
-   (gitignored) with any employer or manager names to scan for, one per line.
-   This file is never committed.
+1. **Confirm authority.** Merge, push, and publication each require explicit user
+   approval and a corresponding `true` flag in `.harness/current.yaml`. One approval
+   does not imply the others.
 
-2. **Run the readiness scan and review every hit.**
+2. **Populate local sensitive terms.** Ensure `tools/.publication_terms` exists in the
+   checkout used for the release scan. It is gitignored and must never be committed.
+
+3. **Run the release verification named by the active plan.** Use a fresh static build,
+   targeted/full site tests appropriate to the change, output-integrity checks, and
+   rendered desktop/mobile QA. A passing build alone is not publication evidence.
+
+4. **Run and adjudicate the publication scan.**
+
    ```bash
-   bash tools/publication_check.sh | less
-   ```
-   The scan is report-only. Joon reviews all working-tree and git-history hits
-   and decides whether any history rewrite is required before the repo goes
-   public. Nothing proceeds until this review is done.
-
-3. **Create the public repository and push.**
-   ```bash
-   gh repo create quant-allocator --public --source=. --push
+   bash tools/publication_check.sh
    ```
 
-4. **Enable GitHub Pages.** In the new repo: Settings → Pages → Source:
-   "GitHub Actions". The `pages.yml` workflow runs on push to `main`.
+   The scanner is report-only. Review every working-tree and reachable-history hit.
+   No current-tree match is accepted by default; every such match blocks release.
+   Already-public history is accepted only for exact pairs in
+   `tools/publication_history_grandfather.yaml`.
 
-5. **Verify the workflow.** Confirm the "Deploy gallery to GitHub Pages" run
-   succeeds and the published gallery renders (index, `e1.html`, `specs/e1.html`).
+5. **Push only the reviewed commit authorized for release.** Do not rewrite published
+   `main` history. If a local branch contains a literal-bearing historical commit, use
+   the repository's planned clean-tree integration procedure rather than pushing that
+   history.
 
-6. **Set the gallery URL in the README.** Replace the
-   `<!-- set after Pages enablement -->` placeholder and the `USERNAME`
-   gallery URL with the real Pages URL, then commit. Also update `REPO_URL`
-   in `src/quant_allocator/site/build.py` to the real repository URL, so the
-   "Source repository" link in every published page footer resolves.
+6. **Verify the existing GitHub Pages workflow.** Confirm the deployment workflow
+   succeeds, then inspect the live homepage, one changed article, one changed exhibit,
+   mobile rendering, formulas, links, and the primary changed interaction.
+
+7. **Record merge and deployment separately.** A merged commit is not proof that the
+   live site has deployed or passed rendered validation.

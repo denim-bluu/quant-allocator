@@ -9,6 +9,11 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 CURRENT = ROOT / ".harness" / "current.yaml"
 PRODUCT = ROOT / "docs" / "PRODUCT.md"
+EDITORIAL_SYSTEM = ROOT / "docs" / "EDITORIAL_SYSTEM.md"
+READER_AUDIT = ROOT / "docs" / "audits" / "2026-07-15-reader-journey-audit.md"
+READER_PLAN = ROOT / "docs" / "superpowers" / "plans" / (
+    "2026-07-15-reader-first-editorial-restructure.md"
+)
 ROADMAP = ROOT / "docs" / "superpowers" / "plans" / (
     "2026-07-10-external-manager-roadmap-implementation.md"
 )
@@ -17,9 +22,6 @@ P4_CARD = ROOT / "docs" / "superpowers" / "plans" / (
 )
 P4_FIXTURE = ROOT / "docs" / "superpowers" / "plans" / (
     "2026-07-11-p4-shared-terms-fixture-seam.md"
-)
-RESET_PLAN = ROOT / "docs" / "superpowers" / "plans" / (
-    "2026-07-15-editorial-site-harness-reset.md"
 )
 PUBLICATION_CHECK = ROOT / "tools" / "publication_check.sh"
 PUBLICATION_GRANDFATHER = ROOT / "tools" / (
@@ -43,6 +45,8 @@ def _assert_active_plan_is_eligible(current: dict) -> None:
     opening = candidate.read_text(encoding="utf-8")[:800]
     assert "SUPERSEDED PRODUCT SCOPE" not in opening
     assert "PARKED OPTIONAL RESEARCH" not in opening
+    assert "COMPLETED HISTORICAL PLAN" not in opening
+    assert "HISTORICAL FIRST REDESIGN" not in opening
 
 
 def test_product_charter_is_the_canonical_editorial_objective():
@@ -61,23 +65,48 @@ def test_current_context_selects_editorial_website_and_no_platform_plan():
     current = _current()
     assert current["version"] == 1
     assert current["product_charter"] == "docs/PRODUCT.md"
+    assert current["editorial_system"] == "docs/EDITORIAL_SYSTEM.md"
+    assert current["evidence_record"] == (
+        "docs/audits/2026-07-15-reader-journey-audit.md"
+    )
     assert set(current["objective"]) >= {"id", "mode", "outcome"}
     assert current["objective"]["id"] == "editorial-site"
     assert current["objective"]["mode"] == "website-first"
     assert current["objective"]["outcome"].strip()
     assert current["scheduler"]["active_plan"] is None
-    assert current["scheduler"]["current_task"].startswith("WEBSITE-")
-    assert current["scheduler"]["next_action"].strip()
+    assert current["scheduler"]["current_task"] == "WEBSITE-EDITORIAL-PUBLISH-R1"
+    assert "push and publish" in current["scheduler"]["next_action"]
     _assert_active_plan_is_eligible(current)
     assert set(current["authority"]) == {"merge", "push", "publish"}
     assert all(type(value) is bool for value in current["authority"].values())
+    assert current["authority"] == {
+        "merge": False,
+        "push": True,
+        "publish": True,
+    }
+    assert current["verification"]["current_level"] == (
+        "reader-first-site-merged-and-locally-verified"
+    )
+    assert "targeted-site-tests" in current["verification"]["required"]
+    assert "output-integrity" in current["verification"]["required"]
     assert "scoped-publication-canary" in current["verification"]["required"]
-    if current["scheduler"]["current_task"].endswith("-COMPLETE"):
-        assert current["authority"] == {
-            "merge": False,
-            "push": False,
-            "publish": False,
-        }
+
+
+def test_reader_first_context_links_binding_documents():
+    current = _current()
+    editorial_path = ROOT / current["editorial_system"]
+    audit_path = ROOT / current["evidence_record"]
+
+    assert editorial_path == EDITORIAL_SYSTEM
+    assert audit_path == READER_AUDIT
+    assert editorial_path.is_file()
+    assert audit_path.is_file()
+    assert current["scheduler"]["active_plan"] is None
+    assert READER_PLAN.is_file()
+
+    plan = READER_PLAN.read_text(encoding="utf-8")
+    assert "docs/EDITORIAL_SYSTEM.md" in plan
+    assert "docs/audits/2026-07-15-reader-journey-audit.md" in plan
 
 
 @pytest.mark.parametrize("plan", [ROADMAP, P4_CARD, P4_FIXTURE])
@@ -90,7 +119,7 @@ def test_active_plan_guard_rejects_superseded_or_parked_plans(plan: Path):
 
 def test_active_plan_guard_accepts_an_existing_unparked_plan():
     current = _current()
-    current["scheduler"]["active_plan"] = RESET_PLAN.relative_to(ROOT).as_posix()
+    current["scheduler"]["active_plan"] = READER_PLAN.relative_to(ROOT).as_posix()
     _assert_active_plan_is_eligible(current)
 
 
@@ -110,6 +139,8 @@ def test_agent_guide_routes_through_product_and_current_context():
     assert "Direct current-task user instruction" in text
     assert "Read `docs/PRODUCT.md` first" in text
     assert "Read `.harness/current.yaml` second" in text
+    assert "reader-facing website task" in text
+    assert "editorial_system" in text
     assert "may not broaden" in text
     assert "historical evidence" in text
     assert "A false authority flag is a prohibition" in text
@@ -170,6 +201,8 @@ def test_harness_readme_keeps_history_out_of_normal_initialization():
     assert "Normal initialization" in text
     assert "Do not initialize from" in text
     assert ".superpowers/sdd/progress.md" in text
+    assert "editorial_system" in text
+    assert "active_plan" in text
 
 
 def test_public_readme_matches_the_editorial_contract():

@@ -29,6 +29,9 @@ pixel-level clone. Quant Allocator uses a clear thesis, a Start Here path, topic
 pillars, a readable article index, and long-form pieces combining intuition,
 mathematics, code, evidence, and limitations.
 
+`docs/EDITORIAL_SYSTEM.md` is the binding reader-facing specification for page order,
+curriculum, progressive disclosure, navigation, and responsive presentation.
+
 Interval remains the quantitative semantic system. Intervals, provenance labels,
 and refusal states communicate what the evidence supports. Aligrithm governs
 editorial composition; Interval governs quantitative meaning.

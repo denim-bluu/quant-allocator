@@ -34,6 +34,10 @@ def _build_with_p3_live(tmp_path):
     shutil.copytree(REPO_ROOT / "site", site_dst)
     # build() resolves specs at site_dir.parent/docs/ideas/specs — mirror that tree.
     shutil.copytree(REPO_ROOT / "docs" / "ideas" / "specs", tmp_path / "docs" / "ideas" / "specs")
+    shutil.copytree(
+        REPO_ROOT / "docs" / "ideas" / "articles",
+        tmp_path / "docs" / "ideas" / "articles",
+    )
 
     manifest_path = site_dst / "cards.yaml"
     cards = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))

@@ -19,6 +19,7 @@
 </head>
 <body>
   {% set home_path = (asset_base | default('')) ~ 'index.html' %}
+  {% set exhibits_path = (asset_base | default('')) ~ 'exhibits.html' %}
   {% set section_path = '' if is_home | default(false) else home_path %}
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="publication-header">
@@ -27,7 +28,7 @@
       <nav class="publication-nav" aria-label="Primary">
         <a href="{{ section_path }}#start-here">Start here</a>
         <a href="{{ section_path }}#research">Research</a>
-        <a href="{{ section_path }}#exhibits">Exhibits</a>
+        <a href="{{ exhibits_path }}">Exhibits</a>
         <a href="{{ section_path }}#browse">Browse</a>
       </nav>
       <button type="button" class="theme-toggle" data-theme-toggle
@@ -37,7 +38,7 @@
         <nav aria-label="Mobile primary">
           <a href="{{ section_path }}#start-here">Start here</a>
           <a href="{{ section_path }}#research">Research</a>
-          <a href="{{ section_path }}#exhibits">Exhibits</a>
+          <a href="{{ exhibits_path }}">Exhibits</a>
           <a href="{{ section_path }}#browse">Browse</a>
         </nav>
       </details>

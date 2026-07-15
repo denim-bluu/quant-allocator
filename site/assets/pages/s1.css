@@ -43,3 +43,130 @@
 .exhibit-guide__map li:last-child {
   margin-top: 8px;
 }
+
+.ledger-focal {
+  max-width: 1100px;
+  margin: 36px 0 30px;
+  padding: 26px 0 30px;
+  border-block: 1px solid var(--line);
+}
+
+.ledger-focal__intro {
+  max-width: 720px;
+  margin-bottom: 20px;
+}
+
+.ledger-focal__eyebrow,
+.ledger-focal__code {
+  margin: 0 0 6px;
+  color: var(--accent);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.ledger-focal__intro h2 {
+  margin: 0 0 9px;
+  font-size: clamp(1.45rem, 3vw, 2.15rem);
+  font-weight: 560;
+}
+
+.ledger-focal__intro p:last-child {
+  margin: 0;
+  color: var(--dim);
+  line-height: 1.6;
+}
+
+.ledger-focal__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.ledger-focal__card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+}
+
+.ledger-focal__card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.ledger-focal__comparison {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  margin: 18px 0 12px;
+}
+
+.ledger-focal__comparison p {
+  margin: 0;
+}
+
+.ledger-focal__comparison span,
+.ledger-focal__rank {
+  display: block;
+  color: var(--dim);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+}
+
+.ledger-focal__comparison strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger-focal__arrow {
+  color: var(--accent) !important;
+  font-size: 1.1rem !important;
+}
+
+.ledger-focal__rank {
+  margin: 0 0 12px;
+}
+
+.ledger-focal__reading {
+  margin: auto 0 0;
+  color: var(--dim);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.ledger-roster {
+  max-width: 1100px;
+  margin-top: 28px;
+  border-block: 1px solid var(--line);
+}
+
+.ledger-roster > summary {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  color: var(--link);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.ledger-roster .ledger-controls {
+  margin: 4px 0 18px;
+}
+
+@media (max-width: 760px) {
+  .ledger-focal__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -29,6 +29,7 @@
       refusal: Historical vintages or a comparable strategy roster are missing.
   demo: pages/s1-ledger.html.j2
   data: s1_ledger.json
+  article: s1-bayesian-alpha-engine.md
   spec: s1-bayesian-alpha-engine.md
   golive:
     data_ask: Monthly net returns for the roster (R), with strategy labels
@@ -65,6 +66,7 @@
       refusal: Fewer than 36 monthly observations or no defensible factor set.
   demo: pages/s2-tearsheet.html.j2
   data: s2_tearsheet.json
+  article: s2-uncertainty-honest-tear-sheet.md
   spec: s2-tear-sheet-engine.md
   golive:
     data_ask: Monthly net returns (R) + risk-free series + strategy factor set
@@ -101,6 +103,7 @@
       refusal: Trade independence or the certified event-count threshold is not met.
   demo: pages/s3-lab.html.j2
   data: s3_lab.json
+  article: s3-sizing-decay-lab.md
   spec: s3-sizing-decay-lab.md
   golive:
     data_ask: "Dated position snapshots (signed weights) + trades (entry/exit) + factor returns (P)"
@@ -137,6 +140,7 @@
       refusal: Too few independent exits or no credible counterfactual execution model.
   demo: pages/s4-sell.html.j2
   data: s4_sell.json
+  article: s4-sell-discipline.md
   spec: s4-sell-discipline.md
   golive:
     data_ask: >-
@@ -177,6 +181,7 @@
       refusal: The short sleeve cannot be isolated or borrow and hedge costs are unavailable.
   demo: pages/s5-shortbook.html.j2
   data: s5_shortbook.json
+  article: s5-short-book-quality.md
   spec: s5-short-book-quality.md
   golive:
     data_ask: "Tier P — month-end positions with signed weights, a risk-model loadings feed (bought), per-name borrow fees where disclosed; E buys the factor split only; R refuses unless the manager discloses sleeve returns"
@@ -213,6 +218,7 @@
       refusal: Refuse operational classification of an individual manager from returns alone.
   demo: pages/s6-signatures.html.j2
   data: s6_signatures.json
+  article: s6-returns-only-signatures.md
   spec: s6-returns-only-signatures.md
   golive:
     data_ask: None — 100% simulator (tier R by construction); the optional external-validity rung later needs E/P summaries for a handful of transparent managers as labels only
@@ -249,6 +255,7 @@
       refusal: Exposure definitions, mandate bands, or a calibrated persistence rule are missing.
   demo: pages/m1-drift.html.j2
   data: m1_drift.json
+  article: m1-exposure-drift-monitor.md
   spec: m1-exposure-drift-monitor.md
   golive:
     data_ask: Exposure summaries (E — net/gross, factor betas, sector/duration buckets) + the stated bands from mandate/letters; + positions (P) for drift attribution; R rolling-beta needs returns + a factor set only
@@ -285,6 +292,7 @@
       refusal: The false-alarm gate fails or appraisal smoothing dominates the return process.
   demo: pages/m2-convexity.html.j2
   data: m2_convexity.json
+  article: m2-hidden-convexity-screen.md
   spec: m2-hidden-convexity-screen.md
   golive:
     data_ask: Monthly net returns (R) + a market-factor return series; the straddle rung adds the public Fung–Hsieh PTFS factor series (adapter not yet built)
@@ -321,6 +329,7 @@
       refusal: The chosen null cannot represent the asset's valuation and liquidity process.
   demo: pages/m3-alarms.html.j2
   data: m3_alarms.json
+  article: m3-drawdown-alarms.md
   spec: m3-drawdown-alarms.md
   golive:
     data_ask: Monthly net returns (R) + a maintained Sharpe (S1 posterior or claimed) + a risk-free series
@@ -357,6 +366,7 @@
       refusal: Coverage is too low or security identity and valuation dates cannot be aligned.
   demo: pages/m4-crowding.html.j2
   data: m4_crowding.json
+  article: m4-crowding-overlap-radar.md
   spec: m4-crowding-overlap-radar.md
   golive:
     data_ask: Position-level holdings aligned to a shared name universe, plus per-name dollar ADV and daily volatility; the public rung later consumes public filings through the shared adapter
@@ -393,6 +403,7 @@
       refusal: Document provenance, exposure definitions, or temporal alignment is incomplete.
   demo: pages/m5-saydo.html.j2
   data: m5_saydo.json
+  article: m5-say-do-gap.md
   spec: m5-say-do-gap.md
   golive:
     data_ask: Letters (R) + exposure summaries (E)
@@ -429,6 +440,7 @@
       refusal: Filing coverage is below threshold or reported longs are treated as the full portfolio.
   demo: pages/m6-holdings.html.j2
   data: m6_holdings.json
+  article: m6-13f-long-book.md
   spec: m6-13f-long-book.md
   golive:
     data_ask: Public SEC EDGAR Form 13F quarterly filings, a 13(f)-eligibility reference, and a value-to-shares source; FINRA short interest plus ADV is required only for the deferred short-interest lens
@@ -465,6 +477,7 @@
       refusal: Skill intervals, joint risk, liquidity, or allocator constraints are incomplete.
   demo: pages/p1-allocation.html.j2
   data: p1_allocation.json
+  article: p1-allocation-uncertainty.md
   spec: p1-allocation-uncertainty.md
   golive:
     data_ask: >-
@@ -505,6 +518,7 @@
       refusal: Modality-quality error and joint multi-factor covariance are not calibrated.
   demo: pages/p2-xray.html.j2
   data: p2_xray.json
+  article: p2-tiered-book-xray.md
   spec: p2-tiered-book-xray.md
   golive:
     data_ask: Returns and a factor set for the full book (R), risk buckets where disclosed (E), and dated holdings where position-transparent (P)
@@ -541,6 +555,7 @@
       refusal: Decisions were not journaled prospectively or failed candidates are missing.
   demo: pages/p3-hirefire.html.j2
   data: p3_hirefire.json
+  article: p3-hirefire-audit.md
   spec: p3-hirefire-audit.md
   golive:
     data_ask: >-
@@ -582,6 +597,7 @@
       refusal: No decision question or reciprocal purpose for the requested evidence is stated.
   doctrine: true
   demo: pages/e1-ladder.html.j2
+  article: e1-transparency-ladder.md
   spec: e1-transparency-ladder.md
   usage_note: One rung per relationship conversation. The 'why the math asks' line is the script.
 - id: e2
@@ -615,6 +631,7 @@
       refusal: Any included section lacks its own power, provenance, or refusal state.
   demo: pages/e2-pack.html.j2
   data: e2_pack.json
+  article: e2-engagement-pack.md
   spec: e2-engagement-pack.md
   golive:
     data_ask: None of its own — inherits each section's ask (S1/S2 returns; M1/M5 exposure)
@@ -651,6 +668,7 @@
       refusal: Corpus provenance, entity resolution, or extraction evaluation is incomplete.
   demo: pages/e3-knowledge.html.j2
   data: e3_knowledge.json
+  article: e3-manager-knowledge-graph.md
   spec: e3-manager-knowledge-graph.md
   golive:
     data_ask: Manager documents at tier R — dated letters, DDQs, and meeting notes; public documents only in the repository. Tier E adds exposure summaries and tier P adds holdings
@@ -687,6 +705,7 @@
       refusal: Simulation assumptions do not match the proposed live data-generating process.
   demo: pages/x1-atlas.html.j2
   data: x1_atlas.json
+  article: x1-tier-power-atlas.md
   spec: x1-tier-power-atlas.md
   golive:
     data_ask: None — simulator study
@@ -724,6 +743,7 @@
   theme: dark
   demo: pages/x2-playground.html.j2
   data: x2_playground.json
+  article: x2-transparency-playground.md
   spec: x2-transparency-playground.md
   standing_note: >-
     This page is the thesis, not a product — it never goes live against a real
@@ -750,6 +770,7 @@
   status: live
   demo: pages/x3-universe.html.j2
   data: x3_universe.json
+  article: x3-manager-universe.md
   spec: x3-manager-universe.md
   claims:
     - id: public_source_membership
@@ -949,6 +970,7 @@
       refusal: Hidden expected outcomes do not reconcile exactly to the public synthetic fixture.
   demo: pages/e4-operational-evidence-change.html.j2
   data: e4_operational_change.json
+  article: e4-operational-evidence-change.md
   spec: e4-operational-evidence-change.md
   golive:
     data_ask: Permissioned versioned operational sources with effective and receipt times, entity and relationship provenance, independence spans, per-dataset rights, delivery completeness, and reconstruction receipts.
@@ -975,6 +997,7 @@
   status: live
   demo: pages/s7-provenance.html.j2
   data: s7_provenance.json
+  article: s7-track-record-provenance.md
   spec: s7-track-record-provenance.md
   claims:
     - id: track_lineage

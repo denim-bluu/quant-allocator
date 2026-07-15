@@ -18,6 +18,10 @@ def _build_with_modified_cells(tmp_path):
     site = tmp_path / "site"
     shutil.copytree(REPO_ROOT / "site", site)
     shutil.copytree(REPO_ROOT / "docs" / "ideas" / "specs", tmp_path / "docs" / "ideas" / "specs")
+    shutil.copytree(
+        REPO_ROOT / "docs" / "ideas" / "articles",
+        tmp_path / "docs" / "ideas" / "articles",
+    )
     data_path = site / "data" / "x2_playground.json"
     data = json.loads(data_path.read_text(encoding="utf-8"))
     data["cells"]["0.04|12|0.8|48|R"]["alpha"][:3] = [0.061, -0.02, 0.13]
@@ -58,6 +62,20 @@ def test_x2_dials_snap_values(tmp_path):
     assert 'data-value="120"' in html  # T
     assert 'data-value="R"' in html  # tier
     assert 'data-value="P"' in html
+
+
+def test_x2_dials_have_named_groups_and_touch_targets(tmp_path):
+    html, _ = _build(tmp_path)
+    css = (REPO_ROOT / "site" / "assets" / "interval.css").read_text(encoding="utf-8")
+
+    assert html.count('<fieldset class="x2-dial"') == 5
+    assert html.count('<legend class="x2-dial__label">') == 5
+    assert 'aria-label="Track length T (months): 120"' in html
+    assert 'aria-label="Transparency tier: E"' in html
+
+    button_rule = css.split(".x2-dial__btn {", 1)[1].split("}", 1)[0]
+    assert "min-width: 44px" in button_rule
+    assert "min-height: 44px" in button_rule
 
 
 def test_x2_component_scaffolding_and_copy(tmp_path):
@@ -103,6 +121,19 @@ def test_x2_opening_and_comparison_follow_named_cells(tmp_path):
         assert expected in explainer
     for stale in ("0.053", "&minus;0.02951", "+0.1249", "0.0482", "+0.001816", "+0.09213"):
         assert stale not in explainer
+
+
+def test_x2_leads_with_an_instructed_before_after_comparison(tmp_path):
+    html, _ = _build(tmp_path)
+
+    comparison = html.split('<section class="x2-before-after"', 1)[1].split(
+        '<section class="x2-controls"', 1
+    )[0]
+    assert "Before · 48 months · tier R" in comparison
+    assert "After · 120 months · tier E" in comparison
+    assert "What changed" in comparison
+    assert "noise" in comparison
+    assert "shrink" in comparison
 
 
 def test_x2_script_loaded(tmp_path):

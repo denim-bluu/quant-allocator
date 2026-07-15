@@ -1,6 +1,12 @@
 # Quant Allocator Editorial Website Design
 
-**Status:** Approved for implementation by the user's 2026-07-15 end-to-end directive
+> **HISTORICAL FIRST REDESIGN:** This specification produced the initial publication
+> shell. Its reader-order choices—including S2/X1/X2 Start Here, full method specs as
+> public articles, and unchanged exhibit ordering—are superseded by
+> `docs/EDITORIAL_SYSTEM.md`. Preserve this file as implementation history; do not use
+> it as current reader-facing authority.
+
+**Status:** Completed historical design; reader-order requirements superseded
 
 **Product authority:** `docs/PRODUCT.md`
 

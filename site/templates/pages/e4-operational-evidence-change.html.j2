@@ -7,6 +7,31 @@
 {% set default_key = card_data.meta.default_state %}
 {% set default_state = card_data.interaction_states[default_key] %}
 
+{% block demo_lead %}
+<section class="e4-boundary" aria-labelledby="e4-boundary-title">
+  <div>
+    <p class="e4-kicker">Decision answer</p>
+    <h2 id="e4-boundary-title">Re-underwrite the evidence gaps, not a synthetic score</h2>
+    <p><span data-e4-cutoff>{{ default_state.cutoff }}</span> ·
+      <span data-e4-source-view>{{ default_state.source_view }}</span> · current attestation D.
+      The committed fact, state, and queue inventories for this selection appear below.</p>
+  </div>
+  <span class="verdict-chip" data-verdict="noise">evidence-conditioned</span>
+</section>
+
+<section class="e4-opening-state" aria-labelledby="e4-opening-state-title">
+  <div>
+    <p class="e4-kicker">Latest entitled state</p>
+    <h2 id="e4-opening-state-title">{{ card_data.reunderwriting_queue[default_key] | length }} actions require review</h2>
+  </div>
+  <p>At <strong>{{ default_state.cutoff }}</strong> with the
+    <strong>{{ default_state.source_view }}</strong> source view, conflicts, stale evidence,
+    and unresolved data boundaries remain routed to human review. Use the controls below to
+    inspect this state; the complete receipted evidence graph remains available in the
+    advanced section.</p>
+</section>
+{% endblock %}
+
 {% block demo_content %}
 <section class="exhibit-intro" aria-label="What this exhibit shows">
   <h2 class="exhibit-intro__title">What this exhibit shows</h2>
@@ -28,17 +53,6 @@
       <li>Use the table beside the graph as its complete accessible equivalent.</li>
     </ul>
   </div>
-</section>
-
-<section class="e4-boundary" aria-labelledby="e4-boundary-title">
-  <div>
-    <p class="e4-kicker">Decision answer</p>
-    <h2 id="e4-boundary-title">Re-underwrite the evidence gaps, not a synthetic score</h2>
-    <p><span data-e4-cutoff>{{ default_state.cutoff }}</span> ·
-      <span data-e4-source-view>{{ default_state.source_view }}</span> · current attestation D.
-      The committed fact, state, and queue inventories for this selection appear below.</p>
-  </div>
-  <span class="verdict-chip" data-verdict="noise">evidence-conditioned</span>
 </section>
 
 <section class="e4-controls" aria-label="Operational evidence controls">
@@ -79,6 +93,9 @@
   </fieldset>
   <button type="button" data-e4-reset>Reset</button>
 </section>
+
+<details class="e4-advanced">
+  <summary>Explore the complete evidence graph</summary>
 
 <p class="e4-announcer" aria-live="polite" data-e4-announcer>
   Showing {{ default_key }} with committed evidence-state memberships.
@@ -271,7 +288,9 @@
     <code data-e4-method-receipt>{{ card_data.refusals.method_boundary.receipt_ids_by_state[default_key] }}</code></p>
 </section>
 
-<noscript><p class="e4-noscript">JavaScript is optional. The full receipted cross-state audit catalog remains fully visible above. Queue, counts, and six data-boundary refusals use the latest/all-entitled default.</p></noscript>
+</details>
+
+<noscript><p class="e4-noscript">JavaScript is optional. The full receipted cross-state audit catalog remains available in the expandable section above. Queue, counts, and six data-boundary refusals use the latest/all-entitled default.</p></noscript>
 {% endblock %}
 
 {% block methodology %}

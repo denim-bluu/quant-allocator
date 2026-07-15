@@ -8,6 +8,28 @@
 {% set default_state = card_data.states[default_key] %}
 {% set default_scenario = card_data.scenarios[default_state.scenario] %}
 
+{% block demo_lead %}
+<aside class="s7-disclosure" role="note">
+  <strong>Synthetic, fictional demonstration.</strong>
+  <span>{{ card_data.meta.fictional_disclosure }} The four source shapes model possible evidence;
+    availability varies by manager, vehicle, source, right, and decision date.</span>
+</aside>
+
+<section class="s7-opening-state" aria-labelledby="s7-answer-title">
+  <div class="s7-opening-state__copy">
+    <p class="s7-kicker">Opening state</p>
+    <h2 id="s7-answer-title" data-s7-conclusion>{{ default_state.conclusion }}</h2>
+    <p data-s7-limitation>{{ default_state.limitation }}</p>
+    <p><strong>What changed:</strong> <span data-s7-what-changed>{{ default_state.what_changed }}</span></p>
+  </div>
+  <div class="s7-opening-state__counts" aria-label="Opening-state observation counts">
+    <p><strong>7 source observations</strong><span>admitted to the selected native panel</span></p>
+    <p><strong>17 remain excluded</strong><span>preserved with typed reasons and receipts</span></p>
+  </div>
+  <span class="s7-chip s7-opening-state__chip" data-state="evidence-conditioned">evidence-conditioned</span>
+</section>
+{% endblock %}
+
 {% block demo_content %}
 <section class="exhibit-intro" aria-label="What this exhibit shows">
   <h2 class="exhibit-intro__title">What this exhibit shows</h2>
@@ -29,22 +51,6 @@
         compare basis, convert FX, calculate performance, rank managers, or create a verdict.</li>
     </ul>
   </div>
-</section>
-
-<aside class="s7-disclosure" role="note">
-  <strong>Synthetic, fictional demonstration.</strong>
-  <span>{{ card_data.meta.fictional_disclosure }} The four source shapes model possible evidence;
-    availability varies by manager, vehicle, source, right, and decision date.</span>
-</aside>
-
-<section class="s7-answer" aria-labelledby="s7-answer-title">
-  <div>
-    <p class="s7-kicker">Decision answer · current attestation D</p>
-    <h2 id="s7-answer-title" data-s7-conclusion>{{ default_state.conclusion }}</h2>
-    <p data-s7-limitation>{{ default_state.limitation }}</p>
-    <p><strong>What changed:</strong> <span data-s7-what-changed>{{ default_state.what_changed }}</span></p>
-  </div>
-  <span class="s7-chip" data-state="evidence-conditioned">evidence-conditioned</span>
 </section>
 
 <section class="s7-source" aria-labelledby="s7-source-title">
@@ -85,6 +91,9 @@
   </fieldset>
 </section>
 
+<details class="s7-advanced">
+  <summary>Explore lineage, basis, and vintage evidence</summary>
+  <div class="s7-advanced__body">
 <p class="s7-state-key"><strong>Committed state:</strong>
   <code data-s7-state-key>{{ default_key }}</code> · decision at
   <time data-s7-decision-at>{{ default_state.decision_at }}</time>
@@ -232,6 +241,8 @@
     </table>
   </div>
 </section>
+  </div>
+</details>
 
 <section class="s7-always" aria-labelledby="s7-refusals-title">
   <header><p class="s7-kicker">Always visible claim boundary</p><h2 id="s7-refusals-title">Refusals and reconstruction receipts</h2></header>

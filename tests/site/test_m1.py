@@ -22,8 +22,12 @@ def _build_with_m1_live(tmp_path):
     tmp_site = tmp_path / "site"
     shutil.copytree(repo_root / "site", tmp_site)
     # build() validates every live card's spec file at site_dir.parent/docs/ideas/specs,
-    # so the tmp tree needs the specs directory alongside the copied site dir.
+    # so the tmp tree needs the specs and public articles beside the copied site dir.
     shutil.copytree(repo_root / "docs" / "ideas" / "specs", tmp_path / "docs" / "ideas" / "specs")
+    shutil.copytree(
+        repo_root / "docs" / "ideas" / "articles",
+        tmp_path / "docs" / "ideas" / "articles",
+    )
     cards = yaml.safe_load((tmp_site / "cards.yaml").read_text(encoding="utf-8"))
     for card in cards:
         if card["id"] == "m1":

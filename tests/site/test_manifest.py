@@ -446,6 +446,30 @@ def test_valid_live_entry_loads(tmp_path):
     assert cards[0]["status"] == "live"
 
 
+def test_valid_optional_public_article_source_loads(tmp_path):
+    _make_live_files(tmp_path)
+    articles = tmp_path / "docs" / "ideas" / "articles"
+    articles.mkdir(parents=True, exist_ok=True)
+    (articles / "t1-public.md").write_text("## The decision", encoding="utf-8")
+    entry = _live_entry()
+    entry["article"] = "t1-public.md"
+    manifest = _write_manifest(tmp_path, [entry])
+
+    cards = load_manifest(manifest)
+
+    assert cards[0]["article"] == "t1-public.md"
+
+
+def test_live_public_article_source_must_exist(tmp_path):
+    _make_live_files(tmp_path)
+    entry = _live_entry()
+    entry["article"] = "missing-public.md"
+    manifest = _write_manifest(tmp_path, [entry])
+
+    with pytest.raises(BuildError, match="missing article file"):
+        load_manifest(manifest)
+
+
 def test_missing_required_key_raises(tmp_path):
     entry = _planned_entry()
     del entry["one_liner"]

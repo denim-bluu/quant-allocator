@@ -17,15 +17,6 @@
     under peer shrinkage and uncertainty-aware ordering. This is a change in estimates,
     not proof that this roster's true-skill order improved.
   </p>
-  <div class="ledger-controls">
-    <button type="button" class="sort-toggle" data-sort-toggle data-order="ols">
-      Order by: OLS rank
-    </button>
-    <span class="ledger-legend">
-      <span class="rank-move rank-move--up">&#9650;</span> rose &middot;
-      <span class="rank-move rank-move--down">&#9660;</span> fell after shrinkage
-    </span>
-  </div>
 </section>
 
 <aside class="exhibit-guide" aria-label="What this exhibit shows">
@@ -61,7 +52,55 @@
   </ul>
 </aside>
 
-<section class="ledger" data-ledger>
+<section class="ledger-focal" aria-labelledby="ledger-focal-title">
+  <div class="ledger-focal__intro">
+    <p class="ledger-focal__eyebrow">Three managers explain the mechanism</p>
+    <h2 id="ledger-focal-title">The same model can hold, lower, or raise a manager.</h2>
+    <p>Start with these three cases before opening the full roster. The direction comes
+      from the manager's estimate relative to the peer mean; the size of the move comes
+      from how much evidence the track record earns.</p>
+  </div>
+  <div class="ledger-focal__grid">
+    {% for code in ['A10', 'B10', 'A07'] %}
+    {% set m = card_data.managers | selectattr('code', 'equalto', code) | first %}
+    {% set delta = m.ols_rank - m.posterior_rank %}
+    <article class="ledger-focal__card" data-focal-manager="{{ m.code }}">
+      <header>
+        <p class="ledger-focal__code">{{ m.code }} · {{ m.months }} months</p>
+        <h3>{{ m.name }}</h3>
+      </header>
+      <div class="ledger-focal__comparison">
+        <p><span>Raw OLS alpha</span><strong>{{ "%+.1f"|format(m.ols_alpha.point * 100) }}%</strong></p>
+        <span class="ledger-focal__arrow" aria-hidden="true">&rarr;</span>
+        <p><span>Posterior alpha</span><strong>{{ "%+.1f"|format(m.posterior_alpha.point * 100) }}%</strong></p>
+      </div>
+      <p class="ledger-focal__rank">OLS #{{ m.ols_rank }} &rarr; posterior #{{ m.posterior_rank }}</p>
+      <p class="ledger-focal__reading">
+        {% if code == 'A10' %}
+        A long, clean record earns enough weight to keep the leading estimate and rank.
+        {% elif code == 'B10' %}
+        A shorter record is pulled further toward peers, lowering the estimate and rank.
+        {% else %}
+        Shrinkage can also raise a manager whose raw estimate sits below its peer signal.
+        {% endif %}
+      </p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<details class="ledger-roster">
+  <summary>Explore all 20 managers</summary>
+  <div class="ledger-controls">
+    <button type="button" class="sort-toggle" data-sort-toggle data-order="ols">
+      Order by: OLS rank
+    </button>
+    <span class="ledger-legend">
+      <span class="rank-move rank-move--up">&#9650;</span> rose &middot;
+      <span class="rank-move rank-move--down">&#9660;</span> fell after shrinkage
+    </span>
+  </div>
+  <section class="ledger" data-ledger>
   {% for m in card_data.managers | sort(attribute='ols_rank') %}
   {% set delta = m.ols_rank - m.posterior_rank %}
   <article class="ledger-row{% if delta != 0 %} ledger-row--mover{% endif %}"
@@ -119,7 +158,8 @@
     </div>
   </article>
   {% endfor %}
-</section>
+  </section>
+</details>
 
 <p class="ledger-footnote">
   This gallery page uses the closed-form normal&ndash;normal shrinkage variant

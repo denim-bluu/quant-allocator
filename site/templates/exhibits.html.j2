@@ -1,0 +1,47 @@
+{% extends "base.html.j2" %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ asset_base | default('') }}assets/gallery.css?v={{ asset_version }}">
+{% endblock %}
+
+{% block content %}
+<article class="exhibit-index">
+  <header class="exhibit-index__header">
+    <a class="article-breadcrumb" href="index.html#research">Research</a>
+    <h1>All exhibits</h1>
+    <p>Twenty-three decision surfaces, grouped by the publication's five research pillars.</p>
+  </header>
+
+  <nav class="exhibit-index__nav" aria-label="Exhibit pillars">
+    {% for pillar in pillars %}
+    <a href="#exhibits-{{ pillar.key }}">{{ pillar.heading }} <span>{{ pillar.cards | length }}</span></a>
+    {% endfor %}
+  </nav>
+
+  {% for pillar in pillars %}
+  <section class="exhibit-index__pillar" id="exhibits-{{ pillar.key }}" aria-labelledby="exhibits-{{ pillar.key }}-title">
+    <header>
+      <p>{{ pillar.description }}</p>
+      <h2 id="exhibits-{{ pillar.key }}-title">{{ pillar.heading }}</h2>
+    </header>
+    <ol>
+      {% for card in pillar.cards %}
+      <li>
+        <article class="exhibit-index__entry">
+          <span class="research-entry__family">{{ card.lane }}</span>
+          <div>
+            <h3>{{ card.title }}</h3>
+            <p>{{ card.decision_question }}</p>
+          </div>
+          <div class="research-entry__actions">
+            <a href="{{ card.id }}.html">View exhibit</a>
+            <a href="specs/{{ card.id }}.html">Read article</a>
+          </div>
+        </article>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% endfor %}
+</article>
+{% endblock %}

@@ -1,6 +1,12 @@
 # Editorial Website Design QA
 
-**Status:** Passed
+> **HISTORICAL BUILD ACCEPTANCE:** This record verified the first redesign's selected
+> sample and interactions. It is not current reader-journey acceptance. The subsequent
+> live audit in `docs/audits/2026-07-15-reader-journey-audit.md` found systemic editorial
+> ordering problems and confirmed S2 mobile overflow outside this record's effective
+> sample.
+
+**Status:** Historical pass for the first redesign only
 
 **Date:** 2026-07-15
 

@@ -7,10 +7,19 @@
 </label>
 {% endmacro %}
 
+{% macro research_actions(card) %}
+{% if card.status == 'live' %}
+<div class="research-entry__actions">
+  <a href="specs/{{ card.id }}.html">Read article</a>
+  <a href="{{ card.id }}.html">View exhibit</a>
+</div>
+{% else %}
+<p class="research-entry__planned">Planned research</p>
+{% endif %}
+{% endmacro %}
+
 {% macro article_entry(card) %}
-{% set target = ('specs/' ~ card.id ~ '.html') if card.status == 'live' else '#' %}
-<a class="card-tile research-entry{% if card.status != 'live' %} card-tile--planned{% endif %}"
-   href="{{ asset_base | default('') }}{{ target }}"
+<article class="card-tile research-entry{% if card.status != 'live' %} card-tile--planned{% endif %}"
    data-gallery-card data-card-id="{{ card.id }}"
    data-stage="{{ card.stages | join(' ') }}"
    data-asset="{{ card.asset_classes | join(' ') }}"
@@ -27,13 +36,14 @@
     <h3 class="card-tile__title">{{ card.title }}</h3>
     <p class="card-tile__oneliner">{{ card.one_liner }}</p>
     <p class="card-tile__question">{{ card.decision_question }}</p>
+    {{ research_actions(card) }}
   </div>
   <dl class="card-tile__facts">
     <div><dt>Maturity</dt><dd>{{ labels[card.decision_readiness] }}</dd></div>
     <div><dt>Minimum data</dt><dd>{{ card.minimum_data }}</dd></div>
     <div><dt>Asset scope</dt><dd>{% for token in card.asset_classes %}{{ labels[token] }}{% if not loop.last %}; {% endif %}{% endfor %}</dd></div>
   </dl>
-</a>
+</article>
 {% endmacro %}
 
 {% block head_extra %}
@@ -48,161 +58,171 @@
     <a class="editorial-link" href="#start-here">Start here</a>
   </section>
 
-  <section class="editorial-overview" id="start-here" aria-label="Start here and research pillars">
-    <div class="start-here">
-      <header class="section-heading">
-        <h2>Start here</h2>
-        <p>A short reading path for building allocator judgment.</p>
-      </header>
-      <ol class="start-here__list">
-        {% for card in start_here %}
-        <li>
-          <span aria-hidden="true">{{ loop.index }}</span>
-          <div>
-            <h3><a href="specs/{{ card.id }}.html">{{ card.title }}</a></h3>
-            <p>{{ card.one_liner }}</p>
-            <small>{{ labels[card.decision_readiness] }}</small>
+  <section class="start-here" id="start-here" aria-labelledby="start-here-title">
+    <header class="section-heading section-heading--major">
+      <h2 id="start-here-title">Start here</h2>
+      <p>Three readings that move from one uncertain record to fair comparison and calibrated monitoring.</p>
+    </header>
+    <ol class="start-here__list">
+      {% for card in start_here %}
+      <li class="curriculum-step" data-curriculum-id="{{ card.id }}">
+        <div class="curriculum-step__number" aria-hidden="true">{{ loop.index }}</div>
+        <div class="curriculum-step__body">
+          <p class="curriculum-step__position">{{ card.position }}</p>
+          <h3>{{ card.title }}</h3>
+          <div class="curriculum-step__learning">
+            <p><strong>Trap</strong>{{ card.trap }}</p>
+            <p><strong>You will be able to</strong>{{ card.ability }}</p>
           </div>
-        </li>
-        {% endfor %}
-      </ol>
-    </div>
-
-    <div class="pillar-guide">
-      <header class="section-heading">
-        <h2>Five research pillars</h2>
-        <p>Five ways to organize the idea bank.</p>
-      </header>
-      <ol class="pillar-guide__list">
-        {% for pillar in pillars %}
-        <li>
-          <a href="?view=catalog&amp;family={{ pillar.key }}#research">
-            <span class="pillar-guide__number">{{ loop.index }}</span>
-            <span class="pillar-guide__copy">
-              <strong>{{ pillar.heading }}</strong>
-              <small>{{ pillar.description }}</small>
-            </span>
-            <span class="pillar-guide__count" data-pillar-count="{{ pillar.cards | length }}">{{ pillar.cards | length }}</span>
-          </a>
-        </li>
-        {% endfor %}
-      </ol>
-    </div>
-
-    <div class="featured-research" id="exhibits">
-      <header class="section-heading">
-        <h2>Selected research</h2>
-        <p>Five useful entry points across the corpus.</p>
-      </header>
-      <ol class="featured-research__list">
-        {% for card in featured_cards %}
-        <li>
-          <a href="{{ card.id }}.html">
-            <strong>{{ card.title }}</strong>
-            <span>{{ labels[card.decision_readiness] }}</span>
-          </a>
-        </li>
-        {% endfor %}
-      </ol>
-    </div>
-  </section>
-
-  <section class="gallery-tools research-browser" id="browse" aria-labelledby="browse-title">
-    <header class="research-browser__heading">
-      <div>
-        <h2 id="browse-title">Browse all {{ cards | length }} ideas</h2>
-        <p>Find research by decision, evidence, or data actually available.</p>
-      </div>
-      <div class="gallery-view" aria-label="Gallery view">
-        <button type="button" data-gallery-view="journey" aria-pressed="true">Journey</button>
-        <button type="button" data-gallery-view="catalog" aria-pressed="false">Catalog</button>
-      </div>
-    </header>
-
-    <label class="gallery-search">
-      <span>Search ideas</span>
-      <input type="search" name="q" autocomplete="off" placeholder="e.g. crowding, credit, DDQ" data-gallery-search>
-    </label>
-
-    <div class="gallery-presets" aria-label="Quick presets">
-      <span>Quick starts</span>
-      <button type="button" data-gallery-preset="returns-only">I have returns only</button>
-      <button type="button" data-gallery-preset="holdings">I have holdings</button>
-      <button type="button" data-gallery-preset="screen-managers">Screen managers</button>
-      <button type="button" data-gallery-preset="ic-preparation">Prepare for IC</button>
-      <button type="button" data-gallery-preset="credit-private">Credit / private markets</button>
-    </div>
-
-    <details class="gallery-filters">
-      <summary>Filter the catalog</summary>
-      <div class="gallery-filters__grid">
-        <fieldset data-filter-group="stage"><legend>Decision stage</legend>
-          {% for token, label in stage_headings.items() %}{{ option('stage', token, label) }}{% endfor %}
-        </fieldset>
-        <fieldset data-filter-group="asset"><legend>Asset class</legend>
-          {% for token in asset_options %}{{ option('asset', token, labels[token]) }}{% endfor %}
-        </fieldset>
-        <fieldset data-filter-group="vehicle"><legend>Vehicle</legend>
-          {% for token in vehicle_options %}{{ option('vehicle', token, labels[token]) }}{% endfor %}
-        </fieldset>
-        <fieldset data-filter-group="access"><legend>Access</legend>
-          {% for token in access_options %}{{ option('access', token, labels[token]) }}{% endfor %}
-        </fieldset>
-        <fieldset data-filter-group="modality"><legend>Data modality</legend>
-          {% for token in modality_options %}{{ option('modality', token, labels[token]) }}{% endfor %}
-        </fieldset>
-        <fieldset data-filter-group="readiness"><legend>Maturity</legend>
-          {% for token in readiness_options %}{{ option('readiness', token, labels[token]) }}{% endfor %}
-        </fieldset>
-        <fieldset data-filter-group="attestation"><legend>Current attestation</legend>
-          {% for token in ['A', 'B', 'C', 'D'] %}{{ option('attestation', token, token) }}{% endfor %}
-        </fieldset>
-        <fieldset data-filter-group="family"><legend>Research pillar</legend>
-          {% for pillar in pillars %}{{ option('family', pillar.key, pillar.heading) }}{% endfor %}
-        </fieldset>
-      </div>
-    </details>
-
-    <div class="gallery-status">
-      <p data-gallery-count aria-live="polite">Showing all {{ cards | length }} ideas</p>
-      <a class="gallery-clear" href="index.html" data-gallery-clear>Clear search and filters</a>
-    </div>
-  </section>
-
-  <noscript><p class="gallery-noscript">All {{ cards | length }} ideas remain available when JavaScript is disabled.</p></noscript>
-
-  <section class="research-index" id="research" aria-labelledby="research-title">
-    <header class="research-index__heading">
-      <p>What are you trying to decide?</p>
-      <h2 id="research-title">Research by allocator journey</h2>
-    </header>
-
-    <nav class="journey-nav" aria-label="Decision journey">
-      {% for stage in stages %}
-      <a href="#stage-{{ stage.key }}">
-        <span>{{ loop.index }}</span>{{ stage.heading }} <strong>{{ stage.cards | length }}</strong>
-      </a>
-      {% endfor %}
-    </nav>
-
-    <div class="gallery-results" data-gallery-results>
-      {% for stage in stages %}
-      <section class="journey-stage" id="stage-{{ stage.key }}" data-stage-section="{{ stage.key }}" aria-labelledby="stage-{{ stage.key }}-title">
-        <header class="journey-stage__header">
-          <span>{{ loop.index }}</span>
-          <div><h2 id="stage-{{ stage.key }}-title">{{ stage.heading }}</h2><p>{{ stage.cards | length }} primary-stage idea{% if stage.cards | length != 1 %}s{% endif %}</p></div>
-        </header>
-        <div class="card-grid">
-          {% for card in stage.cards %}{{ article_entry(card) }}{% endfor %}
+          <dl class="curriculum-step__meta">
+            <div><dt>Reading time</dt><dd>{{ card.reading_time }}</dd></div>
+            <div><dt>Difficulty</dt><dd>{{ card.difficulty }}</dd></div>
+          </dl>
+          <p class="curriculum-step__next"><strong>Why this comes next</strong>{{ card.next_reason }}</p>
+          {{ research_actions(card) }}
         </div>
-      </section>
+      </li>
       {% endfor %}
-    </div>
+    </ol>
   </section>
 
-  <section class="gallery-empty" data-gallery-empty hidden aria-live="polite">
-    <h2>No ideas match this evidence shape</h2>
-    <p>Broaden one filter or clear the current search.</p>
+  <section class="pillar-guide" id="research" aria-labelledby="pillars-title">
+    <header class="section-heading section-heading--major">
+      <h2 id="pillars-title">Five research pillars</h2>
+      <p>The primary map of the publication: start with the kind of allocator problem you need to solve.</p>
+    </header>
+    <ol class="pillar-guide__list">
+      {% for pillar in pillars %}
+      <li>
+        <a href="?family={{ pillar.key }}#all-research">
+          <span class="pillar-guide__number">{{ loop.index }}</span>
+          <span class="pillar-guide__copy">
+            <strong>{{ pillar.heading }}</strong>
+            <small>{{ pillar.description }}</small>
+          </span>
+          <span class="pillar-guide__count" data-pillar-count="{{ pillar.cards | length }}">{{ pillar.cards | length }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="featured-research" id="featured" aria-labelledby="featured-title">
+    <header class="section-heading section-heading--major">
+      <h2 id="featured-title">Featured reading</h2>
+      <p>Five useful entry points after the foundation path.</p>
+    </header>
+    <ol class="featured-research__list">
+      {% for card in featured_cards %}
+      <li>
+        <div class="featured-research__copy">
+          <strong>{{ card.title }}</strong>
+          <span>{{ labels[card.decision_readiness] }}</span>
+        </div>
+        {{ research_actions(card) }}
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="browse-publication" id="browse" aria-labelledby="research-title">
+    <div class="gallery-tools research-browser">
+      <header class="research-browser__heading">
+        <div>
+          <h2>Browse all {{ cards | length }} ideas</h2>
+          <p>Find research by decision, evidence, or data actually available.</p>
+        </div>
+        <div class="gallery-view" aria-label="Research detail level">
+          <button type="button" data-gallery-view="journey" aria-pressed="true">Detailed</button>
+          <button type="button" data-gallery-view="catalog" aria-pressed="false">Compact</button>
+        </div>
+      </header>
+
+      <label class="gallery-search">
+        <span>Search ideas</span>
+        <input type="search" name="q" autocomplete="off" placeholder="e.g. crowding, credit, DDQ" data-gallery-search>
+      </label>
+
+      <div class="gallery-presets" aria-label="Quick presets">
+        <span>Quick starts</span>
+        <button type="button" data-gallery-preset="returns-only">I have returns only</button>
+        <button type="button" data-gallery-preset="holdings">I have holdings</button>
+        <button type="button" data-gallery-preset="screen-managers">Screen managers</button>
+        <button type="button" data-gallery-preset="ic-preparation">Prepare for IC</button>
+        <button type="button" data-gallery-preset="credit-private">Credit / private markets</button>
+      </div>
+
+      <details class="gallery-filters">
+        <summary>Filter the catalog</summary>
+        <div class="gallery-filters__grid">
+          <fieldset data-filter-group="stage"><legend>Decision stage</legend>
+            {% for token, label in stage_headings.items() %}{{ option('stage', token, label) }}{% endfor %}
+          </fieldset>
+          <fieldset data-filter-group="asset"><legend>Asset class</legend>
+            {% for token in asset_options %}{{ option('asset', token, labels[token]) }}{% endfor %}
+          </fieldset>
+          <fieldset data-filter-group="vehicle"><legend>Vehicle</legend>
+            {% for token in vehicle_options %}{{ option('vehicle', token, labels[token]) }}{% endfor %}
+          </fieldset>
+          <fieldset data-filter-group="access"><legend>Access</legend>
+            {% for token in access_options %}{{ option('access', token, labels[token]) }}{% endfor %}
+          </fieldset>
+          <fieldset data-filter-group="modality"><legend>Data modality</legend>
+            {% for token in modality_options %}{{ option('modality', token, labels[token]) }}{% endfor %}
+          </fieldset>
+          <fieldset data-filter-group="readiness"><legend>Maturity</legend>
+            {% for token in readiness_options %}{{ option('readiness', token, labels[token]) }}{% endfor %}
+          </fieldset>
+          <fieldset data-filter-group="attestation"><legend>Current attestation</legend>
+            {% for token in ['A', 'B', 'C', 'D'] %}{{ option('attestation', token, token) }}{% endfor %}
+          </fieldset>
+          <fieldset data-filter-group="family"><legend>Research pillar</legend>
+            {% for pillar in pillars %}{{ option('family', pillar.key, pillar.heading) }}{% endfor %}
+          </fieldset>
+        </div>
+      </details>
+
+      <div class="gallery-status">
+        <p data-gallery-count aria-live="polite">Showing all {{ cards | length }} ideas</p>
+        <a class="gallery-clear" href="index.html" data-gallery-clear>Clear search and filters</a>
+      </div>
+    </div>
+
+    <noscript><p class="gallery-noscript">All {{ cards | length }} ideas remain available when JavaScript is disabled.</p></noscript>
+
+    <div class="research-index" id="all-research">
+      <header class="research-index__heading">
+        <p>Complete publication</p>
+        <h2 id="research-title">All research</h2>
+      </header>
+
+      <nav class="journey-nav" aria-label="Decision journey">
+        {% for stage in stages %}
+        <a href="#stage-{{ stage.key }}">
+          <span>{{ loop.index }}</span>{{ stage.heading }} <strong>{{ stage.cards | length }}</strong>
+        </a>
+        {% endfor %}
+      </nav>
+
+      <div class="gallery-results" data-gallery-results>
+        {% for stage in stages %}
+        <section class="journey-stage" id="stage-{{ stage.key }}" data-stage-section="{{ stage.key }}" aria-labelledby="stage-{{ stage.key }}-title">
+          <header class="journey-stage__header">
+            <span>{{ loop.index }}</span>
+            <div><h2 id="stage-{{ stage.key }}-title">{{ stage.heading }}</h2><p>{{ stage.cards | length }} primary-stage idea{% if stage.cards | length != 1 %}s{% endif %}</p></div>
+          </header>
+          <div class="card-grid">
+            {% for card in stage.cards %}{{ article_entry(card) }}{% endfor %}
+          </div>
+        </section>
+        {% endfor %}
+      </div>
+    </div>
+
+    <section class="gallery-empty" data-gallery-empty hidden aria-live="polite">
+      <h2>No ideas match this evidence shape</h2>
+      <p>Broaden one filter or clear the current search.</p>
+    </section>
   </section>
 </div>
 {% endblock %}

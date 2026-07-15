@@ -112,6 +112,18 @@ def test_editorial_publication_styles_cover_shell_articles_and_mobile():
     assert "min-height: 44px" in gallery
 
 
+def test_article_display_math_is_contained_on_mobile():
+    interval = CSS_PATH.read_text(encoding="utf-8")
+    display_math = re.search(
+        r"\.spec-page__body \.katex-display\s*\{(?P<body>[^}]*)\}", interval
+    )
+    assert display_math is not None
+    declarations = display_math.group("body")
+    assert "max-width: 100%" in declarations
+    assert "overflow-x: auto" in declarations
+    assert "overflow-y: hidden" in declarations
+
+
 def test_gallery_and_context_metadata_never_drop_below_twelve_pixels():
     gallery = (REPO_ROOT / "site" / "assets" / "gallery.css").read_text(encoding="utf-8")
     interval = CSS_PATH.read_text(encoding="utf-8")

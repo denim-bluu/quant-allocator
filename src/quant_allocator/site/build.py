@@ -47,6 +47,7 @@ LEGACY_REQUIRED_KEYS = {"id", "title", "lane", "one_liner", "decisions", "tiers"
 PHASE1_REQUIRED_KEYS = REQUIRED_KEYS - LEGACY_REQUIRED_KEYS
 OPTIONAL_KEYS = {
     "access_contexts",
+    "article",
     "asset_classes",
     "claims",
     "decision_question",
@@ -167,7 +168,7 @@ CLAIM_KEYS = {
 # Placeholder repo URL; set the real one at Pages enablement (see docs/PUBLISHING.md).
 REPO_URL = "https://github.com/denim-bluu/quant-allocator"
 SITE_TITLE = "Quant Allocator"
-ASSET_VERSION = "editorial-v4"
+ASSET_VERSION = "editorial-v7"
 LANE_ORDER = ["S", "M", "P", "E", "X"]
 LANE_HEADINGS = {
     "S": "S — Skill & inference",
@@ -176,8 +177,133 @@ LANE_HEADINGS = {
     "E": "E — Engagement & knowledge",
     "X": "X — Meta / infrastructure",
 }
-START_HERE_IDS = ("s2", "x1", "x2")
+CURRICULUM_STEPS = (
+    {
+        "id": "s2",
+        "position": "Foundation · Step 1 of 3",
+        "trap": "Treating a point estimate as evidence.",
+        "ability": (
+            "Read track-record statistics as uncertain estimates and know when to "
+            "refuse a conclusion."
+        ),
+        "reading_time": "12 min",
+        "difficulty": "Intermediate",
+        "next_reason": (
+            "Next, compare several noisy manager records without rewarding the noisiest."
+        ),
+    },
+    {
+        "id": "s1",
+        "position": "Foundation · Step 2 of 3",
+        "trap": "Treating a noisy ranking as a ranking of manager skill.",
+        "ability": "Understand shrinkage, partial pooling, and posterior rank uncertainty.",
+        "reading_time": "14 min",
+        "difficulty": "Intermediate",
+        "next_reason": (
+            "Next, turn manager-specific uncertainty into a calibrated monitoring baseline."
+        ),
+    },
+    {
+        "id": "m3",
+        "position": "Foundation · Step 3 of 3",
+        "trap": "Applying the same flat drawdown threshold to unlike managers.",
+        "ability": (
+            "Compare a realized drawdown with the manager-specific null and treat an "
+            "alarm as a review trigger rather than an automatic redemption."
+        ),
+        "reading_time": "13 min",
+        "difficulty": "Advanced",
+        "next_reason": "Then branch into the five research pillars by the decision at hand.",
+    },
+)
+CURRICULUM_IDS = tuple(step["id"] for step in CURRICULUM_STEPS)
 FEATURED_IDS = ("s1", "m3", "m4", "p1", "s7")
+ARTICLE_TITLES = {
+    "s1": "Hierarchical Bayesian alpha engine",
+    "s2": "Uncertainty-honest tear-sheet engine",
+    "s3": "Sizing & alpha-decay lab",
+    "s4": "Sell-discipline diagnostic",
+    "s5": "Short-book quality score",
+    "s6": "Returns-only sizing & decay signatures",
+    "s7": "Track-record provenance inspector",
+    "m1": "Exposure hygiene & drift monitor",
+    "m2": "Hidden-convexity / short-vol screen",
+    "m3": "Simulation-calibrated drawdown alarms",
+    "m4": "Crowding & overlap radar",
+    "m5": "Say–do gap monitor",
+    "m6": "13F long-book intelligence",
+    "p1": "Allocation under alpha uncertainty",
+    "p2": "Tiered book X-ray",
+    "p3": "Hire/fire decision audit & journal",
+    "e1": "Trust-preserving transparency ladder",
+    "e2": "Narrated engagement-pack generator",
+    "e3": "Manager knowledge graph & retrieval",
+    "e4": "Operational evidence & change graph",
+    "x1": "Tier & Power Atlas",
+    "x2": "Transparency playground",
+    "x3": "Manager-universe & sourcing-funnel coverage map",
+}
+ARTICLE_READING_DETAILS = {
+    "s1": ("14 min", "Intermediate"),
+    "s2": ("12 min", "Intermediate"),
+    "s3": ("12 min", "Advanced"),
+    "s4": ("11 min", "Intermediate"),
+    "s5": ("13 min", "Advanced"),
+    "s6": ("10 min", "Intermediate"),
+    "s7": ("11 min", "Intermediate"),
+    "m1": ("10 min", "Intermediate"),
+    "m2": ("12 min", "Advanced"),
+    "m3": ("13 min", "Advanced"),
+    "m4": ("11 min", "Intermediate"),
+    "m5": ("10 min", "Intermediate"),
+    "m6": ("11 min", "Intermediate"),
+    "p1": ("12 min", "Advanced"),
+    "p2": ("11 min", "Intermediate"),
+    "p3": ("11 min", "Intermediate"),
+    "e1": ("9 min", "Intermediate"),
+    "e2": ("10 min", "Intermediate"),
+    "e3": ("11 min", "Intermediate"),
+    "e4": ("11 min", "Advanced"),
+    "x1": ("14 min", "Advanced"),
+    "x2": ("12 min", "Intermediate"),
+    "x3": ("10 min", "Intermediate"),
+}
+ARTICLE_PATHS = (
+    ("Foundation", ("s2", "s1", "m3"), "Step"),
+    ("Signal & skill", ("s3", "s4", "s5", "s6", "s7"), "Reading"),
+    ("Monitoring", ("m1", "m2", "m4", "m5", "m6"), "Reading"),
+    ("Portfolio decisions", ("p1", "p2", "p3"), "Reading"),
+    ("Evidence & engagement", ("e1", "e2", "e3", "e4"), "Reading"),
+    ("Cross-cutting foundations", ("x1", "x2", "x3"), "Reading"),
+)
+
+
+def _public_article_meta() -> dict[str, dict[str, str]]:
+    metadata = {}
+    for path_label, card_ids, position_label in ARTICLE_PATHS:
+        for index, card_id in enumerate(card_ids):
+            reading_time, difficulty = ARTICLE_READING_DETAILS[card_id]
+            entry = {
+                "position": (
+                    f"{path_label} · {position_label} {index + 1} of {len(card_ids)}"
+                ),
+                "reading_time": reading_time,
+                "difficulty": difficulty,
+            }
+            if index:
+                previous_id = card_ids[index - 1]
+                entry.update(
+                    previous_id=previous_id,
+                    previous_title=ARTICLE_TITLES[previous_id],
+                )
+            if index + 1 < len(card_ids):
+                next_id = card_ids[index + 1]
+                entry.update(next_id=next_id, next_title=ARTICLE_TITLES[next_id])
+            metadata[card_id] = entry
+    return metadata
+
+
+PUBLIC_ARTICLE_META = _public_article_meta()
 PILLAR_DETAILS = {
     "S": ("Signal & skill", "Measure skill without rewarding noise."),
     "M": ("Monitoring", "Detect change, deterioration, and hidden concentration."),
@@ -668,6 +794,10 @@ def _validate_live_entry(entry: dict, card_id: str, path: Path, site_dir: Path) 
         "demo": site_dir / "templates" / entry["demo"],
         "spec": site_dir.parent / "docs" / "ideas" / "specs" / entry["spec"],
     }
+    if "article" in entry:
+        referenced["article"] = (
+            site_dir.parent / "docs" / "ideas" / "articles" / entry["article"]
+        )
     if not is_doctrine:
         referenced["data"] = site_dir / "data" / entry["data"]
 
@@ -717,7 +847,13 @@ def _render_index(env: Environment, cards: list[dict], out_dir: Path) -> None:
         rendered_card["search_corpus"] = _search_corpus(card)
         view_cards.append(rendered_card)
     cards_by_id = {card["id"]: card for card in view_cards}
-    start_here = [cards_by_id[card_id] for card_id in START_HERE_IDS if card_id in cards_by_id]
+    start_here = []
+    for step in CURRICULUM_STEPS:
+        if step["id"] not in cards_by_id:
+            continue
+        curriculum_card = dict(cards_by_id[step["id"]])
+        curriculum_card.update(step)
+        start_here.append(curriculum_card)
     featured_cards = [
         cards_by_id[card_id] for card_id in FEATURED_IDS if card_id in cards_by_id
     ]
@@ -730,14 +866,17 @@ def _render_index(env: Environment, cards: list[dict], out_dir: Path) -> None:
         }
         for lane in LANE_ORDER
     ]
-    stages = [
-        {
-            "key": stage,
-            "heading": STAGE_HEADINGS[stage],
-            "cards": [card for card in view_cards if card["primary_stage"] == stage],
-        }
-        for stage in STAGE_ORDER
-    ]
+    stages = []
+    for stage in STAGE_ORDER:
+        stage_cards = [card for card in view_cards if card["primary_stage"] == stage]
+        if stage_cards:
+            stages.append(
+                {
+                    "key": stage,
+                    "heading": STAGE_HEADINGS[stage],
+                    "cards": stage_cards,
+                }
+            )
     html = env.get_template("index.html.j2").render(
         start_here=start_here,
         featured_cards=featured_cards,
@@ -764,6 +903,20 @@ def _render_index(env: Environment, cards: list[dict], out_dir: Path) -> None:
         default_theme="light",
     )
     (out_dir / "index.html").write_text(html, encoding="utf-8")
+    exhibits_html = env.get_template("exhibits.html.j2").render(
+        pillars=[
+            {
+                **pillar,
+                "cards": [card for card in pillar["cards"] if card["status"] == "live"],
+            }
+            for pillar in pillars
+            if any(card["status"] == "live" for card in pillar["cards"])
+        ],
+        page_title="Exhibits",
+        asset_base="",
+        default_theme="light",
+    )
+    (out_dir / "exhibits.html").write_text(exhibits_html, encoding="utf-8")
 
 
 def _search_corpus(card: dict) -> str:
@@ -824,23 +977,36 @@ def _copy_assets(site_dir: Path, out_dir: Path) -> None:
 def _render_specs(env: Environment, cards: list[dict], site_dir: Path, out_dir: Path) -> None:
     template = env.get_template("spec.html.j2")
     specs_dir = site_dir.parent / "docs" / "ideas" / "specs"
+    articles_dir = site_dir.parent / "docs" / "ideas" / "articles"
     out_specs = out_dir / "specs"
     out_specs.mkdir(parents=True, exist_ok=True)
     for card in cards:
         if card["status"] != "live":
             continue
-        source = specs_dir / card["spec"]
-        body_html = markdown.markdown(
-            source.read_text(encoding="utf-8"),
+        is_public_article = bool(card.get("article"))
+        source = (
+            articles_dir / card["article"]
+            if is_public_article
+            else specs_dir / card["spec"]
+        )
+        renderer = markdown.Markdown(
             extensions=[
                 *_markdown_extensions(),
                 _SourceLinkExtension(source=source, repo_root=site_dir.parent),
-            ],
+            ]
+        )
+        body_html = renderer.convert(source.read_text(encoding="utf-8"))
+        method_source_url = (
+            f"{REPO_URL}/blob/main/docs/ideas/specs/{quote(card['spec'], safe='')}"
         )
         html = template.render(
             page_title=card["title"],
             card=card,
             spec_html=body_html,
+            article_toc=renderer.toc if is_public_article else "",
+            article_meta=PUBLIC_ARTICLE_META.get(card["id"], {}),
+            is_public_article=is_public_article,
+            method_source_url=method_source_url,
             asset_base="../",
             default_theme="light",
         )
@@ -858,11 +1024,35 @@ def _render_demo_pages(
         if not card.get("doctrine", False):
             card_data_json = (site_dir / "data" / card["data"]).read_text(encoding="utf-8")
             card_data = json.loads(card_data_json)
+
+        curriculum_previous = None
+        curriculum_next = None
+        if card["id"] in CURRICULUM_IDS:
+            curriculum_index = CURRICULUM_IDS.index(card["id"])
+            if curriculum_index > 0:
+                previous_id = CURRICULUM_IDS[curriculum_index - 1]
+                curriculum_previous = {
+                    "href": f"{previous_id}.html",
+                    "title": ARTICLE_TITLES[previous_id],
+                }
+            if curriculum_index < len(CURRICULUM_IDS) - 1:
+                next_id = CURRICULUM_IDS[curriculum_index + 1]
+                curriculum_next = {
+                    "href": f"{next_id}.html",
+                    "title": ARTICLE_TITLES[next_id],
+                }
+            else:
+                curriculum_next = {
+                    "href": "index.html#research",
+                    "title": "Continue to the research pillars",
+                }
         html = env.get_template(card["demo"]).render(
             page_title=card["title"],
             card=card,
             card_data_json=card_data_json,
             card_data=card_data,
+            curriculum_previous=curriculum_previous,
+            curriculum_next=curriculum_next,
             asset_base="",
             default_theme=card.get("theme", "light"),
         )

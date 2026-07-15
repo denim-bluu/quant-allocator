@@ -75,7 +75,7 @@ def test_index_lists_all_cards(tmp_path):
         # title (e.g. "Sizing & alpha-decay lab") becomes "&amp;" in the output.
         # Compare against the same escaping the renderer applies.
         assert str(escape(title)) in index
-    assert len(list(out.glob("*.html"))) + len(list((out / "specs").glob("*.html"))) == 47
+    assert len(list(out.glob("*.html"))) + len(list((out / "specs").glob("*.html"))) == 48
 
 
 def test_assets_copied(tmp_path):
@@ -99,7 +99,7 @@ def test_publication_assets_are_cache_busted(tmp_path):
         "interval.js",
         "gallery.js",
     ):
-        assert f"assets/{asset}?v=editorial-v4" in index
+        assert f"assets/{asset}?v=editorial-v7" in index
 
 
 def test_demo_page_exposes_decision_and_evidence_context(tmp_path):
@@ -116,6 +116,51 @@ def test_demo_page_exposes_decision_and_evidence_context(tmp_path):
     assert "Live ceiling B" in html
 
 
+def test_all_exhibits_put_focal_content_before_collapsed_evidence(tmp_path):
+    out = tmp_path / "out"
+    build(REPO_ROOT / "site", out)
+    cards = yaml.safe_load((REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8"))
+
+    for card in cards:
+        html = (out / f'{card["id"]}.html').read_text(encoding="utf-8")
+        focal = html.index("What this exhibit shows")
+        evidence = html.index("<summary>Evidence and readiness</summary>")
+        article_link = html.index("Read the full article")
+        assert focal < evidence < article_link, card["id"]
+        appendix = html[evidence:article_link]
+        assert 'class="card-context"' in appendix, card["id"]
+        assert "Methodology" in appendix, card["id"]
+        assert any(
+            marker in appendix
+            for marker in ("golive-box", "golive-replaced", "usage-note")
+        ), card["id"]
+
+
+def test_foundation_exhibits_continue_the_curriculum_path(tmp_path):
+    out = tmp_path / "out"
+    build(REPO_ROOT / "site", out)
+
+    s2 = (out / "s2.html").read_text(encoding="utf-8")
+    s1 = (out / "s1.html").read_text(encoding="utf-8")
+    m3 = (out / "m3.html").read_text(encoding="utf-8")
+
+    assert 'class="article-continuation exhibit-continuation"' in s2
+    assert 'href="s1.html"' in s2
+    assert "Next in this path" in s2
+
+    assert 'href="s2.html"' in s1
+    assert 'href="m3.html"' in s1
+    assert "Previous in this path" in s1
+    assert "Next in this path" in s1
+
+    assert 'href="s1.html"' in m3
+    assert 'href="index.html#research"' in m3
+    assert "Continue to the research pillars" in m3
+
+    p1 = (out / "p1.html").read_text(encoding="utf-8")
+    assert "exhibit-continuation" not in p1
+
+
 def test_publication_shell_connects_home_articles_and_exhibits(tmp_path):
     out = tmp_path / "out"
     build(REPO_ROOT / "site", out)
@@ -124,15 +169,19 @@ def test_publication_shell_connects_home_articles_and_exhibits(tmp_path):
     exhibit = (out / "s1.html").read_text(encoding="utf-8")
 
     assert "QUANT ALLOCATOR" in index
-    for target in ("#start-here", "#research", "#exhibits", "#browse"):
+    for target in ("#start-here", "#research", "exhibits.html", "#browse"):
         assert f'href="{target}"' in index
+    assert 'href="../exhibits.html"' in article
+    assert 'href="exhibits.html"' in exhibit
     assert 'href="../index.html#research"' in article
     assert 'href="../s1.html"' in article
     assert "Open the paired exhibit" in article
-    assert 'class="article-intro"' in article
+    assert 'class="article-intro article-intro--reader"' in article
     assert '<h1 id="article-title">Hierarchical Bayesian alpha engine</h1>' in article
     assert "Posterior alpha across the roster" in article
-    assert "Is the reported alpha robust enough to support selection or sizing?" in article
+    assert "Foundation · Step 2 of 3" in article
+    assert "14 min read" in article
+    assert "Technical method and provenance" in article
     assert 'href="specs/s1.html"' in exhibit
     assert "Read the full article" in exhibit
 

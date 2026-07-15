@@ -17,6 +17,10 @@ def _build_with_e2_live(tmp_path, mutate_data=None):
     site = tmp_path / "site"
     shutil.copytree(REPO_ROOT / "site", site)
     shutil.copytree(REPO_ROOT / "docs" / "ideas" / "specs", tmp_path / "docs" / "ideas" / "specs")
+    shutil.copytree(
+        REPO_ROOT / "docs" / "ideas" / "articles",
+        tmp_path / "docs" / "ideas" / "articles",
+    )
 
     cards_path = site / "cards.yaml"
     cards = yaml.safe_load(cards_path.read_text(encoding="utf-8"))

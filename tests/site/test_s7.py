@@ -242,6 +242,22 @@ def test_default_furniture_controls_and_full_method_views(tmp_path: Path) -> Non
         assert f'aria-label="{label}"' in html
 
 
+def test_s7_narrates_one_opening_state_before_advanced_tables(tmp_path: Path) -> None:
+    html, _ = _build(tmp_path)
+
+    opening = html.index('class="s7-opening-state"')
+    guide = html.index("What this exhibit shows")
+    advanced = html.index('<details class="s7-advanced">')
+    assert opening < guide < advanced
+    opening_html = html[opening:advanced]
+    assert "Opening state" in opening_html
+    assert "7 source observations" in opening_html
+    assert "17 remain excluded" in opening_html
+    advanced_html = html[advanced:]
+    assert "Explore lineage, basis, and vintage evidence" in advanced_html
+    assert 'aria-label="Lineage segment table"' in advanced_html
+
+
 def test_exact_24_states_claim_receipts_and_plan_copy(tmp_path: Path) -> None:
     html, _ = _build(tmp_path)
     data = json.loads(

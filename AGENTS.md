@@ -10,13 +10,15 @@ and publication gates.
 2. Read `docs/PRODUCT.md` first. It is the canonical product authority.
 3. Read `.harness/current.yaml` second. It names the current objective, task, next
    action, parked work, and outward-action authority.
-4. Read only the approved specification or implementation plan cited by the current
+4. For a reader-facing website task, read the document named by `editorial_system` and
+   the evidence record named by `evidence_record` in the current harness.
+5. Read only the approved specification or implementation plan cited by the current
    task. A plan may add implementation detail but may not broaden the product charter.
-5. Treat `.superpowers/sdd/progress.md`, old plans, handoffs, reports, and Git history
+6. Treat `.superpowers/sdd/progress.md`, old plans, handoffs, reports, and Git history
    as historical evidence, not normal initialization or automatic continuation.
-6. In each method spec, section 8 rulings govern that article's arithmetic and claims;
+7. In each method spec, section 8 rulings govern that article's arithmetic and claims;
    they do not govern the overall product roadmap.
-7. The primary agent owns synthesis, scope rulings, integration, and publication.
+8. The primary agent owns synthesis, scope rulings, integration, and publication.
 
 A false authority flag is a prohibition. Merge, push, and publication each require
 explicit user approval and the corresponding true flag in `.harness/current.yaml`.
@@ -36,11 +38,11 @@ boundary, or publication prerequisites change.
 - Before every push, run a case-insensitive, word-boundary scan of the working tree and
   reachable Git history from a checkout where `tools/.publication_terms` is present.
   `tools/publication_check.sh` is report-only: read and act on its output.
-- The only accepted current-tree canary match is the agent-worktree ignore entry already
-  in `.gitignore`. For already-public history only, the exact commit/path pairs in
-  `tools/publication_history_grandfather.yaml` are grandfathered. That ledger contains
-  no term text or wildcards and does not authorize current-tree or new-history matches.
-  Treat every unmatched history hit as a release blocker.
+- No current-tree canary match is accepted by default. For already-public history only,
+  the exact commit/path pairs in `tools/publication_history_grandfather.yaml` are
+  grandfathered. That ledger contains no term text or wildcards.
+  It does not authorize current-tree or new-history matches. Treat every current-tree or
+  unmatched history hit as a release blocker.
 - Do not add automated co-author or assistant-attribution trailers to commits.
 
 ## Multi-agent execution

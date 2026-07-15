@@ -61,6 +61,7 @@ def test_provenance_and_page_css(tmp_path):
 
 def test_two_manager_split_green_vs_red(tmp_path):
     html, _ = _build(tmp_path)
+    assert html.index('class="m3-split"') < html.index("What this exhibit shows")
     # The centerpiece: same -12%, opposite verdicts, each an outline VerdictChip.
     assert "Windward Trend Partners" in html
     assert "Stillwater Credit Partners" in html
