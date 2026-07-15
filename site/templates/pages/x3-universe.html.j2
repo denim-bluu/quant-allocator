@@ -9,146 +9,155 @@
 <section class="exhibit-intro" aria-label="What this exhibit shows">
   <h2 class="exhibit-intro__title">What this exhibit shows</h2>
   <div class="exhibit-intro__block">
-    <h3 class="exhibit-intro__sub">What you are looking at</h3>
-    <p>{{ card_data.meta.disclaimer }}</p>
-    <p>Exact source, mapping, membership, and authored-grid counts come from the reviewed shared
-      evidence projections. Missing typed membership-to-cell and mandate-brief projections are
-      shown as refusals; the exhibit does not manufacture those links.</p>
+    <h3 class="exhibit-intro__sub">The answer</h3>
+    <p><strong>The named sources resolve to 24 strategies, but coverage cannot be
+      calculated.</strong> The missing piece is an explicit assignment from each strategy
+      to the allocator's target cells. Without it, a heat map or coverage percentage would
+      invent information that the source records do not contain.</p>
   </div>
   <div class="exhibit-intro__block">
     <h3 class="exhibit-intro__sub">How to read it</h3>
     <ul class="exhibit-intro__list">
-      <li>Change only the three discrete controls; all 27 states are precomputed.</li>
-      <li>Read the exact named-source counts separately from the allocator-authored grid.</li>
-      <li>Follow pointer-specific refusal codes to the missing shared evidence contract.</li>
-      <li>Read the <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>
-        for formulas, access semantics, and binding rulings.</li>
+      <li>Follow the flow from named source rows to resolved strategies.</li>
+      <li>Stop at the broken connector: strategy identities are not target-cell assignments.</li>
+      <li>Read the eligible cell count as the allocator's chosen research scope, not the world.</li>
+      <li>Open the <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">technical
+        method and provenance</a> for the coverage definition and identity gate.</li>
     </ul>
   </div>
 </section>
 
 <p class="x3-disclaimer" role="note">{{ card_data.meta.disclaimer }}</p>
 
-<section class="x3-controls" aria-label="Precomputed coverage state">
-  <label for="x3-cutoff">Decision cutoff
-    <select id="x3-cutoff">
-      <option value="early">early</option><option value="middle">middle</option>
-      <option value="latest" selected>latest</option>
-    </select>
-  </label>
-  <label for="x3-source">Source/access preset
-    <select id="x3-source">
-      <option value="public-only">public only</option>
-      <option value="public-plus-prehire" selected>public + pre-hire</option>
-      <option value="full-synthetic-funnel">full synthetic funnel</option>
-    </select>
-  </label>
-  <label for="x3-scope">Scope preset
-    <select id="x3-scope">
-      <option value="cross-asset" selected>cross-asset</option>
-      <option value="liquid-public-markets">liquid public markets</option>
-      <option value="credit-private-markets">credit/private markets</option>
-    </select>
-  </label>
-</section>
+<section class="x3-flow" id="x3-visual" data-state-key="{{ card_data.meta.default_state }}"
+  aria-labelledby="x3-flow-title">
+  <header>
+    <p class="x3-kicker">Opening state</p>
+    <h2 id="x3-flow-title">Where the coverage calculation stops</h2>
+    <p><strong>Source set: public records plus pre-hire submissions.</strong>
+      Per-source row counts are not available in this exhibit.</p>
+  </header>
 
-<p id="x3-live" class="x3-live" aria-live="polite">Showing {{ card_data.meta.default_state }}.</p>
-<p id="x3-unsupported" class="x3-refusal" hidden>unsupported-state-key: restored the complete server default.</p>
+  <div class="x3-flow__steps">
+    <article class="x3-step x3-step--source">
+      <span>1</span>
+      <div><h3>Named source records</h3>
+        <strong data-x3="source-rows">{{ default_state.source_counts.source_rows }}</strong>
+        <p>mapping rows across the selected sources</p>
+        <ul id="x3-source-list" class="x3-source-list">
+          <li>Public adviser records</li>
+          <li>Registered fund records</li>
+          <li>Holdings filer records</li>
+          <li>RFI and DDQ responses</li>
+          <li>Strategy export</li>
+        </ul>
+      </div>
+    </article>
 
-<section class="x3-summary" id="x3-visual" data-state-key="{{ card_data.meta.default_state }}" aria-labelledby="x3-summary-title">
-  <h2 id="x3-summary-title">Named-source snapshot</h2>
-  <div class="x3-metrics">
-    <p><strong data-x3="source-rows">{{ default_state.source_counts.source_rows }}</strong><span>source mapping rows</span></p>
-    <p><strong data-x3="canonical-members">{{ default_state.source_counts.canonical_members }}</strong><span>resolved active strategy IDs</span></p>
-    <p><strong data-x3="eligible-cells">{{ default_state.target_grid.eligible_cells }}</strong><span>eligible authored cells</span></p>
-    <p><strong data-x3="excluded-cells">{{ default_state.target_grid.excluded_cells }}</strong><span>excluded authored cells</span></p>
+    <article class="x3-step x3-step--resolved">
+      <span>2</span>
+      <div><h3>Resolved strategies</h3>
+        <strong data-x3="canonical-members">{{ default_state.source_counts.canonical_members }}</strong>
+        <p>active strategy identities at one consistent grain</p>
+        <small><span data-x3="ambiguous-rows">{{ default_state.source_counts.ambiguous_rows }}</span>
+          ambiguous row remains outside the resolved count.</small>
+      </div>
+    </article>
+
+    <article class="x3-step x3-step--broken">
+      <span aria-hidden="true">×</span>
+      <div><h3>Missing assignment link</h3>
+        <p>The source records do not say which target cell each resolved strategy belongs to.
+          Name similarity or category order cannot substitute for that link.</p></div>
+    </article>
+
+    <article class="x3-step x3-step--eligible">
+      <span>3</span>
+      <div><h3>Eligible target cells</h3>
+        <strong data-x3="eligible-cells">{{ default_state.target_grid.eligible_cells }}</strong>
+        <p>cells in the allocator's current research map</p>
+        <small><span data-x3="excluded-cells">{{ default_state.target_grid.excluded_cells }}</span>
+          cells are outside target scope.</small>
+      </div>
+    </article>
+
+    <article class="x3-step x3-step--refused">
+      <span>4</span>
+      <div><h3>Coverage not calculated</h3>
+        <strong>Missing denominator linkage</strong>
+        <p>No heat map is drawn because no strategy-to-cell assignments exist.</p>
+      </div>
+    </article>
   </div>
-  <p><strong>Denominator:</strong> <span data-x3="denominator">{{ default_state.denominator_label }}</span>.</p>
-  <p><strong>Observed cells:</strong> refused — <code>typed-membership-cell-projection-required</code>.</p>
 </section>
 
-<section class="x3-panel" aria-labelledby="x3-receipts-title">
-  <h2 id="x3-receipts-title">Source and receipt table</h2>
-  <div class="x3-table-wrap"><table>
-    <thead><tr><th>Dataset</th><th>Slice receipt</th></tr></thead>
-    <tbody id="x3-receipts">
-    {% for dataset_id, receipt_id in default_state.slice_receipts.items() %}
-      <tr><td>{{ dataset_id }}</td><td><code>{{ receipt_id }}</code></td></tr>
-    {% endfor %}
-    </tbody>
-  </table></div>
-  <p>Multi-source access uses AND semantics: each listed dataset has its own right, purpose,
-    version, and receipt. A right for one dataset never authorizes another.</p>
+<section class="x3-controls" aria-label="Choose a precomputed coverage state">
+  <label for="x3-cutoff">Evidence date
+    <select id="x3-cutoff">
+      <option value="early">Early evidence</option>
+      <option value="middle">Intermediate evidence</option>
+      <option value="latest" selected>Latest available evidence</option>
+    </select>
+  </label>
+  <label for="x3-source">Source set
+    <select id="x3-source">
+      <option value="public-only">Public records only</option>
+      <option value="public-plus-prehire" selected>Public records plus pre-hire submissions</option>
+      <option value="full-synthetic-funnel">Full synthetic sourcing funnel</option>
+    </select>
+  </label>
+  <label for="x3-scope">Research scope
+    <select id="x3-scope">
+      <option value="cross-asset" selected>Cross-asset research map</option>
+      <option value="liquid-public-markets">Liquid public-markets map</option>
+      <option value="credit-private-markets">Credit and private-markets map</option>
+    </select>
+  </label>
 </section>
 
-<section class="x3-panel" aria-labelledby="x3-exclusions-title">
-  <h2 id="x3-exclusions-title">Excluded target cells</h2>
-  <div class="x3-table-wrap"><table>
-    <thead><tr><th>Cell</th><th>State</th><th>Reason</th></tr></thead>
-    <tbody id="x3-exclusions">
-    {% for row in default_state.target_grid.excluded_ledger %}
-      <tr><td><code>{{ row.cell_id }}</code></td><td>{{ row.state }}</td><td>{{ row.reason }}</td></tr>
-    {% else %}<tr><td colspan="3">No excluded cells in this scope.</td></tr>{% endfor %}
-    </tbody>
-  </table></div>
-</section>
+<p id="x3-live" class="x3-live" aria-live="polite">Showing the latest available evidence,
+  public records plus pre-hire submissions, across the cross-asset research map.</p>
+<p id="x3-unsupported" class="x3-notice" hidden>That combination is unavailable, so the
+  opening state has been restored.</p>
 
-<section class="x3-panel" aria-labelledby="x3-funnel-title">
-  <h2 id="x3-funnel-title">Receipted funnel boundary</h2>
-  <p><strong>Conversion interval: refused.</strong> Exact labelled cohort stage counts may render
-    only when the shared evaluation receipts pass. Target-cell conversion and mandate-brief
-    inference remain unavailable.</p>
-  <ul id="x3-funnel-counts">
-  {% for row in default_state.funnel.stage_counts %}
-    <li>{{ row.cohort_label }}: {{ row.entry_count }} entry / {{ row.outcome_count }} outcome</li>
-  {% else %}<li>No funnel stage counts in this source preset.</li>{% endfor %}
-  </ul>
-</section>
-
-<section class="x3-panel x3-refusals" aria-labelledby="x3-refusal-title">
-  <h2 id="x3-refusal-title">Visible refusals</h2>
-  <ul id="x3-refusals">
-  {% for row in default_state.refusals %}
-    <li><code>{{ row.pointer }}</code> · <strong>{{ row.code }}</strong> — {{ row.detail }}</li>
-  {% endfor %}
-  </ul>
-  <p><strong>Global denominator:</strong> refused because the world denominator is unknown.</p>
-  <p><strong>Manager ranking:</strong> refused because X3 prioritizes research cells, never managers.</p>
-</section>
-
-<section class="x3-panel" aria-labelledby="x3-claims-title">
-  <h2 id="x3-claims-title">Claim access, attestation, and refusal register</h2>
-  <div class="x3-table-wrap"><table>
-    <thead><tr><th>Claim</th><th>Access contexts</th><th>Access semantics</th><th>Attestation</th><th>Validation</th><th>Receipt</th><th>Rendered refusal</th></tr></thead>
-    <tbody>
-    {% for row in card_data.claim_attestation %}
-      <tr><td><code>{{ row.claim_id }}</code></td><td>{{ row.access_contexts | join(', ') }}</td><td>{{ row.access_semantics }}</td>
-        <td>Current {{ row.current_attestation }} · live ceiling {{ row.live_ceiling }}</td>
-        <td>{{ row.validation_status }} · receipt {{ 'required' if row.receipt_required else 'not required' }}</td>
-        <td><code>{{ row.receipt_id }}</code></td>
-        <td>{{ row.rendered_refusal }}</td></tr>
-    {% endfor %}
-    </tbody>
-  </table></div>
-</section>
-
-<section class="x3-panel" aria-labelledby="x3-audit-title">
-  <h2 id="x3-audit-title">Synthetic validation · current attestation D</h2>
-  <p>Entity precision lower bound {{ "%.4f" | format(card_data.entity_resolution_audit.precision_interval[0]) }};
-    recall lower bound {{ "%.4f" | format(card_data.entity_resolution_audit.recall_interval[0]) }}.
-    The finite-sample gate requires at least 381 accepted true-positive links and zero false positives.</p>
-  <p><strong>Synthetic fixture recall:</strong>
-    {{ card_data.synthetic_discovery_audit.observed_hidden }} / {{ card_data.synthetic_discovery_audit.hidden_denominator }}.
-    This authored denominator is never a live market-coverage claim.</p>
-</section>
+<details class="x3-details">
+  <summary>What else remains unavailable?</summary>
+  <div class="x3-details__body">
+    <section aria-labelledby="x3-funnel-title">
+      <h2 id="x3-funnel-title">Sourcing-funnel conversion</h2>
+      <p>Stage counts may be shown only when their cohort membership is explicit. A conversion
+        interval remains unavailable until each opportunity is assigned to a defined cohort
+        with complete observation windows.</p>
+      <ul id="x3-funnel-counts">
+        <li>No funnel stage counts are available for this source set.</li>
+      </ul>
+    </section>
+    <section aria-labelledby="x3-boundaries-title">
+      <h2 id="x3-boundaries-title">Permanent boundaries</h2>
+      <p><strong>Global market coverage:</strong> not a valid output because the world
+        denominator is unknown.</p>
+      <p><strong>Manager ranking:</strong> not a valid output because this method prioritizes
+        research cells, never managers.</p>
+    </section>
+    <section aria-labelledby="x3-validation-title">
+      <h2 id="x3-validation-title">Synthetic identity check</h2>
+      <p>The lower bounds are
+        {{ "%.4f" | format(card_data.entity_resolution_audit.precision_interval[0]) }} for
+        precision and
+        {{ "%.4f" | format(card_data.entity_resolution_audit.recall_interval[0]) }} for recall.
+        At least 381 accepted true links with no false positives are required. This validates
+        the fictional matching example, not live market coverage.</p>
+    </section>
+  </div>
+</details>
 {% endblock %}
 
 {% block methodology %}
-<p>X3 selects point-in-time shared evidence slices, consumes typed mappings, memberships, grids,
-  opportunities, schemas, cohorts, evaluations, and events, then emits exact source-conditioned
-  counts. It does not resolve identities or infer missing relationships.</p>
-<p>Entity validation uses two-sided 95% Wilson intervals. Browser code selects one of 27 committed
-  states; it performs no estimator, coverage arithmetic, cohort assignment, or ranking.</p>
+<p>The method fixes one decision date, source set, research scope, and entity grain. It resolves
+  source rows to strategy identities, then asks whether an explicit source-to-target-cell link
+  exists before forming a coverage numerator.</p>
+<p>The browser selects one of 27 precomputed states. It does not resolve identities, assign
+  strategies to cells, form cohorts, calculate coverage, or rank managers.</p>
 {% endblock %}
 
 {% block body_scripts %}<script src="{{ asset_base | default('') }}assets/x3-universe.js"></script>{% endblock %}

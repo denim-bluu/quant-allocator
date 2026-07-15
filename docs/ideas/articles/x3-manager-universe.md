@@ -2,7 +2,7 @@
 
 Measure coverage only against a named, versioned target grid and named source snapshots at one canonical entity grain. Use the result to prioritize research cells, never to estimate the global manager universe or rank manager quality.
 
-The current evidence permits exact source, mapping, membership, and authored-grid counts. It refuses observed-cell coverage and cell-level queue verdicts because the typed membership-to-cell projection is missing. It also refuses funnel conversion intervals because the typed mandate-brief cohort projection is missing.
+The current evidence permits exact source, mapping, membership, and authored-grid counts. It refuses observed-cell coverage and cell-level queue verdicts because the source records do not explicitly assign strategies to target cells. It also refuses funnel conversion intervals because opportunities have not been explicitly assigned to complete, dated cohorts.
 
 Those refusals are the central result. A count is not automatically a denominator, and a source row is not automatically a unique strategy.
 
@@ -12,7 +12,7 @@ A database can contain hundreds of rows without establishing what those rows rep
 
 Duplicate source records create another illusion. Two datasets may describe the same strategy under different labels. Counting rows overstates represented entities; collapsing them without a resolved mapping hides ambiguity.
 
-The most tempting mistake is to divide observed rows by an imagined global denominator and call the result market coverage. The denominator is unknown. X3 therefore measures only receipted policy cells in an allocator-authored target grid.
+The most tempting mistake is to divide observed rows by an imagined global denominator and call the result market coverage. The denominator is unknown. The method therefore measures only documented policy cells in an allocator-authored target grid.
 
 Funnel conversion can fail similarly. Stage counts are exact only when cohort eligibility, event completeness, absence semantics, rights, and observation windows are explicit. A ratio over an incomplete denominator is not a rough interval; it is a refused estimand.
 
@@ -58,7 +58,7 @@ C_{t,q}(S)=
 {|G^{\mathrm{eligible}}_{t,q}|}.
 $$
 
-The denominator is the receipted eligible policy grid. Excluded cells never enter it. If the source memberships cannot be linked to grid cells through a typed projection, $C_{t,q}(S)$ refuses.
+The denominator is the documented eligible policy grid. Excluded cells never enter it. If the source memberships cannot be linked explicitly to grid cells, $C_{t,q}(S)$ refuses.
 
 For source $s$, leave-one-source-out novelty is
 
@@ -70,9 +70,9 @@ where $U(S)$ is the canonical entity union across selected sources. $N_s$ is an 
 
 ### Resolve identity before counting
 
-Only shared mappings marked `resolved` enter canonical counts. Ambiguous and unresolved rows remain separately visible. Source evidence is preserved even when canonical identifiers are deduplicated.
+Only source rows attached unambiguously to one strategy enter the resolved count. Ambiguous and unresolved rows remain separately visible. Source evidence is preserved even when duplicate identifiers are consolidated.
 
-Research cells enter a categorical queue in this precedence: identity repair, source refresh, source gap, funnel unavailable, screening backlog, diligence backlog, represented. The first applicable reason wins. Missing typed links trigger the relevant refusal rather than a taxonomy-string or geography inference.
+Research cells enter a categorical queue in this precedence: identity repair, source refresh, source gap, funnel unavailable, screening backlog, diligence backlog, represented. The first applicable reason wins. Missing explicit links trigger the relevant refusal rather than a label or geography guess.
 
 ### Validate the synthetic identity mechanism
 
@@ -96,41 +96,41 @@ Equality passes; $380$ perfect links fail. Recall also needs a lower bound of at
 
 ## What the evidence changes
 
-The synthetic identity audit contains $410$ true positives, $0$ false positives, $10$ false negatives, and $420$ true negatives. Its Wilson lower bounds are $0.990717$ for precision and $0.956732$ for recall, so the synthetic identity gate clears. Synthetic discovery recall is $23/24=0.958333$, using a complete hidden fixture denominator; it cannot be generalized to the market.
+The synthetic identity audit contains $410$ true positives, $0$ false positives, $10$ false negatives, and $420$ true negatives. Its Wilson lower bounds are $0.990717$ for precision and $0.956732$ for recall, so the synthetic identity gate clears. Synthetic discovery recall is $23/24=0.958333$, using a complete hidden reference-set denominator; it cannot be generalized to the market.
 
-The latest full-funnel state supports labelled included counts of $75$ entry and $59$ screened for the discovered-to-screen cohort, and $75$ entry and $7$ approved for the diligence-to-approved cohort. No conversion interval is emitted. The typed mandate-brief cohort projection remains missing, so the denominator and target-cell linkage required for that inference are not certified.
+The latest full-funnel state supports labelled included counts of $75$ entry and $59$ screened for the discovered-to-screen cohort, and $75$ entry and $7$ approved for the diligence-to-approved cohort. No conversion interval is emitted. Explicit opportunity-to-cohort assignment remains missing, so the denominator and target-cell linkage required for that inference are not certified.
 
-The evidence changes research operations by separating exact counts from unresolved claims. It permits source reconciliation and identity-quality validation. It refuses global coverage, target-cell coverage without the typed link, funnel conversion without the cohort prerequisite, and all manager-quality rankings.
+The evidence changes research operations by separating exact counts from unresolved claims. It permits source reconciliation and identity-quality validation. It refuses global coverage, target-cell coverage without the explicit link, funnel conversion without the cohort prerequisite, and all manager-quality rankings.
 
 ## What the allocator does next
 
-First, repair the shared typed membership-to-cell projection. Do not substitute label matching, geography inference, ordinal mapping, or taxonomy strings.
+First, add an explicit strategy-to-target-cell assignment. Do not substitute label matching, geography inference, ordinal mapping, or taxonomy strings.
 
-Second, complete the typed mandate-brief cohort projection and its opportunity, cohort-assignment, event, completeness, absence, right, purpose, and observation-window evidence. Only then revisit conversion intervals.
+Second, complete the opportunity-to-cohort assignment and its event, completeness, absence, right, purpose, and observation-window evidence. Only then revisit conversion intervals.
 
 Third, use exact unresolved identity, source freshness, and missing-source states to prioritize research cells. Keep the queue categorical and preserve the reason each cell entered it.
 
-For every published count, state the source versions, cutoff, entity grain, target-grid version, included rights and purposes, and reconstruction receipts.
+For every published count, state the source versions, cutoff, entity grain, target-grid version, included rights and purposes, and reproducible source records.
 
 ## Limits and go-live
 
 - All displayed entities, mappings, memberships, target cells, and funnel events are fictional synthetic evidence at the current demonstration tier.
-- Live use requires per-dataset rights, licence purposes, access contexts, complete version manifests, exact absence rules, and reconstruction receipts.
-- Shared entity, relationship, membership, and grid projections must use typed references and one canonical grain.
-- Exact source and authored-grid counts need no estimator sample threshold, but their scope remains limited to the named receipted datasets.
+- Live use requires per-dataset rights, licence purposes, access contexts, complete version manifests, exact absence rules, and reproducible source records.
+- Shared entity, relationship, membership, and grid records must use explicit references and one canonical grain.
+- Exact source and authored-grid counts need no estimator sample threshold, but their scope remains limited to the named documented datasets.
 - The synthetic precision gate requires at least $381$ accepted true-positive links with no false positives; recall’s Wilson lower bound must be at least $0.95$.
-- Conversion intervals remain unavailable until the typed mandate-brief cohort projection and complete funnel evidence exist. Target-cell coverage remains unavailable until the typed membership-to-cell projection exists.
+- Conversion intervals remain unavailable until explicit cohort assignment and complete funnel evidence exist. Target-cell coverage remains unavailable until explicit strategy-to-cell assignment exists.
 - Browser controls may choose only among $27$ precomputed states. They may not resolve entities, form cohorts, calculate coverage, or prioritize the queue.
 - Global manager/product coverage and manager-quality ranking refuse in every context.
 
 ## Key takeaways
 
-- Coverage needs a receipted denominator and one canonical entity grain.
+- Coverage needs a documented denominator and one canonical entity grain.
 - Named-source grid coverage is not global market coverage.
 - Exact row counts do not repair a missing membership-to-cell link.
 - Identity ambiguity remains visible and outside resolved canonical counts.
 - Synthetic identity gates can validate the authored matching regime without validating live discovery coverage.
-- X3 prioritizes research cells; it never ranks managers.
+- The method prioritizes research cells; it never ranks managers.
 
 ## References
 
