@@ -17,12 +17,27 @@
   var viewControls = document.querySelectorAll("[data-s7-view-control]");
   var notice = document.querySelector("[data-s7-notice]");
 
+  var viewLabels = {
+    lineage: "Lineage",
+    basis: "Comparability",
+    audit: "Revision history"
+  };
+  var reasonLabels = {
+    "fee-basis-incomparable": "reported fee bases are not comparable",
+    "frequency-calendar-incomparable": "frequencies and calendars are not comparable",
+    "entity-mapping-ambiguous": "the observation cannot be attached to one entity",
+    "entity-mapping-unresolved": "the entity owner has not been resolved",
+    "lineage-overlap": "two lineage intervals overlap",
+    unmatched: "no supported lineage match is available"
+  };
+
   function keyFor(selection) {
     return `${selection.scenario}|${selection.cutoff}|${selection.view}`;
   }
 
   function exactState(selection) {
-    return data.states[keyFor(selection)] || null;
+    var key = keyFor(selection);
+    return data.states[key] || null;
   }
 
   function restoreDefault(reason) {
@@ -39,7 +54,7 @@
       view: query.get("view") || defaults.view
     };
     if (!exactState(candidate)) {
-      restoreDefault(`unsupported-state-key: restored ${data.meta.default_state}`);
+      restoreDefault("That combination is unavailable, so the opening example has been restored.");
       return false;
     }
     selected = candidate;
@@ -67,243 +82,60 @@
     node.replaceChildren();
   }
 
-  function textCell(value) {
-    var cell = document.createElement("td");
-    cell.textContent = value === null || value === undefined || value === "" ? "not available" : String(value);
-    return cell;
+  function metric(label, value) {
+    var article = document.createElement("article");
+    var name = document.createElement("span");
+    var amount = document.createElement("strong");
+    name.textContent = label;
+    amount.textContent = String(value);
+    article.appendChild(name);
+    article.appendChild(amount);
+    return article;
   }
 
-  function codeCell(value) {
-    var cell = document.createElement("td");
-    var code = document.createElement("code");
-    code.textContent = value === null || value === undefined || value === "" ? "none" : String(value);
-    cell.appendChild(code);
-    return cell;
+  function paragraph(text) {
+    var node = document.createElement("p");
+    node.textContent = text;
+    return node;
   }
 
-  function chipCell(value) {
-    var cell = document.createElement("td");
-    var chip = document.createElement("span");
-    chip.className = "s7-chip";
-    chip.dataset.state = value;
-    chip.textContent = value;
-    cell.appendChild(chip);
-    return cell;
+  function readableReason(code) {
+    return reasonLabels[code] || "the required evidence is incomplete";
   }
 
-  function emptyRow(body, span, message) {
-    var row = document.createElement("tr");
-    var cell = document.createElement("td");
-    cell.colSpan = span;
-    cell.textContent = message;
-    row.appendChild(cell);
-    body.appendChild(row);
+  function renderLineage(state, body) {
+    var attached = state.lineage_segments.length
+      ? state.lineage_segments[0].observation_ids.length
+      : 0;
+    body.appendChild(metric("Exact lineage segments", state.lineage_segments.length));
+    body.appendChild(metric("Records attached to the lineage", attached));
+    body.appendChild(metric("Records kept outside", state.exclusions.length));
+    body.appendChild(paragraph(state.what_changed));
   }
 
-  function renderLineage(state) {
-    var body = document.querySelector("[data-s7-lineage-body]");
-    clear(body);
-    if (!state.lineage_segments.length) {
-      emptyRow(body, 5, "No lineage segment is admitted in this state.");
-    }
-    state.lineage_segments.forEach(function (item) {
-      var row = document.createElement("tr");
-      row.dataset.s7LineageRow = item.segment_id;
-      row.appendChild(codeCell(item.canonical_entity_id));
-      row.appendChild(textCell(item.entity_grain));
-      row.appendChild(textCell(`${item.effective_from} to ${item.effective_to}`));
-      row.appendChild(textCell(item.observation_ids.length));
-      row.appendChild(textCell(
-        `${item.mapping_ids.length} mappings; ${item.membership_ids.length} memberships; ${item.relationship_ids.length} relationships`
-      ));
-      body.appendChild(row);
-    });
-
-    var portability = document.querySelector("[data-s7-portability-body]");
-    clear(portability);
-    if (!state.portability_findings.length) {
-      emptyRow(portability, 6, "Not assessed: no authenticated scenario portability bundle.");
-    }
-    state.portability_findings.forEach(function (item) {
-      var row = document.createElement("tr");
-      row.dataset.s7PortabilityRow = item.finding_id;
-      row.appendChild(chipCell(item.state));
-      row.appendChild(textCell(`${item.predecessor_entity_id || "not established"} to ${item.current_entity_id || "not established"}`));
-      row.appendChild(textCell(item.claimed_scope || "not established"));
-      row.appendChild(textCell(`${item.missing_evidence}; ${item.reason_codes}`));
-      row.appendChild(textCell(`Current ${item.current_attestation}; live ceiling ${item.live_attestation_ceiling}`));
-      row.appendChild(codeCell(item.receipt_id));
-      portability.appendChild(row);
-    });
-  }
-
-  function renderBasis(state) {
-    var breaks = document.querySelector("[data-s7-break-body]");
-    clear(breaks);
-    if (!state.basis_breaks.length) {
-      emptyRow(breaks, 5, "No derived basis break is present in this state.");
-    }
-    state.basis_breaks.forEach(function (item) {
-      var row = document.createElement("tr");
-      row.dataset.s7BreakRow = item.receipt_id;
-      row.appendChild(chipCell(item.disposition));
-      row.appendChild(textCell(item.binding_reason));
-      row.appendChild(textCell(item.reason_codes));
-      row.appendChild(textCell(item.row_ids.length));
-      row.appendChild(codeCell(item.receipt_id));
-      breaks.appendChild(row);
-    });
-
+  function renderBasis(state, body) {
     var panel = state.panel;
-    var summary = document.querySelector("[data-s7-panel-summary]");
-    clear(summary);
-    var status = document.createElement("span");
-    status.className = "s7-chip";
-    status.dataset.state = panel.status;
-    status.textContent = panel.status;
-    summary.appendChild(status);
-    var description = panel.status === "admitted"
-      ? ` ${panel.panel_kind}; ${panel.native_frequency}; ${panel.canonical_entity_id}.`
-      : ` ${panel.reason_code}.`;
-    summary.appendChild(document.createTextNode(description));
-
-    var signatureBody = document.querySelector("[data-s7-basis-signature-body]");
-    clear(signatureBody);
-    if (panel.status !== "admitted") {
-      emptyRow(signatureBody, 2, "Unavailable because the panel is refused; see the controlled reasons above.");
+    var status = panel.status === "admitted" ? "Admitted" : "Refused";
+    body.appendChild(metric("Panel decision", status));
+    body.appendChild(metric("Comparable source observations", panel.rows.length));
+    body.appendChild(metric("Basis breaks", state.basis_breaks.length));
+    if (state.basis_breaks.length) {
+      body.appendChild(paragraph(`Primary reason: ${readableReason(state.basis_breaks[0].binding_reason)}.`));
     } else {
-      [
-        "base_currency",
-        "benchmark_id",
-        "benchmark_return_kind",
-        "benchmark_version",
-        "calendar_id",
-        "cashflow_convention_id",
-        "composite_definition_id",
-        "composite_membership_version",
-        "entity_grain",
-        "fee_schedule_version",
-        "frequency",
-        "fx_rule_id",
-        "fx_series_id",
-        "fx_series_version",
-        "fx_treatment",
-        "gross_net_fee_basis",
-        "return_kind",
-        "valuation_policy_id"
-      ].forEach(function (field) {
-        var row = document.createElement("tr");
-        row.appendChild(codeCell(field));
-        row.appendChild(textCell(panel.basis_signature[field] === null ? "not applicable" : panel.basis_signature[field]));
-        signatureBody.appendChild(row);
-      });
+      body.appendChild(paragraph("No controlled basis break is present in this state."));
     }
-
-    var panelBody = document.querySelector("[data-s7-panel-body]");
-    clear(panelBody);
-    if (panel.status !== "admitted") {
-      emptyRow(panelBody, 5, `Panel refused: ${panel.reason_codes}. No empty chart is shown.`);
-    } else {
-      panel.rows.forEach(function (item) {
-        var row = document.createElement("tr");
-        row.dataset.s7PanelRow = item.observation_id;
-        row.appendChild(textCell(item.observed_at));
-        row.appendChild(codeCell(item.observation_id));
-        row.appendChild(textCell(`${item.source_value} source observation`));
-        row.appendChild(textCell(`${item.admitted_value} deterministic admitted value, not an estimate`));
-        row.appendChild(codeCell(item.fx_observation_id));
-        panelBody.appendChild(row);
-      });
-    }
-    document.querySelector("[data-s7-panel-receipt]").textContent = panel.receipt_id;
   }
 
-  function renderAudit(state) {
-    document.querySelector("[data-s7-analytic-mode]").textContent = state.revision_modes.analytic;
-    document.querySelector("[data-s7-audit-mode]").textContent = state.revision_modes.audit;
-    var vintages = document.querySelector("[data-s7-vintage-body]");
-    clear(vintages);
+  function renderAudit(state, body) {
+    body.appendChild(metric("Version changes found", state.vintage_findings.length));
     if (!state.vintage_findings.length) {
-      emptyRow(vintages, 6, "No vintage finding is emitted at this cutoff.");
+      body.appendChild(paragraph("No later version is visible at this decision date."));
+      return;
     }
     state.vintage_findings.forEach(function (item) {
-      var row = document.createElement("tr");
-      row.dataset.s7VintageRow = item.finding_id;
-      row.appendChild(chipCell(item.finding_type));
-      row.appendChild(codeCell(item.dataset_id));
-      row.appendChild(textCell(item.effective_at || "dataset-level"));
-      row.appendChild(textCell(item.first_known_at));
-      row.appendChild(textCell(item.prior_value === undefined ? "not applicable" : `${item.prior_value || "none"} to ${item.later_value || "none"}`));
-      row.appendChild(codeCell(item.receipt_id));
-      vintages.appendChild(row);
-    });
-
-    var exclusions = document.querySelector("[data-s7-exclusion-body]");
-    clear(exclusions);
-    if (!state.exclusions.length) {
-      emptyRow(exclusions, 4, "No typed exclusion is present.");
-    }
-    state.exclusions.forEach(function (item) {
-      var row = document.createElement("tr");
-      row.dataset.s7ExclusionRow = item.observation_id;
-      row.appendChild(codeCell(item.observation_id));
-      row.appendChild(codeCell(item.dataset_id));
-      row.appendChild(textCell(item.reason_code));
-      row.appendChild(textCell(item.source));
-      exclusions.appendChild(row);
-    });
-  }
-
-  function renderRefusals(state) {
-    var container = document.querySelector("[data-s7-refusal-list]");
-    clear(container);
-    state.refusals.forEach(function (item) {
-      var article = document.createElement("article");
-      article.dataset.s7Refusal = "";
-      var chip = document.createElement("span");
-      chip.className = "s7-chip";
-      chip.dataset.state = "refused";
-      chip.textContent = item.reason_code;
-      var pointer = document.createElement("code");
-      pointer.textContent = item.pointer;
-      var receipt = document.createElement("code");
-      receipt.textContent = item.receipt_id;
-      article.appendChild(chip);
-      article.appendChild(pointer);
-      article.appendChild(receipt);
-      if (item.detail) {
-        var detail = document.createElement("p");
-        detail.textContent = item.detail;
-        article.appendChild(detail);
-      }
-      container.appendChild(article);
-    });
-  }
-
-  function renderReceipts(state) {
-    document.querySelector("[data-s7-analytic-bundle]").textContent = state.analytic_bundle_digest;
-    document.querySelector("[data-s7-analytic-join]").textContent = state.join_receipt_ids.analytic;
-    document.querySelector("[data-s7-audit-bundle]").textContent = state.audit_bundle_digest;
-    document.querySelector("[data-s7-audit-join]").textContent = state.join_receipt_ids.audit;
-    var list = document.querySelector("[data-s7-receipt-list]");
-    clear(list);
-    state.receipt_ids.forEach(function (receiptId) {
-      var item = document.createElement("li");
-      var code = document.createElement("code");
-      code.textContent = receiptId;
-      item.appendChild(code);
-      list.appendChild(item);
-    });
-  }
-
-  function renderClaims(key) {
-    Object.keys(data.claims).forEach(function (claimId) {
-      var claim = data.claims[claimId];
-      document.querySelector(`[data-s7-claim-applicable="${claimId}"]`).textContent =
-        claim.applicable_by_state[key] ? "yes" : "no";
-      var receiptIds = claim.receipt_ids_by_state[key];
-      document.querySelector(`[data-s7-claim-receipts="${claimId}"]`).textContent =
-        receiptIds.length ? String(receiptIds) : "none";
+      var effective = item.effective_at ? item.effective_at.slice(0, 10) : "dataset-level change";
+      var known = item.first_known_at.slice(0, 10);
+      body.appendChild(paragraph(`Effective ${effective}; first known ${known}.`));
     });
   }
 
@@ -312,34 +144,23 @@
     var key = keyFor(selected);
     var state = data.states[key];
     var scenario = data.scenarios[state.scenario];
+    var cutoff = selected.cutoff === "early" ? "earlier decision date" : "later decision date";
+    var view = viewLabels[selected.view];
+    var body = document.querySelector("[data-s7-explorer-body]");
 
-    document.documentElement.dataset.s7Enhanced = "true";
-    document.querySelector("[data-s7-state-key]").textContent = key;
-    document.querySelector("[data-s7-decision-at]").textContent = state.decision_at;
-    document.querySelector("[data-s7-conclusion]").textContent = state.conclusion;
-    document.querySelector("[data-s7-limitation]").textContent = state.limitation;
-    document.querySelector("[data-s7-what-changed]").textContent = state.what_changed;
     document.querySelector("[data-s7-scenario-label]").textContent = scenario.label;
-    document.querySelector("[data-s7-source-shape]").textContent = scenario.source_shape;
-    document.querySelector("[data-s7-minimum-data]").textContent = String(scenario.minimum_data);
-    document.querySelector("[data-s7-portability-scope]").textContent = scenario.portability_scope;
-    document.querySelector("[data-s7-access-contexts]").textContent = String(state.access_contexts);
+    document.querySelector("[data-s7-view-label]").textContent = view;
+    document.querySelector("[data-s7-explorer-summary]").textContent = state.conclusion;
+    clear(body);
+    if (selected.view === "lineage") renderLineage(state, body);
+    if (selected.view === "basis") renderBasis(state, body);
+    if (selected.view === "audit") renderAudit(state, body);
 
-    renderLineage(state);
-    renderBasis(state);
-    renderAudit(state);
-    renderRefusals(state);
-    renderReceipts(state);
-    renderClaims(key);
-
-    Array.prototype.forEach.call(document.querySelectorAll("[data-s7-view-panel]"), function (panel) {
-      panel.hidden = panel.dataset.s7ViewPanel !== selected.view;
-    });
     syncPressed(scenarioControls, "data-s7-scenario-control", selected.scenario);
     syncPressed(cutoffControls, "data-s7-cutoff-control", selected.cutoff);
     syncPressed(viewControls, "data-s7-view-control", selected.view);
     document.querySelector("[data-s7-announcer]").textContent =
-      `Showing ${key}. ${state.conclusion}`;
+      `Showing the ${scenario.label.toLowerCase()} at the ${cutoff}, with the ${view.toLowerCase()} view.`;
     if (active && active.matches("[data-s7-scenario-control], [data-s7-cutoff-control], [data-s7-view-control]")) {
       active.focus();
     }

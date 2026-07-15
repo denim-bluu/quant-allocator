@@ -13,7 +13,7 @@ than a silently repaired panel.
 
 The resulting decision is deliberately prior to performance: either construct one
 comparable native-frequency panel with a complete lineage and basis, or refuse the
-panel and identify the exact missing evidence. S7 never upgrades provenance evidence
+panel and identify the exact missing evidence. The inspector never upgrades provenance evidence
 into a claim that historical skill transferred.
 
 ## Why the obvious answer fails
@@ -57,7 +57,7 @@ Keeping both prevents the final value from erasing the fact that the record chan
 ## A small numerical example
 
 Suppose a public-equity observation is a 0.60% local-currency return. The reconciled
-early-cutoff output implies that the receipted FX return used in the transformation is
+early-cutoff output implies that the source-linked FX return used in the transformation is
 2.00%. The only permitted transformation is multiplicative:
 
 $$
@@ -74,7 +74,7 @@ $$
 or 2.612%. This is a deterministic transformed observation, not an estimate.
 
 At a later cutoff, the local observation remains 0.60%; the reconciled output implies
-that the receipted FX series used in the transformation is now 1.80%. The same ruled
+that the source-linked FX series used in the transformation is now 1.80%. The same ruled
 contract gives
 
 $$
@@ -152,18 +152,18 @@ two cutoffs, and three views. It covers public equity, hedge fund, credit, and p
 market examples without claiming those sources are universally available.
 
 The cutoff comparison surfaces revisions rather than overwriting them. The public-
-equity FX conversion changes because the receipted FX version changes. The hedge-fund
+equity FX conversion changes because the documented FX version changes. The hedge-fund
 return and private-market NAV retain their early and latest values. Each is labeled as
 an exact source observation or deterministic transformation, never as an estimate.
 
-The credit panel reaches a stronger conclusion by refusing. Its binding reason is
-`frequency-calendar-incomparable`; the evidence also preserves valuation,
-comparison-kind, and silent-stitch failures. S7 does not “fix” the panel by resampling
+The credit panel reaches a stronger conclusion by refusing. Its frequency and calendar
+bases are incompatible; the evidence also preserves valuation,
+comparison-kind, and silent-stitch failures. The inspector does not “fix” the panel by resampling
 or filling gaps.
 
-All synthetic claims remain evidence class D. A higher live ceiling describes what
-could be supported with stronger evidence; it does not promote the exhibit. Across
-every state, the unconditional performance boundary remains: S7 emits no alpha,
+All values remain synthetic examples. Stronger live conclusions would require independently
+reconstructable source evidence; the demonstration does not promote itself. Across
+every state, the unconditional performance boundary remains: the inspector emits no alpha,
 Sharpe, IRR, PME, skill, or manager ranking.
 
 ## What the allocator does next
@@ -188,7 +188,7 @@ Sharpe, IRR, PME, skill, or manager ranking.
   and tombstone semantics; entity, composite, vehicle, and share-class lineage;
   fee, currency, benchmark, calendar, and valuation basis; universe memberships and
   dead products; predecessor and team evidence; per-dataset rights; and complete
-  receipts.
+  reconstruction records.
 - **Validation coverage.** Go-live requires at least one real, permissioned case in
   each intended source shape, including one known revision or backfill and one basis
   break. This is validation coverage, not an estimator sample-size threshold.

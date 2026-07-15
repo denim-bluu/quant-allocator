@@ -7,67 +7,102 @@
 {% set default_key = card_data.meta.default_state %}
 {% set default_state = card_data.states[default_key] %}
 {% set default_scenario = card_data.scenarios[default_state.scenario] %}
-
-{% block demo_lead %}
-<aside class="s7-disclosure" role="note">
-  <strong>Synthetic, fictional demonstration.</strong>
-  <span>{{ card_data.meta.fictional_disclosure }} The four source shapes model possible evidence;
-    availability varies by manager, vehicle, source, right, and decision date.</span>
-</aside>
-
-<section class="s7-opening-state" aria-labelledby="s7-answer-title">
-  <div class="s7-opening-state__copy">
-    <p class="s7-kicker">Opening state</p>
-    <h2 id="s7-answer-title" data-s7-conclusion>{{ default_state.conclusion }}</h2>
-    <p data-s7-limitation>{{ default_state.limitation }}</p>
-    <p><strong>What changed:</strong> <span data-s7-what-changed>{{ default_state.what_changed }}</span></p>
-  </div>
-  <div class="s7-opening-state__counts" aria-label="Opening-state observation counts">
-    <p><strong>7 source observations</strong><span>admitted to the selected native panel</span></p>
-    <p><strong>17 remain excluded</strong><span>preserved with typed reasons and receipts</span></p>
-  </div>
-  <span class="s7-chip s7-opening-state__chip" data-state="evidence-conditioned">evidence-conditioned</span>
-</section>
-{% endblock %}
+{% set latest_audit = card_data.states['hedge-fund|latest|audit'] %}
+{% set restatement = latest_audit.vintage_findings
+  | selectattr('finding_type', 'equalto', 'return-restatement') | first %}
 
 {% block demo_content %}
+<aside class="s7-disclosure" role="note">
+  <strong>Synthetic, fictional demonstration.</strong>
+  <span>{{ card_data.meta.fictional_disclosure }} Availability varies by manager, vehicle,
+    source right, and decision date.</span>
+</aside>
+
 <section class="exhibit-intro" aria-label="What this exhibit shows">
   <h2 class="exhibit-intro__title">What this exhibit shows</h2>
   <div class="exhibit-intro__block">
-    <h3 class="exhibit-intro__sub">What you are looking at</h3>
-    <p>A point-in-time reconstruction of who owns each supplied source observation, whether its
-      economic basis is comparable, what became knowable later, and which predecessor claims
-      remain unsupported. It emits provenance-qualified native observations, not performance
-      estimates.</p>
+    <h3 class="exhibit-intro__sub">The answer</h3>
+    <p><strong>A track record is usable only after each observation has a known owner,
+      date, and comparable economic basis.</strong> In the opening example, three monthly
+      returns can enter a comparable panel. Other records stay outside because identity,
+      lineage, or fee basis is unresolved.</p>
   </div>
   <div class="exhibit-intro__block">
     <h3 class="exhibit-intro__sub">How to read it</h3>
     <ul class="exhibit-intro__list">
-      <li>Choose a modeled source shape, decision cutoff, and evidence view. Each selection loads
-        one of 24 committed, receipted states.</li>
-      <li>Lineage attributes rows to one effective entity path. Basis either admits a native panel
-        or renders the exact refusal. Audit keeps later revisions and first-known dates visible.</li>
-      <li>The browser only selects a precomputed state. It does not join rows, select revisions,
-        compare basis, convert FX, calculate performance, rank managers, or create a verdict.</li>
+      <li>Follow the opening flow from supplied observations through identity and basis checks.</li>
+      <li>Compare effective date with first-known date before using a revised value.</li>
+      <li>Use the controls only to inspect another precomputed source shape or evidence view.</li>
+      <li>Open the <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">technical
+        method and provenance</a> for the full admission and comparability rules.</li>
     </ul>
   </div>
 </section>
 
-<section class="s7-source" aria-labelledby="s7-source-title">
-  <p class="s7-kicker">Selected modeled source shape</p>
-  <h2 id="s7-source-title" data-s7-scenario-label>{{ default_scenario.label }}</h2>
-  <p data-s7-source-shape>{{ default_scenario.source_shape }}</p>
-  <p><strong>Minimum for this shape:</strong>
-    <span data-s7-minimum-data>{{ default_scenario.minimum_data | join(', ') }}</span>.</p>
-  <p><strong>Portability scope:</strong>
-    <span data-s7-portability-scope>{{ default_scenario.portability_scope }}</span>.</p>
-  <p><strong>Selected-state access contexts:</strong>
-    <span data-s7-access-contexts>{{ default_state.access_contexts | join(', ') }}</span>.</p>
+<section class="s7-opening" aria-labelledby="s7-opening-title">
+  <header>
+    <p class="s7-kicker">Complete opening example</p>
+    <h2 id="s7-opening-title">Can the early hedge-fund record support a comparable panel?</h2>
+    <p>{{ default_scenario.source_shape }} Only evidence available by
+      <time datetime="{{ default_state.decision_at }}">31 March 2024</time> is considered.</p>
+  </header>
+
+  <div class="s7-flow" aria-label="Source observations pass through identity and basis checks before entering or staying outside the panel">
+    <article class="s7-flow__step s7-flow__step--source">
+      <span>1</span>
+      <div><h3>Source observations</h3><p>Versioned composite returns, terms, and
+        predecessor evidence arrive with their original dates.</p></div>
+    </article>
+    <article class="s7-flow__step s7-flow__step--checks">
+      <span>2</span>
+      <div><h3>Identity and basis checks</h3>
+        <p><strong>{{ default_state.lineage_segments[0].observation_ids | length }} records attach to one exact lineage segment.</strong>
+          Each candidate observation must also match the entity, membership, frequency,
+          calendar, currency, fee, benchmark, and valuation basis.</p></div>
+    </article>
+    <div class="s7-flow__outcomes">
+      <article class="s7-outcome s7-outcome--admitted">
+        <span>3A</span><div><h3>Admitted panel</h3>
+          <p><strong>{{ default_state.panel.rows | length }} comparable monthly returns</strong>
+            retain their dates and reported net basis.</p></div>
+      </article>
+      <article class="s7-outcome s7-outcome--excluded">
+        <span>3B</span><div><h3>Kept out</h3>
+          <p><strong>{{ default_state.exclusions | length }} records stay outside that lineage.</strong>
+            One return is excluded because it is reported on an incompatible fee basis.</p></div>
+      </article>
+    </div>
+  </div>
+
+  <p class="s7-boundary"><strong>Decision boundary:</strong> Documented lineage is not
+    evidence that historical skill transferred.</p>
 </section>
 
-<section class="s7-controls" aria-label="Track-record provenance controls">
+<section class="s7-clock" aria-labelledby="s7-clock-title">
+  <div>
+    <p class="s7-kicker">Two clocks, two different questions</p>
+    <h2 id="s7-clock-title">A revision belongs to February but was not knowable until September</h2>
+    <p>The economic period and the publication date must remain separate. The later
+      publication date prevents this revision from entering an earlier decision.</p>
+  </div>
+  <div class="s7-clock__timeline" role="img" aria-label="A return restatement is effective on 29 February 2024 and first known on 15 September 2024.">
+    <article>
+      <span>Effective date</span>
+      <strong><time datetime="{{ restatement.effective_at }}">29 February 2024</time></strong>
+      <small>When the revised return belongs economically</small>
+    </article>
+    <div class="s7-clock__line" aria-hidden="true"><span></span></div>
+    <article>
+      <span>First known</span>
+      <strong><time datetime="{{ restatement.first_known_at }}">15 September 2024</time></strong>
+      <small>When an allocator could first have used it</small>
+    </article>
+  </div>
+</section>
+
+<section class="s7-controls" aria-label="Explore a precomputed provenance state">
   <fieldset>
-    <legend>Source scenario</legend>
+    <legend>Source shape</legend>
     {% for token in ['public-equity', 'hedge-fund', 'credit', 'private-market'] %}
     <button type="button" data-s7-scenario-control="{{ token }}"
       aria-pressed="{{ 'true' if token == default_state.scenario else 'false' }}">
@@ -76,229 +111,59 @@
     {% endfor %}
   </fieldset>
   <fieldset>
-    <legend>Decision cutoff</legend>
-    {% for token in ['early', 'latest'] %}
-    <button type="button" data-s7-cutoff-control="{{ token }}"
-      aria-pressed="{{ 'true' if token == default_state.cutoff else 'false' }}">{{ token }}</button>
-    {% endfor %}
+    <legend>Decision date</legend>
+    <button type="button" data-s7-cutoff-control="early" aria-pressed="true">Earlier</button>
+    <button type="button" data-s7-cutoff-control="latest" aria-pressed="false">Later</button>
   </fieldset>
   <fieldset>
     <legend>Evidence view</legend>
-    {% for token in ['lineage', 'basis', 'audit'] %}
-    <button type="button" data-s7-view-control="{{ token }}"
-      aria-pressed="{{ 'true' if token == default_state.view else 'false' }}">{{ token }}</button>
-    {% endfor %}
+    <button type="button" data-s7-view-control="lineage" aria-pressed="true">Lineage</button>
+    <button type="button" data-s7-view-control="basis" aria-pressed="false">Comparability</button>
+    <button type="button" data-s7-view-control="audit" aria-pressed="false">Revision history</button>
   </fieldset>
 </section>
 
-<details class="s7-advanced">
-  <summary>Explore lineage, basis, and vintage evidence</summary>
-  <div class="s7-advanced__body">
-<p class="s7-state-key"><strong>Committed state:</strong>
-  <code data-s7-state-key>{{ default_key }}</code> · decision at
-  <time data-s7-decision-at>{{ default_state.decision_at }}</time>
-</p>
-<p class="s7-notice" role="status" data-s7-notice hidden></p>
-<p class="s7-announcer" aria-live="polite" data-s7-announcer>
-  Showing {{ default_key }} from committed provenance data.
-</p>
-
-<section class="s7-view" data-s7-view-panel="lineage" aria-labelledby="s7-lineage-title">
-  <header><p class="s7-kicker">Entity and predecessor evidence</p><h2 id="s7-lineage-title">Lineage</h2></header>
-  <div class="s7-table-wrap" role="region" aria-label="Lineage segment table" tabindex="0">
-    <table>
-      <caption>Exact effective-dated owners of admitted source observations</caption>
-      <thead><tr><th scope="col">Canonical entity</th><th scope="col">Grain</th><th scope="col">Effective interval</th><th scope="col">Source observations</th><th scope="col">Evidence closure</th></tr></thead>
-      <tbody data-s7-lineage-body>
-      {% for row in default_state.lineage_segments %}
-        <tr data-s7-lineage-row="{{ row.segment_id }}"><td><code>{{ row.canonical_entity_id }}</code></td><td>{{ row.entity_grain }}</td>
-          <td>{{ row.effective_from }} to {{ row.effective_to }}</td>
-          <td>{{ row.observation_ids | length }}</td>
-          <td>{{ row.mapping_ids | length }} mappings · {{ row.membership_ids | length }} memberships · {{ row.relationship_ids | length }} relationships</td></tr>
-      {% else %}
-        <tr><td colspan="5">No lineage segment is admitted in this state.</td></tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  <div class="s7-table-wrap" role="region" aria-label="Portability evidence table" tabindex="0">
-    <table>
-      <caption>Predecessor and team portability evidence status</caption>
-      <thead><tr><th scope="col">State</th><th scope="col">Predecessor → current</th><th scope="col">Claimed scope</th><th scope="col">Missing evidence / reasons</th><th scope="col">Attestation</th><th scope="col">Receipt</th></tr></thead>
-      <tbody data-s7-portability-body>
-      {% for row in default_state.portability_findings %}
-        <tr data-s7-portability-row="{{ row.finding_id }}"><td><span class="s7-chip" data-state="{{ row.state }}">{{ row.state }}</span></td>
-          <td><code>{{ row.predecessor_entity_id or 'not established' }}</code> → <code>{{ row.current_entity_id or 'not established' }}</code></td>
-          <td>{{ row.claimed_scope or 'not established' }}</td>
-          <td>{{ (row.missing_evidence + row.reason_codes) | join(', ') }}</td>
-          <td>Current {{ row.current_attestation }} · live ceiling {{ row.live_attestation_ceiling }}</td>
-          <td><code>{{ row.receipt_id }}</code></td></tr>
-      {% else %}
-        <tr><td colspan="6">Not assessed: no authenticated scenario portability bundle.</td></tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  <p class="s7-caveat" data-s7-portability-caveat>Documented lineage is not evidence that historical skill transferred.</p>
-</section>
-
-<section class="s7-view" data-s7-view-panel="basis" aria-labelledby="s7-basis-title" hidden>
-  <header><p class="s7-kicker">Native panel admission</p><h2 id="s7-basis-title">Basis and source observations</h2></header>
-  <div class="s7-table-wrap" role="region" aria-label="Basis break table" tabindex="0">
-    <table>
-      <caption>Controlled basis breaks and refusals</caption>
-      <thead><tr><th scope="col">Disposition</th><th scope="col">Binding reason</th><th scope="col">All reasons</th><th scope="col">Affected rows</th><th scope="col">Receipt</th></tr></thead>
-      <tbody data-s7-break-body>
-      {% for row in default_state.basis_breaks %}
-        <tr data-s7-break-row="{{ row.receipt_id }}"><td><span class="s7-chip" data-state="{{ row.disposition }}">{{ row.disposition }}</span></td>
-          <td>{{ row.binding_reason }}</td><td>{{ row.reason_codes | join(', ') }}</td>
-          <td>{{ row.row_ids | length }}</td><td><code>{{ row.receipt_id }}</code></td></tr>
-      {% else %}
-        <tr><td colspan="5">No derived basis break is present in this state.</td></tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  <p data-s7-panel-summary>
-    {% if default_state.panel.status == 'admitted' %}
-      <span class="s7-chip" data-state="admitted">admitted</span>
-      {{ default_state.panel.panel_kind }} · {{ default_state.panel.native_frequency }} ·
-      {{ default_state.panel.canonical_entity_id }}.
-    {% else %}
-      <span class="s7-chip" data-state="refused">refused</span>
-      {{ default_state.panel.reason_code }}.
-    {% endif %}
-  </p>
-  <div class="s7-table-wrap" role="region" aria-label="Basis signature table" tabindex="0">
-    <table>
-      <caption>Exact controlled basis signature for the selected panel</caption>
-      <thead><tr><th scope="col">Basis field</th><th scope="col">Stored value</th></tr></thead>
-      <tbody data-s7-basis-signature-body>
-      {% if default_state.panel.status == 'admitted' %}
-        {% for field, value in default_state.panel.basis_signature | dictsort %}
-        <tr><td><code>{{ field }}</code></td><td>{{ value if value is not none else 'not applicable' }}</td></tr>
-        {% endfor %}
-      {% else %}
-        <tr><td colspan="2">Unavailable because the panel is refused; see the controlled reasons above.</td></tr>
-      {% endif %}
-      </tbody>
-    </table>
-  </div>
-  <div class="s7-table-wrap" role="region" aria-label="Native source observation table" tabindex="0">
-    <table>
-      <caption>Exact source observations; these are not estimates</caption>
-      <thead><tr><th scope="col">Observed at</th><th scope="col">Observation ID</th><th scope="col">Source observation</th><th scope="col">Admitted display value</th><th scope="col">FX observation</th></tr></thead>
-      <tbody data-s7-panel-body>
-      {% if default_state.panel.status == 'admitted' %}
-        {% for row in default_state.panel.rows %}
-        <tr data-s7-panel-row="{{ row.observation_id }}"><td>{{ row.observed_at }}</td><td><code>{{ row.observation_id }}</code></td>
-          <td>{{ row.source_value }} <small>source observation</small></td>
-          <td>{{ row.admitted_value }} <small>deterministic admitted value, not an estimate</small></td>
-          <td><code>{{ row.fx_observation_id or 'none' }}</code></td></tr>
-        {% endfor %}
-      {% else %}
-        <tr><td colspan="5">Panel refused: {{ default_state.panel.reason_codes | join(', ') }}. No empty chart is shown.</td></tr>
-      {% endif %}
-      </tbody>
-    </table>
-  </div>
-  <p><strong>Panel receipt:</strong> <code data-s7-panel-receipt>{{ default_state.panel.receipt_id }}</code></p>
-</section>
-
-<section class="s7-view" data-s7-view-panel="audit" aria-labelledby="s7-audit-title" hidden>
-  <header><p class="s7-kicker">Latest-known versus all-known versions</p><h2 id="s7-audit-title">Point-in-time vintage audit</h2></header>
-  <p>The analytic bundle uses <code data-s7-analytic-mode>{{ default_state.revision_modes.analytic }}</code>;
-    the audit bundle uses <code data-s7-audit-mode>{{ default_state.revision_modes.audit }}</code> at the same decision cutoff.</p>
-  <div class="s7-table-wrap" role="region" aria-label="Vintage finding table" tabindex="0">
-    <table>
-      <caption>Changes with effective and first-known dates</caption>
-      <thead><tr><th scope="col">Finding</th><th scope="col">Dataset</th><th scope="col">Effective at</th><th scope="col">First known at</th><th scope="col">Source values</th><th scope="col">Receipt</th></tr></thead>
-      <tbody data-s7-vintage-body>
-      {% for row in default_state.vintage_findings %}
-        <tr data-s7-vintage-row="{{ row.finding_id }}"><td><span class="s7-chip" data-state="{{ row.finding_type }}">{{ row.finding_type }}</span></td>
-          <td><code>{{ row.dataset_id }}</code></td><td>{{ row.effective_at or 'dataset-level' }}</td>
-          <td>{{ row.first_known_at }}</td>
-          <td>{% if row.prior_value is defined %}{{ row.prior_value or 'none' }} → {{ row.later_value or 'none' }}{% else %}not applicable{% endif %}</td>
-          <td><code>{{ row.receipt_id }}</code></td></tr>
-      {% else %}
-        <tr><td colspan="6">No vintage finding is emitted at this cutoff.</td></tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  <div class="s7-table-wrap" role="region" aria-label="Typed exclusion table" tabindex="0">
-    <table>
-      <caption>Rows preserved outside the admitted panel</caption>
-      <thead><tr><th scope="col">Observation</th><th scope="col">Dataset</th><th scope="col">Reason</th><th scope="col">Source</th></tr></thead>
-      <tbody data-s7-exclusion-body>
-      {% for row in default_state.exclusions %}
-        <tr data-s7-exclusion-row="{{ row.observation_id }}"><td><code>{{ row.observation_id }}</code></td><td><code>{{ row.dataset_id }}</code></td>
-          <td>{{ row.reason_code }}</td><td>{{ row.source }}</td></tr>
-      {% else %}
-        <tr><td colspan="4">No typed exclusion is present.</td></tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</section>
+<details class="s7-explorer">
+  <summary>Explore another evidence state</summary>
+  <div class="s7-explorer__body">
+    <p class="s7-notice" role="status" data-s7-notice hidden></p>
+    <p class="s7-announcer" aria-live="polite" data-s7-announcer>
+      Showing the hedge-fund composite at the earlier decision date, with the lineage view.
+    </p>
+    <header>
+      <p class="s7-kicker" data-s7-view-label>Lineage</p>
+      <h2 data-s7-scenario-label>{{ default_scenario.label }}</h2>
+      <p data-s7-explorer-summary>{{ default_state.conclusion }}</p>
+    </header>
+    <div class="s7-explorer__result" data-s7-explorer-body>
+      <article><span>Exact lineage segments</span><strong>{{ default_state.lineage_segments | length }}</strong></article>
+      <article><span>Records attached to the lineage</span><strong>{{ default_state.lineage_segments[0].observation_ids | length }}</strong></article>
+      <article><span>Records kept outside</span><strong>{{ default_state.exclusions | length }}</strong></article>
+      <p>{{ default_state.what_changed }}</p>
+    </div>
   </div>
 </details>
 
-<section class="s7-always" aria-labelledby="s7-refusals-title">
-  <header><p class="s7-kicker">Always visible claim boundary</p><h2 id="s7-refusals-title">Refusals and reconstruction receipts</h2></header>
-  <div class="s7-refusal-list" data-s7-refusal-list>
-  {% for row in default_state.refusals %}
-    <article data-s7-refusal>
-      <span class="s7-chip" data-state="refused">{{ row.reason_code }}</span>
-      <code>{{ row.pointer }}</code><code>{{ row.receipt_id }}</code>
-      {% if row.detail %}<p>{{ row.detail }}</p>{% endif %}
-    </article>
-  {% endfor %}
-  </div>
-  <dl class="s7-bundle-receipts">
-    <div><dt>Analytic bundle</dt><dd><code data-s7-analytic-bundle>{{ default_state.analytic_bundle_digest }}</code></dd></div>
-    <div><dt>Analytic join receipt</dt><dd><code data-s7-analytic-join>{{ default_state.join_receipt_ids.analytic }}</code></dd></div>
-    <div><dt>Audit bundle</dt><dd><code data-s7-audit-bundle>{{ default_state.audit_bundle_digest }}</code></dd></div>
-    <div><dt>Audit join receipt</dt><dd><code data-s7-audit-join>{{ default_state.join_receipt_ids.audit }}</code></dd></div>
-  </dl>
-  <details><summary>All receipts in this state</summary>
-    <ul data-s7-receipt-list>{% for receipt_id in default_state.receipt_ids %}<li><code>{{ receipt_id }}</code></li>{% endfor %}</ul>
-  </details>
-</section>
-
-<section class="s7-always" aria-labelledby="s7-claims-title">
-  <header><p class="s7-kicker">Claim register</p><h2 id="s7-claims-title">Access, applicability, and attestation</h2></header>
-  <div class="s7-table-wrap" role="region" aria-label="S7 claim register" tabindex="0">
-    <table>
-      <thead><tr><th scope="col">Claim</th><th scope="col">Output</th><th scope="col">Access</th><th scope="col">Semantics</th><th scope="col">Applicable here</th><th scope="col">Selected-state receipts</th><th scope="col">Attestation</th><th scope="col">Refusal boundary</th></tr></thead>
-      <tbody>
-      {% for claim_id, row in card_data.claims | dictsort %}
-        <tr data-s7-claim-id="{{ claim_id }}"><td><code>{{ claim_id }}</code></td>
-          <td>{{ row.output_type }}<br><code>{{ row.output_pointers | join(', ') }}</code></td>
-          <td>{{ row.access_contexts | join(', ') }}</td><td>{{ row.access_semantics }}</td>
-          <td data-s7-claim-applicable="{{ claim_id }}">{{ 'yes' if row.applicable_by_state[default_key] else 'no' }}</td>
-          <td><code data-s7-claim-receipts="{{ claim_id }}">{{ row.receipt_ids_by_state[default_key] | join(', ') or 'none' }}</code></td>
-          <td>Current {{ row.current_attestation }} · live ceiling {{ row.live_attestation_ceiling }} · receipt {{ 'required' if row.receipt_required else 'not required' }}</td>
-          <td>{{ (card.claims | selectattr('id', 'equalto', claim_id) | first).refusal }}</td></tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<section class="s7-limit" aria-labelledby="s7-limit-title">
+  <h2 id="s7-limit-title">What this method refuses</h2>
+  <p>This inspection decides what may enter a later analysis. It does not estimate alpha,
+    Sharpe ratio, IRR, PME, skill, or manager rank. If identity, membership, comparability,
+    or point-in-time evidence is incomplete, it preserves the exclusion instead of silently
+    repairing the history.</p>
 </section>
 
 <noscript>
-  <style>.s7-view[hidden] { display: block !important; }</style>
-  <p class="s7-noscript">JavaScript is optional. All three complete method views above are the
-    server-rendered <code>{{ default_key }}</code> state; controls require JavaScript.</p>
+  <p class="s7-noscript">The complete opening example remains available above. The exploration
+    controls require JavaScript.</p>
 </noscript>
 {% endblock %}
 
 {% block methodology %}
-<p>S7 selects the latest accessible revision at the decision cutoff, reconciles each source
-  observation to one effective entity and X3 membership, then applies exact basis gates. The
-  separately receipted all-known-versions bundle supplies the vintage audit.</p>
-<p>Every displayed exact value is a source observation or a deterministic, receipted FX
-  transformation. Performance estimators and manager ranking remain refused in every context.</p>
+<p>The method selects only evidence knowable at the decision date, attaches each observation
+  to one effective entity lineage, and checks a complete economic-basis signature before panel
+  admission. A separate all-versions view reveals later backfills and restatements.</p>
+<p>Displayed returns and cash-flow values are source observations or deterministic currency
+  transformations, not estimates. Browser code only selects an exact precomputed state.</p>
 {% endblock %}
 
 {% block body_scripts %}

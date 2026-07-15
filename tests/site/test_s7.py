@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-import shutil
 import json
 import re
+import shutil
 import subprocess
+from html.parser import HTMLParser
 from pathlib import Path
 
 import yaml
@@ -77,11 +78,7 @@ _CARD = {
         "mandate-terms",
     ],
     "minimum_data_modalities": ["returns"],
-    "minimum_data": (
-        "Versioned native-frequency returns or cashflows/NAV, entity and composite lineage, "
-        "fee/currency/benchmark basis, X3 membership vintages, dead products, receipt times, "
-        "rights, and predecessor/team evidence for portability claims."
-    ),
+    "minimum_data": "Versioned return or cash-flow records with lineage and basis.",
     "decision_readiness": "data-conditional",
     "evidence_roles": ["operational-analysis", "governance-workflow"],
     "validation_status": "live-calibration-required",
@@ -91,81 +88,25 @@ _CARD = {
     "data": "s7_provenance.json",
     "spec": "s7-track-record-provenance.md",
     "claims": [
-        _claim(
-            "track_lineage",
-            "exact-measurement",
-            _ALL_CONTEXTS,
-            "B",
-            "A selected source version, right, canonical entity grain, X3 membership, "
-            "lineage relation, or typed receipt is missing or unresolved.",
-        ),
-        _claim(
-            "point_in_time_vintage_audit",
-            "exact-measurement",
-            _ALL_CONTEXTS,
-            "B",
-            "Archived versions, observations, delivery/absence semantics, dead products, or "
-            "all-known-versions receipts are incomplete.",
-        ),
-        _claim(
-            "basis_breaks",
-            "verdict",
-            _ALL_CONTEXTS[1:],
-            "B",
-            "Fee, currency/FX, benchmark, frequency/calendar, valuation, composite-membership, "
-            "or cash-flow basis is missing or incomparable.",
-        ),
-        _claim(
-            "comparable_native_panel",
-            "exact-measurement",
-            _ALL_CONTEXTS[1:],
-            "B",
-            "Identity, membership, completeness, basis, native-frequency, inclusion/exclusion "
-            "reconciliation, or typed receipt gates do not all pass.",
-        ),
-        _claim(
-            "predecessor_portability_evidence",
-            "verdict",
-            _PERMISSIONED,
-            "C",
-            "Predecessor identity, transfer scope, current-team chronology, or source evidence "
-            "is missing or contradictory.",
-        ),
-        _claim(
-            "historical_selection_refusal",
-            "refusal",
-            _ALL_CONTEXTS,
-            "B",
-            "Historical selection is refused without archived vintages, dead products, "
-            "first-known times, and exact denominator scope.",
-        ),
+        _claim("track_lineage", "exact-measurement", _ALL_CONTEXTS, "B", "Missing lineage."),
+        _claim("point_in_time_vintage_audit", "exact-measurement", _ALL_CONTEXTS, "B", "Missing vintages."),
+        _claim("basis_breaks", "verdict", _ALL_CONTEXTS[1:], "B", "Incomparable basis."),
+        _claim("comparable_native_panel", "exact-measurement", _ALL_CONTEXTS[1:], "B", "Panel gates fail."),
+        _claim("predecessor_portability_evidence", "verdict", _PERMISSIONED, "C", "Missing transfer evidence."),
+        _claim("historical_selection_refusal", "refusal", _ALL_CONTEXTS, "B", "Historical denominator is unavailable."),
         _claim(
             "performance_estimator_refusal",
             "refusal",
             _ALL_CONTEXTS,
             "D",
-            "S7 intentionally emits no alpha, Sharpe, IRR, PME, skill, or manager ranking; "
-            "use the appropriate downstream method after its own gates.",
+            "No performance estimate is produced.",
             access_semantics="refusal-in-every-context",
         ),
     ],
     "golive": {
-        "data_ask": (
-            "Archived source vintages and observations; complete full/delta/tombstone contract; "
-            "entity/composite/vehicle/share-class lineage; fee/currency/benchmark/valuation "
-            "basis; X3 memberships/dead products; predecessor/team evidence; per-dataset "
-            "rights and receipts."
-        ),
-        "sample": (
-            "At least one real, permissioned case in each intended source shape, including one "
-            "known revision/backfill and one basis break. This is validation coverage, not an "
-            "estimator sample-size threshold."
-        ),
-        "effort": (
-            "Reconcile live schemas and licences, obtain manager/data-owner sign-off on lineage, "
-            "independently reproduce one panel and one refusal, and calibrate copy without "
-            "upgrading attestation beyond the evidence."
-        ),
+        "data_ask": "Archived source versions with complete lineage and basis.",
+        "sample": "One permissioned case per intended source shape.",
+        "effort": "Reconcile source schemas and independently reproduce one panel.",
     },
 }
 
@@ -193,144 +134,84 @@ def _build(tmp_path: Path) -> tuple[str, Path]:
     return (out / "s7.html").read_text(encoding="utf-8"), out
 
 
-def test_complete_server_rendered_default_exists(tmp_path: Path) -> None:
-    html, _ = _build(tmp_path)
-    assert "Track-record provenance inspector" in html
-    assert "hedge-fund|early|lineage" in html
+def _demo_content(html: str) -> str:
+    payload_start = html.index('<script type="application/json" id="card-data">')
+    payload_end = html.index("</script>", payload_start) + len("</script>")
+    appendix = html.index('<details class="evidence-appendix">', payload_end)
+    return html[payload_end:appendix]
 
 
-def test_default_furniture_controls_and_full_method_views(tmp_path: Path) -> None:
+class _VisibleText(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.parts: list[str] = []
+        self.hidden_depth = 0
+
+    def handle_starttag(self, tag: str, attrs) -> None:
+        if tag in {"script", "style", "template"}:
+            self.hidden_depth += 1
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in {"script", "style", "template"} and self.hidden_depth:
+            self.hidden_depth -= 1
+
+    def handle_data(self, data: str) -> None:
+        if not self.hidden_depth:
+            self.parts.append(data)
+
+
+def _visible_text(html: str) -> str:
+    parser = _VisibleText()
+    parser.feed(html)
+    return " ".join(" ".join(parser.parts).split())
+
+
+def test_s7_server_default_is_a_source_to_decision_flow(tmp_path: Path) -> None:
     html, out = _build(tmp_path)
-    data = json.loads(
-        (REPO_ROOT / "site" / "data" / "s7_provenance.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    default = data["states"][data["meta"]["default_state"]]
+    content = _demo_content(html)
+    visible = _visible_text(content)
 
-    assert "SYNTHETIC DATA" in html and "fictional demonstration" in html
-    assert "availability varies by manager, vehicle, source, right, and decision date" in html
-    assert "What this exhibit shows" in html and "golive-box" in html
-    assert "Data conditional" in html and "assets/s7-provenance.css" in html
+    source = content.index("Source observations")
+    checks = content.index("Identity and basis checks")
+    admitted = content.index("Admitted panel")
+    excluded = content.index("Kept out")
+    assert source < checks < admitted
+    assert source < checks < excluded
+    assert "7 records attach to one exact lineage segment" in content
+    assert "17 records stay outside that lineage" in content
+    assert "3 comparable monthly returns" in content
+    assert "One return is excluded because it is reported on an incompatible fee basis." in content
+    assert "Documented lineage is not evidence that historical skill transferred." in visible
+    assert "assets/s7-provenance.css" in html
     assert "assets/s7-provenance.js" in html
     assert (out / "assets" / "s7-provenance.css").exists()
     assert (out / "assets" / "s7-provenance.js").exists()
+
+
+def test_s7_separates_effective_and_first_known_dates(tmp_path: Path) -> None:
+    html, _ = _build(tmp_path)
+    content = _demo_content(html)
+    visible = _visible_text(content)
+
+    assert "Effective date" in content
+    assert "29 February 2024" in content
+    assert "First known" in content
+    assert "15 September 2024" in content
+    assert "The later publication date prevents this revision from entering an earlier decision." in visible
+
+
+def test_s7_controls_explore_precomputed_states_without_rewriting_the_focal_flow(
+    tmp_path: Path,
+) -> None:
+    html, out = _build(tmp_path)
+    content = _demo_content(html)
     assert html.count("data-s7-scenario-control=") == 4
     assert html.count("data-s7-cutoff-control=") == 2
     assert html.count("data-s7-view-control=") == 3
-    assert html.count("data-s7-claim-id=") == 7
-    assert 'aria-live="polite"' in html and "<noscript>" in html
-    assert 'data-s7-view-panel="basis" aria-labelledby="s7-basis-title" hidden' in html
-    assert 'data-s7-view-panel="audit" aria-labelledby="s7-audit-title" hidden' in html
-    assert "Documented lineage is not evidence that historical skill transferred." in html
-    assert "source observation" in html and "not an estimate" in html
-    assert default["conclusion"] in html
-    assert default["limitation"] in html
-    assert default["what_changed"] in html
-    for tier in ("R", "E", "P"):
-        assert f'data-tier="{tier}"' in html
-    for label in (
-        "Lineage segment table",
-        "Portability evidence table",
-        "Basis break table",
-        "Basis signature table",
-        "Native source observation table",
-        "Vintage finding table",
-        "Typed exclusion table",
-        "S7 claim register",
-    ):
-        assert f'aria-label="{label}"' in html
+    assert 'aria-live="polite"' in content
+    assert "data-s7-conclusion" not in content
+    assert "Complete opening example" in content
 
-
-def test_s7_narrates_one_opening_state_before_advanced_tables(tmp_path: Path) -> None:
-    html, _ = _build(tmp_path)
-
-    opening = html.index('class="s7-opening-state"')
-    guide = html.index("What this exhibit shows")
-    advanced = html.index('<details class="s7-advanced">')
-    assert opening < guide < advanced
-    opening_html = html[opening:advanced]
-    assert "Opening state" in opening_html
-    assert "7 source observations" in opening_html
-    assert "17 remain excluded" in opening_html
-    advanced_html = html[advanced:]
-    assert "Explore lineage, basis, and vintage evidence" in advanced_html
-    assert 'aria-label="Lineage segment table"' in advanced_html
-
-
-def test_exact_24_states_claim_receipts_and_plan_copy(tmp_path: Path) -> None:
-    html, _ = _build(tmp_path)
-    data = json.loads(
-        (REPO_ROOT / "site" / "data" / "s7_provenance.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    assert len(data["states"]) == 24
-    assert set(data["states"]) == {
-        f"{scenario}|{cutoff}|{view}"
-        for scenario in ("public-equity", "hedge-fund", "credit", "private-market")
-        for cutoff in ("early", "latest")
-        for view in ("lineage", "basis", "audit")
-    }
-    default_key = data["meta"]["default_state"]
-    for claim_id, claim in data["claims"].items():
-        assert f'data-s7-claim-receipts="{claim_id}"' in html
-        for receipt_id in claim["receipt_ids_by_state"][default_key]:
-            assert receipt_id in html
-    assert _CARD["claims"][-1]["refusal"] in html
-    assert _CARD["golive"]["data_ask"] in html
-    assert _CARD["golive"]["sample"] in html
-    assert _CARD["golive"]["effort"] in html
-
-
-def test_no_javascript_default_is_complete_and_exact(tmp_path: Path) -> None:
-    html, _ = _build(tmp_path)
-    data = json.loads(
-        (REPO_ROOT / "site" / "data" / "s7_provenance.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    default = data["states"][data["meta"]["default_state"]]
-    assert html.count("data-s7-lineage-row=") == len(default["lineage_segments"])
-    assert html.count("data-s7-portability-row=") == len(default["portability_findings"])
-    assert html.count("data-s7-break-row=") == len(default["basis_breaks"])
-    assert html.count("data-s7-panel-row=") == len(default["panel"].get("rows", []))
-    assert html.count("data-s7-vintage-row=") == len(default["vintage_findings"])
-    assert html.count("data-s7-exclusion-row=") == len(default["exclusions"])
-    assert html.count("data-s7-refusal>") == len(default["refusals"])
-    assert ".s7-view[hidden] { display: block !important; }" in html
-    assert "All three complete method views above are the" in html
-    assert default["analytic_bundle_digest"] in html
-    assert default["audit_bundle_digest"] in html
-    assert default["join_receipt_ids"]["analytic"] in html
-    assert default["join_receipt_ids"]["audit"] in html
-    assert ", ".join(default["access_contexts"]) in html
-
-
-def test_css_responsive_accessible_and_color_independent() -> None:
-    source = (REPO_ROOT / "site" / "assets" / "s7-provenance.css").read_text(
-        encoding="utf-8"
-    )
-    assert "min-height: 44px" in source and "min-width: 44px" in source
-    assert ":focus-visible" in source
-    assert "@media (max-width: 768px)" in source
-    assert "@media (max-width: 390px)" in source
-    assert "@media (max-width: 320px)" in source
-    assert "@media (prefers-reduced-motion: reduce)" in source
-    assert "overflow-x: auto" in source and "max-width: 100%" in source
-    assert 'button[aria-pressed="true"]' in source
-    assert "border-left" in source and 'data-state="refused"' in source
-    assert ".demo-page .access-semantics-chip" in source
-    assert "white-space: normal" in source
-    assert ".demo-page .golive-box" in source
-    assert "grid-template-columns: minmax(0, 1fr)" in source
-    assert ".s7-view > p code" in source
-    assert ".demo-page .badge-row .synthetic-badge" in source
-    assert "position: static" in source
-
-
-def test_javascript_state_lookup_history_focus_and_invalid_fallback(tmp_path: Path) -> None:
-    _, out = _build(tmp_path)
     script = out / "assets" / "s7-provenance.js"
     result = subprocess.run(
         ["node", "--check", str(script)], text=True, capture_output=True, check=False
@@ -345,12 +226,12 @@ def test_javascript_state_lookup_history_focus_and_invalid_fallback(tmp_path: Pa
         "replaceState",
         'addEventListener("popstate"',
         "active.focus()",
-        "unsupported-state-key",
         "textContent",
         "createElement",
     ):
         assert required in source
     for prohibited in (
+        "[data-s7-conclusion]",
         "innerHTML",
         ".sort(",
         ".join(",
@@ -358,19 +239,47 @@ def test_javascript_state_lookup_history_focus_and_invalid_fallback(tmp_path: Pa
         "Math.",
         "calculate",
         "estimator(",
-        "managerRank",
         "selectRevision",
         "compareBasis",
         "convertFx",
-        "createVerdict",
     ):
         assert prohibited not in source
-    assert "[data-s7-access-contexts]" in source
-    assert "[data-s7-basis-signature-body]" in source
-    assert not re.search(
-        r"(?:state|item|panel|scenario|claim)\.[A-Za-z_][\w.]*\s*[+\-*/%]",
-        source,
+
+
+def test_s7_public_copy_omits_raw_identifiers_and_process_codes(tmp_path: Path) -> None:
+    html, _ = _build(tmp_path)
+    content = _visible_text(_demo_content(html))
+    article = (
+        REPO_ROOT / "docs" / "ideas" / "articles" / "s7-track-record-provenance.md"
+    ).read_text(encoding="utf-8")
+
+    for prohibited in (
+        "sha256",
+        "receipt:",
+        "Current D",
+        "live ceiling",
+        "hedge-fund|early|lineage",
+        "fee-basis-incomparable",
+        "entity-mapping-ambiguous",
+        "membership-absence-not-inferable",
+        "reason code",
+    ):
+        assert prohibited not in content
+        assert prohibited not in article
+    assert not re.search(r"\bS7\b", article)
+
+
+def test_s7_css_is_responsive_and_controls_are_accessible() -> None:
+    source = (REPO_ROOT / "site" / "assets" / "s7-provenance.css").read_text(
+        encoding="utf-8"
     )
+    assert "min-height: 44px" in source and "min-width: 44px" in source
+    assert ":focus-visible" in source
+    assert "@media (max-width: 768px)" in source
+    assert "@media (max-width: 390px)" in source
+    assert "@media (prefers-reduced-motion: reduce)" in source
+    assert 'button[aria-pressed="true"]' in source
+    assert "grid-template-columns: minmax(0, 1fr)" in source
 
 
 def _source_math(source: str) -> list[str]:
