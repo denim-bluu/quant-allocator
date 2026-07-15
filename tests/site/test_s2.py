@@ -35,7 +35,8 @@ def test_s2_provenance_and_copy(tmp_path):
     assert "2.0%" in html
     assert "(synthetic)" in html
     assert "Decision:" in html
-    assert "known-truth construction exercises" in html
+    assert "controlled synthetic example" in html
+    assert "Manipulation-proof performance measure (MPPM)" in html
     assert "does not establish external calibration" in text
 
 
@@ -76,6 +77,10 @@ def test_s2_reader_first_exhibit_order_and_collapsed_evidence(tmp_path):
     positions = [html.index(marker) for marker in markers]
     assert positions == sorted(positions)
 
+    lead = html.split('<div class="tearsheet-lead">', 1)[1].split("</div>", 1)[0]
+    assert "returns-only evidence" in lead
+    assert "tier R" not in lead
+
     appendix = html.split('<details class="evidence-appendix">', 1)[1].split(
         "</details>", 1
     )[0]
@@ -83,7 +88,7 @@ def test_s2_reader_first_exhibit_order_and_collapsed_evidence(tmp_path):
     assert 'class="card-context"' in appendix
     assert "Primary stage" in appendix
     assert "Minimum data" in appendix
-    assert "Current D" in appendix
+    assert "Validation" in appendix
     assert "Methodology" in appendix
     assert "golive-box" in appendix
 
@@ -109,7 +114,7 @@ def test_s2_focal_and_time_series_visuals_are_labeled_and_interpreted(tmp_path):
     assert "What it changes" in html
     assert "What remains uncertain" in html
 
-    assert "assets/pages/s2.css?v=editorial-v7" in html
+    assert "assets/pages/s2.css?v=editorial-v8" in html
     assert (out / "assets" / "pages" / "s2.css").is_file()
 
 
@@ -168,8 +173,19 @@ def test_s2_public_article_has_reader_sequence_and_separate_method_link(tmp_path
         "**Demo:**",
         "Displayed field",
         "JSON field",
+        "M3",
+        "tier-E",
+        "Tier R",
+        "Tier E",
+        "Tier P",
     ):
         assert internal not in source
+
+    assert "simulation-calibrated drawdown alarm" in source.lower()
+    lowered_source = source.lower()
+    assert "returns-only data" in lowered_source
+    assert "exposure summaries" in lowered_source
+    assert "positions and trades" in lowered_source
 
     assert "Technical method and provenance" in html
     assert "Open the paired exhibit" in html

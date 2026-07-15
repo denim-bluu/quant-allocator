@@ -192,8 +192,8 @@ The synthetic manager's worst drawdown is about −10.5% and remains inside the 
 99th-percentile envelope. This supports the limited statement that the loss is not
 visually extreme under that reference construction. It does **not** create a calibrated
 scanning alarm: repeatedly checking a pointwise band over many months raises the chance
-of at least one false breach. M3 supplies the familywise alarm logic later in the Start
-Here path.
+of at least one false breach. The simulation-calibrated drawdown alarm supplies the
+familywise alarm logic later in the Start Here path.
 
 ## What the evidence changes
 
@@ -224,19 +224,19 @@ redemption.
    factors used in the real underwriting process.
 3. Ask the manager whether the estimated smoothing weights are consistent with the
    portfolio's marking and liquidity process.
-4. Compare inferred factor exposures with manager-reported exposures when tier-E data
-   is available.
+4. Compare inferred factor exposures with manager-reported exposures when exposure
+   summaries are available.
 5. Continue collecting observations rather than treating a wider interval as a defect
    to be hidden.
-6. If drawdown monitoring is decision-relevant, move to M3's familywise-calibrated alarm
-   rather than scanning this pointwise band.
+6. If drawdown monitoring is decision-relevant, move to the simulation-calibrated
+   drawdown alarm rather than scanning this pointwise band.
 
 ## Limits and go-live
 
 This page is an instructional construction, not external calibration evidence.
 
 - **Synthetic inputs.** The manager and factors in the exhibit are synthetic. The
-  example proves the rendering and known-truth mechanics, not live predictive accuracy.
+  example demonstrates controlled mechanics, not live predictive accuracy.
 - **Unsmoothing assumption.** The moving-average inversion treats observed serial
   dependence as mark smoothing. Genuine economic autocorrelation can make that
   interpretation too strong.
@@ -249,10 +249,10 @@ This page is an instructional construction, not external calibration evidence.
   approximate or replaced with the more conservative validated alternative.
 - **Pointwise drawdown envelope.** The chart describes each month in isolation. It is not
   a familywise alarm and must not be used as one.
-- **Data ask.** Tier R requires monthly net returns, risk-free returns, a strategy label,
-  and aligned strategy factors. Tier E adds reported exposures for measured-versus-
-  inferred comparison. Tier P adds holdings descriptors, not new skill estimation in
-  this article.
+- **Data ask.** Returns-only data requires monthly net returns, risk-free returns, a
+  strategy label, and aligned strategy factors. Exposure summaries add reported
+  exposures for measured-versus-inferred comparison. Positions and trades add holdings
+  descriptors, not new skill estimation in this article.
 - **Decision ceiling.** No output on this page authorizes an automatic hire, add, or
   redeem decision.
 

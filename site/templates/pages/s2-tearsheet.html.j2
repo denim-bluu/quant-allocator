@@ -24,7 +24,7 @@
   </p>
   <p class="tearsheet-decision__sample">
     Synthetic manager <strong>{{ card_data.meta.manager_name }}</strong> · equity
-    long/short · {{ card_data.meta.months }} months · tier {{ card_data.meta.tier }} ·
+    long/short · {{ card_data.meta.months }} months · returns-only evidence ·
     risk-free {{ "%.1f"|format(card_data.meta.rf_annual * 100) }}%/yr
     <span class="tearsheet-synthetic">(synthetic)</span>
   </p>
@@ -83,8 +83,9 @@
     Smoothing kernel &theta; = ({{ "%.2f"|format(card_data.theta[0]) }},
     {{ "%.2f"|format(card_data.theta[1]) }}, {{ "%.2f"|format(card_data.theta[2]) }});
     economic/reported volatility ratio {{ "%.2f"|format(card_data.unsmoothing.vol_ratio) }}.
-    MPPM (&rho;=3) is {{ "%+.1f"|format(st.mppm.point * 100) }}%/yr; read the
-    Sharpe&ndash;MPPM gap as a manipulation check, not another ranking score.
+    Manipulation-proof performance measure (MPPM) at &rho;=3 is
+    {{ "%+.1f"|format(st.mppm.point * 100) }}%/yr; read the Sharpe&ndash;MPPM gap as a
+    manipulation check, not another ranking score.
   </p>
   <figcaption id="s2-focal-caption" class="tearsheet-interpretation">
     <strong>What it changes.</strong> The de-smoothed estimate is the defensible basis
@@ -105,7 +106,7 @@
     and whether the realized loss is unusual under the maintained skill hypothesis.
   </p>
   <p class="tearsheet-note">
-    This known-truth construction exercises de-smoothing, interval estimation, factor
+    This controlled synthetic example exercises de-smoothing, interval estimation, factor
     attribution, and drawdown-refusal mechanics. It does not establish external
     calibration, predictive accuracy, or a conclusion about a live manager.
   </p>

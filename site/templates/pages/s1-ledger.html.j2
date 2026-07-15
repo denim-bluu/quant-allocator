@@ -14,43 +14,11 @@
   <p class="ledger-headline">
     Shrinking each manager toward their strategy peers reshuffles the ranking:
     <strong>{{ ns.movers }} of {{ card_data.meta.n_managers }} managers change rank</strong>
-    under peer shrinkage and uncertainty-aware ordering. This is a change in estimates,
-    not proof that this roster's true-skill order improved.
+    under peer shrinkage and uncertainty-aware ordering. Each comparison starts from an
+    ordinary least squares (OLS) estimate. This is a change in estimates, not proof that
+    this roster's true-skill order improved.
   </p>
 </section>
-
-<aside class="exhibit-guide" aria-label="What this exhibit shows">
-  <h2 class="exhibit-guide__title">What this exhibit shows</h2>
-  <p class="exhibit-guide__lead">
-    <strong>What you are looking at.</strong> Each row is one manager's alpha
-    shown twice &mdash; the raw OLS estimate and the posterior after it is shrunk
-    toward its strategy peers. Osprey Hollow Partners (A10) leads on both: a raw
-    +29.3% barely moves to +25.4% and holds rank #1, because a long, clean record
-    is trusted. Cinderbank Capital (B10) instead falls from +19.6% (#3) to +13.2%
-    (#4): its 36-month record earns a shrinkage weight of only 0.46, so the peer
-    mean pulls it down. Across the roster, {{ ns.movers }} of
-    {{ card_data.meta.n_managers }} managers change rank under peer shrinkage.
-    The pinned roster does not prove better true-skill recovery: its known-truth ordering
-    is slightly worse after shrinkage. Repeated-grid rank recovery and live calibration
-    remain gates.
-  </p>
-  <p class="exhibit-guide__subhead">How to read it</p>
-  <ul class="exhibit-guide__map">
-    <li><strong>Two interval bands per row</strong> &mdash; left is the OLS alpha,
-      right is the posterior; each band is the 90% interval and the tick inside is
-      the point estimate.</li>
-    <li><strong>OLS #x &rarr; posterior #y and the &#9650;/&#9660; chip</strong>
-      &mdash; rank before and after shrinkage; the chip flags rose, fell, or held,
-      and movers carry an accent stripe down the left edge.</li>
-    <li><strong>The band pill</strong> (review / minimum / standard / conviction)
-      &mdash; the advisory capital band from the posterior t-ratio.</li>
-    <li><strong>P(&alpha; &gt; 0)</strong> &mdash; the posterior probability true
-      alpha is positive, capped at &gt;0.99 because certainty is never displayed.</li>
-    <li>The full methodology &mdash; with the math and a reference implementation
-      &mdash; is in the
-      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.</li>
-  </ul>
-</aside>
 
 <section class="ledger-focal" aria-labelledby="ledger-focal-title">
   <div class="ledger-focal__intro">
@@ -66,7 +34,7 @@
     {% set delta = m.ols_rank - m.posterior_rank %}
     <article class="ledger-focal__card" data-focal-manager="{{ m.code }}">
       <header>
-        <p class="ledger-focal__code">{{ m.code }} · {{ m.months }} months</p>
+        <p class="ledger-focal__code">{{ m.months }} monthly observations</p>
         <h3>{{ m.name }}</h3>
       </header>
       <div class="ledger-focal__comparison">
@@ -89,6 +57,39 @@
   </div>
 </section>
 
+<aside class="exhibit-guide" aria-label="What this exhibit shows">
+  <h2 class="exhibit-guide__title">What this exhibit shows</h2>
+  <p class="exhibit-guide__lead">
+    <strong>What you are looking at.</strong> Each row is one manager's alpha
+    shown twice &mdash; the raw OLS estimate and the posterior after it is shrunk
+    toward its strategy peers. Osprey Hollow Partners leads on both: a raw
+    +29.3% barely moves to +25.4% and holds rank #1, because a long, clean record
+    is trusted. Cinderbank Capital instead falls from +19.6% (#3) to +13.2%
+    (#4): its 36-month record earns a shrinkage weight of only 0.46, so the peer
+    mean pulls it down. Across the roster, {{ ns.movers }} of
+    {{ card_data.meta.n_managers }} managers change rank under peer shrinkage.
+    This controlled synthetic example does not prove better true-skill recovery: its
+    underlying ordering is slightly worse after shrinkage. Repeated-grid rank recovery
+    and live calibration remain requirements.
+  </p>
+  <p class="exhibit-guide__subhead">How to read it</p>
+  <ul class="exhibit-guide__map">
+    <li><strong>Two interval bands per row</strong> &mdash; left is the OLS alpha,
+      right is the posterior; each band is the 90% interval and the tick inside is
+      the point estimate.</li>
+    <li><strong>OLS #x &rarr; posterior #y and the &#9650;/&#9660; chip</strong>
+      &mdash; rank before and after shrinkage; the chip flags rose, fell, or held,
+      and movers carry an accent stripe down the left edge.</li>
+    <li><strong>The band pill</strong> (review / minimum / standard / conviction)
+      &mdash; the advisory capital band from the posterior t-ratio.</li>
+    <li><strong>P(&alpha; &gt; 0)</strong> &mdash; the posterior probability true
+      alpha is positive, capped at &gt;0.99 because certainty is never displayed.</li>
+    <li>The full methodology &mdash; with the math and a reference implementation
+      &mdash; is in
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">Technical method and provenance</a>.</li>
+  </ul>
+</aside>
+
 <details class="ledger-roster">
   <summary>Explore all 20 managers</summary>
   <div class="ledger-controls">
@@ -107,7 +108,7 @@
            data-ols-rank="{{ m.ols_rank }}"
            data-posterior-rank="{{ m.posterior_rank }}">
     <header class="ledger-row__head">
-      <span class="ledger-row__code">{{ m.name }} <span class="ledger-row__id">{{ m.code }}</span></span>
+      <span class="ledger-row__code">{{ m.name }}</span>
       <span class="ledger-row__meta">group {{ m.group }} &middot; {{ m.months }} months</span>
       <span class="advisory-band" data-band="{{ m.advisory_band }}">{{ m.advisory_band }}</span>
     </header>
@@ -163,9 +164,10 @@
 
 <p class="ledger-footnote">
   This gallery page uses the closed-form normal&ndash;normal shrinkage variant
-  (empirical-Bayes moment estimates per strategy group). The live build is the
-  full hierarchical MCMC model &mdash; the demo formula is the intuition, not the
-  product. See method spec &sect;3.7.
+  (empirical-Bayes moment estimates per strategy group). A production implementation
+  would use the full hierarchical MCMC model &mdash; the displayed formula teaches the
+  intuition rather than certifying a deployable result. See Technical method and
+  provenance &sect;3.7.
 </p>
 <p class="ledger-footnote"><strong>Evidence boundary.</strong> This synthetic roster shows how
   peer shrinkage changes estimates, intervals, and order. It does not establish better

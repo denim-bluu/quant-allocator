@@ -47,7 +47,7 @@ def test_s1_copy_is_shrinkage_not_true_skill_recovery(tmp_path):
     assert "7 of 20 managers change rank" in html
     assert "peer shrinkage" in html
     assert "does not prove better true-skill recovery" in html
-    assert "Repeated-grid rank recovery and live calibration remain gates" in text
+    assert "Repeated-grid rank recovery and live calibration remain requirements" in text
     template = (REPO_ROOT / "site" / "templates" / "pages" / "s1-ledger.html.j2").read_text()
     for overclaim in ("skill, not luck", "separated from skill", "hire the lucky"):
         assert overclaim not in template
@@ -85,8 +85,15 @@ def test_s1_opens_with_three_focal_managers_before_the_full_roster(tmp_path):
     for code in ("A10", "B10", "A07"):
         assert f'data-focal-manager="{code}"' in html
     focal = html.index('class="ledger-focal"')
+    guide = html.index('class="exhibit-guide"')
     roster = html.index('<details class="ledger-roster">')
-    assert focal < roster
+    assert focal < guide < roster
+    assert "ordinary least squares (OLS)" in html
+    assert 'class="ledger-row__id"' not in html
+    for code in ("A10", "B10", "A07"):
+        assert f'<p class="ledger-focal__code">{code}' not in html
+    assert "Osprey Hollow Partners (A10)" not in html
+    assert "Cinderbank Capital (B10)" not in html
     roster_html = html[roster:]
     assert "Explore all 20 managers" in roster_html
     assert roster_html.count('<article class="ledger-row') == 20

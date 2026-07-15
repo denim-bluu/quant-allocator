@@ -56,7 +56,7 @@ def test_provenance_and_page_assets(tmp_path):
     assert "specs/s3.html" in html
     assert "assets/pages/s3.css" in html and (out / "assets" / "pages" / "s3.css").exists()
     assert "assets/s3-lab.js" in html and (out / "assets" / "s3-lab.js").exists()
-    assert '<span class="tier-badge" data-tier="P">' in html
+    assert '<span class="tier-badge">Positions and trades</span>' in html
 
 
 def test_what_this_exhibit_shows(tmp_path):
@@ -64,6 +64,14 @@ def test_what_this_exhibit_shows(tmp_path):
     assert "What this exhibit shows" in html
     assert "What you are looking at" in html
     assert "How to read it" in html
+
+
+def test_focal_comparison_precedes_guide_and_defines_information_ratio(tmp_path):
+    html, _ = _build(tmp_path)
+    assert html.index('class="s3-split"') < html.index('class="s3-exhibit-shows"')
+    assert "information ratio (IR)" in html
+    assert "X1 headline" not in html
+    assert "atlas reference effect" not in html
 
 
 def test_picker_sizer_split_and_verdict(tmp_path):
@@ -94,20 +102,23 @@ def test_structured_attributes_are_html_safe_and_parseable(tmp_path):
 def test_powergate_refusal_arithmetic(tmp_path):
     html, _ = _build(tmp_path)
     assert "power-gate" in html
-    assert "insufficient N" in html
+    assert "Not enough independent trades" in html
+    assert "insufficient N" not in html
     assert "174" in html
     assert "indistinguishable from luck" in html
     # Pin the binding "174 of ~780 independent trades" refusal arithmetic verbatim. The
     # template's {% if gate.hit_rate_threshold %} block renders across a line break, so "of"
     # and "~780" are separated by a newline + indent, not a single space — match that exactly
     # so the assertion actually fails if the ~780 figure disappears from the refusal copy.
-    assert "174 of\n      ~780\n      independent trades" in html
+    assert "Only 174 of\n      ~780\n      independent trades are available" in html
 
 
 def test_cluster_axis_and_reference_effect_statements(tmp_path):
     html, _ = _build(tmp_path)
     assert "Cluster axis: date" in html
-    assert "never clears 80%" in html and "T &le; 120" in html or "T ≤ 120" in html
+    assert "never clears 80%" in html
+    assert "within 120 months" in html
+    assert "T &le; 120" not in html and "T ≤ 120" not in html
 
 
 def test_decay_curve_entry_premium_and_wide_single_band(tmp_path):

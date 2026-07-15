@@ -233,12 +233,30 @@ def test_quarterly_trend_refused_with_arithmetic(tmp_path):
     assert "standard error" in html
 
 
+def test_focal_gap_precedes_guide_and_copy_uses_reader_labels(tmp_path):
+    html, _ = _build(tmp_path)
+    assert html.index('class="s4-panel"') < html.index('class="s4-exhibit"')
+    assert "S4 asks" not in html
+    assert "S4 falls back" not in html
+    assert "false-discovery-rate (FDR)" in html
+    assert "partial pooling" in html
+    assert "design effect" in html
+    assert "deff " not in html
+    for label in ("Positions and trades", "Exposure summaries", "Returns only"):
+        assert label in html
+    for tier in ("P", "E", "R"):
+        assert f'data-tier="{tier}">{tier}</span>' not in html
+
+
 def test_tier_tabs_and_roster_not_fdr(tmp_path):
     html, _ = _build(tmp_path)
     assert "cannot be inferred from monthly returns" in html   # R-tier refusal
     assert "exit-behavior hint, not a measurement" in html      # E-tier hint
     # roster is not an FDR screen (pinned full phrase, not bare "not"/"FDR" substrings)
-    assert "pooled for stability, <strong>not</strong> an\n    FDR luck-screen on alphas." in html
+    assert (
+        "stabilized across small samples, <strong>not</strong> a\n"
+        "    false-discovery-rate (FDR) screen for lucky alpha estimates."
+    ) in html
     # trend is descriptive, not a persistence test (pinned full phrase)
     assert "within-manager series with intervals — not a\n    persistence test" in html
 

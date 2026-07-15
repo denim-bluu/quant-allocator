@@ -60,7 +60,7 @@
 
 {% block demo_content %}
 <section class="s5-intro">
-  <div class="badge-row"><span class="tier-badge" data-tier="P">P · measured</span></div>
+  <div class="badge-row"><span class="tier-badge" data-tier="P">Positions and trades · measured</span></div>
   <p class="s5-headline">
     Two synthetic long/short mandates — <strong>Saxbridge Capital</strong> and
     <strong>Drybrook Capital</strong> — run identical structures ({{ "%.0f"|format(meta.gross * 100) }}
@@ -71,15 +71,20 @@
   </p>
 </section>
 
+<section class="s5-split">
+  {{ manager_panel(alpha_mgr) }}
+  {{ manager_panel(hedge_mgr) }}
+</section>
+
 <aside class="s5-guide" aria-label="What this exhibit shows">
   <h2 class="s5-guide__title">What this exhibit shows</h2>
   <div class="s5-guide__block">
     <h3 class="s5-guide__subtitle">What you are looking at</h3>
     <p>The short sleeve's monthly P&amp;L split into a <strong>hedge component</strong> (measured
       factor exposure × factor returns) and an <strong>alpha component</strong> (weights ×
-      idiosyncratic moves). At tier P this split is an exact identity — accounting, not
-      estimation. Saxbridge's alpha line grinds upward; Drybrook's wanders around zero, while
-      both hedge lines swing with the market.</p>
+      idiosyncratic moves). With positions-and-trades evidence, this split is an exact
+      identity — accounting, not estimation. Saxbridge's alpha line grinds upward;
+      Drybrook's wanders around zero, while both hedge lines swing with the market.</p>
   </div>
   <div class="s5-guide__block">
     <h3 class="s5-guide__subtitle">How to read it</h3>
@@ -90,25 +95,21 @@
         the point net of borrow, the band its 90% interval, with a tick for the gross.</li>
       <li><strong>The borrow dial</strong> sweeps the flat fee across 0–5%/yr — drag it and watch
         Drybrook stay negative and Saxbridge stay positive.</li>
-      <li><strong>The hit-rate power gate</strong> refuses both displayed windows because 745 and
-        385 are below the approved 780-trade line. The borrow-adjusted alpha panels remain available.</li>
+      <li><strong>The hit-rate sample check</strong> refuses both displayed windows because
+        745 and 385 are below the 780-trade requirement. The borrow-adjusted alpha panels
+        remain available.</li>
     </ul>
     <p>The full methodology is in the
-      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.</p>
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">Technical method and provenance</a>.</p>
   </div>
 </aside>
 
-<section class="s5-split">
-  {{ manager_panel(alpha_mgr) }}
-  {{ manager_panel(hedge_mgr) }}
-</section>
-
 <section class="s5-gate">
-  <h2 class="s5-gate__title">Short-side hit rate — power-gated</h2>
+  <h2 class="s5-gate__title">Short-side hit rate — not enough independent trades</h2>
   <p class="s5-window">The demo window is ten years ({{ meta.months }} months),
     <strong>deliberately generous</strong>: even with a decade of positions the hit-rate
-    estimate stays below the {{ meta.short_trade_gate }}-trade certification line; the
-    realistic five-year window is farther below it. Borrow-adjusted alpha remains reported.</p>
+    estimate has fewer than the {{ meta.short_trade_gate }} trades required to report it;
+    the realistic five-year window is farther below. Borrow-adjusted alpha remains reported.</p>
   <div class="s5-gate__toggle">
     {% for m in split %}
     <div class="s5-gate__row" data-role="{{ m.role }}">
@@ -119,18 +120,19 @@
         {{ m.hit_full.trades }} round trips)</span>
       {% else %}
       <div class="power-gate s5-gate__full">
-        <span class="power-gate__title">power gate · T={{ meta.months }}</span>
-        <p class="power-gate__reason">Insufficient N ({{ m.hit_full.trades }} round trips;
-          {{ m.hit_full.gate - m.hit_full.trades }} trades short of the
-          {{ m.hit_full.gate }} certification line) — the hit-rate point and clustered t are refused.</p>
+        <span class="power-gate__title">Ten-year window — result withheld</span>
+        <p class="power-gate__reason">Only {{ m.hit_full.trades }} round trips are available —
+          {{ m.hit_full.gate - m.hit_full.trades }} fewer than the {{ m.hit_full.gate }} required.
+          The hit-rate point and clustered
+          t-statistic are not shown.</p>
       </div>
       {% endif %}
       <div class="power-gate s5-gate__reduced">
-        <span class="power-gate__title">power gate · T={{ meta.toggle_months }}</span>
-        <p class="power-gate__reason">Insufficient N ({{ m.hit_reduced.trades }} round trips;
-          {{ m.hit_reduced.gate - m.hit_reduced.trades }} trades short of the
-          {{ m.hit_reduced.gate }} certification line) — the number is refused, not shown. A five-year window
-          of a {{ meta.n_short }}-name sleeve is lucky-draw territory.</p>
+        <span class="power-gate__title">Five-year window — result withheld</span>
+        <p class="power-gate__reason">Only {{ m.hit_reduced.trades }} round trips are available —
+          {{ m.hit_reduced.gate - m.hit_reduced.trades }} fewer than the
+          {{ m.hit_reduced.gate }} required. The hit-rate result is not shown;
+          a five-year window of a {{ meta.n_short }}-name sleeve remains too dependent on luck.</p>
       </div>
     </div>
     {% endfor %}
@@ -138,20 +140,21 @@
 </section>
 
 <section class="s5-tiers">
-  <h2 class="s5-tiers__title">What each tier buys</h2>
+  <h2 class="s5-tiers__title">What each evidence level buys</h2>
   <div class="s5-tier" data-tier-panel="E">
-    <span class="tier-badge" data-tier="E">E · exposure summaries</span>
+    <span class="tier-badge" data-tier="E">Exposure summaries</span>
     <p>Factor split only: the measured short-sleeve exposure path and the reconstructed hedge
-      component. <strong>No alpha estimate</strong> — the residual is unobservable at E, and the
-      panel says so.</p>
+      component. <strong>No alpha estimate</strong> — the residual is unobservable from exposure
+      summaries, and the panel says so.</p>
   </div>
   <div class="s5-tier" data-tier-panel="R">
-    <span class="tier-badge" data-tier="R">R · returns only</span>
+    <span class="tier-badge" data-tier="R">Returns only</span>
     <p>Refusal: short-book attribution requires disclosed sleeve returns or positions; a blended
       long/short return does not identify its sleeves. <em>Exception:</em> a manager-disclosed
       short-sleeve series runs the constant-beta factor regression, chipped
       <span class="verdict-chip" data-verdict="neutral">manager-disclosed attribution</span>
-      (R² {{ "%.2f"|format(alpha_mgr.r_disclosed.r2) }} / {{ "%.2f"|format(hedge_mgr.r_disclosed.r2) }}
+      (coefficient of determination, R², {{ "%.2f"|format(alpha_mgr.r_disclosed.r2) }} /
+      {{ "%.2f"|format(hedge_mgr.r_disclosed.r2) }}
       stands in for the hedge share) — with the timing-leak caveat: a constant-beta regression
       cannot separate selection alpha from hedge timing.</p>
   </div>
@@ -162,16 +165,17 @@
 <p>The sleeve's P&amp;L is its measured exposures times the factor returns, plus its weights times
 the idiosyncratic surprises — given positions and a factor model, an exact identity (§3.3). The
 hedge share is a ratio of measured quantities and carries no significance claim. Gross short alpha
-is 12 × the mean alpha component; its 90% interval is the S2 tear-sheet machinery (Newey–West HAC
-cross-checked against a block bootstrap, widened to the looser of the two) applied to the alpha
-series — never a bare OLS SE. Borrow enters as a deterministic level, not a regression term: the
-fee bill is a known cost, not a priced risk.</p>
+is 12 × the mean alpha component; its 90% interval uses a Newey–West heteroskedasticity-
+and autocorrelation-consistent standard error, cross-checked against a block bootstrap and
+widened to the looser result. It never uses a bare ordinary least squares (OLS) standard error.
+Borrow enters as a deterministic level, not a regression term: the fee bill is a known cost,
+not a priced risk.</p>
 <p>The short-side hit rate is the active batting average — a short wins when its name underperforms
 the month's cross-section — tested month-clustered against 50%, because positions within a month
 co-move. Power is the binding constraint: detecting a 55% hit rate at 80% power needs ~780
 independent trades, and a 25-name quarter-turnover sleeve accumulates only 745 in a decade — which
-is why the gate refuses at five years and this card ships one calibrated statement per sleeve, not a
-persistence ranking.</p>
+is why the sample check refuses at five years and the exhibit reports one calibrated statement per
+sleeve, not a persistence ranking.</p>
 {% endblock %}
 
 {% block body_scripts %}

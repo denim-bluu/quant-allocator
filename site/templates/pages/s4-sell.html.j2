@@ -25,7 +25,7 @@
     {{ "%+.0f"|format(m.headline.ci_lo * 10000) }} …
     {{ "%+.0f"|format(m.headline.ci_hi * 10000) }} bp</span>
     · <span data-horizon-value="exits">{{ m.n_exits }} exits</span>
-    · deff {{ "%.2f"|format(m.headline.design_effect) }}</span>
+    · design effect {{ "%.2f"|format(m.headline.design_effect) }}</span>
 </div>
 {% endmacro %}
 
@@ -34,13 +34,36 @@
   <p class="s4-headline">
     Two managers with <strong>identical entry skill</strong> and identical-looking tear
     sheets differ by hundreds of basis points per exit in <strong>sell</strong> quality.
-    S4 asks one question of every realized exit: did the name you chose to sell go on to
+    This diagnostic asks one question of every realized exit: did the name you chose to sell go on to
     beat the names you kept — against a <strong>random-sell ghost</strong> drawn from the
     same book at the same moment? <span class="s4-synthetic">Fully synthetic.</span>
   </p>
   <p class="s4-signconv">
     Sign convention: <strong>positive gap = the sold names beat the book = the exits leak;
     negative = the exits cull well; zero = you sell no better than the lottery.</strong>
+  </p>
+</section>
+
+<section class="s4-panel">
+  <h2 class="s4-panel__title">The counterfactual-gap rail — two managers and the ghost</h2>
+  {{ gap_rail(named[0]) }}
+  <p class="s4-verdict">
+    <span class="verdict-chip"
+          data-verdict="{{ 'aligned' if named[0].headline.gap < 0 else 'contradicted' }}">
+      {{ named[0].verdict_chip }}</span>
+    <span class="s4-verdict__note">its sold names underperform the book it keeps.</span>
+  </p>
+  {{ gap_rail(named[1]) }}
+  <p class="s4-verdict">
+    <span class="verdict-chip"
+          data-verdict="{{ 'aligned' if named[1].headline.gap < 0 else 'contradicted' }}">
+      {{ named[1].verdict_chip }}</span>
+    <span class="s4-verdict__note">the names it sells keep beating its book after the sale.</span>
+  </p>
+  {{ gap_rail(ghost) }}
+  <p class="s4-ghost-note">
+    The ghost sells at random from the same book; its gap sits on zero because the
+    random-sell counterfactual is unbiased — the diagnostic's own control group.
   </p>
 </section>
 
@@ -67,42 +90,20 @@
       <li><strong>The forgone-alpha curve</strong> — the cumulative out-performance of the
         sold names over the kept book, month by month after the exit. The disposition seller's
         rises and plateaus; the disciplined seller's dives.</li>
-      <li><strong>The horizon slider</strong> — drag H from 1 to {{ meta.max_horizon_months }};
-        the gap, band, exit count, and curve switch among precomputed horizons. The verdict does not live at
-        one hand-picked horizon.</li>
+      <li><strong>The horizon slider</strong> — move the horizon from 1 to
+        {{ meta.max_horizon_months }} months; the gap, band, exit count, and curve switch among
+        precomputed horizons. The verdict does not live at one hand-picked horizon.</li>
       <li><strong>The trend strip</strong> — yearly buckets render with wide bands; the
         <strong>quarterly view refuses</strong>, printing the arithmetic instead of a chart.</li>
-      <li><strong>The tier rows</strong> — P is this page; E is a low-confidence hint; R refuses.</li>
+      <li><strong>The evidence rows</strong> — Positions and trades support the full diagnostic;
+        Exposure summaries provide only a low-confidence hint; Returns only refuses.</li>
     </ul>
     <p class="s4-exhibit__bridge">
-      The full methodology — with the math and a reference implementation — is in the
-      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
+      The full methodology — with the math and a reference implementation — is in
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">Technical method and provenance</a>.
     </p>
   </div>
 </aside>
-
-<section class="s4-panel">
-  <h2 class="s4-panel__title">The counterfactual-gap rail — two managers and the ghost</h2>
-  {{ gap_rail(named[0]) }}
-  <p class="s4-verdict">
-    <span class="verdict-chip"
-          data-verdict="{{ 'aligned' if named[0].headline.gap < 0 else 'contradicted' }}">
-      {{ named[0].verdict_chip }}</span>
-    <span class="s4-verdict__note">its sold names underperform the book it keeps.</span>
-  </p>
-  {{ gap_rail(named[1]) }}
-  <p class="s4-verdict">
-    <span class="verdict-chip"
-          data-verdict="{{ 'aligned' if named[1].headline.gap < 0 else 'contradicted' }}">
-      {{ named[1].verdict_chip }}</span>
-    <span class="s4-verdict__note">the names it sells keep beating its book after the sale.</span>
-  </p>
-  {{ gap_rail(ghost) }}
-  <p class="s4-ghost-note">
-    The ghost sells at random from the same book; its gap sits on zero because the
-    random-sell counterfactual is unbiased — the diagnostic's own control group.
-  </p>
-</section>
 
 <section class="s4-panel">
   <h2 class="s4-panel__title">The forgone-alpha curve — when the leak accrues</h2>
@@ -141,9 +142,9 @@
     <p class="power-gate__reason">
       At ≈ {{ "%.0f"|format(tr.quarterly_exits_per_bucket) }} exits/quarter the per-bucket
       standard error is ≈ {{ "%.0f"|format(tr.quarterly_se_bp) }} bp — several times any
-      plausible effect. A quarterly trend is astrology; below
-      {{ tr.min_exits_bucket }} exits/bucket S4 falls back to yearly or pooled rendering.
-      The refusal is the pitch.
+      plausible effect. That is too noisy to support a quarterly trend; below
+      {{ tr.min_exits_bucket }} exits/bucket the exhibit falls back to yearly or pooled
+      rendering rather than showing a false pattern.
     </p>
   </div>
   {% endif %}
@@ -165,20 +166,20 @@
     {% endfor %}
   </ul>
   <p class="s4-roster__note">
-    Per-manager gaps shrink toward the transparent-roster mean with the house small-N
-    machinery — a decision-quality measurement pooled for stability, <strong>not</strong> an
-    FDR luck-screen on alphas.
+    Per-manager gaps use partial pooling to shrink toward the transparent-roster mean —
+    a decision-quality measurement stabilized across small samples, <strong>not</strong> a
+    false-discovery-rate (FDR) screen for lucky alpha estimates.
   </p>
 </section>
 
-<section class="s4-panel s4-tiers" aria-label="Tier contract">
-  <h2 class="s4-panel__title">Tier contract — what each tier can honestly produce</h2>
-  <div class="s4-tier s4-tier--p"><span class="tier-badge" data-tier="P">P</span>
+<section class="s4-panel s4-tiers" aria-label="Evidence available">
+  <h2 class="s4-panel__title">What each evidence level can honestly produce</h2>
+  <div class="s4-tier s4-tier--p"><span class="tier-badge" data-tier="P">Positions and trades</span>
     <span>Position-level transparency with exit dates: the full diagnostic above.</span></div>
-  <div class="s4-tier s4-tier--e"><span class="tier-badge" data-tier="E">E</span>
+  <div class="s4-tier s4-tier--e"><span class="tier-badge" data-tier="E">Exposure summaries</span>
     <span>Exit-behavior hint only, low-confidence: turnover accelerates after gains — an
       exit-behavior hint, not a measurement. Never a counterfactual gap, never a verdict.</span></div>
-  <div class="s4-tier s4-tier--r"><span class="tier-badge" data-tier="R">R</span>
+  <div class="s4-tier s4-tier--r"><span class="tier-badge" data-tier="R">Returns only</span>
     <span>Refusal: exit quality cannot be inferred from monthly returns. This page needs
       transaction-level data.</span></div>
 </section>

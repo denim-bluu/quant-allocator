@@ -97,6 +97,16 @@ def test_exhibit_explainer_present(tmp_path):
     assert "How to read it" in html
 
 
+def test_manager_comparison_precedes_guide_and_uses_reader_labels(tmp_path):
+    html, _ = _build(tmp_path)
+    assert html.index('class="s5-split"') < html.index('class="s5-guide"')
+    assert "Positions and trades · measured" in html
+    assert "At tier P" not in html
+    assert "S2 tear-sheet machinery" not in html
+    assert "this card ships" not in html
+    assert "Technical method and provenance" in html
+
+
 def test_two_manager_split_and_chips(tmp_path):
     html, _ = _build(tmp_path)
     assert "Saxbridge Capital" in html
@@ -123,11 +133,13 @@ def test_demo_window_copy_and_gate_toggle(tmp_path):
     # §8 ruling 2: the "deliberately generous" sentence is required, test-pinned.
     assert "deliberately generous" in html
     # The mandatory T=60 gate-refusal toggle with the trade arithmetic.
-    assert "Insufficient N" in html
+    assert "not enough independent trades" in html.lower()
+    assert "Insufficient N" not in html
     assert "385" in html and "780" in html
     assert "power-gate" in html
-    assert text.count("745 round trips; 35 trades short of the 780 certification line") == 2
-    assert text.count("385 round trips; 395 trades short of the 780 certification line") == 2
+    assert text.count("Only 745 round trips are available — 35 fewer than the 780 required") == 2
+    assert text.count("Only 385 round trips are available — 395 fewer than the 780 required") == 2
+    assert "certification line" not in html
     assert "52.8%" not in html
     assert "t = +3.58" not in html
     assert '"hit_rate"' not in html
