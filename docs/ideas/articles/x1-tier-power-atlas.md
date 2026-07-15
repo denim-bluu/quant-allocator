@@ -1,10 +1,10 @@
 ## The decision
 
-Before a manager metric is allowed to speak, require a pre-registered effect, a calibrated false-alarm rate, and a measured sample threshold at the relevant transparency tier. If the simulated study does not clear those conditions, the metric’s registry entry remains closed or explicitly has no threshold.
+Before a manager metric is allowed to speak, require a pre-registered effect, a calibrated false-alarm rate, and a measured sample threshold for the evidence available. If the simulated study does not clear those conditions, the metric remains closed or explicitly has no usable threshold.
 
 The Tier & Power Atlas is an advanced reference and governance tool. It does not decide whether a manager is good. It decides whether a proposed estimate, interval, or verdict has enough evidence to be shown at all.
 
-Its durable output is a machine-readable PowerGate registry. Downstream articles and exhibits consume that registry rather than hand-copying attractive thresholds.
+Its durable output is a machine-readable reliability record. Downstream articles and exhibits use that record rather than hand-copying attractive thresholds.
 
 ## Why the obvious answer fails
 
@@ -22,7 +22,7 @@ For one atlas cell, fix the true effect, transparency tier, sample length, and a
 
 When the effect is present, the fraction of detections estimates **power**. When the effect is zero, the same fraction estimates **size**, the false-alarm rate. Sweep the relevant sample quantity from small to large. The first quantity whose measured power reaches $0.80$, while size remains controlled, is the candidate threshold.
 
-Repeat at returns $R$, exposure $E$, and position $P$ tiers. Differences in thresholds show what transparency buys in measured reliability rather than adjectives.
+Repeat with returns only, measured exposures, and full positions and trades. Differences in thresholds show what additional evidence buys in measured reliability rather than adjectives.
 
 ## A small numerical example
 
@@ -102,27 +102,27 @@ $$
 
 With $z=1.96$, the interval is the center plus or minus the half-width. It stays inside $[0,1]$ and behaves better than a naive normal interval near the boundaries.
 
-### Build the registry only after validation
+### Publish thresholds only after validation
 
 Volume 1 pre-registers metric rules across a $75$-cell primary grid: $5$ information-coefficient settings, $3$ alpha half-lives, and $5$ track lengths. Position-level subsets also vary breadth and sizing discipline. Each cell requires at least $1{,}000$ seeded paths.
 
-For each metric-tier pair, the registry records the gate quantity, pinned effect, smallest quantity reaching power $0.80$, measured size $0.05$, and verdict. A null threshold means no quantity in the measured range suffices.
+For each metric and evidence level, the reliability record stores the gate quantity, pinned effect, smallest quantity reaching power $0.80$, measured size $0.05$, and verdict. A null threshold means no quantity in the measured range suffices.
 
 Validation checks analytic cross-checks, size within $5\%\pm1.5$ percentage points, monotonicity up to Monte Carlo noise, byte-identical reproducibility from the same seed, and nuisance stresses. A test with distorted size gets a corrected critical value or a “size-distorted—no gate” refusal.
 
 ## What the evidence changes
 
-The current sampler shows the practical direction without certifying the final registry. At $T=48$ and $IC=0.04$, alpha-estimation power is $25.2\%$ at tier $R$ and $31.8\%$ at tier $E$. Hit-rate power is $13.2\%$ and sizing-skill power $23.4\%$ at tier $P$; drift detection is deferred.
+The current demonstration shows the practical direction without certifying a publication threshold. At $T=48$ and $IC=0.04$, alpha-estimation power is $25.2\%$ with returns only and $31.8\%$ with measured exposures. With full positions and trades, hit-rate power is $13.2\%$ and sizing-skill power is $23.4\%$; drift detection is deferred.
 
-At the middle effect and $T=120$, the returns-tier shrinkage-posterior point is $0.788$, with Wilson interval $[0.750047,0.821561]$, which spans the $0.80$ bar. Pinning betas at tier $E$ raises the point to $0.820$. These are estimates and intervals, not proof that one tier is precisely below and the other precisely above $0.80$.
+At the middle effect and $T=120$, the returns-only shrinkage-posterior point is $0.788$, with Wilson interval $[0.750047,0.821561]$, which spans the $0.80$ bar. Measuring exposures and pinning the simulated betas raises the point to $0.820$. These are estimates and intervals, not proof that one evidence level is precisely below and the other precisely above $0.80$.
 
-Both sampler registry rows remain null: no tenure in the measured sampler range clears the required bar. That refusal is part of the result. The sampler uses $500$ managers per cell and remains provisional until the at-least-$1{,}000$-replication volume-1 study passes its gates.
+Both provisional threshold records remain null: no tenure in the measured range clears every required bar. That refusal is part of the result. The demonstration uses $500$ managers per cell and remains provisional until the at-least-$1{,}000$-replication study passes its gates.
 
 ## What the allocator does next
 
-For any proposed metric, state the decision, tier, gate quantity, effect size, false-alarm target, and detection target before running the atlas. Reject requests for a universal tenure threshold without those fields.
+For any proposed metric, state the decision, evidence available, gate quantity, effect size, false-alarm target, and detection target before running the atlas. Reject requests for a universal tenure threshold without those fields.
 
-When reading a registry row, distinguish the point power estimate from its Wilson interval, the gate verdict from the effect estimate, and a null threshold from missing work. A null threshold is an explicit refusal within the measured domain.
+When reading a reliability record, distinguish the point power estimate from its Wilson interval, the gate verdict from the effect estimate, and a null threshold from missing work. A null threshold is an explicit refusal within the measured domain.
 
 Use tier degradation in manager engagement: show the measured reliability gained from exposure or position data. Do not describe richer transparency as universally “better” when the relevant metric’s power study has not established the difference.
 
@@ -130,8 +130,8 @@ Use tier degradation in manager engagement: show the measured reliability gained
 
 - The atlas uses synthetic ground truth. Its thresholds are conditional on simulator realism, metric specification, effect grid, cadence, and nuisance stresses.
 - It requires no external or live manager data.
-- The sampler’s $500$-replication cells are illustrative and uncalibrated. Go-live requires the volume-1 run at at least $1{,}000$ seeded paths per cell.
-- Size must fall within $5\%\pm1.5$ percentage points, monotonicity and analytic cross-checks must pass, and identical seeds must reproduce identical registry output.
+- The demonstration’s $500$-replication cells are illustrative and uncalibrated. Go-live requires the full study at at least $1{,}000$ seeded paths per cell.
+- Size must fall within $5\%\pm1.5$ percentage points, monotonicity and analytic cross-checks must pass, and identical seeds must reproduce identical reliability records.
 - A nuisance stress that flips a verdict forces a range with the driver named, not a point label.
 - Thresholds always travel with their pinned effects: alpha at true $IR=0.5$, hit rate $55\%$ versus $50\%$, sizing discipline $0.8$ versus $0$, and a $0.3$ net-beta walk over $12$ months for drift.
 - The atlas governs whether a metric may render. It does not validate a real manager or authorize an allocation decision.
@@ -139,11 +139,11 @@ Use tier degradation in manager engagement: show the measured reliability gained
 ## Key takeaways
 
 - Check false-alarm size before quoting power.
-- A sample threshold is meaningful only beside its effect size and transparency tier.
+- A sample threshold is meaningful only beside its effect size and the evidence available.
 - Roughly $780$ independent trades refers specifically to a $55\%$-versus-$50\%$ hit-rate test at $80\%$ power and $5\%$ size.
 - Monte Carlo power is an estimate and needs an interval.
-- A null registry threshold is an honest refusal, not a blank.
-- The sampler is provisional until the larger validated study supersedes it.
+- A null threshold is an honest refusal, not a blank.
+- The demonstration is provisional until the larger validated study supersedes it.
 
 ## References
 

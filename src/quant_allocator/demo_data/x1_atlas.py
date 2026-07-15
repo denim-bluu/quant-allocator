@@ -38,6 +38,32 @@ def _wilson_summary(power: float, n: int) -> dict:
 def build(out_dir: Path = SITE_DATA_DIR) -> Path:
     payloads, thresholds, meta = x_grid.build_grid()
     realized_ir_by_ic = meta["realized_ir_by_ic"]
+    max_months = max(x_grid.T_GRID)
+
+    def _power_result(cell):
+        power = round(cell["power"], 4)
+        return {"power": power, "wilson": _wilson_summary(power, meta["n_reps"])}
+
+    tier_comparison = {
+        "target_power": x_grid.GATE_POWER_TARGET,
+        "effect_ic": x_grid.PINNED_EFFECT_IC,
+        "effect_realized_ir": round(realized_ir_by_ic[x_grid.PINNED_EFFECT_IC], 3),
+        "rows": [],
+    }
+    for months in (DEGRADATION_T, max_months):
+        row = {"months": months}
+        for label, tier in (("returns_only", "R"), ("measured_exposure", "E")):
+            cell = payloads[
+                (
+                    x_grid.PINNED_EFFECT_IC,
+                    SAMPLER_HALF_LIFE,
+                    SAMPLER_SIZING,
+                    months,
+                    tier,
+                )
+            ].analytics["alpha_posterior"]
+            row[label] = _power_result(cell)
+        tier_comparison["rows"].append(row)
 
     power_curves = []
     for ic in SAMPLER_IC_LEVELS:
@@ -96,10 +122,8 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
         },
         "sizing_skill_P": _degradation_row(sizing_skill),
         "hit_rate_P": _degradation_row(hit_rate),
-        "drift_detection": "deferred (exposure-drift detector, X1 spec §3.2 — docket D-11)",
+        "drift_detection": "Not calculated: exposure-drift calibration is outside this demonstration.",
     }
-
-    max_months = max(x_grid.T_GRID)
 
     def _headline_cell(ic, tier):
         return payloads[(ic, SAMPLER_HALF_LIFE, SAMPLER_SIZING, max_months, tier)].analytics[
@@ -107,8 +131,7 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
         ]
 
     def _headline_result(cell):
-        power = round(cell["power"], 4)
-        return {"power": power, "wilson": _wilson_summary(power, meta["n_reps"])}
+        return _power_result(cell)
 
     e_reference = _headline_cell(x_grid.PINNED_EFFECT_IC, "E")
     r_reference = _headline_cell(x_grid.PINNED_EFFECT_IC, "R")
@@ -171,6 +194,7 @@ def build(out_dir: Path = SITE_DATA_DIR) -> Path:
             "n_reps": meta["n_reps"],
         },
         "headline": headline,
+        "tier_comparison": tier_comparison,
         "power_curves": power_curves,
         "degradation_table": degradation_table,
         "registry_snippet": registry_snippet,

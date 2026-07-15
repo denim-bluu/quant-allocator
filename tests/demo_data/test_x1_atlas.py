@@ -11,7 +11,20 @@ def _load(path):
 
 def test_three_exhibits_present(tmp_path):
     data = _load(x1_atlas.build(out_dir=tmp_path))
-    assert set(data) >= {"meta", "power_curves", "degradation_table", "registry_snippet"}
+    assert set(data) >= {
+        "meta",
+        "tier_comparison",
+        "power_curves",
+        "degradation_table",
+        "registry_snippet",
+    }
+    comparison = data["tier_comparison"]
+    assert comparison["target_power"] == 0.8
+    assert [row["months"] for row in comparison["rows"]] == [48, 120]
+    for row in comparison["rows"]:
+        assert set(row) == {"months", "returns_only", "measured_exposure"}
+        for tier in ("returns_only", "measured_exposure"):
+            assert set(row[tier]) == {"power", "wilson"}
     # Exhibit 1: one curve per IC level, each with OLS and posterior series over T.
     curves = data["power_curves"]
     assert len(curves) == len(x1_atlas.SAMPLER_IC_LEVELS)
@@ -78,6 +91,26 @@ def test_every_emitted_wilson_value_rederives_from_power_and_n(tmp_path):
     for name in ("e_tier", "r_tier", "r_tier_false_attribution"):
         row = data["headline"][name]
         check(row["power"], row["wilson"])
+    for row in data["tier_comparison"]["rows"]:
+        check(row["returns_only"]["power"], row["returns_only"]["wilson"])
+        check(row["measured_exposure"]["power"], row["measured_exposure"]["wilson"])
+
+
+def test_tier_comparison_is_a_projection_of_existing_grid_cells(tmp_path):
+    data = _load(x1_atlas.build(out_dir=tmp_path))
+    payloads, _, _ = x1_atlas.x_grid.build_grid()
+    for row in data["tier_comparison"]["rows"]:
+        for tier_name, tier_code in (("returns_only", "R"), ("measured_exposure", "E")):
+            cell = payloads[
+                (
+                    x1_atlas.x_grid.PINNED_EFFECT_IC,
+                    x1_atlas.SAMPLER_HALF_LIFE,
+                    x1_atlas.SAMPLER_SIZING,
+                    row["months"],
+                    tier_code,
+                )
+            ].analytics["alpha_posterior"]
+            assert row[tier_name]["power"] == round(cell["power"], 4)
 
 
 def test_power_curves_rise_with_T(tmp_path):

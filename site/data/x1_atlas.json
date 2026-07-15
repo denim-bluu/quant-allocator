@@ -23,7 +23,7 @@
         }
       }
     },
-    "drift_detection": "deferred (exposure-drift detector, X1 spec \u00a73.2 \u2014 docket D-11)",
+    "drift_detection": "Not calculated: exposure-drift calibration is outside this demonstration.",
     "hit_rate_P": {
       "power": 0.132,
       "wilson": {
@@ -385,5 +385,54 @@
       "seed": 20260706
     },
     "version": 1
+  },
+  "tier_comparison": {
+    "effect_ic": 0.04,
+    "effect_realized_ir": 0.648,
+    "rows": [
+      {
+        "measured_exposure": {
+          "power": 0.642,
+          "wilson": {
+            "half_width": 0.041876,
+            "hi": 0.682793,
+            "lo": 0.599041,
+            "n": 500
+          }
+        },
+        "months": 48,
+        "returns_only": {
+          "power": 0.596,
+          "wilson": {
+            "half_width": 0.042853,
+            "hi": 0.638122,
+            "lo": 0.552415,
+            "n": 500
+          }
+        }
+      },
+      {
+        "measured_exposure": {
+          "power": 0.82,
+          "wilson": {
+            "half_width": 0.033635,
+            "hi": 0.851196,
+            "lo": 0.783925,
+            "n": 500
+          }
+        },
+        "months": 120,
+        "returns_only": {
+          "power": 0.788,
+          "wilson": {
+            "half_width": 0.035757,
+            "hi": 0.821561,
+            "lo": 0.750047,
+            "n": 500
+          }
+        }
+      }
+    ],
+    "target_power": 0.8
   }
 }
