@@ -10,15 +10,16 @@ objective:
     Build a public static editorial research publication and project-idea bank with
     Aligrithm-style composition and Interval quantitative semantics.
 scheduler:
-  current_task: WEBSITE-EXHIBIT-REMEDIATION-R2-READY
+  current_task: WEBSITE-EXHIBIT-REMEDIATION-R3-PUBLISH
   active_plan: docs/superpowers/plans/2026-07-15-public-exhibit-remediation.md
   next_action: >-
-    Review the verified codex/reader-remediation implementation at
-    38afc21ed561bdfbb93cfb31962e1dd35576de11. Rendered desktop, mobile, and
-    interaction evidence is saved under
-    /private/tmp/quant-allocator-reader-remediation-qa-2026-07-15. No outward action
-    is authorized; merge, push, and publication require separate approval, and parked
-    work remains parked.
+    The user explicitly approved merge, push, and publication on 2026-07-15. Merge
+    the verified codex/reader-remediation branch at d97fd37 into main, push the
+    reviewed main tip, verify the GitHub Pages deployment, and inspect the live
+    homepage plus representative changed exhibits at desktop and mobile sizes.
+    Pre-publication rendered evidence remains under
+    /private/tmp/quant-allocator-reader-remediation-qa-2026-07-15. Parked work
+    remains parked.
 parked_work:
   p4:
     status: parked
@@ -29,9 +30,9 @@ parked_work:
     card_branch: codex/roadmap-p4-impl
     card_tip: 7c2964f
 authority:
-  merge: false
-  push: false
-  publish: false
+  merge: true
+  push: true
+  publish: true
 verification:
   current_level: public-exhibit-remediation-verified
   required:

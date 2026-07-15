@@ -80,24 +80,24 @@ def test_current_context_selects_public_exhibit_remediation():
         "docs/superpowers/plans/2026-07-15-public-exhibit-remediation.md"
     )
     assert current["scheduler"]["current_task"] == (
-        "WEBSITE-EXHIBIT-REMEDIATION-R2-READY"
+        "WEBSITE-EXHIBIT-REMEDIATION-R3-PUBLISH"
     )
-    assert "38afc21ed561bdfbb93cfb31962e1dd35576de11" in current["scheduler"][
+    assert "d97fd37" in current["scheduler"][
         "next_action"
     ].lower()
     assert "/private/tmp/quant-allocator-reader-remediation-qa-2026-07-15" in current[
         "scheduler"
     ]["next_action"]
-    assert "no outward action is authorized" in current["scheduler"][
+    assert "explicitly approved merge, push, and publication" in current["scheduler"][
         "next_action"
     ].lower()
     _assert_active_plan_is_eligible(current)
     assert set(current["authority"]) == {"merge", "push", "publish"}
     assert all(type(value) is bool for value in current["authority"].values())
     assert current["authority"] == {
-        "merge": False,
-        "push": False,
-        "publish": False,
+        "merge": True,
+        "push": True,
+        "publish": True,
     }
     assert current["verification"]["current_level"] == (
         "public-exhibit-remediation-verified"
