@@ -1,4 +1,5 @@
 import shutil
+from html.parser import HTMLParser
 from pathlib import Path
 
 import yaml
@@ -6,6 +7,31 @@ import yaml
 from quant_allocator.site.build import build
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+class _VisibleText(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.hidden = 0
+        self.parts = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag in {"script", "style", "template"}:
+            self.hidden += 1
+
+    def handle_endtag(self, tag):
+        if tag in {"script", "style", "template"} and self.hidden:
+            self.hidden -= 1
+
+    def handle_data(self, data):
+        if not self.hidden:
+            self.parts.append(data)
+
+
+def _visible_text(html):
+    parser = _VisibleText()
+    parser.feed(html)
+    return " ".join(" ".join(parser.parts).split())
 
 _CARD = {
     "id": "s6",
@@ -53,29 +79,34 @@ def test_provenance_and_page_assets(tmp_path):
     assert "What this exhibit shows" in html
 
 
-def test_pilot_label_and_registration_document(tmp_path):
+def test_refusal_and_reader_comparisons_precede_protocol(tmp_path):
     html, _ = _build(tmp_path)
-    assert "PILOT" in html
-    assert "everything you are about to see was committed before the run" in html
-    assert "hard-capped, pre-committed family" in html
-    assert "FDR" in html and "not an FDR" in html
+    visible = _visible_text(html)
+    assert "Monthly returns do not support an operational sizing or decay classification" in html
+    assert "0 usable signals / 1 weak signal / 11 indistinguishable results" in html
+    assert "Disciplined sizing versus equal weighting" in html
+    assert "Fast decay versus slow decay" in html
+    assert "One weak signal, still below usability" in html
+    assert '<details class="s6-protocol">' in html
+    assert html.index("Monthly returns do not support") < html.index("Disciplined sizing versus equal weighting")
+    assert html.index("Disciplined sizing versus equal weighting") < html.index('<details class="s6-protocol">')
+    assert "false-discovery rate" in html
     # The forking-paths footnote does the naive-scan arithmetic (~26%).
     assert "26%" in html or "26 %" in html
-    assert html.index("0 ship / 1 weak tell / 11 null") < html.index("Panel 1")
-    assert "Panel 2 · PILOT" in html or "Panel 2 &middot; PILOT" in html
+    for internal_term in ("PILOT", "SHIP", "H-SIZE", "H-DECAY", "wave-3", "ship rule", "repository history"):
+        assert internal_term not in visible
 
 
 def test_verdict_grid_no_bare_points(tmp_path):
     html, _ = _build(tmp_path)
-    # Two contrast blocks, six rows each; every AUC is an IntervalStat + a VerdictChip.
-    assert "H-SIZE" in html and "H-DECAY" in html
+    # One focal row plus the remaining eleven rows preserve all twelve reviewed intervals.
     assert html.count('class="interval-stat"') >= 12
     assert html.count('class="verdict-chip"') >= 12
     # adj p is always paired with the deciding-cell count (never bare).
     assert "deciding cells" in html
     # A null is rendered first-class, with the same standing as a discovery.
     assert 'data-verdict="null"' in html
-    assert "a finding, not an absence" in html
+    assert "an informative result, not missing evidence" in html
 
 
 def test_two_threshold_honesty_and_single_manager_refusal(tmp_path):

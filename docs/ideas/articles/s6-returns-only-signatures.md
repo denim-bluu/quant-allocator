@@ -5,14 +5,14 @@ manager’s alpha decays? Those traits matter, but they are natively visible in 
 and trades. A returns-only claim needs to prove that enough of the process survives
 aggregation into one monthly number.
 
-The answer from the current public evidence is a refusal. The real-path pilot tested
-six pre-committed signatures against two traits and produced **0 SHIP, 1 WEAK TELL,
-and 11 NULL** results. The lone weak tell was significant in the direction opposite
+The answer from the current public evidence is a refusal. The initial study tested
+six pre-specified signatures against two traits and produced **0 usable signals, 1 weak
+signal, and 11 indistinguishable results**. The lone weak signal was significant in the direction opposite
 to the mechanism declared before the run. It is an anomaly, not a usable classifier.
 
-That pilot is not the confirmatory study. The confirmatory verdict remains unknown by
+That initial study is not the confirmatory study. The confirmatory verdict remains unknown by
 design until a fresh, pre-registered simulation grid, nuisance overlays, and untouched
-seed are run. Even if one signature later ships, it can become only a weak prior nudge
+seed are run. Even if one signature later proves usable, it can become only a weak prior nudge
 after external validation. For an individual manager today, the operational verdict
 is: **do not classify sizing discipline or alpha decay from monthly returns alone**.
 
@@ -78,8 +78,8 @@ $$
 $$
 
 An AUC of 0.5 is blind; 1.0 separates the classes perfectly. This toy value is
-intentionally obvious. In the pilot, the best stand-in signature reached only 0.605,
-and the real-path pilot’s lone anomaly did not clear the registered direction and
+intentionally obvious. In the initial study, the best stand-in signature reached only 0.605,
+and its lone anomaly did not clear the registered direction and
 usability rules.
 
 The AUC is rank-based. A monotone rescaling of kurtosis changes none of the pair
@@ -88,15 +88,15 @@ seeing the data.
 
 ## The method
 
-Two population contrasts are frozen. H-SIZE compares managers with sizing discipline
-0.8 against otherwise identical managers at 0.0. H-DECAY compares a three-month alpha
+Two population contrasts are fixed in advance. The sizing comparison places managers with
+sizing discipline 0.8 against otherwise identical managers at 0.0. The decay comparison places a three-month alpha
 half-life with a 36-month half-life. Each class contains managers generated under known
 truth.
 
 Six return-only signatures are pre-committed: lag-one autocorrelation, the coefficient
 of variation of rolling six-month volatility, skewness, excess kurtosis, maximum-
 drawdown shape scaled by $\hat\sigma\sqrt T$, and the time slope of rolling 12-month
-information ratio. Only directions declared before the run can support a SHIP verdict.
+information ratio. Only directions declared before the run can support a usable verdict.
 
 For signature values $s_i^+$ and $s_j^-$ in positive and negative classes, the
 Mann–Whitney AUC is
@@ -124,7 +124,7 @@ from 0.5 is recorded. Repeating that scan 5,000 times constructs the null distri
 of the best result one would obtain merely because six correlated signatures were
 inspected.
 
-Shipping requires two conditions in every deciding cell:
+A result is usable only when two conditions hold in every deciding cell:
 
 $$
 \min_c\widehat A^{\mathrm{dir}}_{j,c}>0.65
@@ -134,55 +134,55 @@ $$
 
 $\widehat A^{\mathrm{dir}}_{j,c}$ is signature $j$’s AUC oriented to its declared
 direction in cell $c$, and $\tilde p_{j,c}$ is its familywise-adjusted p-value. A
-statistically real effect below 0.65 is a WEAK TELL. Failure of familywise significance
-in any deciding cell is NULL. Significance and usability are separate claims.
+statistically real effect below 0.65 is a weak signal. Failure of familywise significance
+in any deciding cell means the populations were indistinguishable. Significance and usability are separate claims.
 
 ## What the evidence changes
 
-The pilot changes the practical answer more than a speculative positive would. It
+The initial study changes the practical answer more than a speculative positive would. It
 shows that the protocol can detect a real deviation, reject its promotion when the
 direction is wrong, and publish nulls with the same standing as a discovery.
 
-The real-path pilot used a bounded grid, 150 managers per class, 2,000 permutations,
-and a smoothing stress. It found zero signatures eligible to ship. The sole weak tell
-was drawdown shape under H-SIZE: familywise-adjusted $p\approx0.007$, but disciplined-
+The initial study used a bounded grid, 150 managers per class, 2,000 permutations,
+and a smoothing stress. It found zero signatures eligible for use. The sole weak signal
+was drawdown shape in the sizing comparison: familywise-adjusted $p\approx0.007$, but disciplined-
 sizing books showed shallower rather than deeper normalized drawdowns, opposite to the
 frozen positive direction. A post-hoc analysis could have marketed the reversal. The
 registered analysis records it as an anomaly requiring a new version and fresh seed
 before any contrary mechanism is tested.
 
-The result is still labeled PILOT. The full confirmatory run will use 500 managers per
-class per cell, 12 H-SIZE deciding cells, 8 H-DECAY cells, 5,000 permutations, a
+The result remains preliminary evidence. The full confirmatory run will use 500 managers per
+class per cell, 12 sizing-comparison deciding cells, 8 decay-comparison cells, 5,000 permutations, a
 60-month deciding horizon, and both smoothing and written-put stresses. Its outcome is
-not inferred from the pilot.
+not inferred from the initial study.
 
 ## What the allocator does next
 
 1. Keep the individual-manager verdict at refusal: returns alone do not support an
    operational sizing or decay classification.
-2. Use the pilot as a demonstration of protocol behavior, not as the confirmatory
+2. Use the initial study as a demonstration of protocol behavior, not as the confirmatory
    result.
 3. Freeze the final registration, including the untouched confirmatory seed, before
    running any deciding cell.
 4. Run null-size and planted-effect positive controls before interpreting the registered
    grid.
-5. Publish every SHIP, WEAK TELL, and NULL as registered, including overlay failures.
-6. If anything ships, validate it on transparent managers whose exposures, positions,
+5. Publish every usable, weak, and indistinguishable result as registered, including overlay failures.
+6. If anything proves usable, validate it on transparent managers whose exposures, positions,
    or trades provide independent truth labels before showing a roster-facing chip.
 
 ## Limits and go-live
 
-- **Evidence status.** The public counts are pilot evidence. The confirmatory outcome
+- **Evidence status.** The public counts are preliminary evidence. The confirmatory outcome
   remains unknown until the pre-registered run completes.
 - **Data ask.** The confirmatory study needs no external data; it is fully synthetic
   and uses monthly returns by construction. Exposure and position data enter later as
   external-validation labels only.
 - **Sample.** The registered grid uses **500 managers per class per cell**. A live use
-  observes one manager, so even a shipped AUC is only a weak prior nudge.
+  observes one manager, so even a usable AUC is only a weak prior nudge.
 - **Interpretation.** AUC 0.65 means a random cross-class pair is ordered correctly
   about two times in three. It is not a probability that a particular manager belongs
   to either class.
-- **Power floor.** Effects below about AUC 0.55 can return NULL because of limited
+- **Power floor.** Effects below about AUC 0.55 can remain indistinguishable because of limited
   resolution. The publishable negative is therefore bounded: no candidate reaches a
   usable 0.65 across the deciding grid, and sub-0.55 whispers are operationally
   irrelevant.
@@ -190,7 +190,7 @@ not inferred from the pilot.
   overlays, AUM growth, and one dominant drawdown can mimic the candidate signatures.
 - **Protocol integrity.** Peeking at the confirmatory seed, changing a window, or moving
   a threshold voids the run. A changed hypothesis requires version two and a new seed.
-- **Decision ceiling.** Even a SHIP result remains a conversation prompt after external
+- **Decision ceiling.** Even a usable result remains a conversation prompt after external
   validation. It never becomes a manager score, rank, or standalone screen.
 
 ## Key takeaways
@@ -201,7 +201,8 @@ not inferred from the pilot.
   signatures.
 - Statistical significance below the AUC 0.65 usability bar is a weak tell, not a
   product.
-- The pilot found 0 SHIP, 1 direction-reversed WEAK TELL, and 11 NULL results.
+- The initial study found 0 usable signals, 1 direction-reversed weak signal, and 11
+  indistinguishable results.
 - Until confirmatory and external-validation gates pass, individual-manager
   classification is refused.
 

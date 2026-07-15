@@ -7,6 +7,60 @@
 .verdict-chip[data-verdict="weak_tell"] { color: var(--warn); }
 .verdict-chip[data-verdict="null"] { color: var(--dim); }  /* a null is a finding: neutral, not hidden */
 
+.s6-refusal {
+  margin: 8px 0 22px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--warn);
+  border-radius: 8px;
+  background: var(--paper);
+}
+.s6-refusal__eyebrow {
+  margin: 0 0 5px;
+  color: var(--dim);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.s6-refusal h2 { margin: 0 0 8px; font-size: clamp(18px, 3vw, 24px); line-height: 1.2; }
+.s6-refusal p:last-child { margin: 0; max-width: 72ch; }
+
+.s6-question-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 20px 0 24px;
+}
+.s6-question-pair article { padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; }
+.s6-question-pair__tag { color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.s6-question-pair h2 { margin: 5px 0 7px; font-size: 16px; }
+.s6-question-pair p { margin: 0; color: var(--dim); font-size: 13px; line-height: 1.5; }
+
+.s6-focal { margin: 24px 0; padding: 18px; border: 1px solid var(--warn); border-radius: 8px; }
+.s6-focal__heading { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+.s6-focal__heading h2 { margin: 0 0 12px; font-size: 17px; }
+.s6-focal .s6-row { border: 0; padding: 0; }
+.s6-focal .s6-row__head { display: none; }
+.s6-focal__takeaway { margin: 12px 0 0; font-size: 13px; color: var(--dim); }
+
+.s6-all-results, .s6-protocol {
+  margin: 18px 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+}
+.s6-all-results > summary, .s6-protocol > summary {
+  min-height: 44px;
+  box-sizing: border-box;
+  cursor: pointer;
+  padding: 13px 16px;
+  font-weight: 650;
+}
+.s6-all-results[open] > summary, .s6-protocol[open] > summary { border-bottom: 1px solid var(--line); }
+.s6-all-results > :not(summary), .s6-protocol__body { margin-left: 16px; margin-right: 16px; }
+.s6-protocol__body { padding-bottom: 14px; }
+
 /* PILOT banner. */
 .s6-pilot-banner {
   display: flex;
@@ -169,5 +223,8 @@
 .s6-close__note { font-size: 13px; color: var(--dim); margin-top: 12px; }
 
 @media (max-width: 640px) {
+  .s6-question-pair { grid-template-columns: 1fr; }
+  .s6-focal__heading { display: grid; }
   .s6-contrast__rows { grid-template-columns: 1fr; }
+  .s6-family { display: block; overflow-x: auto; }
 }

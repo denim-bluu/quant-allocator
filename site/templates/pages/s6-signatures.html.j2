@@ -13,11 +13,15 @@
 
 {% macro dir_cell(d) %}{% if d == "+" %}+{% elif d == "-" %}&minus;{% else %}&mdash;{% endif %}{% endmacro %}
 
+{% macro contrast_label(id) %}{% if id == "h_size" %}Disciplined sizing versus equal weighting{% else %}Fast decay versus slow decay{% endif %}{% endmacro %}
+
+{% macro verdict_label(verdict) %}{% if verdict == "ship" %}usable signal{% elif verdict == "weak_tell" %}weak signal{% else %}indistinguishable{% endif %}{% endmacro %}
+
 {% macro verdict_row(c, row) %}
 <div class="s6-row s6-row--{{ row.verdict }}">
   <div class="s6-row__head">
     <span class="s6-row__name">{{ row.signature | replace("_", " ") }}</span>
-    <span class="verdict-chip" data-verdict="{{ row.verdict }}">{{ row.verdict | replace("_", " ") }}</span>
+    <span class="verdict-chip" data-verdict="{{ row.verdict }}">{{ verdict_label(row.verdict) }}</span>
   </div>
   <div class="interval-stat" data-domain="auc"
        data-domain-min="0" data-domain-max="1"
@@ -45,7 +49,7 @@
   </p>
   {% if not row.declared %}
   <p class="s6-row__note">No declared direction for this contrast &mdash; computed and reported, but
-    <strong>cannot ship</strong>; a significant undeclared row is only ever a v2 anomaly (&sect;3.4).</p>
+    <strong>cannot become a usable signal</strong>; a surprising result would require a fresh study.</p>
   {% endif %}
   {% if row.reversed %}
   <p class="s6-row__note s6-row__note--reversed">Direction <strong>reversed vs the declaration</strong>:
@@ -56,163 +60,124 @@
 {% endmacro %}
 
 {% block demo_content %}
-<section class="s6-pilot-banner">
-  <span class="s6-pilot-banner__tag">{{ meta.label }}</span>
-  <p>
-    These verdicts are the pre-registered protocol run end-to-end on <strong>actual simulated
-    manager paths</strong> at a burned pilot seed, over a <strong>bounded</strong> pilot grid
-    ({{ meta.pilot_cells.h_size }} + {{ meta.pilot_cells.h_decay }} deciding cells,
-    {{ meta.n_per_class }} managers per class, {{ meta.n_perm }} permutations). The confirmatory
-    run &mdash; the full {{ meta.confirmatory.cells.h_size }} + {{ meta.confirmatory.cells.h_decay }}
-    cells at {{ meta.confirmatory.n_per_class }} per class, a fresh confirmatory seed, and the
-    written-put stress axis &mdash; is wave-3 scope, and its outcome is <strong>unknown by
-    design</strong>.
-  </p>
+<section class="s6-refusal" aria-labelledby="s6-refusal-title">
+  <p class="s6-refusal__eyebrow">Decision</p>
+  <h2 id="s6-refusal-title">Monthly returns do not support an operational sizing or decay classification</h2>
+  <p>The test found <strong>0 usable signals / 1 weak signal / 11 indistinguishable results</strong>.
+    The weak signal pointed in the opposite direction to the mechanism stated before the test.
+    For an individual manager, the honest answer is to ask for exposures, positions, or trades.</p>
 </section>
 
-<section class="s6-pilot-result" aria-label="Pilot result">
-  <span class="verdict-chip" data-verdict="weak_tell">PILOT RESULT</span>
-  <strong>0 ship / 1 weak tell / 11 null</strong>
-  <p>The bounded pilot produces no shippable returns-only tell. Its one weak tell is a
-    registered direction reversal, not a result whose sign may be flipped after inspection.</p>
+<section class="s6-question-pair" aria-label="Two hidden processes tested from monthly returns">
+  <article>
+    <span class="s6-question-pair__tag">Sizing</span>
+    <h2>Disciplined sizing versus equal weighting</h2>
+    <p>Could conviction weighting leave a stable signature in volatility, tails, or drawdowns after
+      dozens of positions have been compressed into one monthly return?</p>
+  </article>
+  <article>
+    <span class="s6-question-pair__tag">Decay</span>
+    <h2>Fast decay versus slow decay</h2>
+    <p>Could a three-month alpha half-life be distinguished from a 36-month half-life using only the
+      slope and dependence structure of monthly returns?</p>
+  </article>
 </section>
 
-<section class="s6-panel s6-registration">
-  <h2 class="s6-panel__title">Panel 1 &middot; The pre-registration document</h2>
-  <p class="s6-registration__lede">
-    Before showing a single number:
-    <strong>everything you are about to see was committed before the run</strong>.
-    The family, the directions, the test statistic, the thresholds, and the deciding
-    cells were frozen in the repository&rsquo;s history first &mdash; so a positive cannot be a
-    forking-paths artifact and a null cannot be reframed as &ldquo;we just need more features.&rdquo;
-  </p>
-
-  <div class="s6-hypotheses">
-    {% for h in protocol.hypotheses %}
-    <div class="s6-hypothesis">
-      <span class="s6-hypothesis__id">{{ h.id | upper | replace("_", "-") }}</span>
-      <span class="s6-hypothesis__body">positive class <code>{{ h.positive }}</code> vs negative
-        class <code>{{ h.negative }}</code>.</span>
+<section class="s6-focal" aria-labelledby="s6-focal-title">
+  <div class="s6-focal__heading">
+    <div>
+      <p class="s6-refusal__eyebrow">Closest result</p>
+      <h2 id="s6-focal-title">One weak signal, still below usability</h2>
     </div>
-    {% endfor %}
+    <span class="verdict-chip" data-verdict="weak_tell">weak signal</span>
   </div>
-
-  <table class="s6-family">
-    <caption>The signature family &mdash; <strong>a hard-capped, pre-committed family</strong> of six
-      returns-only statistics with familywise control (not an FDR luck-screen), frozen with their
-      per-contrast directions.</caption>
-    <thead>
-      <tr>
-        <th>Signature</th><th>Formula</th><th>Mechanism</th>
-        <th>H-SIZE</th><th>H-DECAY</th><th>Known live confound</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for f in protocol.family %}
-      <tr>
-        <td><code>{{ f.signature }}</code></td>
-        <td>{{ f.formula }}</td>
-        <td>{{ f.mechanism }}</td>
-        <td class="s6-family__dir">{{ dir_cell(f.direction_h_size) }}</td>
-        <td class="s6-family__dir">{{ dir_cell(f.direction_h_decay) }}</td>
-        <td>{{ f.confound }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  <dl class="s6-constants">
-    <dt>Usability bar</dt><dd>AUC &gt; {{ "%.2f"|format(meta.auc_min) }}</dd>
-    <dt>Familywise &alpha;</dt><dd>{{ "%.2f"|format(meta.familywise_alpha) }} (Westfall&ndash;Young max-statistic)</dd>
-    <dt>Confirmatory scale</dt><dd>{{ meta.confirmatory.n_per_class }} per class &middot; {{ meta.confirmatory.n_perm }} permutations</dd>
-    <dt>Rolling windows</dt><dd>{{ meta.rolling_windows[0] }} / {{ meta.rolling_windows[1] }} months</dd>
-    <dt>Smoothing &theta; stress</dt><dd>identity + ({{ meta.smoothing_theta | join(", ") }})</dd>
-    <dt>Deciding horizon</dt><dd>T = {{ meta.decision_t }} months (T = {{ meta.secondary_t }} secondary, never deciding)</dd>
-  </dl>
-
-  <div class="s6-shiprule">
-    <h3>The two-part ship rule</h3>
-    <p>A signature <strong>ships</strong> only if, in <em>every</em> deciding cell, its
-      direction-oriented AUC clears the usability bar {{ "%.2f"|format(meta.auc_min) }} <em>and</em>
-      its familywise-adjusted p stays at or below &alpha; = {{ "%.2f"|format(meta.familywise_alpha) }}.
-      Significance is <strong>detectable</strong>; the bar is <strong>usable</strong>; the two are
-      different claims, and the gap between them is this card&rsquo;s central honesty device.</p>
-    <ul class="s6-taxonomy">
-      <li><span class="verdict-chip" data-verdict="ship">ship</span> passes both parts in every cell &mdash; a labeled weak-prior chip, pending external validation.</li>
-      <li><span class="verdict-chip" data-verdict="weak_tell">weak tell</span> significant everywhere but below the bar, or significant in the reversed / undeclared direction &mdash; a published finding, never a product.</li>
-      <li><span class="verdict-chip" data-verdict="null">null</span> not familywise-significant in at least one cell &mdash; a published negative, first-class.</li>
-    </ul>
-  </div>
-
-  <p class="s6-amendment">{{ protocol.amendment_rule }}</p>
-
-  <p class="s6-forking">
-    <strong>What this discipline is worth.</strong> Scanning six signatures per contrast at a naive
-    5% each false-alarms on <em>some</em> signature roughly <strong>{{ naive_pct }}%</strong> of the
-    time per cell (1 &minus; 0.95<sup>6</sup>); a vendor free to scan dozens of features and pick the
-    winner essentially always &ldquo;finds&rdquo; a tell. The familywise test replays the whole scan
-    on relabeled data and asks whether the observed deviation beats the null <em>max</em> &mdash;
-    <strong>not an FDR</strong> screen over an open pool, but familywise control of a small, closed,
-    <strong>hard-capped, pre-committed family</strong>.
-  </p>
+  {{ verdict_row(contrasts[0], contrasts[0].rows[4]) }}
+  <p class="s6-focal__takeaway">The interval is statistically distinguishable from blind ranking,
+    but it lies on the wrong side of the declared mechanism. It cannot be turned into a classifier
+    by reversing the story after seeing the result.</p>
 </section>
 
 <aside class="s6-exhibit" aria-label="What this exhibit shows">
   <h2 class="s6-exhibit__title">What this exhibit shows</h2>
   <div class="s6-exhibit__block">
-    <h3 class="s6-exhibit__sub">What you are looking at</h3>
-    <p>A <strong>pre-registration document</strong> (Panel 1) and <strong>its pilot verdicts</strong>
-      (Panel 2): six frozen returns-only signatures scored as two-class discriminators on managers
-      whose sizing discipline and alpha half-life are known by construction. The headline
-      (Panel 3) reads the verdict grid honestly &mdash; and a null here is a finding, not an absence.</p>
-  </div>
-  <div class="s6-exhibit__block">
     <h3 class="s6-exhibit__sub">How to read it</h3>
-    <ul class="s6-exhibit__list">
-      <li><strong>Verdict chip</strong> &mdash; ship / weak tell / null, each with equal weight.</li>
-      <li><strong>The two rail marks</strong> &mdash; the familywise <em>significance</em> floor and
-        the <em>usability</em> bar (0.65); the gap between them is the &ldquo;real but useless&rdquo; zone.</li>
-      <li><strong>adj p + cell count</strong> &mdash; always together, never a bare point.</li>
-      <li><strong>The reversal flag</strong> &mdash; a significant result opposite to the declared
-        direction is an anomaly, not a discovery.</li>
-      <li><strong>The ladder</strong> &mdash; the simulator verdict is only the first evidentiary rung.</li>
-    </ul>
-    <p class="s6-exhibit__bridge">
-      The full methodology &mdash; with the math and a reference implementation &mdash; is in the
-      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
-    </p>
+    <p>The grey mark is blind ranking at AUC 0.50. The amber mark is the familywise
+      <em>significance</em> boundary; the blue mark is the higher <em>usability</em> bar at
+      {{ "%.2f"|format(meta.auc_min) }}. A result must clear both in the declared direction across
+      every deciding cell. The weak result does not.</p>
+    <p class="s6-exhibit__bridge">The complete method and derivation are in the
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">technical method</a>.</p>
   </div>
 </aside>
 
-<section class="s6-panel s6-grid">
-  <h2 class="s6-panel__title">Panel 2 &middot; PILOT <span class="verdict-chip" data-verdict="weak_tell">PILOT</span> &middot; The verdict grid</h2>
-  <p class="s6-grid__gapnote">The <strong>real-but-useless</strong> zone is the gap between the two
-    rail marks &mdash; the familywise significance floor and the usability bar. The machinery
-    <em>detects</em> whispers there and the ship rule then correctly refuses to sell them.</p>
+<details class="s6-all-results">
+  <summary>See the other eleven reviewed intervals</summary>
+  <p class="s6-grid__gapnote">An indistinguishable result is an informative result, not missing
+    evidence: the signature failed to separate the two known synthetic populations.</p>
   {% for c in contrasts %}
   <div class="s6-contrast">
-    <h3 class="s6-contrast__label">{{ c.label }}</h3>
-    <p class="s6-contrast__meta">{{ c.n_deciding_cells }} deciding cells (ic &times; smoothing &theta;);
-      significance floor {{ "%.3f"|format(c.significance_floor) }}, usability bar
-      {{ "%.2f"|format(c.usability_bar) }}.</p>
+    <h3 class="s6-contrast__label">{{ contrast_label(c.id) }}</h3>
+    <p class="s6-contrast__meta">{{ c.n_deciding_cells }} deciding cells; significance boundary
+      {{ "%.3f"|format(c.significance_floor) }}, usability bar {{ "%.2f"|format(c.usability_bar) }}.</p>
     <div class="s6-contrast__rows">
-      {% for row in c.rows %}{{ verdict_row(c, row) }}{% endfor %}
+      {% for row in c.rows %}
+        {% if not (c.id == "h_size" and row.signature == "drawdown_shape") %}{{ verdict_row(c, row) }}{% endif %}
+      {% endfor %}
     </div>
   </div>
   {% endfor %}
-</section>
+</details>
+
+<details class="s6-protocol">
+  <summary>How the test was fixed in advance</summary>
+  <div class="s6-protocol__body">
+    <p>The six signatures, expected directions, window lengths, thresholds, and deciding cells were
+      fixed before the simulated paths were inspected. Trying six independent 5% tests would produce
+      at least one false alarm about <strong>{{ naive_pct }}%</strong> of the time
+      (1 &minus; 0.95<sup>6</sup>). The Westfall&ndash;Young maximum-statistic test instead controls
+      the chance of any false claim across the closed family. This is familywise control, not a
+      false-discovery rate screen over an open pool.</p>
+
+    <table class="s6-family">
+      <caption>Six pre-specified returns-only signatures and their expected directions.</caption>
+      <thead><tr><th>Signature</th><th>Mechanism</th><th>Disciplined sizing</th>
+        <th>Fast decay</th><th>Known confound</th></tr></thead>
+      <tbody>
+        {% for f in protocol.family %}
+        <tr><td>{{ f.signature | replace("_", " ") }}</td><td>{{ f.mechanism }}</td>
+          <td class="s6-family__dir">{{ dir_cell(f.direction_h_size) }}</td>
+          <td class="s6-family__dir">{{ dir_cell(f.direction_h_decay) }}</td>
+          <td>{{ f.confound }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <dl class="s6-constants">
+      <dt>Usability bar</dt><dd>AUC &gt; {{ "%.2f"|format(meta.auc_min) }}</dd>
+      <dt>Familywise &alpha;</dt><dd>{{ "%.2f"|format(meta.familywise_alpha) }} (Westfall&ndash;Young maximum statistic)</dd>
+      <dt>Current study</dt><dd>{{ meta.n_per_class }} per class &middot; {{ meta.n_perm }} permutations</dd>
+      <dt>Confirmatory study</dt><dd>{{ meta.confirmatory.n_per_class }} per class &middot; {{ meta.confirmatory.n_perm }} permutations</dd>
+      <dt>Rolling windows</dt><dd>{{ meta.rolling_windows[0] }} and {{ meta.rolling_windows[1] }} months</dd>
+      <dt>Deciding horizon</dt><dd>{{ meta.decision_t }} months ({{ meta.secondary_t }} months is secondary)</dd>
+    </dl>
+    <p>The confirmatory study uses a fresh seed and a wider stress grid. Its outcome is
+      <strong>unknown by design</strong>. Any change after looking at these results requires a fresh
+      study; the current results remain on record.</p>
+  </div>
+</details>
 
 <section class="s6-panel s6-close">
-  <h2 class="s6-panel__title">Panel 3 &middot; The honest headline</h2>
-  <p class="s6-headline">{{ headline.text }}</p>
+  <h2 class="s6-panel__title">What the result permits</h2>
+  <p class="s6-headline">No reviewed returns-only signature supports classifying a manager&rsquo;s
+    sizing discipline or alpha decay.</p>
 
   <div class="power-gate">
-    <span class="power-gate__title">what even a ship would &mdash; and would not &mdash; mean</span>
+    <span class="power-gate__title">What even a usable signal would &mdash; and would not &mdash; mean</span>
     <p class="power-gate__reason">
       An AUC of {{ "%.2f"|format(odds.auc) }} {{ odds.pair_odds }}. Applied to a
       <strong>single</strong> manager it is {{ odds.single_manager }} &mdash; which is why any
-      shipped tell is a <strong>conversation prompt</strong> for the monitor and select decisions,
-      never a standalone score. A null here is <strong>a finding, not an absence</strong>: if the
+      usable signal would be a <strong>conversation prompt</strong>, never a standalone score.
+      An indistinguishable result is <strong>an informative result, not missing evidence</strong>: if the
       fingerprint does not survive in a clean world where the trait is the only difference, it will
       not survive a dirtier one.
     </p>
@@ -223,9 +188,8 @@
     <li class="s6-ladder__rung"><span class="s6-ladder__num">{{ rung.rung }}</span>{{ rung.label }}</li>
     {% endfor %}
   </ol>
-  <p class="s6-close__note">No roster-facing use precedes the external-validity rung &mdash; a
-    pre-commitment of the same standing as the ship rule. The confirmatory outcome is
-    <strong>unknown by design</strong>.</p>
+  <p class="s6-close__note">No manager-facing use precedes external validation against positions or
+    exposures where the process is directly observable.</p>
 </section>
 {% endblock %}
 
