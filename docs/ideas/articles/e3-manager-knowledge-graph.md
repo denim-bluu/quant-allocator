@@ -33,7 +33,7 @@ Use the fictional query: “what did Corvid Lane say about liquidity in 2024?”
 On the current five-document authored corpus, lexical retrieval ranks the paraphrased meeting note $5$th. Plain hybrid search puts the Wexford distractor $2$nd and returns
 
 $$
-[\text{DDQ-2024},\ \text{DDQ-WEX},\ \text{L-2024Q1}]
+[\text{fund questionnaire},\ \text{other-manager questionnaire},\ \text{first-quarter letter}]
 $$
 
 in its top three. Against the three planted relevant documents, both recall@3 and precision@3 are $0.67$.
@@ -41,7 +41,7 @@ in its top three. Against the three planted relevant documents, both recall@3 an
 The one-hop graph candidate removes the unrelated Wexford document and admits the firm-unnamed meeting note through the author’s employment edge. Its top three become
 
 $$
-[\text{DDQ-2024},\ \text{L-2024Q1},\ \text{MTG-2024-05}],
+[\text{fund questionnaire},\ \text{first-quarter letter},\ \text{meeting note}],
 $$
 
 so the illustrative recall@3 and precision@3 both rise to $1.00$.
@@ -124,7 +124,7 @@ To revisit graph activation, build a larger planted query-to-relevant-document s
 - Real-document facts require per-slot extraction precision and recall of at least $0.8$.
 - Graph expansion requires $+0.10$ absolute recall@10 over plain hybrid search and a paired-difference interval excluding zero. The current evidence fails that gate.
 - The data ask at the returns/document tier is dated manager letters, DDQs, and meeting notes, with public documents only in the publication corpus. Exposure summaries enrich say–do sections; positions permit supported name-level sections.
-- Every fact needs manager identity, receipt context, source document, exact source span, and as-of date. Incomplete corpus provenance or entity resolution causes refusal.
+- Every fact needs manager identity, source-record context, source document, exact source span, and as-of date. Incomplete corpus provenance or entity resolution causes refusal.
 - No chatbot, manager ranking, skill inference, or automatic decision is produced.
 - A light typed-table implementation is sufficient. A graph database is not a go-live prerequisite.
 

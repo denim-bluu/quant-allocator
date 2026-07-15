@@ -2,19 +2,20 @@
   const panel = document.getElementById("e3-provenance");
   if (!panel) return;
 
-  const documentSlot = panel.querySelector("[data-provenance-doc]");
+  const nameSlot = panel.querySelector("[data-provenance-name]");
   const spanSlot = panel.querySelector("[data-provenance-span]");
   const dateSlot = panel.querySelector("[data-provenance-date]");
+  const buttons = document.querySelectorAll("[data-source-doc]");
 
-  document.querySelectorAll(".e3-fact").forEach((button) => {
-    button.setAttribute("aria-pressed", "false");
+  buttons.forEach((button) => {
     button.addEventListener("click", () => {
-      document.querySelectorAll(".e3-fact").forEach((item) => {
+      buttons.forEach((item) => {
         item.setAttribute("aria-pressed", String(item === button));
       });
-      documentSlot.textContent = button.dataset.sourceDoc;
+      panel.dataset.selectedSource = button.dataset.sourceDoc;
+      nameSlot.textContent = button.dataset.sourceLabel;
       spanSlot.textContent = button.dataset.sourceSpan;
-      dateSlot.textContent = `As of ${button.dataset.asOf}`;
+      dateSlot.textContent = button.dataset.asOf;
     });
   });
 })();

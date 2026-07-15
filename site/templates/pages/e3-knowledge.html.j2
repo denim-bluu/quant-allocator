@@ -4,199 +4,216 @@
 <link rel="stylesheet" href="{{ asset_base | default('') }}assets/pages/e3.css">
 {% endblock %}
 
-{% macro passage_list(title, rows, note='') %}
-<section class="e3-retriever">
-  <h3>{{ title }}</h3>
-  {% if note %}<p class="e3-retriever__note">{{ note }}</p>{% endif %}
-  <ol>
-    {% for row in rows[:3] %}
-    <li>
-      <strong>{{ row.rank }}. {{ row.doc_id }}</strong>
-      <p>{{ row.text }}</p>
-      <span class="provenance-chip">{{ row.provenance.source_doc }} · {{ row.provenance.as_of }}</span>
-      <span class="provenance-chip">{{ row.provenance.source_span }}</span>
-    </li>
-    {% endfor %}
-  </ol>
-</section>
+{% macro result_row(rank, label, standing, excerpt) %}
+<li class="e3-result" data-standing="{{ standing | lower | replace(' ', '-') }}">
+  <span class="e3-result__rank">{{ rank }}</span>
+  <div>
+    <strong>{{ label }}</strong>
+    <span class="e3-result__standing">{{ standing }}</span>
+    <p>{{ excerpt }}</p>
+  </div>
+</li>
 {% endmacro %}
 
 {% block demo_content %}
 <section class="exhibit-intro" aria-label="What this exhibit shows">
   <h2 class="exhibit-intro__title">What this exhibit shows</h2>
   <div class="exhibit-intro__block">
-    <h3 class="exhibit-intro__sub">What you are looking at</h3>
-    <p>A sourced memory layer for {{ card_data.meta.manager_name }}. The active product is
-      document-native preparation and deterministic hybrid search over five documents. The
-      candidate graph also carries one E3-owned authored relationship receipt, excluded from
-      retrieval rankings, whose sentences support its structural facts.</p>
+    <h3 class="exhibit-intro__sub">The answer</h3>
+    <p><strong>Hybrid search is useful now; graph expansion has not earned activation.</strong>
+      Exact words find the fund questionnaire and first-quarter letter. Semantic matching
+      recovers paraphrases, but also promotes a passage from the wrong manager. Entity links
+      fix that example, yet the formal recall test shows no measured improvement.</p>
   </div>
   <div class="exhibit-intro__block">
     <h3 class="exhibit-intro__sub">How to read it</h3>
     <ul class="exhibit-intro__list">
-      <li>Click a typed node or edge to inspect the exact source sentence and date.</li>
-      <li>Compare lexical, plain-hybrid, and graph-candidate top-three results as an
-        <em>illustration</em>, then read the separate formal recall-at-ten refusal.</li>
-      <li>The meeting brief names missing source panels rather than borrowing data from a
-        different fictional manager.</li>
-      <li>Read the full <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method
-        spec</a> for the schema, ranking math, and kill criterion.</li>
+      <li>Start with the ranked results and notice which error each method makes.</li>
+      <li>Read the formal recall-at-ten refusal before the small top-three illustration.</li>
+      <li>Follow the evidence path to see how identity and topic are established separately.</li>
+      <li>Open the <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">technical
+        method and provenance</a> for the ranking equations and activation rule.</li>
     </ul>
   </div>
 </section>
 
-<section class="e3-active" aria-labelledby="e3-active-title">
-  <div>
-    <p class="e3-kicker">Shipping fallback</p>
-    <h2 id="e3-active-title">Active retrieval: hybrid search</h2>
-    <p>Extraction tables and sourced hybrid search remain useful without production graph
-      expansion. The graph result below is <strong>candidate — gate not cleared</strong>.</p>
-  </div>
-  <span class="verdict-chip" data-verdict="shrink">hybrid fallback active</span>
-</section>
-
-<section class="e3-panel" aria-labelledby="e3-graph-title">
+<section class="e3-panel e3-retrieval-first" aria-labelledby="e3-retrieval-title">
   <header class="e3-panel__head">
     <div>
-      <p class="e3-kicker">Candidate evaluation only</p>
-      <h2 id="e3-graph-title">Typed manager-memory graph</h2>
+      <p class="e3-kicker">Decision question</p>
+      <h2 id="e3-retrieval-title">What did Corvid Lane say about liquidity in 2024?</h2>
     </div>
-    <span class="verdict-chip" data-verdict="noise">candidate — gate not cleared</span>
-  </header>
-  <p>The manager record is <strong>Tier R</strong>, granted 2024-01. The
-    <code>employed_by</code> edge from Elena Voss to Selby Point Advisors makes the
-    person-across-firms path visible, but v1 never expands through a theme-based second hop.</p>
-  <div class="e3-graph-grid">
-    <div>
-      <h3>Nodes</h3>
-      <div class="e3-facts">
-      {% for node in card_data.graph_candidate.nodes %}
-        <button class="e3-fact" type="button" data-node-type="{{ node.node_type }}"
-          data-source-doc="{{ node.provenance.source_doc }}"
-          data-source-span="{{ node.provenance.source_span }}"
-          data-as-of="{{ node.provenance.as_of }}">
-          <span>{{ node.node_type }}</span><strong>{{ node.label }}</strong>
-          {% if node.tier %}<small>Tier {{ node.tier }} · granted {{ node.tier_grant_date }}</small>{% endif %}
-        </button>
-      {% endfor %}
-      </div>
-    </div>
-    <div>
-      <h3>Edges</h3>
-      <div class="e3-facts">
-      {% for edge in card_data.graph_candidate.edges %}
-        <button class="e3-fact" type="button" data-edge-type="{{ edge.edge_type }}"
-          data-source-doc="{{ edge.provenance.source_doc }}"
-          data-source-span="{{ edge.provenance.source_span }}"
-          data-as-of="{{ edge.provenance.as_of }}">
-          <span>{{ edge.edge_type }}</span><strong>{{ edge.source }} → {{ edge.target }}</strong>
-          {% if edge.from_date %}<small>{{ edge.from_date }} → {{ edge.to_date or 'open' }}</small>{% endif %}
-        </button>
-      {% endfor %}
-      </div>
-    </div>
-  </div>
-  <aside id="e3-provenance" class="e3-provenance" aria-live="polite">
-    <strong>Provenance receipt</strong>
-    <span data-provenance-doc>Select a node or edge.</span>
-    <blockquote data-provenance-span>Its exact authored source sentence will appear here.</blockquote>
-    <span data-provenance-date></span>
-  </aside>
-</section>
-
-<section class="e3-panel" aria-labelledby="e3-retrieval-title">
-  <header class="e3-panel__head">
-    <div>
-      <p class="e3-kicker">Decision-hook query</p>
-      <h2 id="e3-retrieval-title">“What did Corvid Lane say about liquidity in 2024?”</h2>
-    </div>
+    <span class="verdict-chip" data-verdict="shrink">Hybrid search remains active</span>
   </header>
   <div class="e3-retrieval-grid">
-    {{ passage_list('Lexical only', card_data.retrieval.lexical,
-      'Literal terms work; the paraphrased meeting note ranks 5th.') }}
-    {{ passage_list('Plain hybrid', card_data.retrieval.plain_hybrid,
-      'Semantic meaning helps, but the Wexford distractor ranks 2nd.') }}
-    {{ passage_list('Graph candidate', card_data.retrieval.graph_candidate,
-      'One-hop entity scoping drops the wrong-firm distractor. Candidate only.') }}
+    <section class="e3-ranking" aria-labelledby="e3-lexical-title">
+      <h3 id="e3-lexical-title">Exact words only</h3>
+      <ol>
+        {{ result_row(1, 'Fund questionnaire', 'Relevant',
+          'Quarterly redemption terms and the documented liquidity policy.') }}
+        {{ result_row(2, 'First-quarter letter', 'Relevant',
+          'The portfolio remained comfortable with liquidity.') }}
+        {{ result_row(3, 'Another manager\'s questionnaire', 'Wrong manager',
+          'The wording matches, but the evidence belongs to Wexford Green.') }}
+      </ol>
+      <p class="e3-ranking__miss"><strong>Missed paraphrase:</strong> the meeting note about
+        redemption gates and cash buffers ranks fifth.</p>
+    </section>
+
+    <section class="e3-ranking" aria-labelledby="e3-hybrid-title">
+      <h3 id="e3-hybrid-title">Hybrid search</h3>
+      <ol>
+        {{ result_row(1, 'Fund questionnaire', 'Relevant',
+          'The literal liquidity answer stays first.') }}
+        {{ result_row(2, 'Another manager\'s questionnaire', 'Wrong manager',
+          'Semantic similarity does not prove manager identity.') }}
+        {{ result_row(3, 'First-quarter letter', 'Relevant',
+          'The manager\'s stated portfolio view remains in the top three.') }}
+      </ol>
+      <p class="e3-ranking__miss"><strong>Missed paraphrase:</strong> the meeting note improves
+        to fourth, still outside the illustrative top three.</p>
+    </section>
+
+    <section class="e3-ranking e3-ranking--candidate" aria-labelledby="e3-candidate-title">
+      <h3 id="e3-candidate-title">Entity-scoped candidate</h3>
+      <ol>
+        {{ result_row(1, 'Fund questionnaire', 'Relevant',
+          'The questionnaire is directly attributed to Corvid Lane.') }}
+        {{ result_row(2, 'First-quarter letter', 'Relevant',
+          'The letter is directly attributed to Corvid Lane.') }}
+        {{ result_row(3, 'Meeting note', 'Relevant',
+          'The author-to-firm link admits the paraphrased note.') }}
+      </ol>
+      <p class="e3-ranking__miss">The wrong-manager result is removed in this example.
+        This is an evaluated candidate, not the active retrieval method.</p>
+    </section>
   </div>
-  <p class="e3-illustration"><strong>Illustrative top-3:</strong> recall
-    {{ "%.2f" | format(card_data.retrieval.illustrative_k3.baseline.recall) }} →
-    {{ "%.2f" | format(card_data.retrieval.illustrative_k3.graph_candidate.recall) }}.
-    This is not the formal gate.</p>
 </section>
 
 <section class="e3-panel" aria-labelledby="e3-gate-title">
   <div class="power-gate e3-power-gate">
-    <span class="power-gate__title" id="e3-gate-title">Formal recall@10 is insufficient</span>
-    <p>The rule is <strong>+0.10 absolute recall@10</strong> and a
-      <strong>paired interval lower bound above zero</strong>. The current fixture has one
-      planted query, below the paired-evidence minimum.</p>
-    <div class="e3-gate-metrics">
-      <p><strong>Baseline recall@10</strong>
-        {{ "%.2f" | format(card_data.retrieval_gate.formal_metrics.baseline.recall) }}
-        <span>95% Wilson interval
-          {{ "%.2f" | format(card_data.retrieval_gate.formal_metrics.baseline.recall_wilson[0]) }}–{{ "%.2f" | format(card_data.retrieval_gate.formal_metrics.baseline.recall_wilson[1]) }}</span></p>
-      <p><strong>Graph-candidate recall@10</strong>
-        {{ "%.2f" | format(card_data.retrieval_gate.formal_metrics.graph_candidate.recall) }}
-        <span>95% Wilson interval
-          {{ "%.2f" | format(card_data.retrieval_gate.formal_metrics.graph_candidate.recall_wilson[0]) }}–{{ "%.2f" | format(card_data.retrieval_gate.formal_metrics.graph_candidate.recall_wilson[1]) }}</span></p>
-      <p><strong>Observed uplift</strong>
-        {{ "%+.2f" | format(card_data.retrieval_gate.uplift) }}
-        <span>No paired interval from one query.</span></p>
+    <span class="power-gate__title" id="e3-gate-title">Formal recall@10: no measured improvement</span>
+    <p>Plain hybrid search and the entity-scoped candidate both retrieve all three relevant
+      records in the five-document example. Recall is therefore
+      <strong>{{ "%.2f" | format(card_data.retrieval_gate.formal_metrics.baseline.recall) }}</strong>
+      versus
+      <strong>{{ "%.2f" | format(card_data.retrieval_gate.formal_metrics.graph_candidate.recall) }}</strong>,
+      an uplift of <strong>{{ "%+.2f" | format(card_data.retrieval_gate.uplift) }}</strong>.</p>
+    <p>The activation rule requires at least <strong>+0.10 absolute recall@10</strong> and a
+      paired interval whose lower bound is above zero. One query cannot supply that interval.
+      The candidate therefore remains inactive.</p>
+  </div>
+</section>
+
+<section class="e3-panel e3-illustration" aria-labelledby="e3-illustration-title">
+  <header class="e3-panel__head">
+    <div>
+      <p class="e3-kicker">Mechanism, not activation evidence</p>
+      <h2 id="e3-illustration-title">Illustrative top-three mechanism check</h2>
     </div>
-    <p><strong>Result:</strong> active hybrid fallback. If the graph does not clear the
-      baseline by the stated margin, E3 ships as extraction tables plus search, no production
-      graph expansion.</p>
+  </header>
+  <p>In the top three only, the entity-scoped candidate recovers three of three relevant
+    records instead of two of three: recall moves from
+    <strong>{{ "%.2f" | format(card_data.retrieval.illustrative_k3.baseline.recall) }}</strong>
+    to
+    <strong>{{ "%.2f" | format(card_data.retrieval.illustrative_k3.graph_candidate.recall) }}</strong>.
+    This explains the mechanism; it does not override the formal refusal above.</p>
+</section>
+
+<section class="e3-panel" aria-labelledby="e3-path-title">
+  <header class="e3-panel__head">
+    <div>
+      <p class="e3-kicker">Connected evidence</p>
+      <h2 id="e3-path-title">One evidence path, two independent checks</h2>
+    </div>
+  </header>
+  <p>The stored relationships establish who produced the evidence and what it discusses.
+    They do not store a direct manager-to-topic conclusion.</p>
+
+  <div class="e3-evidence-path" role="img" aria-label="A first-quarter letter branches to an identity path through Elena Voss and Corvid Lane Capital, and a topic path through a liquidity view to the liquidity theme.">
+    <article class="e3-path-node e3-path-node--source">
+      <span>Source record</span><strong>First-quarter letter</strong>
+    </article>
+    <div class="e3-path-branch e3-path-branch--identity">
+      <span class="e3-path-relation">authored by</span>
+      <article class="e3-path-node"><span>Person</span><strong>Elena Voss</strong></article>
+      <span class="e3-path-relation">employed by</span>
+      <article class="e3-path-node"><span>Manager</span><strong>Corvid Lane Capital</strong></article>
+    </div>
+    <div class="e3-path-branch e3-path-branch--topic">
+      <span class="e3-path-relation">expresses</span>
+      <article class="e3-path-node"><span>View</span><strong>Liquidity view</strong></article>
+      <span class="e3-path-relation">about theme</span>
+      <article class="e3-path-node"><span>Theme</span><strong>Liquidity</strong></article>
+    </div>
+    <article class="e3-path-endpoint">
+      <span>Underwriting question</span>
+      <strong>What did Corvid Lane say about liquidity?</strong>
+      <small>The question is a presentation endpoint, not a stored graph relation.</small>
+    </article>
+  </div>
+
+  <aside class="e3-wrong-branch" aria-label="Wrong-manager branch">
+    <span>Other-manager questionnaire</span>
+    <span class="e3-path-relation">attributed to</span>
+    <strong>Wexford Green Capital</strong>
+    <small>Muted because it answers a similar question for the wrong manager.</small>
+  </aside>
+
+  <div class="e3-source-picker" aria-labelledby="e3-source-picker-title">
+    <h3 id="e3-source-picker-title">Inspect the supporting sentence</h3>
+    <div class="e3-source-picker__controls">
+      <button type="button" aria-pressed="true" data-source-doc="L-2024Q1"
+        data-source-label="First-quarter letter" data-as-of="March 2024"
+        data-source-span="In the first quarter we remained comfortable with portfolio liquidity and kept the book positioned for a range of outcomes.">First-quarter letter</button>
+      <button type="button" aria-pressed="false" data-source-doc="DDQ-2024"
+        data-source-label="Fund questionnaire" data-as-of="February 2024"
+        data-source-span="The fund offers quarterly redemption with ninety day notice and maintains a documented liquidity policy.">Fund questionnaire</button>
+      <button type="button" aria-pressed="false" data-source-doc="MTG-2024-05"
+        data-source-label="Meeting note" data-as-of="May 2024"
+        data-source-span="The portfolio manager explained redemption gates under stress and how cash buffers are sized against withdrawals.">Meeting note</button>
+    </div>
+    <blockquote id="e3-provenance" class="e3-provenance" aria-live="polite">
+      <strong data-provenance-name>First-quarter letter</strong>
+      <span data-provenance-date>March 2024</span>
+      <p data-provenance-span>In the first quarter we remained comfortable with portfolio
+        liquidity and kept the book positioned for a range of outcomes.</p>
+    </blockquote>
   </div>
 </section>
 
 <section class="e3-panel" aria-labelledby="e3-brief-title">
   <header class="e3-panel__head">
     <div>
-      <p class="e3-kicker">Decision hook</p>
-      <h2 id="e3-brief-title">Document-native meeting brief</h2>
+      <p class="e3-kicker">Meeting preparation</p>
+      <h2 id="e3-brief-title">What the allocator can ask next</h2>
     </div>
   </header>
   <div class="e3-brief-grid">
-  {% for section in card_data.brief.sections %}
-    <article class="e3-brief-section" data-state="{{ section.state }}">
-      <h3>{{ section.title }}</h3>
-      {% if section.state == 'rendered' %}
-        {% for row in section.views %}
-          {% if row.quote %}<blockquote>{{ row.quote }}</blockquote>{% endif %}
-          {% if row.question %}<p>{{ row.question }}</p>{% endif %}
-          <span class="provenance-chip">{{ row.source_doc }} · {{ row.as_of }}</span>
-        {% endfor %}
-      {% else %}
-        <p><strong>Not attached:</strong> {{ section.omitted.reason }}.</p>
-      {% endif %}
-    </article>
-  {% endfor %}
+    <article><h3>Liquidity terms</h3><p>How would the ninety-day notice period and
+      quarterly dealing terms behave during a stressed redemption wave?</p></article>
+    <article><h3>Cash buffers</h3><p>What determines the size of the cash buffer, and
+      which sleeves would be raised first?</p></article>
+    <article><h3>Missing evidence</h3><p>Return and position panels are not attached to
+      this fictional manager identity, so the brief does not borrow another manager's figures.</p></article>
   </div>
-  <p>This is intentionally partial: there is no identity crosswalk to the existing M5/S2
-    demo manager, so no foreign manager's figures are relabelled as Corvid Lane.</p>
 </section>
 
 <aside class="e3-honesty" role="note">
-  <h2>Demo and live boundary</h2>
-  <p>Dense scoring here is an <strong>authored concept-table stand-in</strong>, and every
-    displayed fact is an authored synthetic constant. Live extraction requires
-    precision and recall at least 0.8 per core slot <strong>before any real-document fact renders</strong>.
-    The absent extraction harness is a live prerequisite, not something this demo pretends to run.</p>
-  <p>The brief is <strong>help, not an audit</strong>. This product is not a chatbot, and a
-    retrieved passage is preparation material, never a mechanical judgement.</p>
+  <h2>Limit of the exhibit</h2>
+  <p>All documents, people, firms, and relationships are authored synthetic examples. A live
+    fact would render only after extraction precision and recall each reach at least 0.8 for
+    every required field. Retrieved material prepares a human conversation; it never becomes
+    a manager score or an automatic decision.</p>
 </aside>
 {% endblock %}
 
 {% block methodology %}
-<p>E3 stores seven typed entity tables and six typed edge tables in standard-library SQLite.
-  BM25 supplies literal matching, the disclosed concept table supplies the demo semantic
-  channel, and reciprocal-rank fusion combines rank positions. The active output stops at
-  hybrid search because the candidate graph has not cleared its formal paired retrieval gate.</p>
-<p>Every fact carries a source document, exact sentence, and date. Graph expansion is one hop:
-  documents attributed to the manager plus documents authored by people employed there. No
-  graph database, two-hop theme walk, live embedding model, or real-document extraction is
-  hidden behind this exhibit.</p>
+<p>The active method combines literal and semantic retrieval, then fuses their rank positions.
+  The evaluated extension uses one-hop entity scoping: documents attributed to the manager,
+  plus documents authored by people employed there.</p>
+<p>Every displayed fact retains a source sentence and date. The browser only switches among
+  those authored source records. It does not traverse relationships or recompute retrieval.</p>
 {% endblock %}
 
 {% block body_scripts %}
