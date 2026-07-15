@@ -168,7 +168,7 @@ CLAIM_KEYS = {
 # Placeholder repo URL; set the real one at Pages enablement (see docs/PUBLISHING.md).
 REPO_URL = "https://github.com/denim-bluu/quant-allocator"
 SITE_TITLE = "Quant Allocator"
-ASSET_VERSION = "editorial-v7"
+ASSET_VERSION = "editorial-v8"
 LANE_ORDER = ["S", "M", "P", "E", "X"]
 LANE_HEADINGS = {
     "S": "S — Skill & inference",
@@ -310,6 +310,34 @@ PILLAR_DETAILS = {
     "P": ("Portfolio decisions", "Size, combine, and govern under uncertainty."),
     "E": ("Evidence & engagement", "Gather, challenge, and act on dated evidence."),
     "X": ("Cross-cutting foundations", "Define what the available data can support."),
+}
+TIER_LABELS = {
+    "R": "Returns only",
+    "E": "Exposure summaries",
+    "P": "Positions and trades",
+}
+EVIDENCE_READINESS_LABELS = {
+    "D": "Illustrative synthetic evidence",
+    "C": "Evidence-backed interpretation or disclosed scenario",
+    "B": "Reproducible manager output",
+    "A": "Independently reconstructable evidence",
+}
+ACCESS_RULE_LABELS = {
+    "exact-per-dataset": "Each dataset is evaluated separately.",
+    "exact-per-selected-dataset": "Each selected dataset is evaluated separately.",
+    "all-required-per-selected-dataset": (
+        "All required fields must be present in each selected dataset."
+    ),
+    "all-required-per-dataset": (
+        "All required fields must be present in each dataset."
+    ),
+    "synthetic-fixture-only": "This result is demonstrated with synthetic data only.",
+    "refusal-in-every-context": (
+        "No result is produced in the current evidence contexts."
+    ),
+    "refusal-per-inadmissible-input": (
+        "The method stops when an input does not meet its evidence rules."
+    ),
 }
 STAGE_ORDER = ["discover", "underwrite", "mandate", "construct", "monitor", "govern"]
 STAGE_HEADINGS = {
@@ -811,6 +839,7 @@ def _validate_live_entry(entry: dict, card_id: str, path: Path, site_dir: Path) 
 def build(site_dir: Path, out_dir: Path, *, allow_legacy: bool = False) -> None:
     """Validate the manifest, render index/specs/demo pages, copy assets, lint."""
     cards = load_manifest(site_dir / "cards.yaml", allow_legacy=allow_legacy)
+    public_cards = [_public_card(card) for card in cards]
 
     env = Environment(
         loader=FileSystemLoader(str(site_dir / "templates")),
@@ -823,29 +852,44 @@ def build(site_dir: Path, out_dir: Path, *, allow_legacy: bool = False) -> None:
     env.globals["labels"] = TOKEN_LABELS
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    _render_index(env, cards, out_dir)
-    _render_specs(env, cards, site_dir, out_dir)
-    _render_demo_pages(env, cards, site_dir, out_dir)
+    _render_index(env, public_cards, out_dir)
+    _render_specs(env, public_cards, site_dir, out_dir)
+    _render_demo_pages(env, public_cards, site_dir, out_dir)
     _copy_assets(site_dir, out_dir)
-    _lint_outputs(cards, out_dir)
+    _lint_outputs(public_cards, out_dir)
+
+
+def _dedupe(values: list[str]) -> list[str]:
+    return list(dict.fromkeys(values))
+
+
+def _public_card(card: dict) -> dict:
+    """Project internal manifest data into reader-facing labels and sentences."""
+    projected = dict(card)
+    claims = card.get("claims", [])
+    projected["pillar_heading"] = PILLAR_DETAILS[card["lane"]][0]
+    projected["tier_labels"] = [TIER_LABELS[tier] for tier in card["tiers"]]
+    projected["public_access_rules"] = _dedupe(
+        [ACCESS_RULE_LABELS[claim["access_semantics"]] for claim in claims]
+    )
+    projected["public_current_readiness"] = _dedupe(
+        [EVIDENCE_READINESS_LABELS[claim["current_attestation"]] for claim in claims]
+    )
+    projected["public_live_readiness"] = _dedupe(
+        [
+            EVIDENCE_READINESS_LABELS[claim["live_attestation_ceiling"]]
+            for claim in claims
+        ]
+    )
+    projected["claim_access_contexts"] = sorted(
+        {access for claim in claims for access in claim["access_contexts"]}
+    )
+    projected["search_corpus"] = _search_corpus(projected)
+    return projected
 
 
 def _render_index(env: Environment, cards: list[dict], out_dir: Path) -> None:
-    view_cards = []
-    for card in cards:
-        rendered_card = dict(card)
-        rendered_card["current_attestations"] = sorted(
-            {claim["current_attestation"] for claim in card["claims"]}
-        )
-        rendered_card["claim_access_contexts"] = sorted(
-            {
-                access
-                for claim in card["claims"]
-                for access in claim["access_contexts"]
-            }
-        )
-        rendered_card["search_corpus"] = _search_corpus(card)
-        view_cards.append(rendered_card)
+    view_cards = [dict(card) for card in cards]
     cards_by_id = {card["id"]: card for card in view_cards}
     start_here = []
     for step in CURRICULUM_STEPS:
@@ -920,51 +964,26 @@ def _render_index(env: Environment, cards: list[dict], out_dir: Path) -> None:
 
 
 def _search_corpus(card: dict) -> str:
-    """Return escaped-at-render search text spanning every decision/evidence field."""
-    parts = [card["title"], card["one_liner"]]
-    scalar_fields = (
-        "lane",
-        "status",
-        "decision_question",
-        "primary_stage",
-        "decision_readiness",
-        "minimum_data",
-        "validation_status",
-    )
-    list_fields = (
-        "decisions",
-        "tiers",
-        "stages",
+    """Return reader-facing search text without internal claim metadata."""
+    parts = [
+        card["title"],
+        card["one_liner"],
+        card["decision_question"],
+        card["minimum_data"],
+        STAGE_HEADINGS[card["primary_stage"]],
+        TOKEN_LABELS[card["decision_readiness"]],
+        card["pillar_heading"],
+    ]
+    parts.extend(card["tier_labels"])
+    for field in (
         "asset_classes",
         "vehicle_types",
         "access_contexts",
         "supported_data_modalities",
         "minimum_data_modalities",
-        "evidence_roles",
-    )
-    claim_fields = (
-        "id",
-        "output_type",
-        "access_contexts",
-        "access_semantics",
-        "current_attestation",
-        "live_attestation_ceiling",
-        "validation_status",
-        "receipt_required",
-        "refusal",
-    )
-    parts.extend(str(card[field]) for field in scalar_fields)
-    if "theme" in card:
-        parts.append(str(card["theme"]))
-    parts.extend(str(value) for field in list_fields for value in card[field])
-    for claim in card["claims"]:
-        for field in claim_fields:
-            value = claim[field]
-            if isinstance(value, list):
-                parts.extend(str(item) for item in value)
-            else:
-                parts.append(str(value).lower() if isinstance(value, bool) else str(value))
-    return " ".join(parts)
+    ):
+        parts.extend(TOKEN_LABELS[value] for value in card[field])
+    return " ".join(_dedupe(parts))
 
 
 def _copy_assets(site_dir: Path, out_dir: Path) -> None:
@@ -1016,6 +1035,7 @@ def _render_specs(env: Environment, cards: list[dict], site_dir: Path, out_dir: 
 def _render_demo_pages(
     env: Environment, cards: list[dict], site_dir: Path, out_dir: Path
 ) -> None:
+    card_titles = {card["id"]: card["title"] for card in cards}
     for card in cards:
         if card["status"] != "live":
             continue
@@ -1051,6 +1071,7 @@ def _render_demo_pages(
             card=card,
             card_data_json=card_data_json,
             card_data=card_data,
+            card_titles=card_titles,
             curriculum_previous=curriculum_previous,
             curriculum_next=curriculum_next,
             asset_base="",

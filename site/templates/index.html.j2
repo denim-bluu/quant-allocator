@@ -28,11 +28,10 @@
    data-modality="{{ card.supported_data_modalities | join(' ') }}"
    data-minimum-modality="{{ card.minimum_data_modalities | join(' ') }}"
    data-readiness="{{ card.decision_readiness }}"
-   data-attestation="{{ card.current_attestations | join(' ') }}"
    data-family="{{ card.lane }}"
    data-search="{{ card.search_corpus }}">
-  <span class="research-entry__family">{{ card.lane }}</span>
   <div class="research-entry__body">
+    <p class="research-entry__pillar">{{ card.pillar_heading }}</p>
     <h3 class="card-tile__title">{{ card.title }}</h3>
     <p class="card-tile__oneliner">{{ card.one_liner }}</p>
     <p class="card-tile__question">{{ card.decision_question }}</p>
@@ -172,9 +171,6 @@
           </fieldset>
           <fieldset data-filter-group="readiness"><legend>Maturity</legend>
             {% for token in readiness_options %}{{ option('readiness', token, labels[token]) }}{% endfor %}
-          </fieldset>
-          <fieldset data-filter-group="attestation"><legend>Current attestation</legend>
-            {% for token in ['A', 'B', 'C', 'D'] %}{{ option('attestation', token, token) }}{% endfor %}
           </fieldset>
           <fieldset data-filter-group="family"><legend>Research pillar</legend>
             {% for pillar in pillars %}{{ option('family', pillar.key, pillar.heading) }}{% endfor %}

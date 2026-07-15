@@ -118,6 +118,8 @@ def test_gallery_exposes_search_presets_facets_and_explicit_empty_state(tmp_path
         assert f'data-gallery-preset="{preset}"' in html
     for facet in ("stage", "asset", "vehicle", "access", "modality", "readiness"):
         assert f'data-filter-group="{facet}"' in html
+    assert 'data-filter-group="attestation"' not in html
+    assert "Current attestation" not in html
     assert "data-gallery-count" in html
     assert "data-gallery-empty" in html
     assert html.count("data-gallery-clear") == 1
@@ -166,59 +168,37 @@ def test_primary_stage_mapping_matches_the_approved_research_audit():
     )
 
 
-def test_search_corpus_contains_all_controlled_and_claim_metadata(tmp_path):
+def test_search_corpus_contains_reader_facing_metadata_only(tmp_path):
     index = _built_index(tmp_path)
     cards = yaml.safe_load((REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8"))
-    scalar_fields = [
-        "lane",
-        "status",
-        "decision_question",
-        "primary_stage",
-        "decision_readiness",
-        "minimum_data",
-        "validation_status",
-    ]
-    list_fields = [
-        "decisions",
-        "tiers",
-        "stages",
-        "asset_classes",
-        "vehicle_types",
-        "access_contexts",
-        "supported_data_modalities",
-        "minimum_data_modalities",
-        "evidence_roles",
-    ]
-    claim_fields = [
-        "id",
-        "output_type",
-        "access_contexts",
-        "access_semantics",
-        "current_attestation",
-        "live_attestation_ceiling",
-        "validation_status",
-        "receipt_required",
-        "refusal",
-    ]
-
     for card in cards:
         corpus = _tile_attribute(index, card["id"], "data-search")
-        expected = [card["title"], card["one_liner"]]
-        expected.extend(str(card[field]) for field in scalar_fields)
-        expected.extend(str(value) for field in list_fields for value in card[field])
+        for expected in (
+            card["title"],
+            card["one_liner"],
+            card["decision_question"],
+            card["minimum_data"],
+        ):
+            assert expected in corpus, card["id"]
         for claim in card["claims"]:
-            for field in claim_fields:
-                value = claim[field]
-                if isinstance(value, list):
-                    expected.extend(str(item) for item in value)
-                elif isinstance(value, bool):
-                    expected.append(str(value).lower())
-                else:
-                    expected.append(str(value))
-        if "theme" in card:
-            expected.append(card["theme"])
-        assert not [value for value in expected if value not in corpus], card["id"]
-    assert "segregated-mandate" in _tile_attribute(index, "s3", "data-search")
+            assert claim["access_semantics"] not in corpus, card["id"]
+            assert claim["current_attestation"] not in corpus.split(), card["id"]
+            if "_" in claim["id"]:
+                assert claim["id"] not in corpus, card["id"]
+
+
+def test_home_and_exhibit_index_use_full_pillar_names(tmp_path):
+    out = tmp_path / "out"
+    build(REPO_ROOT / "site", out)
+    index = (out / "index.html").read_text(encoding="utf-8")
+    exhibits = (out / "exhibits.html").read_text(encoding="utf-8")
+    article = (out / "specs" / "s1.html").read_text(encoding="utf-8")
+
+    assert "Signal &amp; skill" in index
+    assert 'class="research-entry__family"' not in index
+    assert 'class="research-entry__family"' not in exhibits
+    assert "Signal &amp; skill" in article
+    assert "<span>S</span>" not in article
 
 
 def test_tile_access_tokens_are_exactly_the_claim_access_union(tmp_path):
@@ -234,7 +214,7 @@ def test_tile_access_tokens_are_exactly_the_claim_access_union(tmp_path):
         assert tile_access.isdisjoint(claim_semantics)
 
 
-def test_search_corpus_includes_all_controlled_access_semantics(tmp_path):
+def test_search_corpus_omits_controlled_access_semantics(tmp_path):
     repo = tmp_path / "repo"
     shutil.copytree(REPO_ROOT / "site", repo / "site")
     shutil.copytree(REPO_ROOT / "docs" / "ideas" / "specs", repo / "docs" / "ideas" / "specs")
@@ -263,7 +243,7 @@ def test_search_corpus_includes_all_controlled_access_semantics(tmp_path):
     index = (out / "index.html").read_text(encoding="utf-8")
 
     for card, semantic in zip(semantic_cards, semantics, strict=True):
-        assert semantic in _tile_attribute(index, card["id"], "data-search")
+        assert semantic not in _tile_attribute(index, card["id"], "data-search")
 
 
 def test_p3_does_not_advertise_drawdown_fund_support():
@@ -289,7 +269,7 @@ const card = {
   stage: ['underwrite', 'construct'],
   asset: ['public-equity'], vehicle: ['pooled-fund'], access: ['shortlisted-nda'],
   modality: ['returns', 'documents'], minimumModality: ['returns'],
-  readiness: ['data-conditional'], attestation: ['D'], family: ['S']
+  readiness: ['data-conditional'], family: ['S']
 };
 assert.equal(gallery.matchesCard(card, parsed), true);
 parsed.facets.access = ['public'];

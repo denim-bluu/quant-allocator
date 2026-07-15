@@ -10,7 +10,7 @@
     <nav class="article-breadcrumb" aria-label="Breadcrumb">
       <a href="{{ asset_base | default('') }}index.html#research">Research</a>
       <span aria-hidden="true">/</span>
-      <span>{{ card.lane }}</span>
+      <span>{{ card.pillar_heading }}</span>
     </nav>
     <a class="article-link" href="{{ asset_base | default('') }}{{ card.id }}.html">Open the paired exhibit</a>
   </header>
@@ -32,7 +32,7 @@
   </aside>
   {% else %}
   <section class="article-intro" aria-labelledby="article-title">
-    <p class="article-intro__kicker">{{ card.lane }} research · {{ stage_headings[card.primary_stage] }}</p>
+    <p class="article-intro__kicker">{{ card.pillar_heading }} · {{ stage_headings[card.primary_stage] }}</p>
     <h1 id="article-title">{{ card.title }}</h1>
     <p class="article-intro__deck">{{ card.one_liner }}</p>
     <dl class="article-intro__meta">

@@ -443,7 +443,7 @@
 
 .exhibit-index__entry {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
   gap: 20px;
   padding: 22px 0;
@@ -755,7 +755,7 @@
 .card-tile,
 .research-entry {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
   align-items: start;
   min-width: 0;
   gap: 20px;
@@ -777,17 +777,14 @@
   transform: none;
 }
 
-.research-entry__family {
-  display: grid;
-  width: 30px;
-  height: 30px;
-  place-items: center;
-  border: 1px solid var(--accent);
-  border-radius: 50%;
+.research-entry__pillar {
+  margin: 0 0 8px;
   color: var(--accent);
   font-family: var(--font-ui);
   font-size: 0.75rem;
   font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .research-entry__body {
@@ -868,7 +865,7 @@
 }
 
 .gallery[data-view="catalog"] .research-entry {
-  grid-template-columns: 30px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .gallery[data-view="catalog"] .card-tile__facts {
@@ -941,11 +938,11 @@
   }
 
   .exhibit-index__entry {
-    grid-template-columns: 34px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .exhibit-index__entry .research-entry__actions {
-    grid-column: 2;
+    grid-column: 1;
   }
 
   .gallery-filters__grid {
@@ -953,11 +950,11 @@
   }
 
   .research-entry {
-    grid-template-columns: 34px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .research-entry .card-tile__facts {
-    grid-column: 2;
+    grid-column: 1;
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -1069,13 +1066,13 @@
   }
 
   .exhibit-index__entry {
-    grid-template-columns: 30px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
   }
 
   .exhibit-index__entry .research-entry__actions {
     grid-column: 1 / -1;
-    padding-left: 42px;
+    padding-left: 0;
   }
 
   .featured-research {
@@ -1137,7 +1134,7 @@
 
   .research-entry,
   .gallery[data-view="catalog"] .research-entry {
-    grid-template-columns: 30px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
     padding: 18px 0;
   }
@@ -1145,7 +1142,7 @@
   .research-entry .card-tile__facts {
     grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1fr);
-    padding-left: 42px;
+    padding-left: 0;
   }
 
   .card-tile__title {

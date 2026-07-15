@@ -7,7 +7,7 @@
   </header>
   <div class="badge-row">
     {% if not card.doctrine %}<span class="synthetic-badge">SYNTHETIC DATA</span>{% endif %}
-    {% for tier in card.tiers %}<span class="tier-badge" data-tier="{{ tier }}">{{ tier }} · {{ {'R': 'Returns', 'E': 'Exposures', 'P': 'Positions'}[tier] }}</span>{% endfor %}
+    {% for tier in card.tier_labels %}<span class="tier-badge">{{ tier }}</span>{% endfor %}
   </div>
   <h1 class="demo-page__title">{{ card.title }}</h1>
   <p class="demo-page__oneliner">{{ card.one_liner }}</p>
@@ -43,9 +43,10 @@
           <div><dt>Asset scope</dt><dd>{% for token in card.asset_classes %}{{ labels[token] }}{% if not loop.last %}; {% endif %}{% endfor %}</dd></div>
           <div><dt>Vehicle scope</dt><dd>{% for token in card.vehicle_types %}{{ labels[token] }}{% if not loop.last %}; {% endif %}{% endfor %}</dd></div>
           <div><dt>Access</dt><dd>{% for token in card.access_contexts %}{{ labels[token] }}{% if not loop.last %}; {% endif %}{% endfor %}</dd></div>
-          <div><dt>Access semantics</dt><dd>{% for claim in card.claims %}<span class="attestation-chip access-semantics-chip" data-claim-id="{{ claim.id }}" data-access-semantics="{{ claim.access_semantics }}">{{ claim.id }} · {{ labels[claim.access_semantics] }}</span>{% if not loop.last %} {% endif %}{% endfor %}</dd></div>
+          <div><dt>How evidence is used</dt><dd>{% for rule in card.public_access_rules %}{{ rule }}{% if not loop.last %} {% endif %}{% endfor %}</dd></div>
           <div><dt>Validation</dt><dd>{{ labels[card.validation_status] }}</dd></div>
-          <div><dt>Attestation</dt><dd>{% for claim in card.claims %}<span class="attestation-chip">Current {{ claim.current_attestation }} · Live ceiling {{ claim.live_attestation_ceiling }}</span>{% if not loop.last %} {% endif %}{% endfor %}</dd></div>
+          <div><dt>Current evidence status</dt><dd>{% for label in card.public_current_readiness %}{{ label }}{% if not loop.last %}; {% endif %}{% endfor %}</dd></div>
+          <div><dt>Highest readiness with live evidence</dt><dd>{% for label in card.public_live_readiness %}{{ label }}{% if not loop.last %}; {% endif %}{% endfor %}</dd></div>
         </dl>
       </section>
       {% endblock %}
@@ -69,7 +70,6 @@
       <dl class="golive-box">
         <dt>Data ask</dt><dd>{{ card.golive.data_ask }}</dd>
         <dt>Sample required</dt><dd>{{ card.golive.sample }}</dd>
-        <dt>Build effort</dt><dd>{{ card.golive.effort }}</dd>
       </dl>
       {% endif %}
     </div>

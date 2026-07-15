@@ -8,7 +8,6 @@
     "access",
     "modality",
     "readiness",
-    "attestation",
     "family",
   ];
 
@@ -126,7 +125,6 @@
       modality: tokens(element.dataset.modality),
       minimumModality: tokens(element.dataset.minimumModality),
       readiness: tokens(element.dataset.readiness),
-      attestation: tokens(element.dataset.attestation),
       family: tokens(element.dataset.family),
     };
   }

@@ -1,4 +1,3 @@
-import re
 from pathlib import Path
 
 import yaml
@@ -99,7 +98,7 @@ def test_publication_assets_are_cache_busted(tmp_path):
         "interval.js",
         "gallery.js",
     ):
-        assert f"assets/{asset}?v=editorial-v7" in index
+        assert f"assets/{asset}?v=editorial-v8" in index
 
 
 def test_demo_page_exposes_decision_and_evidence_context(tmp_path):
@@ -112,8 +111,12 @@ def test_demo_page_exposes_decision_and_evidence_context(tmp_path):
     assert "Underwrite manager and strategy" in html
     assert "Data conditional" in html
     assert "Comparable, point-in-time monthly net returns with strategy labels." in html
-    assert "Current D" in html
-    assert "Live ceiling B" in html
+    assert "Illustrative synthetic evidence" in html
+    assert "Highest readiness with live evidence" in html
+    assert "Reproducible manager output" in html
+    assert "Current D" not in html
+    assert "Live ceiling B" not in html
+    assert "Access semantics" not in html
 
 
 def test_all_exhibits_put_focal_content_before_collapsed_evidence(tmp_path):
@@ -186,27 +189,24 @@ def test_publication_shell_connects_home_articles_and_exhibits(tmp_path):
     assert "Read the full article" in exhibit
 
 
-def test_demo_pages_render_exactly_one_access_semantics_badge_per_claim(tmp_path):
+def test_demo_appendix_translates_claim_access_and_readiness(tmp_path):
     out = tmp_path / "out"
     build(REPO_ROOT / "site", out)
     cards = yaml.safe_load((REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8"))
+    card = next(card for card in cards if card["id"] == "s1")
+    html = (out / "s1.html").read_text(encoding="utf-8")
 
-    for card in cards:
-        html = (out / f"{card['id']}.html").read_text(encoding="utf-8")
-        badges = re.findall(
-            r'<span class="attestation-chip access-semantics-chip" data-claim-id="([^"]+)" '
-            r'data-access-semantics="([^"]+)">([^<]+)</span>',
-            html,
-        )
-        expected = [
-            (
-                claim["id"],
-                claim["access_semantics"],
-                f"{claim['id']} · {TOKEN_LABELS[claim['access_semantics']]}",
-            )
-            for claim in card["claims"]
-        ]
-        assert badges == expected
+    assert "Access semantics" not in html
+    assert "Current A" not in html
+    assert "Current B" not in html
+    assert "Current C" not in html
+    assert "Current D" not in html
+    assert "Live ceiling" not in html
+    assert "Build effort" not in html
+    assert "data-claim-id=" not in html
+    assert "data-access-semantics=" not in html
+    for claim in card["claims"]:
+        assert claim["access_semantics"] not in html
 
 
 def test_all_access_semantics_have_readable_labels():
