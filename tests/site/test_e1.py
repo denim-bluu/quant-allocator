@@ -18,4 +18,7 @@ def test_e1_ladder_page(tmp_path):
     assert "one reciprocal rung per conversation" in html
     assert "No synthetic manager evidence is shown" in html
     assert "tracked pilot outcomes" in html
+    assert html.index("Rung 1 — Monthly returns") < html.index(
+        'class="exhibit-explainer"'
+    )
     assert (tmp_path / "out" / "specs" / "e1.html").exists()

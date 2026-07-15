@@ -4,7 +4,7 @@ Use the Transparency Playground as a synthetic, precomputed teaching surface. It
 
 The page’s most important design choice is refusal to interpolate. Every dial snaps to a simulated atlas cell. Moving a control selects a committed estimate, interval, verdict, and power-gate state; it does not calculate a new statistic in the browser.
 
-X2 is an advanced reference tool and communication device. Its outcome is understanding, not an operational manager decision.
+This playground is an advanced reference tool and communication device. Its outcome is understanding, not an operational manager decision.
 
 ## Why the obvious answer fails
 
@@ -12,7 +12,7 @@ A table of power numbers is accurate but inert. A slide saying “short track re
 
 A smooth interactive slider looks more persuasive but is less honest. If the atlas simulated only discrete settings, a value between two settings has no measured cell. Drawing an interpolated estimate would create precision the study never produced and present it with the same visual authority as an observed simulation result.
 
-Live client-side statistics create another failure mode: the teaching page could disagree with the atlas it is supposed to explain. X2 avoids that problem by carrying no estimator. It selects from the atlas’s frozen table and shows the Monte Carlo uncertainty of the selected verdict.
+Live client-side statistics create another failure mode: the teaching page could disagree with the calibration study it is supposed to explain. The playground avoids that problem by carrying no estimator. It selects from the study's fixed table and shows the Monte Carlo uncertainty of the selected verdict.
 
 ## The intuition
 
@@ -91,11 +91,11 @@ Use one instructed comparison rather than exploring the full grid without a ques
 
 Read the point, interval, verdict, and gate separately. A positive point inside an interval spanning zero remains unresolved. A verdict can also carry Monte Carlo uncertainty even when the displayed alpha interval appears narrow.
 
-For any operational manager question, leave the playground. Consult the relevant method and its own data, provenance, and go-live gates. X2 never supplies a manager-specific result.
+For any operational manager question, leave the playground. Consult the relevant method and its own data, provenance, and go-live requirements. The playground never supplies a manager-specific result.
 
 ## Limits and go-live
 
-- The page stays synthetic forever. It has no live-manager data path and no operational attestation ceiling.
+- The page stays synthetic forever. It has no live-manager data path and no operational readiness claim.
 - Every value must trace to one committed atlas cell. Dials snap; interpolation and client-side estimators are prohibited.
 - The synthetic disclosure is always visible, and the simulator must never be described as an operational manager finding.
 - The starter grid uses at least $500$ simulated managers per cell. Atlas volume 1 uses at least $1{,}000$ and replaces the starter grid wholesale.
@@ -110,7 +110,7 @@ For any operational manager question, leave the playground. Consult the relevant
 - The same simulated manager can move from **noise** to **shrink** when the evidence becomes stronger.
 - Track-length uncertainty falls with $1/\sqrt{T}$, not $1/T$.
 - Tier $E$ demonstrates what measured exposures buy; tier $P$ introduces trade-level gates.
-- X2 teaches how to read evidence and is never evidence about a real manager.
+- The playground teaches how to read evidence and is never evidence about a real manager.
 
 ## References
 

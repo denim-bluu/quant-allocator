@@ -6,6 +6,7 @@
 
 {% set opening = card_data.cells["0.04|12|0.8|48|R"] %}
 {% set comparison = card_data.cells["0.04|12|0.8|120|E"] %}
+{% set tier_labels = {"R": "Returns only", "E": "Exposure summaries", "P": "Positions and trades"} %}
 
 {% macro dial(name, label, values, active, numeric=True) %}
 <fieldset class="x2-dial" data-dial="{{ name }}">
@@ -13,10 +14,11 @@
   <div class="x2-dial__options">
     {% for v in values %}
     {% set token = "%g"|format(v) if numeric else v %}
+    {% set display = tier_labels[token] if name == "tier" else token %}
     <button type="button" class="x2-dial__btn{% if token == active %} x2-dial__btn--active{% endif %}"
             data-value="{{ token }}"
-            aria-label="{{ label }}: {{ token }}"
-            aria-pressed="{{ 'true' if token == active else 'false' }}">{{ token }}</button>
+            aria-label="{{ label }}: {{ display }}"
+            aria-pressed="{{ 'true' if token == active else 'false' }}">{{ display }}</button>
     {% endfor %}
   </div>
 </fieldset>
@@ -49,7 +51,7 @@
 {% block demo_content %}
 <section class="x2-intro">
   <p class="x2-headline">
-    Choose the dials. Every claim is a precomputed cell of the X1 atlas &mdash; the page
+    Choose the dials. Every claim comes from a precomputed calibration cell &mdash; the page
     computes nothing, it snaps to measured rungs and never interpolates. Watch an interval
     widen, a verdict flip, a gate stay shut.
   </p>
@@ -61,13 +63,13 @@
     <header class="x2-before-after__header">
       <p class="x2-before-after__eyebrow">Instructed comparison</p>
       <h3 id="x2-before-after-title">Hold the manager fixed. Change the evidence.</h3>
-      <p>Read left to right before using the controls. Both states come from committed X1
-        atlas cells; the browser only reveals them.</p>
+      <p>Read left to right before using the controls. Both states come from the same
+        precomputed calibration table; the browser only reveals them.</p>
     </header>
 
     <div class="x2-before-after__grid">
       <article class="x2-before-after__state x2-before-after__state--before">
-        <p class="x2-before-after__label">Before · 48 months · tier R</p>
+        <p class="x2-before-after__label">Before · 48 months · Returns only</p>
         <p class="x2-before-after__estimate">
           <strong>{{ "%.3f"|format(opening.alpha[0]) }}</strong>
           <span>annualized alpha</span>
@@ -86,7 +88,7 @@
       <span class="x2-before-after__arrow" aria-hidden="true">&rarr;</span>
 
       <article class="x2-before-after__state x2-before-after__state--after">
-        <p class="x2-before-after__label">After · 120 months · tier E</p>
+        <p class="x2-before-after__label">After · 120 months · Exposure summaries</p>
         <p class="x2-before-after__estimate">
           <strong>{{ "%.3f"|format(comparison.alpha[0]) }}</strong>
           <span>annualized alpha</span>
@@ -120,10 +122,10 @@
     <li><b>Dials</b> are buttons, not sliders: they <em>snap</em> to computed cells, because the
       grid is measured, not modelled, and there is nothing honest to show between rungs.</li>
     <li><b>Interval band</b> &mdash; the shaded rail is the 95% credible band and the marker is the
-      point estimate; wider means less certain. Watch it animate as you switch T.</li>
+      point estimate; wider means less certain. Watch it animate as you switch track length.</li>
     <li><b>Verdict chip</b> &mdash; <em>noise</em> when the band covers zero, <em>shrink</em> for a
       smaller-than-headline effect, <em>robust</em> when the effect is clearly supported.</li>
-    <li><b>Power gate</b> &mdash; open or shut; a shut gate (the tier-P trade analytics) names the
+    <li><b>Evidence threshold</b> &mdash; open or shut; a shut threshold for Positions and trades analytics names the
       trade threshold it failed, or says no threshold is reached in the measured range.</li>
     <li><b>Wilson footnote</b> &mdash; the &plusmn; half-width on the cell's measured power: the
       verdict is itself an estimate.</li>
@@ -143,7 +145,7 @@
   {{ dial("half_life", "Alpha half-life (months)", card_data.meta.dials.half_life, "12") }}
   {{ dial("sizing", "Sizing discipline", card_data.meta.dials.sizing, "0.8") }}
   {{ dial("T", "Track length T (months)", card_data.meta.dials.T, "48") }}
-  {{ dial("tier", "Transparency tier", card_data.meta.dials.tier, "R", numeric=False) }}
+  {{ dial("tier", "Evidence available", card_data.meta.dials.tier, "R", numeric=False) }}
 </section>
 
 <div class="x2-falsealarm" data-falsealarm hidden>
@@ -161,12 +163,13 @@
 
 {% block methodology %}
 <p>The page is a communication device, not an analytic: it renders a precomputed subset of
-the X1 atlas grid (450 cells, &ge;500 simulated managers each), shipped as committed JSON.
+the calibration grid (450 cells, &ge;500 simulated managers each).
 Dials snap to computed cells &mdash; interpolating between them would invent precision the
 Monte-Carlo grid does not have.</p>
-<p>The tier selector is the star control: the same ground truth at three honesty levels. R
-estimates betas from returns; E pins them to the true exposures, narrowing the alpha band;
-P adds trade-level analytics behind PowerGates. Every verdict rests on a measured power
+<p>The evidence selector is the star control: the same ground truth at three evidence levels.
+Returns-only estimates infer betas from returns; Exposure summaries pin them to measured
+exposures, narrowing the alpha band; Positions and trades add trade-level analytics behind
+explicit evidence thresholds. Every verdict rests on a measured power
 that carries its own Wilson 95% half-width &mdash; the verdict is itself an estimate.</p>
 {% endblock %}
 

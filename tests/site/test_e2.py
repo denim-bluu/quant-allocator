@@ -70,7 +70,7 @@ def test_e2_renders_the_three_section_states(tmp_path):
     assert "no tenure" in html
     # Omitted-and-footnoted: never silently dropped.
     assert "Exposure hygiene &amp; drift" in html or "Exposure hygiene & drift" in html
-    assert "shown at tier E" in html
+    assert "available with Exposure summaries" in html
 
 
 def test_e2_certified_numbers_render_verbatim(tmp_path):
@@ -120,4 +120,25 @@ def test_e2_honesty_note_states_hand_authored(tmp_path):
 
 def test_e2_gallery_explainer_present(tmp_path):
     html, _ = _build_with_e2_live(tmp_path)
+    reader_html = html.split('<script type="application/json" id="card-data">', 1)[0]
+    reader_html += html.split("</script>", 2)[-1]
     assert "What this exhibit shows" in html
+    assert html.index('<div class="pack-page">') < html.index(
+        '<section class="exhibit-intro"'
+    )
+    for title in (
+        "Uncertainty-honest tear-sheet engine",
+        "Hierarchical Bayesian alpha engine",
+    ):
+        assert title in html
+    for internal in (
+        "E2 computes",
+        "tier R",
+        "tier E",
+        "source card",
+        "Gated by X1",
+        "numeric-faithfulness harness",
+        "render payload",
+        "registry row",
+    ):
+        assert internal not in reader_html

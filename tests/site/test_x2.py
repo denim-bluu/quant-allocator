@@ -42,8 +42,8 @@ def test_x2_provenance_dark_and_standing_note(tmp_path):
     # Go-live box is replaced by the standing statement, not present.
     assert "golive-replaced" in html
     assert "golive-box" not in html
-    assert "the thesis, not a product" in html
-    assert "it never goes live" in html
+    assert "synthetic teaching example, not a live manager product" in html
+    assert "It remains synthetic" in html
     # Inlined JSON for the dials + spec link.
     assert 'id="card-data"' in html
     assert "specs/x2.html" in html
@@ -71,7 +71,7 @@ def test_x2_dials_have_named_groups_and_touch_targets(tmp_path):
     assert html.count('<fieldset class="x2-dial"') == 5
     assert html.count('<legend class="x2-dial__label">') == 5
     assert 'aria-label="Track length T (months): 120"' in html
-    assert 'aria-label="Transparency tier: E"' in html
+    assert 'aria-label="Evidence available: Exposure summaries"' in html
 
     button_rule = css.split(".x2-dial__btn {", 1)[1].split("}", 1)[0]
     assert "min-width: 44px" in button_rule
@@ -129,11 +129,29 @@ def test_x2_leads_with_an_instructed_before_after_comparison(tmp_path):
     comparison = html.split('<section class="x2-before-after"', 1)[1].split(
         '<section class="x2-controls"', 1
     )[0]
-    assert "Before · 48 months · tier R" in comparison
-    assert "After · 120 months · tier E" in comparison
+    assert "Before · 48 months · Returns only" in comparison
+    assert "After · 120 months · Exposure summaries" in comparison
     assert "What changed" in comparison
     assert "noise" in comparison
     assert "shrink" in comparison
+
+
+def test_x2_uses_full_public_tier_labels_and_hides_internal_publication_terms(tmp_path):
+    html, _ = _build(tmp_path)
+
+    for label in ("Returns only", "Exposure summaries", "Positions and trades"):
+        assert label in html
+    for token in ('data-value="R"', 'data-value="E"', 'data-value="P"'):
+        assert token in html
+    for internal in (
+        "X1 atlas",
+        "committed JSON",
+        "tier R",
+        "tier E",
+        "tier-P",
+        "attestation ceiling",
+    ):
+        assert internal not in html
 
 
 def test_x2_script_loaded(tmp_path):

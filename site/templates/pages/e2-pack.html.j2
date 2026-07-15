@@ -9,58 +9,24 @@
 {% set reported = tear.stats | selectattr("label", "equalto", "Reported Sharpe") | first %}
 {% set desmoothed = tear.stats | selectattr("label", "equalto", "De-smoothed Sharpe") | first %}
 {% set alpha = tear.stats | selectattr("label", "equalto", "Annualized alpha") | first %}
+{% set tier_labels = {"R": "Returns only", "E": "Exposure summaries", "P": "Positions and trades"} %}
 
 {% block demo_content %}
-<section class="exhibit-intro" aria-label="What this exhibit shows">
-  <h2 class="exhibit-intro__title">What this exhibit shows</h2>
-  <div class="exhibit-intro__block">
-    <h3 class="exhibit-intro__sub">What you are looking at</h3>
-    <p>This is one composed engagement pack for {{ card_data.meta.manager_name }},
-      a returns-only (tier&nbsp;{{ card_data.meta.tier }}) manager, for
-      {{ card_data.meta.quarter }}. E2 computes nothing itself: it stitches
-      already-certified fragments from other cards into one print-clean document.
-      The tear sheet is honest &mdash; a reported Sharpe of {{ reported.value }} that de-smooths to
-      {{ desmoothed.value }}, with a {{ alpha.value }} alpha whose {{ alpha.level }} interval still spans zero &mdash; while the
-      skill-standing section stays gated at {{ standing.gate.measured }} months and the exposure-drift panel is
-      withheld until tier&nbsp;E. Nothing here is asserted beyond what its source card
-      certified.</p>
-  </div>
-  <div class="exhibit-intro__block">
-    <h3 class="exhibit-intro__sub">How to read it</h3>
-    <ul class="exhibit-intro__list">
-      <li><strong>Interval band</strong> (the little rail under a number): the point
-        estimate is the tick, the shaded band is its confidence interval &mdash; a
-        band crossing zero means the track is too short to call.</li>
-      <li><strong>Verdict chip</strong> ("provisionally alternative beta"): a
-        plain-language read on the number, a track-length statement, not a claim of
-        skill.</li>
-      <li><strong>Power-gate panel</strong> (the dashed box on Posterior skill
-        standing): a <em>refused</em> section &mdash; it names what the metric would
-        show and the sample it needs, rather than guessing. The refusal is content,
-        not a gap.</li>
-      <li><strong>"Not shown at this tier" footer</strong>: an <em>omitted</em>
-        section (Exposure hygiene &amp; drift) that this manager's data does not reach
-        &mdash; disclosed, never silently dropped.</li>
-      <li><strong>Per-section provenance line</strong>: which source card certified
-        each number, so every figure traces to its origin even on paper.</li>
-      <li>The full methodology &mdash; with the math and a reference implementation
-        &mdash; is in the
-        <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.</li>
-    </ul>
-  </div>
-</section>
-
 <div class="pack-page">
   <section class="pack-head">
     <p class="pack-head__meta">
-      {{ card_data.meta.manager_name }} &middot; tier {{ card_data.meta.tier }} &middot;
-      {{ card_data.meta.quarter }}
+      {{ card_data.meta.manager_name }} &middot; {{ tier_labels[card_data.meta.tier] }}
+      &middot; {{ card_data.meta.quarter }}
     </p>
-    <p class="pack-summary">{{ card_data.summary }}</p>
+    <p class="pack-summary">{{ card_data.summary
+      | replace("returns-only tier", "Returns only")
+      | replace("tier-E data", "Exposure summaries")
+      | replace("source card", "source analysis")
+    }}</p>
     <aside class="pack-honesty" role="note">
-      Narration in this demo is <strong>hand-authored and human-edited</strong>. The
-      live build drafts it through the numeric-faithfulness harness (spec &sect;4);
-      every number here already traces to the source card that certified it.
+      Narration in this demonstration is <strong>hand-authored and human-edited</strong>.
+      Automatic number checks require every stated value to match the dated analysis
+      named beneath its section.
     </aside>
   </section>
 
@@ -68,9 +34,14 @@
     {% if s.state == "rendered" %}
     <section class="pack-section" data-section="{{ s.section_id }}">
       <h2 class="pack-section__title">{{ s.title }}</h2>
-      <p class="pack-section__prov">Certified by {{ s.provenance.card | upper }}
-        &middot; {{ s.provenance.metric }} &middot; as of {{ s.provenance.as_of }}</p>
-      {% if s.narration %}<p class="pack-narration">{{ s.narration }}</p>{% endif %}
+      <p class="pack-section__prov">Source analysis: {{ card_titles[s.provenance.card] }}
+        &middot; {{ s.provenance.metric | replace("_", " ") }}
+        &middot; as of {{ s.provenance.as_of }}</p>
+      {% if s.narration %}<p class="pack-narration">{{ s.narration
+        | replace("sampler atlas", "calibration study")
+        | replace("At the returns-only tier", "With returns only")
+        | replace("unlocks at tier E", "becomes available with Exposure summaries")
+      }}</p>{% endif %}
       {% if s.stats %}
       <div class="pack-stats">
         {% for stat in s.stats %}
@@ -103,18 +74,17 @@
       </ul>
       {% endif %}
     </section>
-
     {% elif s.state == "refused" %}
     <section class="pack-section" data-section="{{ s.section_id }}">
       <h2 class="pack-section__title">{{ s.title }}</h2>
-      <p class="pack-section__prov">Gated by X1 &middot; {{ s.gate.metric }}
-        &middot; source {{ s.provenance.card | upper }}</p>
+      <p class="pack-section__prov">Source analysis: {{ card_titles[s.provenance.card] }}
+        &middot; {{ s.gate.metric | replace("_", " ") }}</p>
       <div class="power-gate">
-        <span class="power-gate__title">{{ s.title }} &middot; power gate</span>
-        <p class="power-gate__reason">{{ s.narration }}</p>
+        <span class="power-gate__title">Not enough evidence for this section</span>
+        <p class="power-gate__reason">{{ s.narration | replace("sampler atlas", "calibration study") }}</p>
         <p class="power-gate__reason">
-          {{ s.gate.effect }} needs more {{ s.gate.quantity }} than the sampler atlas
-          holds &mdash;
+          {{ s.gate.effect }} needs more {{ s.gate.quantity }} than the reliability
+          study covers &mdash;
           {% if s.gate.threshold is none %}no tenure in the measured range suffices{% else %}threshold {{ s.gate.threshold }} {{ s.gate.quantity }}{% endif %}
           (measured {{ s.gate.measured }}).
         </p>
@@ -124,35 +94,49 @@
   {% endfor %}
 
   <footer class="pack-footer">
-    <h2 class="pack-footer__title">Provenance</h2>
+    <h2 class="pack-footer__title">Source analyses</h2>
     <ul class="pack-footer__prov">
       {% for p in card_data.footer.provenance %}
-      <li>{{ p.title }} &mdash; certified by {{ p.certified_by | upper }}</li>
+      <li>{{ p.title }} &mdash; {{ card_titles[p.certified_by] }}</li>
       {% endfor %}
     </ul>
     {% if card_data.footer.omitted %}
-    <h2 class="pack-footer__title">Not shown at this tier</h2>
+    <h2 class="pack-footer__title">Not available with current evidence</h2>
     <ul class="pack-footer__omitted">
       {% for o in card_data.footer.omitted %}
-      <li>{{ o.title }} &mdash; shown at tier {{ o.needs_tier }}</li>
+      <li>{{ o.title }} &mdash; available with {{ tier_labels[o.needs_tier] }}</li>
       {% endfor %}
     </ul>
     {% endif %}
   </footer>
 </div>
+
+<section class="exhibit-intro" aria-label="What this exhibit shows">
+  <h2 class="exhibit-intro__title">What this exhibit shows</h2>
+  <div class="exhibit-intro__block">
+    <h3 class="exhibit-intro__sub">What you are looking at</h3>
+    <p>This is one composed engagement pack for {{ card_data.meta.manager_name }}, a
+      returns-only manager, for {{ card_data.meta.quarter }}. It combines reviewed
+      analyses into one meeting document without upgrading any conclusion. The
+      reported Sharpe is {{ reported.value }}, de-smoothed Sharpe is
+      {{ desmoothed.value }}, and the {{ alpha.value }} alpha still has an
+      {{ alpha.level }} interval spanning zero. Skill standing remains unavailable at
+      {{ standing.gate.measured }} months; exposure drift needs Exposure summaries.</p>
+  </div>
+  <div class="exhibit-intro__block">
+    <h3 class="exhibit-intro__sub">How to read it</h3>
+    <p>Read each interval with its verdict and dated source-analysis line. A refused or
+      omitted section is part of the document: it states what evidence is missing
+      instead of silently disappearing. <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">Read the full article</a>.</p>
+  </div>
+</section>
 {% endblock %}
 
 {% block methodology %}
-<p>E2 computes nothing. It reads the certified render payloads other cards emit,
-selects the sections this manager's tier and the X1 PowerGate registry permit,
-orders them, and binds narration whose every number traces to a payload. A
-section resolves to exactly one of three states &mdash; rendered, refused, or
-omitted-and-footnoted &mdash; never a silent drop.</p>
-<p>The refusal is content, not a gap: where the source card's PowerGate refuses a
-claim, the pack shows the gate and the sample it would need, and the narration
-may say what the metric would show and why it can't &mdash; it may not assert the
-refused claim. A killed analytic has no registry row and no payload, so the pack
-cannot narrate a claim no card is allowed to make.</p>
+<p>The pack performs no statistical estimation. It orders reviewed analysis sections,
+preserves each section's evidence threshold and date, and checks that every number in
+the narration matches an approved value. Each section is rendered, refused with a
+plain reason, or listed as unavailable with current evidence.</p>
 {% endblock %}
 
 {% block body_scripts %}
