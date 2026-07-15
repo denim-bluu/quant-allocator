@@ -1,11 +1,17 @@
 from __future__ import annotations
 
+from pathlib import Path
+
+import yaml
+
+from quant_allocator.site.build import build
 from quant_allocator.site.public_text import public_text_violations
 
 
 CARD_IDS = {"S1", "E3", "X3"}
 CLAIM_IDS = {"S1-alpha-posterior", "E3-retrieval-gate"}
 ACCESS_SEMANTICS = {"exact-per-dataset", "synthetic-fixture-only"}
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _violations(html: str):
@@ -82,3 +88,49 @@ def test_public_text_scan_reports_short_normalized_excerpts():
     assert len(violations) == 1
     assert len(violations[0].excerpt) <= 160
     assert "Current A" in violations[0].excerpt
+
+
+def test_all_generated_public_pages_pass_internal_language_lint(tmp_path):
+    out = tmp_path / "out"
+    build(REPO_ROOT / "site", out)
+    cards = yaml.safe_load(
+        (REPO_ROOT / "site" / "cards.yaml").read_text(encoding="utf-8")
+    )
+    card_ids = {card["id"].upper() for card in cards}
+    access_semantics = {
+        claim["access_semantics"] for card in cards for claim in card["claims"]
+    }
+    claim_ids = set()
+    for card in cards:
+        reader_fields = " ".join(
+            (
+                card["title"],
+                card["one_liner"],
+                card["decision_question"],
+                card["minimum_data"],
+            )
+        ).lower()
+        claim_ids.update(
+            claim["id"]
+            for claim in card["claims"]
+            if claim["id"].lower() not in reader_fields
+        )
+
+    pages = [out / "index.html", out / "exhibits.html"]
+    pages.extend(out / f"{card['id']}.html" for card in cards)
+    pages.extend(out / "specs" / f"{card['id']}.html" for card in cards)
+
+    failures = []
+    for page in pages:
+        violations = public_text_violations(
+            page.read_text(encoding="utf-8"),
+            card_ids=card_ids,
+            claim_ids=claim_ids,
+            access_semantics=access_semantics,
+        )
+        failures.extend(
+            f"{page.relative_to(out)} [{violation.rule}] {violation.excerpt}"
+            for violation in violations
+        )
+
+    assert not failures, "\n" + "\n".join(failures)
