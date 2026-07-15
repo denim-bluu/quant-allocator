@@ -10,12 +10,15 @@ objective:
     Build a public static editorial research publication and project-idea bank with
     Aligrithm-style composition and Interval quantitative semantics.
 scheduler:
-  current_task: WEBSITE-EXHIBIT-REMEDIATION-R2
+  current_task: WEBSITE-EXHIBIT-REMEDIATION-R2-READY
   active_plan: docs/superpowers/plans/2026-07-15-public-exhibit-remediation.md
   next_action: >-
-    Implement the shared public-language projection and validator unit tests, then
-    execute the approved file-disjoint exhibit remediation tracks. No outward action
-    is authorized; parked work remains parked.
+    Review the verified codex/reader-remediation implementation at
+    38afc21ed561bdfbb93cfb31962e1dd35576de11. Rendered desktop, mobile, and
+    interaction evidence is saved under
+    /private/tmp/quant-allocator-reader-remediation-qa-2026-07-15. No outward action
+    is authorized; merge, push, and publication require separate approval, and parked
+    work remains parked.
 parked_work:
   p4:
     status: parked
@@ -30,7 +33,7 @@ authority:
   push: false
   publish: false
 verification:
-  current_level: public-exhibit-remediation-in-progress
+  current_level: public-exhibit-remediation-verified
   required:
     - targeted-site-tests
     - fresh-static-build

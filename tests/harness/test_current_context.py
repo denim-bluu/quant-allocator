@@ -80,11 +80,14 @@ def test_current_context_selects_public_exhibit_remediation():
         "docs/superpowers/plans/2026-07-15-public-exhibit-remediation.md"
     )
     assert current["scheduler"]["current_task"] == (
-        "WEBSITE-EXHIBIT-REMEDIATION-R2"
+        "WEBSITE-EXHIBIT-REMEDIATION-R2-READY"
     )
-    assert "shared public-language projection" in current["scheduler"][
+    assert "38afc21ed561bdfbb93cfb31962e1dd35576de11" in current["scheduler"][
         "next_action"
     ].lower()
+    assert "/private/tmp/quant-allocator-reader-remediation-qa-2026-07-15" in current[
+        "scheduler"
+    ]["next_action"]
     assert "no outward action is authorized" in current["scheduler"][
         "next_action"
     ].lower()
@@ -97,7 +100,7 @@ def test_current_context_selects_public_exhibit_remediation():
         "publish": False,
     }
     assert current["verification"]["current_level"] == (
-        "public-exhibit-remediation-in-progress"
+        "public-exhibit-remediation-verified"
     )
     assert "targeted-site-tests" in current["verification"]["required"]
     assert "output-integrity" in current["verification"]["required"]
