@@ -63,7 +63,7 @@ def _build(tmp_path):
     return (out / "m6.html").read_text(encoding="utf-8"), out
 
 
-def test_page_furniture_and_accessible_timeline(tmp_path):
+def test_page_furniture_and_accessible_trajectory(tmp_path):
     html, out = _build(tmp_path)
     assert "SYNTHETIC DATA" in html
     assert "golive-box" in html
@@ -73,29 +73,34 @@ def test_page_furniture_and_accessible_timeline(tmp_path):
     assert "What this exhibit shows" in html
     assert "What you are looking at" in html
     assert "How to read it" in html
-    assert "Reported-long timeline" in html
+    assert "Form 13F is a quarterly US regulatory filing" in html
+    assert "Six-quarter concentration trajectory" in html
+    assert html.count('class="m6-trajectory__quarter"') == 6
+    assert "100%" in html and "50%" in html and "0%" in html
+    assert "Largest reported position" in html
+    assert "Top five reported positions" in html
+    assert "Effective names" in html
     assert "<caption>" in html
     assert html.count('scope="col"') >= 6
     assert "m6-holdings.js" not in html
 
 
-def test_centerpiece_receipts_and_method_boundaries(tmp_path):
+def test_centerpiece_source_dates_and_method_boundaries(tmp_path):
     html, out = _build(tmp_path)
     intro = html.split('<section class="m6-intro">', 1)[1].split("</section>", 1)[0]
     crossing = html.split('<p class="m6-crossing">', 1)[1].split("</p>", 1)[0]
     assert "Vesper Lane Capital" in html
-    assert "This fully synthetic 13F-style filing crop shows" in intro
+    assert "Form 13F is a quarterly US regulatory filing" in intro
     assert intro.count("as of") == 2
     assert intro.count("known at") == 2
     assert intro.count("45-day lag") == 2
-    assert 'data-receipt="crossing"' in crossing
     assert "as of" in crossing
     assert "known at" in crossing
     assert "45-day lag" in crossing
     assert "as of" in html
     assert "known at" in html
     assert "45-day lag" in html
-    assert "crowding caps belong to M4" in html
+    assert "A separate crowding analysis sets any position cap" in html
     assert "quarterly survival at filing granularity" in html
     assert "never a half-life and never entry-dated" in html
     assert "walk us through the conviction?" in html
@@ -125,16 +130,19 @@ def test_coverage_gate_suppresses_hensley_book_verdicts(tmp_path):
     hensley = html.split('data-filer="hensley"', 1)[1].split("</article>", 1)[0]
     assert 'data-stat="concentration"' in vesper
     assert 'data-stat="overlap"' in vesper
-    assert "CoverageGate pass" in vesper
+    assert "Coverage check passed" in vesper
     assert 'data-stat="concentration"' not in hensley
     assert 'data-stat="overlap"' not in hensley
-    assert "CoverageGate refusal" in hensley
+    assert "Coverage too low" in hensley
+    assert "Coverage not sufficient to calculate concentration or overlap" in hensley
     assert "visible names" in hensley
+    assert html.index("Coverage not sufficient to calculate concentration or overlap") < html.index("Reported holdings detail")
 
 
 def test_finra_placeholder_and_caveat_ledger(tmp_path):
     html, _ = _build(tmp_path)
-    assert "requires FINRA adapter" in html
+    assert "Requires public FINRA data" in html
+    assert "has not been connected" in html
     assert "days-to-cover number is shown" not in html
     assert "Staleness" in html
     assert "Longs-only" in html

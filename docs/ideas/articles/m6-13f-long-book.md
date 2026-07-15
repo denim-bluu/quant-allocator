@@ -140,7 +140,8 @@ dates. They support better questions than a one-off holdings list.
 
 The method preserves several negative findings. Reported persistence is not alpha
 persistence. Peer overlap is not a size cap. Concentration is not return prediction.
-The short-interest lens remains unplayed until a real FINRA and ADV adapter exists.
+The short-interest lens remains not calculated until real FINRA short-interest and
+trading-volume data are connected.
 
 Most importantly, an exact filing statistic does not override low coverage. The
 coverage warning replaces the verdict when the public crop is likely to misrepresent
@@ -161,8 +162,8 @@ The public example uses synthetic filers. Live use requires versioned SEC EDGAR 
 supports a snapshot; several quarters are required for persistence and trajectory.
 
 The filing may be 45 days stale, includes longs but not shorts, can omit non-public or
-non-US positions, and can misstate economic exposure through option values. In the
-current v1 rule, option lines are excluded from share calculations and a filer is
+non-US positions, and can misstate economic exposure through option values. Under the
+current rule, option lines are excluded from share calculations and a filer is
 provisionally flagged option-heavy when option value exceeds 10% of reported value.
 
 The provisional coverage threshold is 0.60. Below it, concentration and overlap refuse.

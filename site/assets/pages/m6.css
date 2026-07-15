@@ -1,8 +1,9 @@
 /* M6 page layout only; shared badges, verdicts, gates, and go-live furniture come from
    interval.css. */
 
-.m6-intro, .m6-timeline, .m6-gate, .m6-finra, .m6-caveats { margin: 20px 0; }
+.m6-intro, .m6-trajectory, .m6-gate, .m6-holdings-detail, .m6-finra, .m6-caveats { margin: 20px 0; }
 .m6-headline { font-size: 15px; line-height: 1.55; }
+.m6-source-dates { color: var(--dim); font-size: 10px; }
 
 .m6-exhibit, .m6-boundary {
   margin: 20px 0;
@@ -11,13 +12,45 @@
   border-radius: 8px;
   background: var(--paper);
 }
-.m6-exhibit h2, .m6-timeline h2, .m6-gate h2, .m6-finra h2, .m6-caveats h2 {
+.m6-exhibit h2, .m6-trajectory h2, .m6-gate h2, .m6-holdings-detail h2,
+.m6-finra h2, .m6-caveats h2 {
   margin: 0 0 10px;
   font-size: 15px;
 }
 .m6-exhibit h3 { margin: 12px 0 5px; font-size: 11px; text-transform: uppercase;
   letter-spacing: 0.1em; color: var(--dim); }
 .m6-exhibit p, .m6-exhibit li, .m6-boundary { font-size: 13px; line-height: 1.5; }
+
+.m6-trajectory {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+}
+.m6-trajectory__heading { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 16px; }
+.m6-trajectory__heading h2 { margin: 3px 0 0; font-size: 18px; }
+.m6-trajectory__eyebrow { margin: 0; color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.m6-trajectory__legend { display: grid; gap: 4px; color: var(--dim); font-size: 10px; }
+.m6-trajectory__legend span { display: flex; align-items: center; gap: 6px; }
+.m6-trajectory__legend i { display: inline-block; flex: none; }
+.m6-trajectory__legend-bar { width: 14px; height: 8px; background: color-mix(in srgb, var(--accent) 35%, transparent); }
+.m6-trajectory__legend-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); }
+.m6-trajectory__chart { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 8px; }
+.m6-trajectory__axis { height: 210px; display: flex; flex-direction: column; justify-content: space-between; align-items: end; padding: 23px 0 69px; box-sizing: border-box; color: var(--dim); font-size: 9px; }
+.m6-trajectory__quarters { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.m6-trajectory__quarter { min-width: 0; display: grid; align-content: start; gap: 3px; text-align: center; font-size: 10px; }
+.m6-trajectory__scale {
+  position: relative;
+  height: 120px;
+  margin: 5px 0;
+  border-bottom: 1px solid var(--ink);
+  background: linear-gradient(to bottom, transparent 49.5%, var(--line) 50%, transparent 50.5%);
+}
+.m6-trajectory__bar { position: absolute; left: 22%; bottom: 0; width: 56%; height: calc(var(--m6-top-five) * 100%); background: color-mix(in srgb, var(--accent) 35%, transparent); border: 1px solid var(--accent); border-bottom: 0; box-sizing: border-box; }
+.m6-trajectory__leader { position: absolute; left: 50%; bottom: calc(var(--m6-leader) * 100%); width: 8px; height: 8px; transform: translate(-50%, 50%); border-radius: 50%; background: var(--warn); border: 1px solid var(--paper); box-shadow: 0 0 0 1px var(--warn); }
+.m6-trajectory__value, .m6-trajectory__effective { font-variant-numeric: tabular-nums; }
+.m6-trajectory__effective { color: var(--ink); font-weight: 650; }
+.m6-trajectory__quarter small { color: var(--dim); font-size: 8px; line-height: 1.35; }
 
 .m6-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
 .m6-table { width: 100%; min-width: 780px; border-collapse: collapse; font-size: 12px; }
@@ -52,6 +85,11 @@
 .m6-caveats ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 
 @media (max-width: 700px) {
+  .m6-trajectory__heading { display: grid; }
+  .m6-trajectory__chart { grid-template-columns: 1fr; }
+  .m6-trajectory__axis { display: none; }
+  .m6-trajectory__quarters { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .m6-trajectory__scale { height: 100px; }
   .m6-gate__grid { grid-template-columns: 1fr; }
   .m6-rail { grid-template-columns: 1fr; }
 }
