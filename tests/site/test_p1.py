@@ -149,3 +149,6 @@ def test_tau_active_and_focus_contrast_tokens_are_explicit():
     assert "color: var(--paper)" in css
     assert ".p1-dial__btn:focus-visible" in css
     assert "outline: 3px solid var(--accent)" in css
+    button_rule = css.split(".p1-dial__btn {", 1)[1].split("}", 1)[0]
+    assert "min-width: 44px" in button_rule
+    assert "min-height: 44px" in button_rule

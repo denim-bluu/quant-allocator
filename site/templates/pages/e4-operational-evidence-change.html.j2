@@ -186,10 +186,10 @@
     <header><p class="e4-kicker">Relationship view</p><h2 id="e4-graph-title">Supporting operational relationships</h2></header>
     <div class="e4-graph" role="region" aria-label="Operational relationship diagram">
       {% for row in card_data.relationships %}
-      <button type="button" class="e4-edge" data-e4-relationship-id="{{ row.relationship_id }}"
+      <article class="e4-edge" data-e4-relationship-id="{{ row.relationship_id }}"
         aria-label="{{ row.source_label }} {{ row.relation_type | replace('-', ' ') }} {{ row.target_label }}">
         <span>{{ row.source_label }}</span><b>{{ row.relation_type | replace('-', ' ') }}</b><span>{{ row.target_label }}</span>
-      </button>
+      </article>
       {% endfor %}
     </div>
   </section>

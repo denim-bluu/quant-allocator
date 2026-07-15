@@ -13,11 +13,16 @@
     }
     var los = stats.map(function (s) { return parseFloat(s.dataset.lo); });
     var his = stats.map(function (s) { return parseFloat(s.dataset.hi); });
-    var min = Math.min.apply(null, los);
-    var max = Math.max.apply(null, his);
+    var min = Math.min.apply(null, [0].concat(los));
+    var max = Math.max.apply(null, [0].concat(his));
     var span = max - min;
     if (span <= 0) {
       return;
+    }
+    var zeroPosition = ((0 - min) / span) * 100;
+    var axis = document.querySelector("[data-ledger-axis]");
+    if (axis) {
+      axis.style.setProperty("--ledger-zero", zeroPosition + "%");
     }
     stats.forEach(function (s) {
       var lo = parseFloat(s.dataset.lo);
@@ -25,9 +30,11 @@
       var point = parseFloat(s.dataset.point);
       var band = s.querySelector(".interval-stat__band");
       var mark = s.querySelector(".interval-stat__point");
+      var zero = s.querySelector(".interval-stat__zero");
       band.style.left = ((lo - min) / span) * 100 + "%";
       band.style.width = ((hi - lo) / span) * 100 + "%";
       mark.style.left = ((point - min) / span) * 100 + "%";
+      zero.style.left = zeroPosition + "%";
     });
   }
 

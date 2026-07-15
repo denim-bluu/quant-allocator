@@ -49,6 +49,8 @@
 .p1-dial { margin-top: 10px; }
 .p1-dial__options { display: flex; gap: 6px; }
 .p1-dial__btn {
+  min-width: 44px;
+  min-height: 44px;
   padding: 2px 10px;
   border: 1px solid currentColor;
   border-radius: 999px;

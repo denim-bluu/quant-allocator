@@ -100,31 +100,30 @@
   </div>
 </section>
 
-<section class="s7-controls" aria-label="Explore a precomputed provenance state">
-  <fieldset>
-    <legend>Source shape</legend>
-    {% for token in ['public-equity', 'hedge-fund', 'credit', 'private-market'] %}
-    <button type="button" data-s7-scenario-control="{{ token }}"
-      aria-pressed="{{ 'true' if token == default_state.scenario else 'false' }}">
-      {{ card_data.scenarios[token].label }}
-    </button>
-    {% endfor %}
-  </fieldset>
-  <fieldset>
-    <legend>Decision date</legend>
-    <button type="button" data-s7-cutoff-control="early" aria-pressed="true">Earlier</button>
-    <button type="button" data-s7-cutoff-control="latest" aria-pressed="false">Later</button>
-  </fieldset>
-  <fieldset>
-    <legend>Evidence view</legend>
-    <button type="button" data-s7-view-control="lineage" aria-pressed="true">Lineage</button>
-    <button type="button" data-s7-view-control="basis" aria-pressed="false">Comparability</button>
-    <button type="button" data-s7-view-control="audit" aria-pressed="false">Revision history</button>
-  </fieldset>
-</section>
-
 <details class="s7-explorer">
   <summary>Explore another evidence state</summary>
+  <section class="s7-controls" aria-label="Explore a precomputed provenance state">
+    <fieldset>
+      <legend>Source shape</legend>
+      {% for token in ['public-equity', 'hedge-fund', 'credit', 'private-market'] %}
+      <button type="button" data-s7-scenario-control="{{ token }}"
+        aria-pressed="{{ 'true' if token == default_state.scenario else 'false' }}">
+        {{ card_data.scenarios[token].label }}
+      </button>
+      {% endfor %}
+    </fieldset>
+    <fieldset>
+      <legend>Decision date</legend>
+      <button type="button" data-s7-cutoff-control="early" aria-pressed="true">Earlier</button>
+      <button type="button" data-s7-cutoff-control="latest" aria-pressed="false">Later</button>
+    </fieldset>
+    <fieldset>
+      <legend>Evidence view</legend>
+      <button type="button" data-s7-view-control="lineage" aria-pressed="true">Lineage</button>
+      <button type="button" data-s7-view-control="basis" aria-pressed="false">Comparability</button>
+      <button type="button" data-s7-view-control="audit" aria-pressed="false">Revision history</button>
+    </fieldset>
+  </section>
   <div class="s7-explorer__body">
     <p class="s7-notice" role="status" data-s7-notice hidden></p>
     <p class="s7-announcer" aria-live="polite" data-s7-announcer>

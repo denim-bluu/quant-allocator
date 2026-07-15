@@ -139,3 +139,10 @@ def test_dietvorst_dial_is_precomputed(tmp_path):
     html, _ = _build(tmp_path)
     # The skepticism slider snaps among precomputed fan states (x2 idiom); no client computation.
     assert "data-dial" in html or "m3-dial" in html
+
+
+def test_dietvorst_dial_buttons_keep_minimum_touch_targets():
+    css = (REPO_ROOT / "site" / "assets" / "pages" / "m3.css").read_text(encoding="utf-8")
+    button_rule = css.split(".m3-dial__btn {", 1)[1].split("}", 1)[0]
+    assert "min-width: 44px" in button_rule
+    assert "min-height: 44px" in button_rule

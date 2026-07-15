@@ -2,6 +2,7 @@ from pathlib import Path
 
 import json
 import shutil
+import subprocess
 
 from quant_allocator.site.build import build
 
@@ -158,3 +159,128 @@ def test_x2_script_loaded(tmp_path):
     html, out = _build(tmp_path)
     assert "assets/x2-playground.js" in html
     assert (out / "assets" / "x2-playground.js").exists()
+
+
+def test_x2_controls_announce_the_selected_precomputed_state(tmp_path):
+    html, out = _build(tmp_path)
+    script = (out / "assets" / "x2-playground.js").read_text(encoding="utf-8")
+
+    assert 'data-x2-announcer' in html
+    assert 'aria-live="polite"' in html
+    assert "Showing " in script
+    assert "Evidence available" not in script
+
+
+def test_x2_interval_geometry_uses_one_committed_domain_per_analytic():
+    script_path = REPO_ROOT / "site" / "assets" / "x2-playground.js"
+    data_path = REPO_ROOT / "site" / "data" / "x2_playground.json"
+    harness = r"""
+const fs = require("fs"), vm = require("vm");
+const data = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+
+function node() {
+  return {
+    style: {}, textContent: "", attrs: {}, hidden: false,
+    setAttribute(k, v) { this.attrs[k] = String(v); },
+    getAttribute(k) { return this.attrs[k]; }
+  };
+}
+
+const stat = node(), value = node(), range = node(), band = node(), mark = node();
+const chip = node(), wilson = node(), reason = node();
+const slot = node();
+slot.attrs["data-analytic"] = "alpha";
+slot.querySelector = selector => ({
+  ".interval-stat": stat,
+  ".interval-stat__value": value,
+  ".interval-stat__range": range,
+  ".interval-stat__band": band,
+  ".interval-stat__point": mark,
+  ".verdict-chip": chip,
+  ".x2-wilson__value": wilson,
+  ".power-gate__reason": reason
+}[selector]);
+
+let click = null;
+const controls = node();
+controls.attrs = {
+  "data-default-ic": "0.04",
+  "data-default-half_life": "12",
+  "data-default-sizing": "0.8",
+  "data-default-T": "24",
+  "data-default-tier": "R"
+};
+controls.addEventListener = (name, fn) => { if (name === "click") click = fn; };
+
+const group = node();
+group.attrs["data-dial"] = "T";
+const button24 = node(), button120 = node();
+[button24, button120].forEach(button => {
+  button.classList = {toggle() {}};
+  button.closest = selector => selector === ".x2-dial__btn" ? button : group;
+});
+button24.attrs["data-value"] = "24";
+button120.attrs["data-value"] = "120";
+group.querySelectorAll = () => [button24, button120];
+
+const cardData = node();
+cardData.textContent = JSON.stringify(data);
+global.document = {
+  readyState: "complete",
+  getElementById(id) { return id === "card-data" ? cardData : null; },
+  querySelector(selector) {
+    if (selector === "[data-dials]") return controls;
+    if (selector === "[data-falsealarm]") return null;
+    return null;
+  },
+  querySelectorAll(selector) {
+    return selector === ".x2-analytic" ? [slot] : [];
+  }
+};
+
+vm.runInThisContext(fs.readFileSync(process.argv[1], "utf8"));
+if (!click) throw new Error("dial listener was not registered");
+
+const values = [0];
+Object.values(data.cells).forEach(cell => {
+  if (cell.alpha) values.push(cell.alpha[0], cell.alpha[1], cell.alpha[2]);
+});
+const min = Math.min(...values), max = Math.max(...values), span = max - min;
+const expected = months => {
+  const arr = data.cells[`0.04|12|0.8|${months}|R`].alpha;
+  return {
+    left: (arr[1] - min) / span * 100,
+    width: (arr[2] - arr[1]) / span * 100,
+    point: (arr[0] - min) / span * 100
+  };
+};
+const observed24 = {
+  left: parseFloat(band.style.left),
+  width: parseFloat(band.style.width),
+  point: parseFloat(mark.style.left)
+};
+click({target: button120});
+const observed120 = {
+  left: parseFloat(band.style.left),
+  width: parseFloat(band.style.width),
+  point: parseFloat(mark.style.left)
+};
+
+for (const [observed, wanted] of [[observed24, expected(24)], [observed120, expected(120)]]) {
+  for (const key of ["left", "width", "point"]) {
+    if (Math.abs(observed[key] - wanted[key]) > 1e-9) {
+      throw new Error(`${key}: observed ${observed[key]}, expected ${wanted[key]}`);
+    }
+  }
+}
+if (Math.abs(observed24.width - observed120.width) < 1) {
+  throw new Error("24- and 120-month interval bands should be visibly different");
+}
+"""
+    result = subprocess.run(
+        ["node", "-e", harness, str(script_path), str(data_path)],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr

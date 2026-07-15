@@ -173,6 +173,8 @@ def test_supporting_tables_keep_accessible_equivalence_without_public_ids(tmp_pa
     assert html.count("data-e4-fact-id=") == len(data["facts"]) == 32
     assert html.count("data-e4-relationship-id=") == len(data["relationships"]) == 16
     assert html.count("data-e4-relationship-row-id=") == len(data["relationships"]) == 16
+    assert html.count('<article class="e4-edge"') == len(data["relationships"]) == 16
+    assert '<button type="button" class="e4-edge"' not in html
     assert "Relationship rows equivalent to the diagram" in html
     assert "<noscript>" in html
 

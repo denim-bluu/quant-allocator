@@ -6,8 +6,13 @@
 
 {% block demo_content %}
 {% set ns = namespace(movers=0) %}
+{% set axis = namespace(lo=0, hi=0) %}
 {% for m in card_data.managers %}
   {% if m.ols_rank != m.posterior_rank %}{% set ns.movers = ns.movers + 1 %}{% endif %}
+  {% for estimate in [m.ols_alpha, m.posterior_alpha] %}
+    {% if estimate.ci_lo < axis.lo %}{% set axis.lo = estimate.ci_lo %}{% endif %}
+    {% if estimate.ci_hi > axis.hi %}{% set axis.hi = estimate.ci_hi %}{% endif %}
+  {% endfor %}
 {% endfor %}
 
 <section class="ledger-intro">
@@ -101,6 +106,15 @@
       <span class="rank-move rank-move--down">&#9660;</span> fell after shrinkage
     </span>
   </div>
+  <div class="ledger-shared-axis" data-ledger-axis
+       aria-label="Shared annual alpha scale from {{ '%+.1f'|format(axis.lo * 100) }}% to {{ '%+.1f'|format(axis.hi * 100) }}%, with zero marked">
+    <span class="ledger-shared-axis__title">Shared annual alpha scale</span>
+    <div class="ledger-shared-axis__rail" aria-hidden="true">
+      <span class="ledger-shared-axis__endpoint ledger-shared-axis__endpoint--min">{% if axis.lo < 0 %}&minus;{{ '%.1f'|format(-axis.lo * 100) }}%{% else %}+{{ '%.1f'|format(axis.lo * 100) }}%{% endif %}</span>
+      <span class="ledger-shared-axis__zero">0%</span>
+      <span class="ledger-shared-axis__endpoint ledger-shared-axis__endpoint--max">{% if axis.hi < 0 %}&minus;{{ '%.1f'|format(-axis.hi * 100) }}%{% else %}+{{ '%.1f'|format(axis.hi * 100) }}%{% endif %}</span>
+    </div>
+  </div>
   <section class="ledger" data-ledger>
   {% for m in card_data.managers | sort(attribute='ols_rank') %}
   {% set delta = m.ols_rank - m.posterior_rank %}
@@ -133,6 +147,7 @@
         <span class="interval-stat__value">{{ "%+.1f"|format(m.ols_alpha.point * 100) }}%</span>
         <div class="interval-stat__rail">
           <div class="interval-stat__band"></div>
+          <div class="interval-stat__zero" aria-hidden="true"></div>
           <div class="interval-stat__point"></div>
         </div>
         <span class="interval-stat__range">90% interval {{ "%+.1f"|format(m.ols_alpha.ci_lo * 100) }}% &hellip; {{ "%+.1f"|format(m.ols_alpha.ci_hi * 100) }}%</span>
@@ -146,6 +161,7 @@
         <span class="interval-stat__value">{{ "%+.1f"|format(m.posterior_alpha.point * 100) }}%</span>
         <div class="interval-stat__rail">
           <div class="interval-stat__band"></div>
+          <div class="interval-stat__zero" aria-hidden="true"></div>
           <div class="interval-stat__point"></div>
         </div>
         <span class="interval-stat__range">90% interval {{ "%+.1f"|format(m.posterior_alpha.ci_lo * 100) }}% &hellip; {{ "%+.1f"|format(m.posterior_alpha.ci_hi * 100) }}%</span>

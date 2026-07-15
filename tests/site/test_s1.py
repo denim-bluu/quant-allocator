@@ -1,3 +1,4 @@
+import subprocess
 from pathlib import Path
 
 from quant_allocator.site.build import build
@@ -37,6 +38,73 @@ def test_s1_page_component_dom_and_numbers(tmp_path):
     # (A08/A10 carry prob_positive == 1.0 from 6-digit rounding).
     assert "&gt;0.99" in html
     assert ">1.00<" not in html
+
+
+def test_s1_roster_has_one_shared_axis_and_zero_marker_on_every_rail(tmp_path):
+    out = tmp_path / "out"
+    build(REPO_ROOT / "site", out)
+    html = (out / "s1.html").read_text(encoding="utf-8")
+
+    assert html.count('class="ledger-shared-axis"') == 1
+    assert "Shared annual alpha scale" in html
+    assert "&minus;16.3%" in html
+    assert "+37.9%" in html
+    assert html.count('class="interval-stat__zero"') == 40
+
+
+def test_s1_script_uses_one_domain_for_bands_axis_and_zero_markers():
+    script_path = REPO_ROOT / "site" / "assets" / "s1-ledger.js"
+    harness = r"""
+const fs = require("fs"), vm = require("vm");
+function node(dataset) {
+  return {dataset: dataset || {}, style: {}, attrs: {}, textContent: "",
+    setAttribute(k, v) { this.attrs[k] = String(v); }};
+}
+function stat(lo, point, hi) {
+  const band = node(), mark = node(), zero = node();
+  const value = node({lo: String(lo), point: String(point), hi: String(hi)});
+  value.parts = {band, mark, zero};
+  value.querySelector = selector => ({
+    ".interval-stat__band": band,
+    ".interval-stat__point": mark,
+    ".interval-stat__zero": zero
+  }[selector]);
+  return value;
+}
+const stats = [stat(-0.25, -0.10, 0.20), stat(0.10, 0.30, 0.50)];
+const axis = node();
+axis.style.setProperty = (key, value) => { axis.style[key] = value; };
+global.document = {
+  readyState: "complete",
+  querySelectorAll(selector) { return selector === ".ledger .interval-stat" ? stats : []; },
+  querySelector(selector) { return selector === "[data-ledger-axis]" ? axis : null; }
+};
+vm.runInThisContext(fs.readFileSync(process.argv[1], "utf8"));
+const expected = 100 / 3;
+const zeroPositions = stats.map(item => parseFloat(item.parts.zero.style.left));
+const checks = [
+  zeroPositions.every(value => Math.abs(value - expected) < 1e-9),
+  Math.abs(parseFloat(axis.style["--ledger-zero"]) - expected) < 1e-9,
+  stats[0].parts.band.style.left === "0%",
+  Math.abs(parseFloat(stats[1].parts.mark.style.left) - 73.33333333333333) < 1e-9
+];
+if (checks.some(value => !value)) { console.error(checks, stats, axis); process.exit(1); }
+"""
+    result = subprocess.run(
+        ["node", "-e", harness, str(script_path)],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+def test_s1_and_m5_shared_buttons_keep_minimum_touch_targets():
+    css = (REPO_ROOT / "site" / "assets" / "interval.css").read_text(encoding="utf-8")
+    for selector in (".sort-toggle", ".saydo-focus"):
+        rule = css.split(f"{selector} {{", 1)[1].split("}", 1)[0]
+        assert "min-width: 44px" in rule
+        assert "min-height: 44px" in rule
 
 
 def test_s1_copy_is_shrinkage_not_true_skill_recovery(tmp_path):

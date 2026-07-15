@@ -127,6 +127,7 @@ def test_sign_convention_and_demo_live_disclosure(tmp_path):
 def test_horizon_slider_and_curve(tmp_path):
     html, _ = _build(tmp_path)
     assert 'id="s4-horizon"' in html
+    assert 'class="s4-slider__range"' in html
     assert "s4-curve" in html
     assert "Forward horizon" in html
     parser = _HorizonAttrs()
@@ -136,6 +137,13 @@ def test_horizon_slider_and_curve(tmp_path):
         states = json.loads(value)
         assert [state["horizon"] for state in states] == [1, 2, 3, 4, 5, 6]
     assert 'data-horizons="[{&#34;' in html
+
+
+def test_horizon_slider_keeps_a_minimum_touch_target():
+    css = (REPO_ROOT / "site" / "assets" / "interval.css").read_text(encoding="utf-8")
+    range_rule = css.split(".s4-slider__range {", 1)[1].split("}", 1)[0]
+    assert "min-width: 44px" in range_rule
+    assert "min-height: 44px" in range_rule
 
 
 def test_horizon_control_updates_text_attributes_paths_and_rails(tmp_path):

@@ -1049,6 +1049,8 @@ button:focus-visible,
 }
 
 .sort-toggle {
+  min-width: 44px;
+  min-height: 44px;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: transparent;
@@ -1057,6 +1059,64 @@ button:focus-visible,
   cursor: pointer;
   font: inherit;
 }
+
+.ledger-shared-axis {
+  --ledger-zero: 50%;
+  margin: 14px 0 18px;
+}
+
+.ledger-shared-axis__title {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--dim);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ledger-shared-axis__rail {
+  position: relative;
+  height: 30px;
+  border-top: 1px solid var(--line);
+  color: var(--dim);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger-shared-axis__endpoint,
+.ledger-shared-axis__zero {
+  position: absolute;
+  top: 8px;
+  white-space: nowrap;
+}
+
+.ledger-shared-axis__endpoint--min { left: 0; }
+.ledger-shared-axis__endpoint--max { right: 0; }
+
+.ledger-shared-axis__zero {
+  left: var(--ledger-zero);
+  transform: translateX(-50%);
+}
+
+.ledger-shared-axis__zero::before {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 1px;
+  height: 9px;
+  background: var(--dim);
+  content: "";
+}
+
+.ledger .interval-stat__zero {
+  position: absolute;
+  z-index: 1;
+  top: -4px;
+  width: 1px;
+  height: 12px;
+  background: var(--dim);
+}
+
+.ledger .interval-stat__point { z-index: 2; }
 
 .ledger-legend {
   font-size: 12px;
@@ -1186,6 +1246,8 @@ button:focus-visible,
 }
 
 .saydo-focus {
+  min-width: 44px;
+  min-height: 44px;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: transparent;
@@ -1193,6 +1255,11 @@ button:focus-visible,
   padding: 4px 10px;
   cursor: pointer;
   font: inherit;
+}
+
+.s4-slider__range {
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .saydo {

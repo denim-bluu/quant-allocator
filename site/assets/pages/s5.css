@@ -16,7 +16,7 @@
 .s5-split-chart__hedge { fill: none; stroke: var(--dim); stroke-width: 0.7; }
 .s5-split-chart__alpha { fill: none; stroke: var(--ink); stroke-width: 1.0; }
 .s5-dial { margin-top: 12px; }
-.s5-dial__range { width: 100%; }
+.s5-dial__range { width: 100%; min-width: 44px; min-height: 44px; }
 .s5-dial__readout { font-variant-numeric: tabular-nums; color: var(--dim); }
 /* Verdict-chip variants S5 introduces (add here, never in interval.css). */
 .verdict-chip[data-verdict="pos"] { color: var(--pos); }

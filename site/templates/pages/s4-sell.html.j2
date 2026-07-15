@@ -109,7 +109,8 @@
   <h2 class="s4-panel__title">The forgone-alpha curve — when the leak accrues</h2>
   <div class="s4-slider">
     <label class="s4-slider__label" for="s4-horizon">Forward horizon (months)</label>
-    <input type="range" id="s4-horizon" min="1" max="{{ meta.max_horizon_months }}"
+    <input type="range" id="s4-horizon" class="s4-slider__range"
+           min="1" max="{{ meta.max_horizon_months }}"
            value="{{ meta.horizon_months }}" step="1">
     <output class="s4-slider__out" for="s4-horizon">{{ meta.horizon_months }}</output>
   </div>

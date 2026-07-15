@@ -21,6 +21,19 @@
     sizing_slope: { fmt: slope4, band: "95% band " }
   };
 
+  var REFERENCE = {
+    alpha: 0,
+    sharpe: 0,
+    hit_rate: 0.5,
+    sizing_slope: 0
+  };
+
+  var TIER_LABEL = {
+    R: "returns only",
+    E: "exposure summaries",
+    P: "positions and trades"
+  };
+
   function readCardData() {
     var el = document.getElementById("card-data");
     if (!el) {
@@ -55,7 +68,39 @@
     return "gate closed — opens at " + arr[THRESHOLD] + " " + arr[UNITS];
   }
 
-  function paintSlot(slot, arr) {
+  // Fix one domain per analytic from every committed display cell. State changes then
+  // map endpoints to pixels on a comparable scale; no estimator runs in the browser.
+  function displayDomains(data) {
+    var values = {};
+    Object.keys(FORMAT).forEach(function (name) {
+      values[name] = [REFERENCE[name]];
+    });
+    Object.keys(data.cells).forEach(function (key) {
+      var cell = data.cells[key];
+      Object.keys(FORMAT).forEach(function (name) {
+        var arr = cell[name];
+        if (arr) {
+          values[name].push(arr[POINT], arr[LO], arr[HI]);
+        }
+      });
+    });
+    var domains = {};
+    Object.keys(values).forEach(function (name) {
+      domains[name] = {
+        min: Math.min.apply(null, values[name]),
+        max: Math.max.apply(null, values[name])
+      };
+    });
+    return domains;
+  }
+
+  function railPct(value, domain) {
+    var span = domain.max - domain.min;
+    var fraction = span > 0 ? (value - domain.min) / span : 0.5;
+    return Math.max(0, Math.min(1, fraction)) * 100;
+  }
+
+  function paintSlot(slot, arr, domain) {
     var name = slot.getAttribute("data-analytic");
     var f = FORMAT[name];
     var stat = slot.querySelector(".interval-stat");
@@ -75,14 +120,13 @@
     wilson.textContent = arr[WILSON].toFixed(3);
     reason.textContent = gateReason(arr);
 
-    // Position: band spans lo..hi, point placed within it. Pixel layout only.
-    var span = arr[HI] - arr[LO];
-    band.style.left = "0%";
-    band.style.width = "100%";
-    mark.style.left = (span > 0 ? ((arr[POINT] - arr[LO]) / span) * 100 : 50) + "%";
+    // Position committed endpoints and point on the analytic's fixed display domain.
+    band.style.left = railPct(arr[LO], domain) + "%";
+    band.style.width = (railPct(arr[HI], domain) - railPct(arr[LO], domain)) + "%";
+    mark.style.left = railPct(arr[POINT], domain) + "%";
   }
 
-  function render(data, state) {
+  function render(data, state, domains) {
     var cell = data.cells[cellKey(state)];
     var slots = Array.prototype.slice.call(
       document.querySelectorAll(".x2-analytic")
@@ -92,7 +136,7 @@
       var arr = cell ? cell[name] : null;
       if (arr) {
         slot.hidden = false;
-        paintSlot(slot, arr);
+        paintSlot(slot, arr, domains[name]);
       } else {
         slot.hidden = true;
       }
@@ -100,6 +144,12 @@
     var banner = document.querySelector("[data-falsealarm]");
     if (banner) {
       banner.hidden = state.ic !== "0";
+    }
+    var announcer = document.querySelector("[data-x2-announcer]");
+    if (announcer) {
+      announcer.textContent = "Showing " + TIER_LABEL[state.tier] + " at " + state.T +
+        " months; information coefficient " + state.ic + ", alpha half-life " +
+        state.half_life + " months, sizing discipline " + state.sizing + ".";
     }
   }
 
@@ -129,10 +179,11 @@
       return;
     }
     var state = readState(controls);
-    render(data, state);
+    var domains = displayDomains(data);
+    render(data, state, domains);
     bindDials(controls, function (dial, value) {
       state[dial] = value;
-      render(data, state);
+      render(data, state, domains);
     });
   }
 

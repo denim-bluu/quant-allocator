@@ -50,6 +50,13 @@
   margin: 12px 0 0;
 }
 
+.x2-state-summary {
+  margin: -8px 0 16px;
+  color: var(--dim);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .x2-before-after {
   margin: 0 0 18px;
   padding: 18px;

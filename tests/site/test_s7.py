@@ -205,6 +205,13 @@ def test_s7_controls_explore_precomputed_states_without_rewriting_the_focal_flow
 ) -> None:
     html, out = _build(tmp_path)
     content = _demo_content(html)
+    explorer = content.index('<details class="s7-explorer">')
+    summary = content.index("<summary>Explore another evidence state</summary>", explorer)
+    controls = content.index('<section class="s7-controls"', explorer)
+    announcement = content.index('data-s7-announcer', explorer)
+    result = content.index('data-s7-explorer-body', explorer)
+    assert explorer < summary < controls < announcement < result
+    assert '<details class="s7-explorer" open' not in content
     assert html.count("data-s7-scenario-control=") == 4
     assert html.count("data-s7-cutoff-control=") == 2
     assert html.count("data-s7-view-control=") == 3

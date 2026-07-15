@@ -169,6 +169,13 @@ def test_borrow_dial_and_tier_strip(tmp_path):
     assert 'data-tier="E"' in html and 'data-tier="R"' in html
 
 
+def test_borrow_dial_keeps_a_minimum_touch_target():
+    css = (REPO_ROOT / "site" / "assets" / "pages" / "s5.css").read_text(encoding="utf-8")
+    range_rule = css.split(".s5-dial__range {", 1)[1].split("}", 1)[0]
+    assert "min-width: 44px" in range_rule
+    assert "min-height: 44px" in range_rule
+
+
 def test_no_banned_words(tmp_path):
     html, _ = _build(tmp_path)
     low = html.lower()

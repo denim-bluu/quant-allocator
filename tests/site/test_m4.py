@@ -165,9 +165,22 @@ def test_heatmap_and_stress_controls_are_accessible_and_precomputed(tmp_path):
     assert html.count('role="gridcell"') == 36
     assert html.count("liquidity-adjusted overlap") >= 36
     assert 'id="m4-stress-delta"' in html
+    assert 'class="m4-slider__range"' in html
     assert 'id="m4-unwind-bars"' in html
     assert "illustrative impact" in html
     assert "illustrative &mdash; not a forecast" in html
+
+
+def test_heatmap_cells_and_stress_slider_keep_minimum_touch_targets():
+    css = (REPO_ROOT / "site" / "assets" / "pages" / "m4.css").read_text(encoding="utf-8")
+    mobile = css.split("@media (max-width: 700px) {", 1)[1]
+    cell_rule = mobile.split(".m4-cell {", 1)[1].split("}", 1)[0]
+    range_rule = css.split(".m4-slider__range {", 1)[1].split("}", 1)[0]
+
+    assert "min-width: 44px" in cell_rule
+    assert "min-height: 44px" in cell_rule
+    assert "min-width: 44px" in range_rule
+    assert "min-height: 44px" in range_rule
 
 
 def test_measurement_prediction_split_and_kill_rule(tmp_path):
