@@ -129,3 +129,13 @@ def test_x1_script_loaded(tmp_path):
     assert "drawTierComparison" in script
     assert 'querySelector(".x1-tier-chart")' in script
     assert "regression" not in script.lower()
+
+
+def test_x1_chart_places_series_labels_on_opposite_sides_of_points(tmp_path):
+    _, out = _build(tmp_path)
+    script = (out / "assets" / "x1-atlas.js").read_text(encoding="utf-8")
+
+    assert "labelOffset" in script
+    assert 'index === 0 ? "start" : index === months.length - 1 ? "end"' in script
+    assert '"x1-tier-chart--returns", -28, "Returns", 16' in script
+    assert '"x1-tier-chart--exposure", 28, "Exposures", -10' in script

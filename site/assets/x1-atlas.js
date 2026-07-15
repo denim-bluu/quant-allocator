@@ -67,9 +67,10 @@
       addLine(svg, "x1-tier-chart__tick", left - 4, y(value), left, y(value));
     });
 
-    function drawSeries(values, lows, highs, cls, offset, label) {
+    function drawSeries(values, lows, highs, cls, offset, label, labelOffset) {
       months.forEach(function (month, index) {
         var cx = x(month) + offset;
+        var labelAnchor = index === 0 ? "start" : index === months.length - 1 ? "end" : "middle";
         addLine(svg, "x1-tier-chart__interval " + cls, cx, y(lows[index]), cx, y(highs[index]));
         addLine(svg, "x1-tier-chart__cap " + cls, cx - 5, y(lows[index]), cx + 5, y(lows[index]));
         addLine(svg, "x1-tier-chart__cap " + cls, cx - 5, y(highs[index]), cx + 5, y(highs[index]));
@@ -82,14 +83,15 @@
           svg,
           "x1-tier-chart__value " + cls,
           cx,
-          y(values[index]) - 10,
-          label + " " + (values[index] * 100).toFixed(1) + "%"
+          y(values[index]) + labelOffset,
+          label + " " + (values[index] * 100).toFixed(1) + "%",
+          labelAnchor
         );
       });
     }
 
-    drawSeries(returns, returnsLo, returnsHi, "x1-tier-chart--returns", -28, "Returns");
-    drawSeries(exposure, exposureLo, exposureHi, "x1-tier-chart--exposure", 28, "Exposures");
+    drawSeries(returns, returnsLo, returnsHi, "x1-tier-chart--returns", -28, "Returns", 16);
+    drawSeries(exposure, exposureLo, exposureHi, "x1-tier-chart--exposure", 28, "Exposures", -10);
     months.forEach(function (month) {
       addText(svg, "x1-tier-chart__month", x(month), height - 14, String(month));
     });
