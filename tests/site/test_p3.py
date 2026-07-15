@@ -99,7 +99,17 @@ def test_p3_counterfactual_panel_and_ledger(tmp_path):
     html, _ = _build_with_p3_live(tmp_path)
     assert "p3-cohort" in html                 # fired-vs-replacement forward SVG
     assert html.count('class="p3-event ') >= 15  # the per-event ledger, never averaged
-    # All three counterfactual rungs surface as receipts.
+    assert "Forward cumulative relative return (%)" in html
+    assert "Months after decision" in html
+    assert "Fired managers at end" in html
+    assert "Replacement managers at end" in html
+    assert 'class="p3-event-details"' in html
+    assert html.index('class="p3-panel p3-panel--primary"') < html.index(
+        'class="p3-explainer"'
+    )
+    assert 'class="ledger-row__id"' not in html
+    assert "individual stories with receipts" not in html
+    # All three counterfactual methods remain visible in the detailed histories.
     assert "replacement-paired" in html
     assert "peer-median" in html
     assert "benchmark" in html

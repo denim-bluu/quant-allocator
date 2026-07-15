@@ -15,74 +15,13 @@
     Goyal&ndash;Wahal (2008): plan sponsors hire after strong trailing performance and
     fire after weak &mdash; yet the <strong>fired managers go on to match or beat the
     newly hired ones</strong>. The round-trip adds nothing; the timing is the mistake.
-    P3 audits <strong>the allocator's own decision</strong>, not the manager's skill.
+    This exhibit audits <strong>the allocator's own decision</strong>, not the manager's skill.
     This is a fully <span class="p3-synthetic">synthetic</span> decision history of
     {{ ag.n_events }} events over {{ card_data.meta.n_managers }} managers.
   </p>
 </section>
 
-<section class="p3-explainer" aria-label="What this exhibit shows">
-  <h2 class="p3-panel__title">What this exhibit shows</h2>
-  <div class="p3-explainer__block">
-    <h3 class="p3-explainer__sub">What you are looking at</h3>
-    <p class="p3-note">
-      A fully synthetic history of {{ ag.n_events }} hire, fire, and
-      hold-under-review decisions across {{ card_data.meta.n_managers }} managers.
-      The headline exhibit shrinks their average value-add toward the
-      Goyal&ndash;Wahal base rate of zero and reports it as a
-      {{ "%+.1f"|format(ag.posterior.ci_lo * 100) }}% to
-      {{ "%+.1f"|format(ag.posterior.ci_hi * 100) }}% per-year posterior interval
-      &mdash; straddling zero, tagged &ldquo;{{ ag.verdict_chip }}.&rdquo; Below it,
-      the fired-versus-replacement cohort paths mean-revert, one scorecard grades a
-      decision against its pre-committed thesis, and the full {{ ag.n_events }}-row
-      ledger keeps every decision as its own story rather than averaging them away.
-    </p>
-    <p class="p3-note">
-      The generator is deliberately built to reproduce the published stylized fact. It tests
-      ledger, counterfactual, shrinkage, and refusal mechanics; it does not independently validate
-      the paper or any real committee&rsquo;s skill.
-    </p>
-  </div>
-  <div class="p3-explainer__block">
-    <h3 class="p3-explainer__sub">How to read it</h3>
-    <ul class="p3-explainer__list">
-      <li><strong>The interval band</strong> is the 90% posterior for process
-        value-add; its width is the uncertainty, the tick is the pinned-zero base
-        rate, and the dot is the shrunk point
-        ({{ "%+.1f"|format(ag.posterior.point * 100) }}%/yr).</li>
-      <li><strong>The verdict chip</strong> reads
-        &ldquo;{{ ag.verdict_chip }}&rdquo; whenever the interval still covers zero
-        &mdash; the conclusion, not a failure.</li>
-      <li><strong>The &ldquo;raw average refused&rdquo; note</strong> withholds the
-        plain average because effective N is only
-        {{ "%.1f"|format(ag.n_effective) }} ({{ ag.n_events }} events,
-        {{ ag.n_cohorts }} quarterly cohorts, design effect
-        {{ "%.2f"|format(ag.design_effect) }}) &mdash; below the
-        {{ card_data.meta.min_events }}-event gate.</li>
-      <li><strong>The detectability line</strong> says that at a true
-        {{ "%.0f"|format(ag.events_to_detect.true_gap * 100) }}%/yr edge the
-        interval would not exclude zero until &asymp;
-        {{ ag.events_to_detect.n | int }} decisions.</li>
-      <li><strong>The cohort chart</strong> plots the fired managers' forward path
-        (green) against their replacements' (red); the fired recover and the
-        replacements fade.</li>
-      <li><strong>The scorecard</strong> sets the pre-committed thesis and kill
-        criterion beside the realized path, so process is graded, not the draw.</li>
-      <li><strong>Each ledger row</strong> is one decision: a green left border
-        means it helped, red means it hurt; the row shows the raw and
-        factor-adjusted forward gaps, the counterfactual rung used
-        (replacement-paired, peer-median, or benchmark), and whether the kill
-        criterion was met.</li>
-    </ul>
-    <p class="p3-note">
-      The full methodology &mdash; with the math and a reference implementation
-      &mdash; is in the
-      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
-    </p>
-  </div>
-</section>
-
-<section class="p3-panel">
+<section class="p3-panel p3-panel--primary">
   <h2 class="p3-panel__title">Process value-add &mdash; shrunk toward the base rate</h2>
   {% if ag.raw_mean_gated %}
   <div class="power-gate" role="note">
@@ -135,6 +74,38 @@
   </p>
 </section>
 
+<section class="p3-explainer" aria-label="What this exhibit shows">
+  <h2 class="p3-panel__title">What this exhibit shows</h2>
+  <div class="p3-explainer__block">
+    <h3 class="p3-explainer__sub">What you are looking at</h3>
+    <p class="p3-note">
+      The interval above estimates whether the allocator's decisions added value after
+      shrinking a small, correlated history toward a zero base rate. It crosses zero,
+      so the honest answer is that this history does not distinguish the process from
+      the base rate.
+    </p>
+    <p class="p3-note">
+      The synthetic generator is deliberately built to reproduce the published stylized fact. It
+      tests ledger, counterfactual, shrinkage, and refusal mechanics; it does not independently validate
+      the paper or any real committee's skill.
+    </p>
+  </div>
+  <div class="p3-explainer__block">
+    <h3 class="p3-explainer__sub">How to read it</h3>
+    <ul class="p3-explainer__list">
+      <li><strong>Interval first:</strong> width is uncertainty; crossing zero is the
+        conclusion, not a missing result.</li>
+      <li><strong>Cohort path next:</strong> compare fired managers with the
+        replacements that received their capital.</li>
+      <li><strong>Scorecard:</strong> grade one decision against the thesis and kill
+        criterion written before the outcome.</li>
+      <li><strong>Decision histories:</strong> open the final disclosure only when the
+        individual cases are useful.</li>
+    </ul>
+    <p class="p3-note"><a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">Read the full article</a>.</p>
+  </div>
+</section>
+
 <section class="p3-panel">
   <h2 class="p3-panel__title">Counterfactual cohort &mdash; fired vs replacement, forward</h2>
   <p class="p3-note">
@@ -143,11 +114,15 @@
     replacements fade &mdash; mean reversion, exactly the round-trip Goyal&ndash;Wahal
     found. This is calibration of the termination bar, not an accusation.
   </p>
-  <svg class="p3-cohort" viewBox="0 0 100 40" preserveAspectRatio="none"
-       role="img" aria-label="Fired vs replacement forward paths"></svg>
+  <div class="p3-cohort__frame">
+    <span class="p3-cohort__y-label">Forward cumulative relative return (%)</span>
+    <svg class="p3-cohort" viewBox="0 0 100 40" preserveAspectRatio="none"
+         role="img" aria-label="Fired vs replacement forward paths"></svg>
+    <div class="p3-cohort__x-axis"><span>Decision</span><span>Months after decision</span><span>36</span></div>
+  </div>
   <div class="p3-cohort__legend">
-    <span class="p3-legend p3-legend--fired">fired</span>
-    <span class="p3-legend p3-legend--replacement">replacement</span>
+    <span class="p3-legend p3-legend--fired">Fired managers at end <strong>{{ "%+.1f"|format((card_data.cohort_paths.fired | last) * 100) }}%</strong></span>
+    <span class="p3-legend p3-legend--replacement">Replacement managers at end <strong>{{ "%+.1f"|format((card_data.cohort_paths.replacement | last) * 100) }}%</strong></span>
   </div>
 </section>
 
@@ -156,7 +131,6 @@
   <div class="p3-scorecard">
     <div class="p3-scorecard__head">
       <span class="p3-scorecard__name">{{ names[sc.manager_id] }}</span>
-      <span class="ledger-row__id">{{ sc.manager_id }}</span>
       <span class="ledger-row__meta">{{ sc.decision_type }} &middot; {{ sc.decision_date }}
         &middot; {{ sc.horizon_years }}y horizon</span>
     </div>
@@ -179,18 +153,19 @@
 </section>
 
 <section class="p3-panel">
-  <h2 class="p3-panel__title">Per-event ledger &mdash; individual stories with receipts</h2>
+  <h2 class="p3-panel__title">Decision histories</h2>
   <p class="p3-note">
     At this decision count the stories <em>are</em> the honest output; nothing is
     averaged away. Each row is one decision, its counterfactual, and the forward gap.
   </p>
+  <details class="p3-event-details">
+    <summary>Show all {{ ag.n_events }} individual decisions</summary>
   <div class="p3-ledger">
     {% for ev in card_data.events %}
     <article class="p3-event p3-event--{{ ev.value_verdict }}">
       <div class="p3-event__head">
         <span class="p3-event__type">{{ ev.decision_type }}</span>
         <span class="p3-event__name">{{ names[ev.manager_id] }}</span>
-        <span class="ledger-row__id">{{ ev.manager_id }}</span>
         <span class="ledger-row__meta">{{ ev.decision_date }} &middot;
           {{ ev.counterfactual_rung }} &middot; {{ ev.horizon_years }}y</span>
         <span class="verdict-chip" data-verdict="{{ 'aligned' if ev.value_verdict == 'helped'
@@ -205,6 +180,7 @@
     </article>
     {% endfor %}
   </div>
+  </details>
 </section>
 {% endblock %}
 
@@ -213,8 +189,8 @@
 prospective discipline instrument &mdash; a schema (thesis, expected alpha, horizon,
 kill criterion) filled at the decision moment, before the outcome is known, the only
 clean defense against outcome bias. The <strong>ledger</strong> is deterministic
-event-time accounting: forward excess returns and factor-adjusted gaps (reusing the S2
-factor regression), a counterfactual resolved by a fixed hierarchy
+event-time accounting: forward excess returns and factor-adjusted gaps (reusing the
+uncertainty-honest factor regression), a counterfactual resolved by a fixed hierarchy
 (replacement-paired &rarr; peer-median &rarr; benchmark), and a signed value-add per
 event where positive always means the decision helped.</p>
 <p>The one crossing-events number is the <strong>process value-add posterior</strong>:

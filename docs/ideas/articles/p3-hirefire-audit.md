@@ -151,7 +151,7 @@ not proof that any specific termination is wrong.
 
 For a single allocator, the aggregate interval may remain indistinguishable from zero
 through an entire career. That does not defeat the journal. The prospective discipline,
-complete counterfactual roster, and event-level receipts can improve governance without
+complete counterfactual roster, and event-level source records can improve governance without
 pretending the committee has a statistically significant track record.
 
 ## What the allocator does next

@@ -28,6 +28,17 @@
 }
 
 .p3-cohort { display: block; width: 100%; height: 160px; }
+.p3-cohort__frame { position: relative; padding-left: 28px; }
+.p3-cohort__y-label {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  color: var(--dim);
+  font-size: 0.75rem;
+  transform: translate(-42%, -50%) rotate(-90deg);
+  white-space: nowrap;
+}
+.p3-cohort__x-axis { display: flex; justify-content: space-between; color: var(--dim); font-size: 0.75rem; }
 .p3-cohort__p-fired { fill: none; stroke: var(--pos); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .p3-cohort__p-replacement { fill: none; stroke: var(--neg); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .p3-cohort__zero { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 2 2; vector-effect: non-scaling-stroke; }
@@ -54,6 +65,8 @@
 .p3-event__head .verdict-chip { margin-left: auto; }
 .p3-event__gaps { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--dim); font-variant-numeric: tabular-nums; }
 .p3-event__thesis { margin: 8px 0 0; font-size: 13px; }
+.p3-event-details > summary { min-height: 44px; cursor: pointer; font-weight: 700; }
+.p3-event-details[open] > summary { margin-bottom: 12px; }
 
 @media (max-width: 640px) {
   .p3-scorecard__grid { grid-template-columns: 1fr; }
