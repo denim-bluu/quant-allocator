@@ -1,4 +1,5 @@
 import shutil
+from html.parser import HTMLParser
 from pathlib import Path
 
 import yaml
@@ -6,6 +7,37 @@ import yaml
 from quant_allocator.site.build import build
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+class _VisibleText(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.parts = []
+        self.hidden = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in {"script", "style", "template"}:
+            self.hidden += 1
+
+    def handle_endtag(self, tag):
+        if tag in {"script", "style", "template"} and self.hidden:
+            self.hidden -= 1
+
+    def handle_data(self, data):
+        if not self.hidden:
+            self.parts.append(data)
+
+
+def _visible_text(html):
+    parser = _VisibleText()
+    parser.feed(html)
+    return " ".join(" ".join(parser.parts).split())
+
+
+def _page_content(html):
+    start = html.index('<section class="m4-intro">')
+    end = html.index('<details class="evidence-appendix">', start)
+    return html[start:end]
 
 
 def _load_publication_terms():
@@ -96,6 +128,25 @@ def test_exact_snapshot_measurements_and_centerpiece(tmp_path):
     assert '<span class="interval-stat__value" id="m4-cosine-value">0.327</span>' in html
 
 
+def test_m4_heatmap_precedes_guide_and_uses_full_evidence_labels(tmp_path):
+    html, _ = _build(tmp_path)
+    content = _page_content(html)
+    visible = _visible_text(content)
+    assert content.index('id="m4-heatmap-title"') < content.index('class="m4-guide"')
+    assert "Position holdings" in visible
+    assert "Exposure summaries" in visible
+    assert "Returns only" in visible
+    for prohibited in (
+        "P-tier",
+        "gate 2",
+        "gate 3",
+        "M4 measures",
+        "P1 may",
+        "CTR coverage holes",
+    ):
+        assert prohibited not in visible
+
+
 def test_pair_selector_updates_values_data_and_rail_geometry():
     script = (REPO_ROOT / "site" / "assets" / "m4-crowding.js").read_text(encoding="utf-8")
     assert "function updateStat" in script
@@ -121,11 +172,12 @@ def test_heatmap_and_stress_controls_are_accessible_and_precomputed(tmp_path):
 
 def test_measurement_prediction_split_and_kill_rule(tmp_path):
     html, _ = _build(tmp_path)
+    visible = _visible_text(_page_content(html))
     assert "Scenario, not forecast" in html
     assert "No predicted loss or size-cap" in html
-    assert "If gate 2 fails, the measurement stays" in html
-    assert "M4 measures crowding; it does not allocate" in html
-    assert "never computes portfolio weights" in html
+    assert "If predictive validation fails, the measurement stays" in html
+    assert "This exhibit measures crowding; it does not allocate" in html
+    assert "never computes portfolio weights" in visible
 
 
 def test_tier_limits_and_public_view_withheld(tmp_path):
@@ -133,12 +185,16 @@ def test_tier_limits_and_public_view_withheld(tmp_path):
     assert 'data-tier="P"' in html
     assert 'data-tier="E"' in html
     assert 'data-tier="R"' in html
+    assert "Position holdings" in html
+    assert "Exposure summaries" in html
+    assert "Returns only" in html
     assert "Factor crowding only" in html
     assert "not a holdings measurement" in html
-    assert "13F view withheld pending degradation gate" in html
+    assert "Public-filings view unavailable" in html
+    assert "Form 13F" in html
     assert "45-day lag" in html
     assert "longs-only" in html
-    assert "CTR coverage holes" in html
+    assert "coverage gaps in the filing universe" in html
     assert "non-US blindness" in html
 
 

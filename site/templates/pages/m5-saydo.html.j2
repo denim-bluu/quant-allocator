@@ -4,48 +4,16 @@
 <section class="saydo-intro">
   <p class="saydo-headline">
     One synthetic manager letter ({{ card_data.meta.manager_name }}), three stated
-    views, read against the measured book. Two views match the positioning; one contradicts it &mdash; shown side
-    by side, quote and measurement together, so the reader draws the conclusion.
+    views, read against the measured book. Two views match the positioning; one contradicts
+    it &mdash; shown side by side, quote and measurement together, so the reader can inspect
+    the conclusion.
   </p>
-  <aside class="saydo-honesty" role="note">
-    The extraction shown here is <strong>illustrative</strong>. The live build
-    renders a real-letter claim only after the synthetic-letter eval harness
-    passes its gate (extraction precision &ge; 0.8 and recall &ge; 0.8, alignment
-    accuracy &ge; 0.8). See method spec &sect;4.
-  </aside>
-  <button type="button" class="saydo-focus" data-saydo-focus>Focus the contradiction</button>
-</section>
-
-<section class="saydo-intro" aria-labelledby="m5-exhibit-shows">
-  <h2 id="m5-exhibit-shows" class="saydo-headline"><strong>What this exhibit shows</strong></h2>
   <p class="saydo-headline">
-    <strong>What you are looking at.</strong> Three views pulled from one
-    {{ card_data.meta.manager_name }} letter, each read against the manager's
-    measured book over a {{ card_data.meta.horizon_months }}-month horizon. Two
-    match: the value tilt rose {{ "%+.3f"|format(card_data.views[1].measured.move) }}
-    and the net held flat at {{ "%.2f"|format(card_data.views[0].measured.end) }}.
-    One contradicts: after saying it was trimming momentum, the book's momentum
-    beta rose {{ "%+.3f"|format(card_data.views[2].measured.move) }} &mdash; against
-    the stated direction, and more than twice the
-    &plusmn;{{ "%.2f"|format(card_data.views[2].measured.delta) }} dead-band.
+    <strong>A language model is a system that turns prose into structured fields.</strong>
+    Here it identifies the stated direction, theme, horizon, and exact quote. Deterministic
+    code &mdash; ordinary fixed rules &mdash; compares those fields with the measured exposure.
   </p>
-  <div class="saydo-honesty" role="note">
-    <strong>How to read it.</strong>
-    <ul>
-      <li>Each <strong>row</strong> is one stated view: the quote and direction on
-        the &ldquo;Said&rdquo; side, the measured exposure path on the &ldquo;Did&rdquo; side.</li>
-      <li>The <strong>sparkline</strong> is the actual exposure over the horizon;
-        <strong>start &rarr; end (move)</strong> is what the scorer reads.</li>
-      <li>The <strong>dead-band &delta;</strong> is the materiality threshold &mdash; a
-        move smaller than &delta; is noise, not a statement. Here it is
-        illustrative, uncalibrated.</li>
-      <li>The <strong>verdict chip</strong> is a one-word label &mdash; <em>aligned</em>,
-        <em>partial</em>, or <em>contradicted</em> &mdash; set by deterministic code, not by a
-        model, so it never moves between runs.</li>
-      <li>The full methodology &mdash; with the math and a reference implementation &mdash; is
-        in the <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.</li>
-    </ul>
-  </div>
+  <button type="button" class="saydo-focus" data-saydo-focus>Focus the contradiction</button>
 </section>
 
 <section class="saydo" data-saydo>
@@ -89,28 +57,60 @@
   {% endfor %}
 </section>
 
+<section class="saydo-intro" aria-labelledby="m5-exhibit-shows">
+  <h2 id="m5-exhibit-shows" class="saydo-headline"><strong>What this exhibit shows</strong></h2>
+  <p class="saydo-headline">
+    <strong>What you are looking at.</strong> Three views pulled from one
+    {{ card_data.meta.manager_name }} letter, each read against the manager's
+    measured book over a {{ card_data.meta.horizon_months }}-month horizon. Two
+    match: the value tilt rose {{ "%+.3f"|format(card_data.views[1].measured.move) }}
+    and the net held flat at {{ "%.2f"|format(card_data.views[0].measured.end) }}.
+    One contradicts: after saying it was trimming momentum, the book's momentum
+    beta rose {{ "%+.3f"|format(card_data.views[2].measured.move) }} &mdash; against
+    the stated direction, and more than twice the
+    &plusmn;{{ "%.2f"|format(card_data.views[2].measured.delta) }} dead-band.
+  </p>
+  <div class="saydo-honesty" role="note">
+    <strong>How to read it.</strong>
+    <ul>
+      <li>Each <strong>row</strong> is one stated view: the quote and direction on
+        the &ldquo;Said&rdquo; side, the measured exposure path on the &ldquo;Did&rdquo; side.</li>
+      <li>The <strong>sparkline</strong> is the exposure over the horizon;
+        <strong>start &rarr; end (move)</strong> is what the fixed scoring rule reads.</li>
+      <li>The <strong>dead-band &delta;</strong> is the materiality threshold &mdash; a
+        move smaller than &delta; is noise, not a statement. Here it is
+        illustrative and uncalibrated.</li>
+      <li>The <strong>verdict chip</strong> is <em>aligned</em>, <em>partial</em>, or
+        <em>contradicted</em>. The label comes from deterministic code, not the language model.</li>
+      <li>Read the <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">technical
+        method and provenance</a> for the equations and evaluation design.</li>
+    </ul>
+  </div>
+  <aside class="saydo-honesty" role="note">
+    <strong>Evidence requirement.</strong> The extraction is illustrative. Real-letter output
+    requires at least 80% precision and 80% recall for the core extracted fields, plus at
+    least 80% alignment-label accuracy on independently checked examples.
+  </aside>
+</section>
+
 <p class="saydo-footnote">
-  &ldquo;Communication drift worth a conversation,&rdquo; never &ldquo;caught
-  you.&rdquo; Every row shows the verbatim quote and the measured series side by
-  side and stops there. The dead-band &delta; is illustrative, uncalibrated in
-  this demo; the live build sets each &delta; from the simulator so a stated
-  false-contradiction budget holds. See method spec &sect;3.2 and &sect;4.
+  &ldquo;Communication drift worth a conversation,&rdquo; never &ldquo;caught you.&rdquo;
+  Every row shows the verbatim quote and measured series side by side. The dead-band
+  &delta; remains illustrative and uncalibrated here; live use must calibrate it so ordinary
+  noise rarely creates a false contradiction.
 </p>
 {% endblock %}
 
 {% block methodology %}
-<p>Two stages with a hard division of labor: an LLM reads the letter text and
-emits a structured view (direction, theme, instrument, conviction, quote span);
-deterministic code scores that view against the measured exposure path. Nothing
-probabilistic touches the label.</p>
+<p>A language model is a system that turns prose into structured fields. It reads the letter
+and emits direction, theme, instrument, conviction, and exact quote. Deterministic code then
+scores that view against the measured exposure path; the model never chooses the label.</p>
 <p>A view is <em>aligned</em> when the exposure moves in the stated direction by
 at least the dead-band &delta; over the horizon, <em>contradicted</em> when it
 moves against the stated direction by at least &delta;, and <em>partial</em> when
-the move stays inside the dead-band &mdash; in either direction &mdash; making no
-material statement. A stated-flat view is <em>aligned</em> only while the
-exposure stays inside &plusmn;&delta;, <em>contradicted</em> beyond it. In this
-demo &delta; is illustrative, uncalibrated; the live build calibrates it from
-the simulator's honest-wander distribution.</p>
+the move stays inside the dead-band. A stated-flat view is <em>aligned</em> only while
+the exposure stays inside &plusmn;&delta;. The demonstration threshold is illustrative;
+live use must calibrate it on ordinary noisy paths.</p>
 {% endblock %}
 
 {% block body_scripts %}

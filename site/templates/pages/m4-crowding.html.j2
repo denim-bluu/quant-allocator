@@ -24,40 +24,15 @@
 {% block demo_content %}
 <section class="m4-intro">
   <p class="m4-headline">
-    The labels say diversifiers. Their P-tier holdings say otherwise: {{ pair.manager_a }} and
+    The labels say diversifiers. Their position holdings say otherwise: {{ pair.manager_a }} and
     {{ pair.manager_b }} share {{ "%.1f"|format(pair.raw * 100) }}% of their signed books, but
     {{ "%.1f"|format(pair.liquidity * 100) }}% of their unwind footprints because the shared
     names are harder to exit. This is a point-in-time measurement and a liquidation
     <strong>scenario, not a forecast</strong>.
   </p>
-  <span class="tier-badge" data-tier="P">P &middot; position measurement</span>
+  <span class="tier-badge" data-tier="P">Position holdings &middot; exact snapshot</span>
   <span class="verdict-chip" data-verdict="robust">measurement only</span>
 </section>
-
-<aside class="m4-guide" aria-label="What this exhibit shows">
-  <h2>What this exhibit shows</h2>
-  <div>
-    <h3>What you are looking at</h3>
-    <p>
-      A six-manager synthetic roster on one shared market. The heat map measures the common
-      unwind footprint of every pair; the centrepiece opens the hottest unexpected pair and
-      shows the same-direction positions they would both need to exit.
-    </p>
-  </div>
-  <div>
-    <h3>How to read it</h3>
-    <ul>
-      <li>Raw overlap is the common signed weight; opposite directions are offsets.</li>
-      <li>Liquidity overlap re-expresses each book in days-to-cover shares.</li>
-      <li>The slider selects a committed stressed-volume scenario; it does not predict loss.</li>
-      <li>The dashed impact annotation is illustrative and is not part of the robust bars.</li>
-    </ul>
-    <p>
-      The formulas, tier contract, and validation gates are in the
-      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">method spec</a>.
-    </p>
-  </div>
-</aside>
 
 <section class="m4-panel" aria-labelledby="m4-pair-title">
   <h2 id="m4-pair-title">The two-manager unwind panel</h2>
@@ -93,6 +68,31 @@
   </div>
 </section>
 
+<aside class="m4-guide" aria-label="What this exhibit shows">
+  <h2>What this exhibit shows</h2>
+  <div>
+    <h3>What you are looking at</h3>
+    <p>
+      A six-manager synthetic roster on one shared market. The heat map measures the common
+      unwind footprint of every pair; the centrepiece opens the hottest unexpected pair and
+      shows the same-direction positions they would both need to exit.
+    </p>
+  </div>
+  <div>
+    <h3>How to read it</h3>
+    <ul>
+      <li>Raw overlap is the common signed weight; opposite directions are offsets.</li>
+      <li>Liquidity overlap re-expresses each book in days-to-cover shares.</li>
+      <li>The slider selects a precomputed stressed-volume scenario; it does not predict loss.</li>
+      <li>The dashed impact annotation is illustrative and is not part of the exact bars.</li>
+    </ul>
+    <p>
+      The formulas, evidence requirements, and validation tests are in the
+      <a href="{{ asset_base | default('') }}specs/{{ card.id }}.html">technical method and provenance</a>.
+    </p>
+  </div>
+</aside>
+
 <section class="m4-panel" aria-labelledby="m4-stress-title">
   <h2 id="m4-stress-title">Common-holder unwind scenario</h2>
   <div class="m4-slider">
@@ -102,7 +102,7 @@
   </div>
   <p class="m4-note">
     At the selected 50% volume state, {{ pair.worst_asset }} ({{ pair.worst_direction }}) is
-    {{ "%.1f"|format(pair.worst_days_stressed_volume) }} days of stressed volume. Robust bars
+    {{ "%.1f"|format(pair.worst_days_stressed_volume) }} days of stressed volume. Exact bars
     measure the footprint under the chosen input; they do not predict a liquidation.
   </p>
   <div id="m4-unwind-bars" class="m4-bars" aria-live="polite">
@@ -120,15 +120,16 @@
 </section>
 
 <section class="m4-panel" aria-labelledby="m4-tier-title">
-  <h2 id="m4-tier-title">Tier limits are part of the result</h2>
-  <div class="m4-tier"><span class="tier-badge" data-tier="P">P</span><p>Position holdings: name-level overlap and unwind measurement render.</p></div>
-  <div class="m4-tier"><span class="tier-badge" data-tier="E">E</span><p>Factor crowding only; no name-level overlap and no unwind stress.</p></div>
-  <div class="m4-tier"><span class="tier-badge" data-tier="R">R</span><p>Descriptive return co-movement only &mdash; not a holdings measurement, no unwind scenario, no size cap.</p></div>
+  <h2 id="m4-tier-title">Evidence limits are part of the result</h2>
+  <div class="m4-tier"><span class="tier-badge" data-tier="P">Position holdings</span><p>Name-level overlap and unwind measurement can render.</p></div>
+  <div class="m4-tier"><span class="tier-badge" data-tier="E">Exposure summaries</span><p>Factor crowding only; no name-level overlap and no unwind stress.</p></div>
+  <div class="m4-tier"><span class="tier-badge" data-tier="R">Returns only</span><p>Descriptive return co-movement only &mdash; not a holdings measurement, no unwind scenario, no size cap.</p></div>
   <div class="power-gate">
-    <span class="power-gate__title">13F view withheld pending degradation gate</span>
+    <span class="power-gate__title">Public-filings view unavailable</span>
     <p class="power-gate__reason">
-      No public-filings panel renders before gate 3 quantifies the 45-day lag, longs-only
-      coverage, CTR coverage holes, and non-US blindness.
+      Form 13F is a US regulatory filing that reports certain long equity positions. No
+      public-filings panel renders until validation quantifies its 45-day lag, longs-only
+      coverage, coverage gaps in the filing universe, and non-US blindness.
     </p>
   </div>
 </section>
@@ -136,17 +137,18 @@
 <section class="m4-panel" aria-labelledby="m4-gate-title">
   <h2 id="m4-gate-title">Predictive claim refused</h2>
   <div class="power-gate">
-    <span class="power-gate__title">Scenario, not forecast &middot; gate 2 missing</span>
+    <span class="power-gate__title">Scenario, not forecast &middot; predictive validation unavailable</span>
     <p class="power-gate__reason">
       Overlap and stressed-volume measurements render. No predicted loss or size-cap
       recommendation renders before the overlap-decile versus co-drawdown operating
-      characteristic exists. If gate 2 fails, the measurement stays while exit-risk and
+      characteristic exists. If predictive validation fails, the measurement stays while exit-risk and
       size-cap framing are removed.
     </p>
   </div>
   <p class="m4-note">
-    M4 measures crowding; it does not allocate. P1 may consume a certified measurement as a
-    constraint later, but this card never computes portfolio weights.
+    This exhibit measures crowding; it does not allocate. A separate allocation method may
+    consume a validated measurement as a constraint later, but this exhibit never computes
+    portfolio weights.
   </p>
 </section>
 {% endblock %}
@@ -157,7 +159,7 @@
   both managers hold the name in the same direction. Liquidity overlap applies the same
   measure after each book is normalized in days-to-cover space. The unwind report then sums
   same-direction dollar holders and divides by stressed dollar volume. These are exact
-  snapshot measurements at tier P; the loss interpretation remains gated.
+  snapshot measurements with position holdings; the loss interpretation remains unvalidated.
 </p>
 {% endblock %}
 

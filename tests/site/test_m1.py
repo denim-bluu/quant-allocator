@@ -1,8 +1,40 @@
 import shutil
+from html.parser import HTMLParser
 
 import yaml
 
 from quant_allocator.site.build import build
+
+
+class _VisibleText(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.parts = []
+        self.hidden = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in {"script", "style", "template"}:
+            self.hidden += 1
+
+    def handle_endtag(self, tag):
+        if tag in {"script", "style", "template"} and self.hidden:
+            self.hidden -= 1
+
+    def handle_data(self, data):
+        if not self.hidden:
+            self.parts.append(data)
+
+
+def _visible_text(html):
+    parser = _VisibleText()
+    parser.feed(html)
+    return " ".join(" ".join(parser.parts).split())
+
+
+def _page_content(html):
+    start = html.index('<section class="m1-intro">')
+    end = html.index('<details class="evidence-appendix">', start)
+    return html[start:end]
 
 M1_LIVE = {
     "status": "live",
@@ -60,6 +92,32 @@ def test_m1_measurement_vs_calibrated_rule_copy(tmp_path):
     assert "calibrated rule" in html
     assert "autocorrelated" in html             # the null-calibration point (§3.4)
     assert 'class="tier-badge" data-tier="E"' in html
+
+
+def test_m1_chart_precedes_guide_and_defines_cusum(tmp_path):
+    html, _ = _build_with_m1_live(tmp_path)
+    content = _page_content(html)
+    assert content.index('class="m1-drift-chart"') < content.index('class="m1-guide"')
+    assert "cumulative sum (CUSUM)" in _visible_text(content)
+    assert "running total of sustained deviations" in _visible_text(content)
+
+
+def test_m1_public_copy_uses_reader_facing_evidence_terms(tmp_path):
+    html, _ = _build_with_m1_live(tmp_path)
+    visible = _visible_text(_page_content(html))
+    for prohibited in (
+        "E detection",
+        "R detection",
+        "E measures",
+        "R only infers",
+        "power gate",
+        "0.50 floor",
+        "T=",
+        "X1",
+    ):
+        assert prohibited not in visible
+    assert "Exposure-summary detection" in visible
+    assert "Returns-only detection" in visible
 
 
 def test_m1_tier_degradation_and_noise_chip(tmp_path):

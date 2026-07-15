@@ -1,4 +1,5 @@
 import shutil
+from html.parser import HTMLParser
 from pathlib import Path
 
 import yaml
@@ -6,6 +7,37 @@ import yaml
 from quant_allocator.site.build import build
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+class _VisibleText(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.parts = []
+        self.hidden = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in {"script", "style", "template"}:
+            self.hidden += 1
+
+    def handle_endtag(self, tag):
+        if tag in {"script", "style", "template"} and self.hidden:
+            self.hidden -= 1
+
+    def handle_data(self, data):
+        if not self.hidden:
+            self.parts.append(data)
+
+
+def _visible_text(html):
+    parser = _VisibleText()
+    parser.feed(html)
+    return " ".join(" ".join(parser.parts).split())
+
+
+def _page_content(html):
+    start = html.index('<section class="m3-intro">')
+    end = html.index('<details class="evidence-appendix">', start)
+    return html[start:end]
 
 _CARD = {
     "id": "m3",
@@ -75,17 +107,32 @@ def test_two_manager_split_green_vs_red(tmp_path):
     assert "maintained Sharpe" in html
 
 
-def test_roster_heat_list_and_gate_copy(tmp_path):
+def test_roster_heat_list_and_calibration_copy(tmp_path):
     html, _ = _build(tmp_path)
-    # Roster heat-list prints its expected-false-RED count (spec §3.4).
     assert "expected by chance" in html
-    # Gate rulings as verbatim copy obligations.
-    assert "per review window" in html          # budgets are per-review-window (gate)
-    assert "full evaluated track" in html       # ALARM_WINDOW v1 (gate)
-    assert "not a" in html and "FDR" in html     # distinction from the prohibited FDR alpha-screen
-    # PowerGate refusal: detection is low-power at T <= 60.
+    assert "per review window" in html
+    assert "full evaluated track" in html
+    assert "False-discovery rate (FDR)" in html
     assert "power-gate" in html
-    assert "T &le; 60" in html or "T ≤ 60" in html
+    assert "fewer than 61 months" in html
+
+
+def test_m3_defines_fdr_and_removes_workflow_codes(tmp_path):
+    html, _ = _build(tmp_path)
+    visible = _visible_text(_page_content(html))
+    assert "False-discovery rate (FDR)" in visible
+    assert "expected share of false discoveries among results called significant" in visible
+    for prohibited in (
+        "M3",
+        "S2",
+        "gate 2",
+        "gate 3",
+        "power gate",
+        "hardened build",
+        "T = 48",
+        "T ≤ 60",
+    ):
+        assert prohibited not in visible
 
 
 def test_dietvorst_dial_is_precomputed(tmp_path):

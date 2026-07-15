@@ -78,8 +78,8 @@
     budget), RED above the 99th ({{ "%.0f"|format(card_data.meta.red_budget * 100) }}% budget).
     Budgets are stated under the fitted null; parameter-estimation slack means realized
     false-alarm rates can run above nominal at short track lengths &mdash; validation at
-    T = 48 measured roughly 2% for the 1% RED budget. The hardened build recalibrates with
-    parameter-uncertainty-aware nulls.
+    48 months measured roughly 2% for the 1% RED budget. Live validation must recalibrate with
+    parameter-uncertainty-aware nulls before use.
   </p>
 </section>
 
@@ -118,7 +118,7 @@
       <li><strong>The roster heat-list</strong> &mdash; each row&rsquo;s percentile is read against
         that manager&rsquo;s own null; the count line prints the expected-false REDs so the list is
         read with its multiplicity in view.</li>
-      <li><strong>The power gate</strong> &mdash; the honest refusal: detection of slow alpha death
+      <li><strong>The sample limit</strong> &mdash; the honest refusal: detection of slow alpha death
         is low-power at short track lengths, so this is a flag, never proof or an auto-redeem.</li>
     </ul>
     <p class="m3-exhibit__bridge">
@@ -148,16 +148,18 @@
     {% endfor %}
   </ul>
   <div class="power-gate">
-    <span class="power-gate__title">power gate</span>
+    <span class="power-gate__title">Sample limit</span>
     <p class="power-gate__reason">
-      Detection of slow alpha death is low-power at T &le; 60 (one drawdown episode is n&asymp;1).
+      Detection of slow alpha death is low-power with fewer than 61 months (one drawdown episode provides roughly one independent event).
       This alarm is a <strong>calibrated flag</strong> &mdash; &ldquo;extreme relative to the
       stated null&rdquo; &mdash; never proof the alpha is gone, and never an auto-redeem.
     </p>
   </div>
   <p class="m3-roster__fdr">
-    This roster count controls <em>monitor</em> false-alarms (drawdowns). It is <strong>not</strong>
-    an FDR luck-screen on alphas at roster scale &mdash; M3 runs no cross-manager alpha-discovery
+    This roster count controls <em>monitor</em> false alarms (drawdowns). A
+    <strong>False-discovery rate (FDR)</strong> is the expected share of false discoveries among
+    results called significant. This exhibit is <strong>not</strong> an FDR luck-screen on alphas
+    at roster scale &mdash; it runs no cross-manager alpha-discovery
     test; it reports one honest count so the heat-list is not read naively.
   </p>
 </section>
@@ -166,13 +168,13 @@
 {% block methodology %}
 <p>The alarm statistic is the <em>path</em> max-drawdown: one scalar per simulated null path, so
 an &alpha;-level test has exactly an &alpha; familywise false-alarm rate by construction &mdash;
-the multiplicity S2's pointwise 99th band cannot control. The null is Monte-Carlo'd from each
+a pointwise 99th-percentile band cannot control that whole-path error rate. The null is simulated from each
 manager's maintained hypothesis (Sharpe, de-smoothed vol, fitted AR(1)); the panel plots the
 realized running max-drawdown against the familywise band, where a breach at the window end
 <em>is</em> a calibrated event.</p>
 <p>The roster heat-list carries its own multiplicity: a 1%-per-manager RED still yields roughly a
-one-in-three chance of some false RED across 40 healthy managers, so M3 prints the expected-false
-count rather than Bonferroni-correcting it away (which would destroy detection at T &le; 60). The
+one-in-three chance of some false RED across 40 healthy managers, so the exhibit prints the expected-false
+count rather than Bonferroni-correcting it away (which would destroy detection with fewer than 61 months). The
 skepticism dial is the honest picture of how much each verdict leans on the maintained Sharpe.</p>
 {% endblock %}
 

@@ -4,8 +4,8 @@ Manager letters state what a manager believes and how the book is positioned. Ex
 reports show what the book actually did. The allocator's useful question is whether the
 two align over the horizon the manager named.
 
-The public method separates reading from judgment. A language model may extract a
-structured view and its verbatim source sentence. It may not decide whether that view
+The public method separates reading from judgment. A language model is a system that turns prose into structured fields. It may extract a
+view and its verbatim source sentence, but it may not decide whether that view
 was followed. Deterministic code compares the stated direction with the measured
 exposure move and returns aligned, partial, contradicted, or unmappable.
 
@@ -38,7 +38,7 @@ The separation gives each tool the job it can defend. Language models are useful
 turning prose into structured candidates. Plain code is useful for applying the same
 rule to the same numbers every time.
 
-The receipt travels with the result: quote on one side, exposure path and threshold on
+The supporting evidence travels with the result: quote on one side, exposure path and threshold on
 the other. A reader can disagree with the mapping or the threshold without having to
 trust a hidden model judgment.
 
@@ -115,10 +115,10 @@ logic is inspectable. An aligned row confirms only that the measured exposure mo
 the stated direction. It does not validate the investment thesis. A contradicted row
 identifies a communication gap; it does not establish deception.
 
-At returns-only transparency, letters can support a view inventory and consistency
+With returns only, letters can support a view inventory and consistency
 checks across letters, but not alignment. Without exposure measurements, the method
 refuses the label. Exposure summaries support factor, sector, duration, gross, and net
-alignment. Positions can add name-level receipts.
+alignment. Positions can add name-level evidence.
 
 The public demonstration remains illustrative until the extraction evaluation clears.
 No real-letter claim is promoted from a hand-authored example.
@@ -142,8 +142,8 @@ to one quarter.
 This is not a sample-size problem. It is an extraction-and-labeling quality problem.
 Before a real-letter alignment can render, precision and recall must each be at least
 0.80 on the core extraction slots, and alignment accuracy must be at least 0.80 on a
-synthetic corpus with planted truth. If the gate still fails after two prompt or model
-iterations, the method remains limited to its synthetic demonstration.
+synthetic corpus with planted truth. If results remain below those requirements after two
+prompt or model iterations, the method remains limited to its synthetic demonstration.
 
 Dead-bands must be calibrated on honest noisy paths to a false-contradiction target of
 at most one view in twenty. Demo thresholds remain labelled illustrative and
